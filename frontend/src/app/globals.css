@@ -1,0 +1,689 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    /* Kingsfield brand tokens — source of truth */
+    --color-kf-navy:   #15192E;
+    --color-kf-gold:   #E09B30;
+    --color-kf-black:  #0E0C09;
+    --color-kf-cream:  #F5F1EA;
+    --color-kf-red:    #DC2626;
+    --color-kf-green:  #16A34A;
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-inter);
+    --font-serif: var(--font-eb-garamond);
+    --color-blue: rgb(0, 136, 255);
+    --color-blue-50: rgba(0, 136, 255, 0.05);
+    --color-blue-100: rgba(0, 136, 255, 0.1);
+    --color-blue-200: rgba(0, 136, 255, 0.3);
+    --color-blue-600: rgb(0, 136, 255);
+    --color-blue-700: rgb(0, 120, 230);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+    --radius: 0.5rem;
+    --color-azure: 0, 136, 255;
+    /* Kingsfield brand — parchment light theme */
+    --background:              #F5F1EA;   /* kf-prim-white-100 */
+    --foreground:              #0E0C09;   /* kf-prim-black-900 */
+    --card:                    #F0EBE0;
+    --card-foreground:         #0E0C09;
+    --popover:                 #F5F1EA;
+    --popover-foreground:      #0E0C09;
+    /* GOLD — not purple. Kill shadcn default. */
+    --primary:                 #E09B30;   /* kf-prim-amber-400 */
+    --primary-foreground:      #0E0C09;
+    --secondary:               #E0D8C8;
+    --secondary-foreground:    #1A1A16;
+    --muted:                   #E0D8C8;
+    --muted-foreground:        #6B6560;
+    --accent:                  #C8A96E;
+    --accent-foreground:       #1A1A16;
+    --destructive:             #8B1F1F;
+    --border:                  #C8BEA8;
+    --input:                   #C8BEA8;
+    --ring:                    #C8A96E;
+    --chart-1:                 #C8A96E;
+    --chart-2:                 #2A6B45;
+    --chart-3:                 #1B3A5C;
+    --chart-4:                 #8A5A0F;
+    --chart-5:                 #8B1F1F;
+    --sidebar:                 #1A1A16;
+    --sidebar-foreground:      #EDE8DC;
+    --sidebar-primary:         #C8A96E;
+    --sidebar-primary-foreground: #1A1A16;
+    --sidebar-accent:          #2A2A24;
+    --sidebar-accent-foreground: #EDE8DC;
+    --sidebar-border:          #2A2A2440;
+    --sidebar-ring:            #C8A96E;
+}
+
+/* ─── Beige / parchment theme ───────────────────────────────────── */
+.beige {
+    --background: oklch(0.955 0.018 85);
+    --foreground: oklch(0.18 0.02 60);
+    --card: oklch(0.965 0.016 85);
+    --card-foreground: oklch(0.18 0.02 60);
+    --popover: oklch(0.965 0.016 85);
+    --popover-foreground: oklch(0.18 0.02 60);
+    --primary: oklch(0.28 0.04 60);
+    --primary-foreground: oklch(0.97 0.01 85);
+    --secondary: oklch(0.91 0.025 85);
+    --secondary-foreground: oklch(0.28 0.04 60);
+    --muted: oklch(0.91 0.025 85);
+    --muted-foreground: oklch(0.48 0.03 70);
+    --accent: oklch(0.91 0.025 85);
+    --accent-foreground: oklch(0.28 0.04 60);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.84 0.035 80);
+    --input: oklch(0.84 0.035 80);
+    --ring: oklch(0.65 0.04 75);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --sidebar: oklch(0.93 0.025 82);
+    --sidebar-foreground: oklch(0.18 0.02 60);
+    --sidebar-primary: oklch(0.28 0.04 60);
+    --sidebar-primary-foreground: oklch(0.97 0.01 85);
+    --sidebar-accent: oklch(0.88 0.03 80);
+    --sidebar-accent-foreground: oklch(0.28 0.04 60);
+    --sidebar-border: oklch(0.84 0.035 80);
+    --sidebar-ring: oklch(0.65 0.04 75);
+}
+
+.dark {
+    /* Exact values from kingsfield-tokens.css primitive palette */
+    --background:              #0E0C09;   /* kf-prim-black-900 — warm amber-black */
+    --foreground:              #F5F1EA;   /* kf-prim-white-100 */
+    --card:                    #1C190F;   /* kf-prim-black-800 */
+    --card-foreground:         #F5F1EA;
+    --popover:                 #1C190F;
+    --popover-foreground:      #F5F1EA;
+    --primary:                 #E09B30;   /* kf-prim-amber-400 — true amber */
+    --primary-foreground:      #0E0C09;
+    --secondary:               #272318;   /* kf-prim-black-700 */
+    --secondary-foreground:    #F5F1EA;
+    --muted:                   #272318;
+    --muted-foreground:        #7A7060;   /* kf-prim-warm-300 */
+    --accent:                  #E09B30;
+    --accent-foreground:       #0E0C09;
+    --destructive:             #DC2626;   /* kf-prim-red-500 */
+    --border:                  #2E2A1E;   /* kf-prim-black-600 — warm border */
+    --input:                   #2E2A1E80;
+    --ring:                    #E09B30;   /* amber */
+    --chart-1:                 #E09B30;
+    --chart-2:                 #3DAA6A;
+    --chart-3:                 #4A8AC4;
+    --chart-4:                 #D47A2A;
+    --chart-5:                 #DC2626;
+    --sidebar:                 #141109;   /* kf-prim-black-850 */
+    --sidebar-foreground:      #F5F1EA;
+    --sidebar-primary:         #E09B30;
+    --sidebar-primary-foreground: #0E0C09;
+    --sidebar-accent:          #1C190F;
+    --sidebar-accent-foreground: #F5F1EA;
+    --sidebar-border:          #2E2A1E50;
+    --sidebar-ring:            #E09B30;
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-family: var(--font-body);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+    }
+
+    button {
+        cursor: pointer;
+    }
+}
+
+/* ── Kingsfield utility classes ────────────────────────────────── */
+.font-display   { font-family: var(--font-display) !important; }
+.font-editorial { font-family: var(--font-editorial) !important; }
+.font-brutalist { font-family: var(--font-brutalist) !important; letter-spacing: 0.02em; }
+.font-mono      { font-family: var(--font-mono) !important; }
+
+/* Gold text / border helpers */
+.text-gold  { color: var(--kg-gold); }
+.border-gold { border-color: var(--kg-gold); }
+
+/* ─── Theme overrides for hardcoded Tailwind gray/white classes ─── *
+ * Most components use bg-white / bg-gray-* instead of semantic vars.
+ * These rules remap those to the active theme's variables so the full
+ * UI respects the theme without touching every component.             */
+
+.dark body,
+.dark .bg-white    { background-color: #141413; color: #ECECEC; }
+.dark .bg-gray-50  { background-color: #1E1E1C; }
+.dark .bg-gray-100 { background-color: #252522; }
+.dark .bg-gray-200 { background-color: #2E2E2B; }
+.dark .text-gray-900, .dark .text-gray-800 { color: #ECECEC; }
+.dark .text-gray-700, .dark .text-gray-600 { color: #ABABAB; }
+.dark .text-gray-500, .dark .text-gray-400 { color: #717171; }
+.dark .border-gray-200, .dark .border-gray-100 { border-color: rgba(255,255,255,0.08); }
+.dark .shadow-lg   { box-shadow: 0 10px 30px -4px rgba(0,0,0,0.6); }
+.dark .shadow-sm   { box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+.dark .hover\:bg-gray-100:hover { background-color: #252522; }
+.dark .hover\:bg-gray-50:hover  { background-color: #1E1E1C; }
+
+.beige body,
+.beige .bg-white    { background-color: var(--background); color: var(--foreground); }
+.beige .bg-gray-50  { background-color: oklch(0.93 0.022 82); }
+.beige .bg-gray-100 { background-color: oklch(0.90 0.025 82); }
+.beige .bg-gray-200 { background-color: oklch(0.86 0.030 80); }
+.beige .text-gray-900, .beige .text-gray-800 { color: oklch(0.18 0.02 60); }
+.beige .text-gray-700, .beige .text-gray-600 { color: oklch(0.32 0.025 65); }
+.beige .text-gray-500, .beige .text-gray-400 { color: oklch(0.50 0.02 70); }
+.beige .border-gray-200, .beige .border-gray-100 { border-color: oklch(0.84 0.035 80); }
+.beige .hover\:bg-gray-100:hover { background-color: oklch(0.90 0.025 82); }
+.beige .hover\:bg-gray-50:hover  { background-color: oklch(0.93 0.022 82); }
+
+/* ─── Kingsfield Brand Design System ────────────────────────────── */
+:root {
+  /* ── Surfaces ──────────────────────────────────────────────────── */
+  --kg-navy:          #1C2744;   /* primary dark surface — brand bg */
+  --kg-navy-deep:     #141D35;   /* deeper panels, sidebar */
+  --kg-navy-light:    #243052;   /* card surface on navy */
+  --kg-navy-border:   #2E3D68;   /* borders on navy */
+
+  /* ── Gold — the brand color ────────────────────────────────────── */
+  --kg-gold:          #C8A96E;   /* primary gold */
+  --kg-gold-bright:   #E2C98A;   /* highlights, hover */
+  --kg-gold-muted:    #8C7347;   /* subtle gold, disabled states */
+  --kg-gold-rule:     #C8A96E40; /* translucent dividers */
+
+  /* ── Cream — replaces pure white throughout ────────────────────── */
+  --kg-cream:         #EDE8DC;   /* body text on dark, light bg */
+  --kg-cream-mid:     #D4C9B0;   /* secondary text on dark */
+  --kg-cream-faint:   #8A8070;   /* tertiary text, captions */
+
+  /* ── Parchment — light mode surfaces ──────────────────────────── */
+  --kg-parchment:     #F0EBE0;   /* light mode page bg */
+  --kg-parchment-mid: #E8E1D4;   /* light mode card bg */
+  --kg-parchment-dark:#C8BEA8;   /* light mode borders */
+
+  /* ── Semantic ──────────────────────────────────────────────────── */
+  --kg-success:       #3DAA6A;
+  --kg-success-bg:    #0D2B1A;
+  --kg-warning:       #D4922A;
+  --kg-warning-bg:    #2B1E07;
+  --kg-danger:        #E04444;
+  --kg-danger-bg:     #2B0A0A;
+
+  /* ── Typography — Kingsfield brand ────────────────────────────── */
+  --font-display:     var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-brutalist:   var(--font-bebas), 'Bebas Neue', Impact, sans-serif;
+  --font-editorial:   var(--font-eb-garamond), 'EB Garamond', Georgia, serif;
+  --font-body:        var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-mono:        var(--font-ibm-plex-mono), 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Display type scale */
+  --kg-display-hero:  clamp(80px, 18vw, 280px);
+  --kg-display-xl:    clamp(60px, 10vw, 160px);
+  --kg-display-lg:    clamp(40px, 6vw, 90px);
+  --kg-display-md:    clamp(28px, 4vw, 56px);
+  --kg-tracking-tight: -0.02em;
+  --kg-leading-tight:  0.82;
+}
+
+/* Landing page Ronin-style intro animations */
+@keyframes kg-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes kg-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; pointer-events: none; }
+}
+@keyframes kg-slam-in {
+  0%   { opacity: 0; transform: scale(1.06) translateY(8px); }
+  60%  { opacity: 1; transform: scale(0.99) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes kg-reveal-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes kg-curtain {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0% 0); }
+}
+@keyframes kg-line-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.kg-intro-line-1 { animation: kg-fade-in 0.9s ease forwards; animation-delay: 0.4s; opacity: 0; }
+.kg-intro-line-2 { animation: kg-fade-in 0.9s ease forwards; animation-delay: 1.4s; opacity: 0; }
+.kg-intro-line-3 { animation: kg-fade-in 0.9s ease forwards; animation-delay: 2.3s; opacity: 0; }
+.kg-intro-screen { animation: kg-fade-out 0.8s ease forwards; animation-delay: 4.0s; }
+.kg-hero-slam    { animation: kg-slam-in 1s cubic-bezier(.22,.68,0,1.2) forwards; animation-delay: 4.6s; opacity: 0; }
+.kg-hero-reveal  { animation: kg-reveal-up 0.8s ease forwards; opacity: 0; }
+.kg-hero-reveal-1 { animation-delay: 5.0s; }
+.kg-hero-reveal-2 { animation-delay: 5.2s; }
+.kg-hero-reveal-3 { animation-delay: 5.4s; }
+.kg-hero-reveal-4 { animation-delay: 5.6s; }
+.kg-line-grow    { animation: kg-line-grow 0.8s ease forwards; animation-delay: 5.2s; transform-origin: left; transform: scaleX(0); }
+
+/* Skip animation immediately if prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .kg-intro-line-1, .kg-intro-line-2, .kg-intro-line-3,
+  .kg-hero-slam, .kg-hero-reveal,
+  .kg-hero-reveal-1, .kg-hero-reveal-2, .kg-hero-reveal-3, .kg-hero-reveal-4 {
+    animation: none;
+    opacity: 1;
+  }
+  .kg-intro-screen { display: none; }
+  .kg-line-grow { transform: scaleX(1); animation: none; }
+}
+
+.usc-section {
+    font-family: var(--font-serif);
+    line-height: 1.6;
+}
+
+.usc-section h1,
+.usc-section h2,
+.usc-section h3,
+.usc-section h4,
+.usc-section h5,
+.usc-section h6 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+}
+
+.usc-section h1 {
+    font-size: 1.5em;
+}
+
+.usc-section h2 {
+    font-size: 1.25em;
+}
+
+.usc-section h3 {
+    font-size: 1.125em;
+}
+
+.usc-section p {
+    margin-bottom: 1em;
+}
+
+/* Inline cross-reference links within section text */
+.usc-xref,
+.usc-section a {
+    color: rgb(var(--color-azure));
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(var(--color-azure), 0.4);
+    transition: border-bottom-color 0.2s;
+}
+
+.usc-xref:hover,
+.usc-section a:hover {
+    border-bottom-color: rgb(var(--color-azure));
+}
+
+/* Remove automatic list styling for USC section content */
+/* The labels are already embedded in the HTML content */
+.usc-section ol,
+.usc-section ul {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 0;
+}
+
+.usc-section li {
+    margin-bottom: 0.125em;
+    text-indent: -1.25em;
+    padding-left: 1.25em;
+}
+
+/* Add indentation for nested lists */
+.usc-section ol ol,
+.usc-section ol ul,
+.usc-section ul ol {
+    padding-left: 0.75em !important;
+    margin-top: 0;
+}
+
+/* ─── CFR (Code of Federal Regulations) ────────────────────────── */
+.cfr-section {
+    font-family: var(--font-serif);
+    line-height: 1.6;
+}
+
+.cfr-section h1,
+.cfr-section h2,
+.cfr-section h3,
+.cfr-section h4,
+.cfr-section h5,
+.cfr-section h6 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.2;
+}
+
+.cfr-section h1 {
+    font-size: 1.5em;
+}
+.cfr-section h2 {
+    font-size: 1.25em;
+}
+.cfr-section h3 {
+    font-size: 1.125em;
+}
+
+.cfr-section p {
+    margin-bottom: 0.75em;
+}
+
+.cfr-section a {
+    color: rgb(var(--color-azure));
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(var(--color-azure), 0.4);
+    transition: border-bottom-color 0.2s;
+}
+
+.cfr-section a:hover {
+    border-bottom-color: rgb(var(--color-azure));
+}
+
+.cfr-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 0.875em;
+}
+
+.cfr-section th,
+.cfr-section td {
+    border: 1px solid #e2e8f0;
+    padding: 0.5em 0.75em;
+    text-align: left;
+}
+
+.cfr-section th {
+    background: #f8fafc;
+    font-weight: 600;
+}
+
+.cfr-section .authority-section,
+.cfr-section .source-section {
+    font-size: 0.875em;
+    color: #64748b;
+    margin: 1em 0;
+    padding: 0.75em;
+    border-left: 3px solid #e2e8f0;
+}
+
+@layer utilities {
+    .font-eb-garamond {
+        font-family: var(--font-eb-garamond);
+    }
+
+    .sidebar-fade-in {
+        animation: sidebarFadeIn 0.3s ease-out forwards;
+        animation-delay: 0.1s;
+        opacity: 0;
+    }
+
+    .sidebar-fade-in-2 {
+        animation: sidebarFadeIn 0.3s ease-out forwards;
+        animation-delay: 0.2s;
+        opacity: 0;
+    }
+
+    .sidebar-fade-in-3 {
+        animation: sidebarFadeIn 0.3s ease-out forwards;
+        animation-delay: 0.25s;
+        opacity: 0;
+    }
+
+    @keyframes sidebarFadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes scroll-left {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-100% + 100px));
+        }
+    }
+
+    @keyframes shimmer {
+        from {
+            background-position: 0 0;
+        }
+        to {
+            background-position: -200% 0;
+        }
+    }
+
+    .animate-shimmer {
+        animation: shimmer 8s linear infinite;
+    }
+}
+
+/* ─── Tiptap WYSIWYG workflow editor ────────────────────────────── */
+.workflow-editor-content {
+    min-height: 100%;
+    padding: 1rem 1.25rem;
+    outline: none;
+    font-size: 0.875rem;
+    color: #374151;
+    line-height: 1.65;
+    font-family: var(--font-serif);
+}
+
+.workflow-editor-content h1 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 1.25rem;
+    margin-bottom: 0.375rem;
+}
+
+.workflow-editor-content h2 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.workflow-editor-content h3 {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #111827;
+    margin-top: 0.625rem;
+    margin-bottom: 0.125rem;
+}
+
+.workflow-editor-content h1:first-child,
+.workflow-editor-content h2:first-child,
+.workflow-editor-content h3:first-child {
+    margin-top: 0;
+}
+
+.workflow-editor-content p {
+    margin-bottom: 0.5rem;
+}
+
+.workflow-editor-content p:last-child {
+    margin-bottom: 0;
+}
+
+.workflow-editor-content ul {
+    list-style-type: disc;
+    padding-left: 1.375rem;
+    margin-bottom: 0.5rem;
+}
+
+.workflow-editor-content ol {
+    list-style-type: decimal;
+    padding-left: 1.375rem;
+    margin-bottom: 0.5rem;
+}
+
+.workflow-editor-content li {
+    margin-bottom: 0.125rem;
+}
+
+.workflow-editor-content li > p {
+    margin-bottom: 0;
+}
+
+.workflow-editor-content strong {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.workflow-editor-content em {
+    font-style: italic;
+}
+
+/* ChatBox Animation Styles */
+
+/* PDF text layer */
+.pdf-text-layer {
+    overflow: hidden;
+    opacity: 1;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+}
+
+.pdf-text-layer > span {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+}
+
+.pdf-text-layer .pdf-text-highlight {
+    background-color: rgba(37, 99, 235, 0.2);
+    border-radius: 2px;
+    position: static;
+}
+
+.docx-view-container span.docx-text-highlight,
+.docx-view-container .docx-text-highlight {
+    background-color: rgba(37, 99, 235, 0.35) !important;
+    border-radius: 2px;
+    padding: 0 1px;
+    color: inherit !important;
+}
+
+/* docx-preview tracked-change styling */
+.docx-view-container ins {
+    color: #16a34a;
+    text-decoration: none;
+    background-color: rgba(22, 163, 74, 0.08);
+}
+
+.docx-view-container del {
+    color: #dc2626;
+    text-decoration: line-through;
+    background-color: rgba(220, 38, 38, 0.08);
+}
+
+/* Kill docx-preview's default dark-gray wrapper chrome — let the scroll
+   container's own bg show through. */
+.docx-view-container .docx-wrapper {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+.docx-view-container .docx-wrapper > section.docx {
+    margin: 0 auto 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.docx-view-container .docx-edit-flash {
+    animation: docxEditFlash 2s ease-out;
+    border-radius: 2px;
+}
+
+/* Optimistic Accept/Reject: instantly hide rejected side / de-style kept side.
+   These are ephemeral DOM mutations; the real re-render replaces the markup. */
+.docx-view-container .docx-edit-hidden {
+    display: none !important;
+}
+
+.docx-view-container ins.docx-edit-kept,
+.docx-view-container del.docx-edit-kept {
+    color: inherit !important;
+    background-color: transparent !important;
+    text-decoration: none !important;
+}
+
+@keyframes docxEditFlash {
+    0%, 20% {
+        background-color: rgba(59, 130, 246, 0.45);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.45);
+    }
+    100% {
+        background-color: rgba(59, 130, 246, 0);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0);
+    }
+}
