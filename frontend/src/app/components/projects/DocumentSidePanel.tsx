@@ -403,7 +403,7 @@ export function DocumentSidePanel({
             ref={panelRef}
             className={cn(
                 "fixed z-[190] flex flex-col",
-                "inset-3 md:left-auto rounded-2xl border border-white/70 bg-gray-50/80 shadow-[0_8px_24px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-10px_24px_rgba(255,255,255,0.18),inset_1px_0_0_rgba(255,255,255,0.5)] backdrop-blur-2xl overflow-hidden",
+                "inset-3 md:left-auto rounded-2xl border border-white/70 bg-paper/80 dark:bg-ink-2/80 shadow-[0_8px_24px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-10px_24px_rgba(255,255,255,0.18),inset_1px_0_0_rgba(255,255,255,0.5)] backdrop-blur-2xl overflow-hidden",
             )}
             style={isMobile ? undefined : { width: panelWidth }}
         >

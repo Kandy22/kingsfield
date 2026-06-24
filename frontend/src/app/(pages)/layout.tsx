@@ -102,7 +102,7 @@ export default function MikeLayout({
                         },
                     }}
                 >
-                    <div className="h-dvh flex flex-col bg-gray-50/80">
+                    <div className="h-dvh flex flex-col bg-paper/80 dark:bg-ink-2/80">
                         <div className="flex-1 flex min-w-0 overflow-visible">
                             <AppSidebar
                                 isOpen={isSidebarOpen}

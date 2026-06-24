@@ -31,7 +31,7 @@ export default function BlogPage() {
 
             {/* Hero */}
             <div className="px-8 md:px-14 py-16 md:py-24 border-b border-[#0A0A0A]/10">
-                <p className="text-[10px] tracking-[0.3em] uppercase text-[#C8A96E] mb-4">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-[#2B5CE6] mb-4">
                     Smart. Not Stupid.
                 </p>
                 <h1
@@ -65,7 +65,7 @@ export default function BlogPage() {
                                 <p className="text-[10px] tracking-[0.2em] uppercase text-[#0A0A0A]/30 mb-1">{report.issue}</p>
                                 <p className="text-xs text-[#0A0A0A]/40">{report.season}</p>
                                 {report.status === "upcoming" && (
-                                    <span className="inline-flex items-center gap-1 mt-2 text-[9px] tracking-[0.2em] uppercase px-2 py-0.5 border border-[#C8A96E]/40 text-[#C8A96E]">
+                                    <span className="inline-flex items-center gap-1 mt-2 text-[9px] tracking-[0.2em] uppercase px-2 py-0.5 border border-[#2B5CE6]/40 text-[#2B5CE6]">
                                         Coming Soon
                                     </span>
                                 )}

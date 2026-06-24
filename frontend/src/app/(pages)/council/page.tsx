@@ -42,7 +42,7 @@ const ADVISORS = [
         model: "Gemini Pro",
         provider: "gemini",
         description: "Strips away precedent and convention. Rebuilds from the actual rule, the actual statute, the actual text — not what everyone assumes it says.",
-        accent: "#E09B30", // kf-prim-amber-400 — primary accent/clarity
+        accent: "#2B5CE6", // kf-prim-amber-400 — primary accent/clarity
     },
     {
         role: "expansionist",
@@ -92,8 +92,8 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
     return (
         <div className="rounded p-4 transition-all"
             style={{
-                background: "#1C190F",
-                border: `1px solid #2E2A1E`,
+                background: "#161615",
+                border: `1px solid #2A2A28`,
                 borderLeft: `3px solid ${advisor.accent}`,
             }}>
             <div className="flex items-start justify-between gap-3">
@@ -103,7 +103,7 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
                             fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
                             fontSize: 13,
                             fontWeight: 700,
-                            color: "#F5F1EA",
+                            color: "#F7F6F2",
                         }}>{advisor.label.split(" ").map(w => w[0] + w.slice(1).toLowerCase()).join(" ")}</span>
                         <ProviderBadge provider={advisor.provider} model={advisor.model} />
                     </div>
@@ -116,7 +116,7 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
                 )}
             </div>
             {response && expanded && (
-                <div className="mt-3 pt-3" style={{ borderTop: "1px solid #2A2A26" }}>
+                <div className="mt-3 pt-3" style={{ borderTop: "1px solid #2A2A28" }}>
                     <p className="text-sm whitespace-pre-wrap leading-relaxed" style={{ color: "#ABABAB" }}>{response.text}</p>
                 </div>
             )}
@@ -126,7 +126,7 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
                 </button>
             )}
             {!response && (
-                <div className="mt-2 h-1 rounded animate-pulse" style={{ background: "#2A2A26" }} />
+                <div className="mt-2 h-1 rounded animate-pulse" style={{ background: "#2A2A28" }} />
             )}
         </div>
     );
@@ -134,14 +134,14 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
 
 function VerdictSection({ verdict }: { verdict: string }) {
     return (
-        <div className="rounded p-5" style={{ background: "#1C190F", border: "1px solid #E09B30" }}>
+        <div className="rounded p-5" style={{ background: "#161615", border: "1px solid #2B5CE6" }}>
             <div className="flex items-center gap-2 mb-4">
-                <Gavel className="h-4 w-4" style={{ color: "#E09B30" }} />
+                <Gavel className="h-4 w-4" style={{ color: "#2B5CE6" }} />
                 <span className="font-bold tracking-widest" style={{
                     fontFamily: "var(--font-inter), Inter, sans-serif",
                     fontSize: 11,
                     fontWeight: 600,
-                    color: "#E09B30",
+                    color: "#2B5CE6",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase" as const,
                 }}>CHAIRMAN'S VERDICT</span>
@@ -183,12 +183,12 @@ export default function CouncilPage() {
     const getAdvisorResponse = (role: string) => result?.advisors.find(a => a.role === role);
 
     return (
-        <div className="h-full overflow-y-auto" style={{ background: "#0E0C09" }}>
+        <div className="h-full overflow-y-auto" style={{ background: "#FFFFFF" }}>
             <div className="max-w-4xl mx-auto px-6 py-10">
 
                 {/* ── Header ── */}
                 <div className="mb-10">
-                    <div className="text-xs font-semibold tracking-widest mb-2" style={{ color: "#717171", letterSpacing: "0.15em" }}>
+                    <div className="text-xs font-semibold tracking-widest mb-2" style={{ color: "#5A5A56", letterSpacing: "0.15em" }}>
                         KINGSFIELD · MULTI-MODEL DELIBERATION
                     </div>
                     <h1 style={{
@@ -196,13 +196,13 @@ export default function CouncilPage() {
                         fontSize: 56,
                         fontWeight: 900,
                         lineHeight: 1.0,
-                        color: "#F5F1EA",
+                        color: "#0A0A0A",
                         letterSpacing: "-0.03em",
                     }}>
                         The Council
                     </h1>
-                    <div style={{ width: 48, height: 2, background: "#E09B30", marginTop: 16, marginBottom: 16 }} />
-                    <p className="text-sm leading-relaxed max-w-2xl" style={{ color: "#ABABAB" }}>
+                    <div style={{ width: 48, height: 2, background: "#2B5CE6", marginTop: 16, marginBottom: 16 }} />
+                    <p className="text-sm leading-relaxed max-w-2xl" style={{ color: "#5A5A56" }}>
                         Five advisors. Two model providers. One chairman. Each advisor attacks your question from a
                         different angle — then they peer-review each other before the chairman synthesizes the verdict.
                     </p>
@@ -215,14 +215,14 @@ export default function CouncilPage() {
                     ))}
                     {/* Chairman */}
                     <div className="rounded p-4 sm:col-span-2 lg:col-span-3"
-                        style={{ background: "#1C1C1A", border: "1px solid #2A2A26", borderLeft: "3px solid #C8A96E" }}>
+                        style={{ background: "#161615", border: "1px solid #2A2A28", borderLeft: "3px solid #2B5CE6" }}>
                         <div className="flex items-center gap-2 flex-wrap">
-                            <Gavel className="h-4 w-4" style={{ color: "#E09B30" }} />
+                            <Gavel className="h-4 w-4" style={{ color: "#2B5CE6" }} />
                             <span style={{
                                 fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
                                 fontSize: 13,
                                 fontWeight: 700,
-                                color: "#F5F1EA",
+                                color: "#F7F6F2",
                             }}>The Chairman</span>
                             <ProviderBadge provider="claude" model="Claude Opus" />
                         </div>
@@ -234,18 +234,18 @@ export default function CouncilPage() {
 
                 {/* ── Word Plugin Banner ── */}
                 <div className="rounded mb-8 flex items-center justify-between gap-4 px-5 py-4"
-                    style={{ background: "#1C190F", border: "1px solid #2E2A1E", borderLeft: "3px solid #E09B30" }}>
+                    style={{ background: "#161615", border: "1px solid #2A2A28", borderLeft: "3px solid #2B5CE6" }}>
                     <div className="flex items-center gap-3 min-w-0">
                         <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded"
                             style={{ background: "rgba(224,155,48,0.12)" }}>
-                            <FileText className="h-5 w-5" style={{ color: "#E09B30" }} />
+                            <FileText className="h-5 w-5" style={{ color: "#2B5CE6" }} />
                         </div>
                         <div>
                             <div style={{
                                 fontFamily: "var(--font-inter), Inter, sans-serif",
                                 fontSize: 11,
                                 fontWeight: 700,
-                                color: "#E09B30",
+                                color: "#2B5CE6",
                                 letterSpacing: "0.12em",
                                 textTransform: "uppercase",
                             }}>
@@ -259,7 +259,7 @@ export default function CouncilPage() {
                     <a
                         href="#word-plugin"
                         className="flex-shrink-0 px-4 py-2 rounded text-xs font-semibold transition-all hover:opacity-80"
-                        style={{ background: "#E09B30", color: "#0E0C09", whiteSpace: "nowrap", fontWeight: 600 }}
+                        style={{ background: "#2B5CE6", color: "#FFFFFF", whiteSpace: "nowrap", fontWeight: 600 }}
                     >
                         Get the Plugin →
                     </a>
@@ -267,7 +267,7 @@ export default function CouncilPage() {
 
                 {/* ── Input form ── */}
                 {!result && (
-                    <div className="rounded p-5 mb-6" style={{ background: "#1C1C1A", border: "1px solid #2A2A26" }}>
+                    <div className="rounded p-5 mb-6" style={{ background: "#161615", border: "1px solid #2A2A28" }}>
                         <label className="block text-xs font-semibold tracking-widest mb-3" style={{ color: "#ABABAB", letterSpacing: "0.10em" }}>
                             WHAT DO YOU NEED THE COUNCIL TO PRESSURE-TEST?
                         </label>
@@ -277,7 +277,7 @@ export default function CouncilPage() {
                             placeholder="e.g. We're about to file a 12(b)(6) motion on preemption grounds. The plaintiff's complaint alleges state-law fraud arising from the same conduct as an SEC enforcement action. Do we have a strong field-preemption argument, or are we better off arguing implied conflict preemption?"
                             rows={5}
                             className="w-full rounded px-3 py-2.5 text-sm resize-none focus:outline-none"
-                            style={{ background: "#0E0C09", color: "#ECECEC", border: "1px solid #2A2A26", fontFamily: "var(--font-inter), Inter, sans-serif" }}
+                            style={{ background: "#FFFFFF", color: "#ECECEC", border: "1px solid #2A2A28", fontFamily: "var(--font-inter), Inter, sans-serif" }}
                         />
                         <label className="block text-xs font-semibold tracking-widest mb-3 mt-5" style={{ color: "#ABABAB", letterSpacing: "0.10em" }}>
                             CONTEXT <span className="font-normal normal-case" style={{ color: "#717171", letterSpacing: 0 }}>(optional — matter summary, prior filings, key facts)</span>
@@ -288,7 +288,7 @@ export default function CouncilPage() {
                             placeholder="Add background the council should know — opposing counsel's arguments, the judge's tendencies, prior rulings, key facts you can't ignore..."
                             rows={3}
                             className="w-full rounded px-3 py-2.5 text-sm resize-none focus:outline-none"
-                            style={{ background: "#0E0C09", color: "#ECECEC", border: "1px solid #2A2A26", fontFamily: "var(--font-inter), Inter, sans-serif" }}
+                            style={{ background: "#FFFFFF", color: "#ECECEC", border: "1px solid #2A2A28", fontFamily: "var(--font-inter), Inter, sans-serif" }}
                         />
                         <div className="mt-5 flex items-center justify-between flex-wrap gap-3">
                             <p className="text-xs" style={{ color: "#717171", fontFamily: "var(--font-ibm-plex-mono), monospace" }}>
@@ -299,8 +299,8 @@ export default function CouncilPage() {
                                 disabled={loading || question.trim().length < 10}
                                 className="flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                                 style={{
-                                    background: "#E09B30",
-                                    color: "#0E0C09",
+                                    background: "#2B5CE6",
+                                    color: "#FFFFFF",
                                     fontFamily: "var(--font-inter), Inter, sans-serif",
                                     fontSize: 13,
                                     fontWeight: 600,
@@ -314,18 +314,18 @@ export default function CouncilPage() {
                 )}
 
                 {error && (
-                    <div className="flex items-start gap-3 rounded p-4 mb-6" style={{ background: "#2A1515", border: "1px solid #C84040" }}>
-                        <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: "#C84040" }} />
+                    <div className="flex items-start gap-3 rounded p-4 mb-6" style={{ background: "#2B0A0A", border: "1px solid #C7341A" }}>
+                        <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: "#C7341A" }} />
                         <div>
-                            <p className="text-sm font-semibold" style={{ color: "#C84040" }}>Council failed</p>
+                            <p className="text-sm font-semibold" style={{ color: "#C7341A" }}>Council failed</p>
                             <p className="text-xs mt-0.5" style={{ color: "#ABABAB" }}>{error}</p>
                         </div>
                     </div>
                 )}
 
                 {loading && (
-                    <div className="rounded p-6 mb-6 text-center" style={{ background: "#1C1C1A", border: "1px solid #2A2A26" }}>
-                        <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3" style={{ color: "#E09B30" }} />
+                    <div className="rounded p-6 mb-6 text-center" style={{ background: "#161615", border: "1px solid #2A2A28" }}>
+                        <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3" style={{ color: "#2B5CE6" }} />
                         <p className="text-sm font-semibold" style={{ color: "#ABABAB" }}>The council is deliberating…</p>
                         <p className="text-xs mt-1" style={{ color: "#717171" }}>Running five advisors + peer review + chairman synthesis</p>
                     </div>
@@ -333,7 +333,7 @@ export default function CouncilPage() {
 
                 {result && (
                     <div className="space-y-5">
-                        <div className="rounded p-4" style={{ background: "#1C1C1A", border: "1px solid #2A2A26" }}>
+                        <div className="rounded p-4" style={{ background: "#161615", border: "1px solid #2A2A28" }}>
                             <p className="text-xs font-semibold tracking-widest mb-2" style={{ color: "#717171", letterSpacing: "0.10em" }}>QUESTION AS FRAMED BY THE COUNCIL</p>
                             <p className="text-sm leading-relaxed" style={{ color: "#ABABAB" }}>{result.framedQuestion}</p>
                         </div>

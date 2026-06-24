@@ -175,9 +175,9 @@ export function DocVersionHistory({
 
     if (versions.length === 0) {
         return (
-            <div className="flex items-center h-9 border-b border-gray-50 text-xs text-gray-400 bg-gray-50/80">
+            <div className="flex items-center h-9 border-b border-gray-50 text-xs text-gray-400 bg-paper/80 dark:bg-ink-2/80">
                 <div
-                    className={`sticky left-0 z-[60] ${DOC_NAME_COL_W} bg-gray-50/80 py-2 pl-4 pr-2`}
+                    className={`sticky left-0 z-[60] ${DOC_NAME_COL_W} bg-paper/80 dark:bg-ink-2/80 py-2 pl-4 pr-2`}
                     style={treeNameCellStyle(depth)}
                 >
                     <div>No version history.</div>

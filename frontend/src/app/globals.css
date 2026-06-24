@@ -4,7 +4,23 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    /* Kingsfield brand tokens — source of truth */
+    /* Kingsfield brand tokens — source of truth (2026-06-23 redesign) */
+    --color-ink:        #0A0A0A;
+    --color-ink-2:      #161615;
+    --color-ink-3:      #2A2A28;
+    --color-ink-mid:    #5A5A56;
+    --color-ink-soft:   #9A9A94;
+    --color-stone:      #C4C3BD;
+    --color-mist:       #C8D8DC;
+    --color-paper:      #F7F6F2;
+    --color-paper-2:    #EFEEEA;
+    --color-draft:      #C7341A;
+    --color-research:   #2B5CE6;
+    --color-workflow:   #E8B121;
+    --color-dataroom:   #1F8A5B;
+    --color-knowledge:  #7A3FD6;
+
+    /* Legacy brand tokens — kept for components not yet migrated */
     --color-kf-navy:   #15192E;
     --color-kf-gold:   #E09B30;
     --color-kf-black:  #0E0C09;
@@ -14,14 +30,15 @@
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-inter);
-    --font-serif: var(--font-eb-garamond);
-    --color-blue: rgb(0, 136, 255);
-    --color-blue-50: rgba(0, 136, 255, 0.05);
-    --color-blue-100: rgba(0, 136, 255, 0.1);
-    --color-blue-200: rgba(0, 136, 255, 0.3);
-    --color-blue-600: rgb(0, 136, 255);
-    --color-blue-700: rgb(0, 120, 230);
+    --font-sans: var(--font-dm-sans);
+    --font-serif: var(--font-playfair);
+    --font-mono: var(--font-jetbrains-mono);
+    --color-blue: rgb(43, 92, 230);
+    --color-blue-50: rgba(43, 92, 230, 0.05);
+    --color-blue-100: rgba(43, 92, 230, 0.1);
+    --color-blue-200: rgba(43, 92, 230, 0.3);
+    --color-blue-600: rgb(43, 92, 230);
+    --color-blue-700: rgb(35, 75, 200);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -58,41 +75,67 @@
 }
 
 :root {
-    --radius: 0.5rem;
-    --color-azure: 0, 136, 255;
-    /* Kingsfield brand — parchment light theme */
-    --background:              #F5F1EA;   /* kf-prim-white-100 */
-    --foreground:              #0E0C09;   /* kf-prim-black-900 */
-    --card:                    #F0EBE0;
-    --card-foreground:         #0E0C09;
-    --popover:                 #F5F1EA;
-    --popover-foreground:      #0E0C09;
-    /* GOLD — not purple. Kill shadcn default. */
-    --primary:                 #E09B30;   /* kf-prim-amber-400 */
-    --primary-foreground:      #0E0C09;
-    --secondary:               #E0D8C8;
-    --secondary-foreground:    #1A1A16;
-    --muted:                   #E0D8C8;
-    --muted-foreground:        #6B6560;
-    --accent:                  #C8A96E;
-    --accent-foreground:       #1A1A16;
-    --destructive:             #8B1F1F;
-    --border:                  #C8BEA8;
-    --input:                   #C8BEA8;
-    --ring:                    #C8A96E;
-    --chart-1:                 #C8A96E;
-    --chart-2:                 #2A6B45;
-    --chart-3:                 #1B3A5C;
-    --chart-4:                 #8A5A0F;
-    --chart-5:                 #8B1F1F;
-    --sidebar:                 #1A1A16;
-    --sidebar-foreground:      #EDE8DC;
-    --sidebar-primary:         #C8A96E;
-    --sidebar-primary-foreground: #1A1A16;
-    --sidebar-accent:          #2A2A24;
-    --sidebar-accent-foreground: #EDE8DC;
-    --sidebar-border:          #2A2A2440;
-    --sidebar-ring:            #C8A96E;
+    --radius: 0px;
+    --color-azure: 43, 92, 230;
+
+    /* New tokens — direct var() access for components not on the @theme scale */
+    --ink: #0A0A0A;
+    --ink-2: #161615;
+    --ink-3: #2A2A28;
+    --ink-mid: #5A5A56;
+    --ink-soft: #9A9A94;
+    --stone: #C4C3BD;
+    --mist: #C8D8DC;
+    --paper: #F7F6F2;
+    --paper-2: #EFEEEA;
+    --red: #C7341A;
+    --blue: #2B5CE6;
+    --blue-soft: #E2E9FB;
+    --draft: #C7341A;
+    --research: #2B5CE6;
+    --workflow: #E8B121;
+    --dataroom: #1F8A5B;
+    --knowledge: #7A3FD6;
+
+    /* Kingsfield brand — paper/ink/blue theme (2026-06-23) */
+    --background:              #F7F6F2;   /* paper */
+    --foreground:              #0A0A0A;   /* ink */
+    --card:                    #FFFFFF;
+    --card-foreground:         #0A0A0A;
+    --popover:                 #FFFFFF;
+    --popover-foreground:      #0A0A0A;
+    --primary:                 #0A0A0A;   /* ink — default button fill; blue is reserved for the one standout CTA per view */
+    --primary-foreground:      #FFFFFF;
+    --secondary:               #EFEEEA;   /* paper-2 */
+    --secondary-foreground:    #0A0A0A;
+    --muted:                   #EFEEEA;
+    --muted-foreground:        #5A5A56;   /* ink-mid */
+    --accent:                  #E2E9FB;   /* blue-soft */
+    --accent-foreground:       #0A0A0A;
+    --destructive:             #C7341A;   /* red */
+    --border:                  #EFEEEA;   /* paper-2 */
+    --input:                   #EFEEEA;
+    --ring:                    #0A0A0A;
+    --chart-1:                 #2B5CE6;
+    --chart-2:                 #1F8A5B;
+    --chart-3:                 #E8B121;
+    --chart-4:                 #7A3FD6;
+    --chart-5:                 #C7341A;
+    --sidebar:                 #0A0A0A;   /* ink */
+    --sidebar-foreground:      #FFFFFF;
+    --sidebar-primary:         #2B5CE6;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent:          #161615;
+    --sidebar-accent-foreground: #FFFFFF;
+    --sidebar-border:          #2A2A2840;
+    --sidebar-ring:            #2B5CE6;
+}
+
+.redline {
+  background-image: linear-gradient(var(--red), var(--red));
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: left bottom 1px;
 }
 
 /* ─── Beige / parchment theme ───────────────────────────────────── */
@@ -131,38 +174,38 @@
 }
 
 .dark {
-    /* Exact values from kingsfield-tokens.css primitive palette */
-    --background:              #0E0C09;   /* kf-prim-black-900 — warm amber-black */
-    --foreground:              #F5F1EA;   /* kf-prim-white-100 */
-    --card:                    #1C190F;   /* kf-prim-black-800 */
-    --card-foreground:         #F5F1EA;
-    --popover:                 #1C190F;
-    --popover-foreground:      #F5F1EA;
-    --primary:                 #E09B30;   /* kf-prim-amber-400 — true amber */
-    --primary-foreground:      #0E0C09;
-    --secondary:               #272318;   /* kf-prim-black-700 */
-    --secondary-foreground:    #F5F1EA;
-    --muted:                   #272318;
-    --muted-foreground:        #7A7060;   /* kf-prim-warm-300 */
-    --accent:                  #E09B30;
-    --accent-foreground:       #0E0C09;
-    --destructive:             #DC2626;   /* kf-prim-red-500 */
-    --border:                  #2E2A1E;   /* kf-prim-black-600 — warm border */
-    --input:                   #2E2A1E80;
-    --ring:                    #E09B30;   /* amber */
-    --chart-1:                 #E09B30;
-    --chart-2:                 #3DAA6A;
-    --chart-3:                 #4A8AC4;
-    --chart-4:                 #D47A2A;
-    --chart-5:                 #DC2626;
-    --sidebar:                 #141109;   /* kf-prim-black-850 */
-    --sidebar-foreground:      #F5F1EA;
-    --sidebar-primary:         #E09B30;
-    --sidebar-primary-foreground: #0E0C09;
-    --sidebar-accent:          #1C190F;
-    --sidebar-accent-foreground: #F5F1EA;
-    --sidebar-border:          #2E2A1E50;
-    --sidebar-ring:            #E09B30;
+    /* Ink/paper/blue dark surface — same brand, inverted */
+    --background:              #0A0A0A;   /* ink */
+    --foreground:              #F7F6F2;   /* paper */
+    --card:                    #161615;   /* ink-2 */
+    --card-foreground:         #F7F6F2;
+    --popover:                 #161615;
+    --popover-foreground:      #F7F6F2;
+    --primary:                 #F7F6F2;   /* paper — default button fill on dark surfaces */
+    --primary-foreground:      #0A0A0A;
+    --secondary:               #2A2A28;   /* ink-3 */
+    --secondary-foreground:    #F7F6F2;
+    --muted:                   #2A2A28;
+    --muted-foreground:        #9A9A94;   /* ink-soft */
+    --accent:                  #2B5CE6;
+    --accent-foreground:       #FFFFFF;
+    --destructive:             #C7341A;   /* red */
+    --border:                  #2A2A28;   /* ink-3 */
+    --input:                   #2A2A2880;
+    --ring:                    #2B5CE6;
+    --chart-1:                 #2B5CE6;
+    --chart-2:                 #1F8A5B;
+    --chart-3:                 #E8B121;
+    --chart-4:                 #7A3FD6;
+    --chart-5:                 #C7341A;
+    --sidebar:                 #0A0A0A;
+    --sidebar-foreground:      #F7F6F2;
+    --sidebar-primary:         #2B5CE6;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent:          #161615;
+    --sidebar-accent-foreground: #F7F6F2;
+    --sidebar-border:          #2A2A2850;
+    --sidebar-ring:            #2B5CE6;
 }
 
 @layer base {
@@ -201,18 +244,18 @@
  * UI respects the theme without touching every component.             */
 
 .dark body,
-.dark .bg-white    { background-color: #141413; color: #ECECEC; }
-.dark .bg-gray-50  { background-color: #1E1E1C; }
-.dark .bg-gray-100 { background-color: #252522; }
-.dark .bg-gray-200 { background-color: #2E2E2B; }
-.dark .text-gray-900, .dark .text-gray-800 { color: #ECECEC; }
-.dark .text-gray-700, .dark .text-gray-600 { color: #ABABAB; }
-.dark .text-gray-500, .dark .text-gray-400 { color: #717171; }
+.dark .bg-white    { background-color: #0A0A0A; color: #F7F6F2; }
+.dark .bg-gray-50  { background-color: #161615; }
+.dark .bg-gray-100 { background-color: #2A2A28; }
+.dark .bg-gray-200 { background-color: #2A2A28; }
+.dark .text-gray-900, .dark .text-gray-800 { color: #F7F6F2; }
+.dark .text-gray-700, .dark .text-gray-600 { color: #C4C3BD; }
+.dark .text-gray-500, .dark .text-gray-400 { color: #9A9A94; }
 .dark .border-gray-200, .dark .border-gray-100 { border-color: rgba(255,255,255,0.08); }
-.dark .shadow-lg   { box-shadow: 0 10px 30px -4px rgba(0,0,0,0.6); }
-.dark .shadow-sm   { box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-.dark .hover\:bg-gray-100:hover { background-color: #252522; }
-.dark .hover\:bg-gray-50:hover  { background-color: #1E1E1C; }
+.dark .shadow-lg   { box-shadow: none; }
+.dark .shadow-sm   { box-shadow: none; }
+.dark .hover\:bg-gray-100:hover { background-color: #2A2A28; }
+.dark .hover\:bg-gray-50:hover  { background-color: #161615; }
 
 .beige body,
 .beige .bg-white    { background-color: var(--background); color: var(--foreground); }
@@ -226,44 +269,44 @@
 .beige .hover\:bg-gray-100:hover { background-color: oklch(0.90 0.025 82); }
 .beige .hover\:bg-gray-50:hover  { background-color: oklch(0.93 0.022 82); }
 
-/* ─── Kingsfield Brand Design System ────────────────────────────── */
+/* ─── Kingsfield Brand Design System (2026-06-23 redesign) ───────── */
 :root {
-  /* ── Surfaces ──────────────────────────────────────────────────── */
-  --kg-navy:          #1C2744;   /* primary dark surface — brand bg */
-  --kg-navy-deep:     #141D35;   /* deeper panels, sidebar */
-  --kg-navy-light:    #243052;   /* card surface on navy */
-  --kg-navy-border:   #2E3D68;   /* borders on navy */
+  /* ── Surfaces — ink replaces navy ─────────────────────────────── */
+  --kg-navy:          #0A0A0A;   /* ink — primary dark surface / brand bg */
+  --kg-navy-deep:     #161615;   /* ink-2 — deeper panels, sidebar */
+  --kg-navy-light:    #2A2A28;   /* ink-3 — card surface on dark */
+  --kg-navy-border:   #2A2A2840; /* borders on dark */
 
-  /* ── Gold — the brand color ────────────────────────────────────── */
-  --kg-gold:          #C8A96E;   /* primary gold */
-  --kg-gold-bright:   #E2C98A;   /* highlights, hover */
-  --kg-gold-muted:    #8C7347;   /* subtle gold, disabled states */
-  --kg-gold-rule:     #C8A96E40; /* translucent dividers */
+  /* ── Blue replaces gold as the brand accent ──────────────────── */
+  --kg-gold:          #2B5CE6;   /* blue — primary accent / CTA */
+  --kg-gold-bright:   #5A7FF0;   /* highlights, hover */
+  --kg-gold-muted:    #1F8A5B;   /* unused-state fallback (was muted gold) */
+  --kg-gold-rule:     #2B5CE640; /* translucent dividers */
 
-  /* ── Cream — replaces pure white throughout ────────────────────── */
-  --kg-cream:         #EDE8DC;   /* body text on dark, light bg */
-  --kg-cream-mid:     #D4C9B0;   /* secondary text on dark */
-  --kg-cream-faint:   #8A8070;   /* tertiary text, captions */
+  /* ── Cream → paper, replaces pure white where warmth is wanted ── */
+  --kg-cream:         #F7F6F2;   /* paper — body text on dark, light bg */
+  --kg-cream-mid:     #C4C3BD;   /* stone — secondary text on dark */
+  --kg-cream-faint:   #9A9A94;   /* ink-soft — tertiary text, captions */
 
-  /* ── Parchment — light mode surfaces ──────────────────────────── */
-  --kg-parchment:     #F0EBE0;   /* light mode page bg */
-  --kg-parchment-mid: #E8E1D4;   /* light mode card bg */
-  --kg-parchment-dark:#C8BEA8;   /* light mode borders */
+  /* ── Parchment → paper-2, light mode surfaces ────────────────── */
+  --kg-parchment:     #F7F6F2;   /* paper — light mode page bg */
+  --kg-parchment-mid: #EFEEEA;   /* paper-2 — light mode card bg */
+  --kg-parchment-dark:#C4C3BD;   /* stone — light mode borders */
 
   /* ── Semantic ──────────────────────────────────────────────────── */
-  --kg-success:       #3DAA6A;
+  --kg-success:       #1F8A5B;   /* dataroom */
   --kg-success-bg:    #0D2B1A;
-  --kg-warning:       #D4922A;
+  --kg-warning:       #E8B121;   /* workflow */
   --kg-warning-bg:    #2B1E07;
-  --kg-danger:        #E04444;
+  --kg-danger:        #C7341A;   /* red */
   --kg-danger-bg:     #2B0A0A;
 
   /* ── Typography — Kingsfield brand ────────────────────────────── */
   --font-display:     var(--font-playfair), 'Playfair Display', Georgia, serif;
   --font-brutalist:   var(--font-bebas), 'Bebas Neue', Impact, sans-serif;
   --font-editorial:   var(--font-eb-garamond), 'EB Garamond', Georgia, serif;
-  --font-body:        var(--font-inter), 'Inter', system-ui, sans-serif;
-  --font-mono:        var(--font-ibm-plex-mono), 'IBM Plex Mono', 'Courier New', monospace;
+  --font-body:        var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-mono:        var(--font-jetbrains-mono), 'JetBrains Mono', 'Courier New', monospace;
 
   /* Display type scale */
   --kg-display-hero:  clamp(80px, 18vw, 280px);

@@ -25,17 +25,17 @@ interface SectionConfig {
     bg: string;
 }
 
-// Uniform navy panel — instrument layer aesthetic per brand guide
-// #15192E = kf-navy. Section identity via gold accent, not bg color.
+// Uniform ink panel — instrument layer aesthetic per brand guide.
+// #161615 = ink-2. Section identity via blue accent, not bg color.
 const SECTIONS: SectionConfig[] = [
-    { href: "/assistant",       label: "Assistant",       sublabel: "AI research & drafting",   icon: MessageSquare, bg: "#15192E" },
-    { href: "/case-law",        label: "Case Law",        sublabel: "Search opinions",           icon: BookOpen,      bg: "#15192E" },
-    { href: "/council",         label: "Council",         sublabel: "Multi-model deliberation",  icon: Scale,         bg: "#15192E" },
-    { href: "/projects",        label: "Projects",        sublabel: "Case workspaces",           icon: FolderOpen,    bg: "#15192E" },
-    { href: "/legislation",     label: "Legislation",     sublabel: "Statutes & codes",          icon: Scroll,        bg: "#15192E" },
-    { href: "/tabular-reviews", label: "Tabular Review",  sublabel: "Structured extraction",     icon: Table2,        bg: "#15192E" },
-    { href: "/workflows",       label: "Workflows",       sublabel: "Automated pipelines",       icon: Library,       bg: "#15192E" },
-    { href: "/analytics",       label: "Analytics",       sublabel: "Judicial connections",      icon: Network,       bg: "#15192E" },
+    { href: "/assistant",       label: "Assistant",       sublabel: "AI research & drafting",   icon: MessageSquare, bg: "#161615" },
+    { href: "/case-law",        label: "Case Law",        sublabel: "Search opinions",           icon: BookOpen,      bg: "#161615" },
+    { href: "/council",         label: "Council",         sublabel: "Multi-model deliberation",  icon: Scale,         bg: "#161615" },
+    { href: "/projects",        label: "Projects",        sublabel: "Case workspaces",           icon: FolderOpen,    bg: "#161615" },
+    { href: "/legislation",     label: "Legislation",     sublabel: "Statutes & codes",          icon: Scroll,        bg: "#161615" },
+    { href: "/tabular-reviews", label: "Tabular Review",  sublabel: "Structured extraction",     icon: Table2,        bg: "#161615" },
+    { href: "/workflows",       label: "Workflows",       sublabel: "Automated pipelines",       icon: Library,       bg: "#161615" },
+    { href: "/analytics",       label: "Analytics",       sublabel: "Judicial connections",      icon: Network,       bg: "#161615" },
 ];
 
 interface AppSidebarProps {
@@ -54,7 +54,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     const [projectNames, setProjectNames] = useState<Record<string, string>>({});
 
     const active = SECTIONS.find(s => pathname === s.href || pathname.startsWith(s.href + "/"));
-    const panelBg = active?.bg ?? "#1A1A18";
+    const panelBg = active?.bg ?? "#161615";
 
     useEffect(() => {
         if (!user) return;
@@ -88,13 +88,13 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     return (
         <div className="flex h-dvh flex-shrink-0">
 
-            {/* ── STRIP: warm black (#080705 = kf-prim-black-950), always 52px ── */}
+            {/* ── STRIP: ink (#0A0A0A), always 52px ── */}
             <div className="flex flex-col items-center py-3 flex-shrink-0"
-                style={{ width: 52, background: "#080705", borderRight: "1px solid #2E2A1E" }}>
+                style={{ width: 52, background: "#0A0A0A", borderRight: "1px solid #2A2A28" }}>
 
                 {/* Skull logo mark */}
                 <Link href="/assistant" className="mb-2 block" title="Kingsfield">
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", overflow: "hidden", border: "1px solid #333" }}>
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", overflow: "hidden", border: "1px solid #2A2A28" }}>
                         <Image src="/skull.jpg" alt="Kingsfield" width={36} height={36}
                             style={{ objectFit: "cover", objectPosition: "center" }} />
                     </div>
@@ -111,15 +111,15 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                 style={{
                                     width: 36, height: 36,
                                     display: "flex", alignItems: "center", justifyContent: "center",
-                                    borderRadius: 4,
-                                    background: isActive ? "rgba(224,155,48,0.12)" : "transparent",
-                                    color: isActive ? "#E09B30" : "#4A4A46",
-                                    borderLeft: isActive ? "2px solid #E09B30" : "2px solid transparent",
+                                    borderRadius: 0,
+                                    background: isActive ? "rgba(43,92,230,0.12)" : "transparent",
+                                    color: isActive ? "#2B5CE6" : "#5A5A56",
+                                    borderLeft: isActive ? "2px solid #2B5CE6" : "2px solid transparent",
                                     cursor: "pointer",
                                     transition: "all 0.15s",
                                 }}
-                                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "#ABABAB"; }}
-                                onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "#4A4A46"; }}
+                                onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "#C4C3BD"; }}
+                                onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.color = "#5A5A56"; }}
                             >
                                 <Icon style={{ width: 15, height: 15 }} />
                             </button>
@@ -133,10 +133,10 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                     <button onClick={() => router.push("/account")} title={user.email}
                         style={{
                             width: 28, height: 28, borderRadius: "50%",
-                            background: "#1E1E1C", color: "#ABABAB",
+                            background: "#161615", color: "#C4C3BD",
                             fontSize: 11, fontWeight: 600,
                             display: "flex", alignItems: "center", justifyContent: "center",
-                            border: "1px solid #2A2A26", cursor: "pointer",
+                            border: "1px solid #2A2A28", cursor: "pointer",
                         }}>
                         {initials()}
                     </button>
@@ -155,7 +155,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
                     {/* Header — click to collapse */}
                     <button onClick={onToggle} className="text-left px-5 pt-5 pb-4 flex-shrink-0 w-full">
-                        <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-inter)", fontWeight: 600, textTransform: "uppercase", marginBottom: 6 }}>
+                        <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-dm-sans)", fontWeight: 600, textTransform: "uppercase", marginBottom: 6 }}>
                             Kingsfield
                         </div>
                         <div style={{
@@ -169,7 +169,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                             {active?.label ?? "Kingsfield"}
                         </div>
                         {active?.sublabel && (
-                            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 3, fontFamily: "var(--font-inter)" }}>
+                            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 3, fontFamily: "var(--font-dm-sans)" }}>
                                 {active.sublabel}
                             </div>
                         )}
@@ -188,7 +188,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                         background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
                                         color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.50)",
                                         fontWeight: isActive ? 600 : 400,
-                                        fontSize: 13, fontFamily: "var(--font-inter)",
+                                        fontSize: 13, fontFamily: "var(--font-dm-sans)",
                                         border: "none", cursor: "pointer", textAlign: "left",
                                         transition: "background 0.1s",
                                     }}
@@ -214,7 +214,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                         display: "flex", alignItems: "center", gap: 7,
                                         padding: "7px 10px", borderRadius: 4, marginBottom: 8,
                                         background: "rgba(255,255,255,0.18)", color: "#FFFFFF",
-                                        fontWeight: 600, fontSize: 13, fontFamily: "var(--font-inter)",
+                                        fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)",
                                         border: "none", cursor: "pointer", width: "100%",
                                     }}>
                                     <Plus style={{ width: 13, height: 13 }} /> New Chat
@@ -225,7 +225,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                         padding: "0 10px", marginBottom: 4,
                                         background: "transparent", border: "none", cursor: "pointer",
                                         color: "rgba(255,255,255,0.35)", fontSize: 11, fontWeight: 600,
-                                        fontFamily: "var(--font-inter)", letterSpacing: "0.08em",
+                                        fontFamily: "var(--font-dm-sans)", letterSpacing: "0.08em",
                                         textTransform: "uppercase", width: "100%",
                                     }}>
                                     <span>Recent</span>
@@ -257,17 +257,17 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                         )}
 
                         {active?.href === "/projects" && (
-                            <button onClick={() => router.push("/projects")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-inter)", border: "none", cursor: "pointer", width: "100%" }}>
+                            <button onClick={() => router.push("/projects")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)", border: "none", cursor: "pointer", width: "100%" }}>
                                 <Plus style={{ width: 13, height: 13 }} /> New Project
                             </button>
                         )}
                         {active?.href === "/workflows" && (
-                            <button onClick={() => router.push("/workflows")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-inter)", border: "none", cursor: "pointer", width: "100%" }}>
+                            <button onClick={() => router.push("/workflows")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)", border: "none", cursor: "pointer", width: "100%" }}>
                                 <Plus style={{ width: 13, height: 13 }} /> New Workflow
                             </button>
                         )}
                         {active?.href === "/tabular-reviews" && (
-                            <button onClick={() => router.push("/tabular-reviews")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-inter)", border: "none", cursor: "pointer", width: "100%" }}>
+                            <button onClick={() => router.push("/tabular-reviews")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)", border: "none", cursor: "pointer", width: "100%" }}>
                                 <Plus style={{ width: 13, height: 13 }} /> New Review
                             </button>
                         )}
@@ -284,20 +284,20 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                             <div style={{
                                 width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
                                 background: "rgba(255,255,255,0.18)", color: "#FFFFFF",
-                                fontSize: 12, fontWeight: 700, fontFamily: "var(--font-inter)",
+                                fontSize: 12, fontWeight: 700, fontFamily: "var(--font-dm-sans)",
                                 display: "flex", alignItems: "center", justifyContent: "center",
                                 border: "1px solid rgba(255,255,255,0.25)",
                             }}>{initials()}</div>
                             <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.85)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "var(--font-inter)" }}>{displayName()}</div>
-                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-inter)" }}>{tier()}</div>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.85)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "var(--font-dm-sans)" }}>{displayName()}</div>
+                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-dm-sans)" }}>{tier()}</div>
                             </div>
                             <ChevronsUpDown style={{ width: 14, height: 14, color: "rgba(255,255,255,0.30)", flexShrink: 0 }} />
                         </button>
                         {dropdownOpen && (
-                            <div style={{ position: "absolute", bottom: "100%", left: 0, margin: 4, background: "#1C1C1A", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, padding: 4, zIndex: 50, width: "calc(100% - 8px)" }}>
+                            <div style={{ position: "absolute", bottom: "100%", left: 0, margin: 4, background: "#161615", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, padding: 4, zIndex: 50, width: "calc(100% - 8px)" }}>
                                 <button onClick={() => { router.push("/account"); setDropdownOpen(false); }}
-                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-inter)" }}
+                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-dm-sans)" }}
                                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
                                     onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}>
                                     <User style={{ width: 14, height: 14 }} /> Account Settings

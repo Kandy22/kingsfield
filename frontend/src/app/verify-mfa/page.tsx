@@ -118,7 +118,7 @@ export default function VerifyMfaPage() {
     }
 
     return (
-        <div className="relative flex min-h-dvh items-start justify-center bg-gray-50/80 px-6 pb-10 pt-32 md:pt-40">
+        <div className="relative flex min-h-dvh items-start justify-center bg-paper/80 dark:bg-ink-2/80 px-6 pb-10 pt-32 md:pt-40">
             <div className="absolute left-1/2 top-4 -translate-x-1/2 md:top-8">
                 <SiteLogo size="lg" asLink />
             </div>

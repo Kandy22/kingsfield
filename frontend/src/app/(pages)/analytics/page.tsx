@@ -23,7 +23,7 @@ interface GraphLink {
 }
 
 const NODE_COLORS: Record<NodeType, string> = {
-    judge:  "#C8A96E",
+    judge:  "#2B5CE6",
     case:   "#ECECEC",
     party:  "#5B8ECC",
     court:  "#9B6FD8",
@@ -170,7 +170,7 @@ export default function AnalyticsPage() {
         const linkEl = linkGroup.selectAll("line")
             .data(links)
             .join("line")
-            .attr("stroke", "#2A2A26")
+            .attr("stroke", "#2A2A28")
             .attr("stroke-width", 1)
             .attr("stroke-opacity", 0.7);
 
@@ -233,9 +233,9 @@ export default function AnalyticsPage() {
     };
 
     return (
-        <div className="h-full flex flex-col" style={{ background: "#141413" }}>
+        <div className="h-full flex flex-col" style={{ background: "#0A0A0A" }}>
             {/* Header */}
-            <div className="px-6 pt-6 pb-4 flex-shrink-0" style={{ borderBottom: "1px solid #2A2A26" }}>
+            <div className="px-6 pt-6 pb-4 flex-shrink-0" style={{ borderBottom: "1px solid #2A2A28" }}>
                 <div className="text-xs font-semibold tracking-widest mb-1" style={{ color: "#717171", letterSpacing: "0.15em" }}>
                     KINGSFIELD · JUDICIAL INTELLIGENCE
                 </div>
@@ -261,9 +261,9 @@ export default function AnalyticsPage() {
                                 fontFamily: "var(--font-bebas), 'Bebas Neue', sans-serif",
                                 fontSize: 12,
                                 letterSpacing: "0.10em",
-                                background: filter === f.key ? "#C8A96E" : "#1C1C1A",
+                                background: filter === f.key ? "#2B5CE6" : "#161615",
                                 color: filter === f.key ? "#0B0B0B" : "#717171",
-                                border: `1px solid ${filter === f.key ? "#C8A96E" : "#2A2A26"}`,
+                                border: `1px solid ${filter === f.key ? "#2B5CE6" : "#2A2A28"}`,
                             }}
                         >
                             {f.label}
@@ -287,13 +287,13 @@ export default function AnalyticsPage() {
                 <svg
                     ref={svgRef}
                     className="flex-1"
-                    style={{ background: "#141413", cursor: "grab" }}
+                    style={{ background: "#0A0A0A", cursor: "grab" }}
                 />
 
                 {selected && (
                     <div className="flex-shrink-0 flex flex-col overflow-y-auto"
-                        style={{ width: 280, background: "#1C1C1A", borderLeft: "1px solid #2A2A26" }}>
-                        <div className="p-5" style={{ borderBottom: "1px solid #2A2A26" }}>
+                        style={{ width: 280, background: "#161615", borderLeft: "1px solid #2A2A28" }}>
+                        <div className="p-5" style={{ borderBottom: "1px solid #2A2A28" }}>
                             <div className="text-xs font-semibold tracking-widest mb-2"
                                 style={{ color: NODE_COLORS[selected.type], letterSpacing: "0.10em", fontFamily: "var(--font-bebas), sans-serif", fontSize: 11 }}>
                                 {selected.type.toUpperCase()}
@@ -317,7 +317,7 @@ export default function AnalyticsPage() {
                                         key={i}
                                         onClick={() => selectNode(item.node!)}
                                         className="w-full text-left rounded p-2.5 transition-all hover:bg-white/5"
-                                        style={{ border: "1px solid #2A2A26" }}
+                                        style={{ border: "1px solid #2A2A28" }}
                                     >
                                         <div className="flex items-center justify-between gap-2">
                                             <span className="text-xs font-medium" style={{ color: NODE_COLORS[item.node.type] }}>
@@ -336,7 +336,7 @@ export default function AnalyticsPage() {
                         <button
                             onClick={() => setSelected(null)}
                             className="mx-5 mb-5 mt-auto px-3 py-2 rounded text-xs transition-all"
-                            style={{ border: "1px solid #2A2A26", color: "#717171" }}
+                            style={{ border: "1px solid #2A2A28", color: "#717171" }}
                         >
                             Clear selection
                         </button>

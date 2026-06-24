@@ -14,7 +14,7 @@ import {
 } from "@/app/components/shared/RowActions";
 import { GLASS_DROPDOWN } from "@/app/components/shared/HeaderFilterDropdown";
 
-export const TABLE_STICKY_CELL_BG = "bg-[#fafbfc]";
+export const TABLE_STICKY_CELL_BG = "bg-[#fafbfc] dark:bg-[#161615]";
 export const TABLE_PRIMARY_CELL_WIDTH_CLASS =
     "w-[248px] sm:w-[292px] md:w-[332px] shrink-0";
 export const TABLE_CHECKBOX_CLASS =

@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
-import { Inter, EB_Garamond, Playfair_Display, IBM_Plex_Mono, Bebas_Neue } from "next/font/google";
+import { Inter, EB_Garamond, Playfair_Display, IBM_Plex_Mono, Bebas_Neue, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
 const inter = Inter({
     variable: "--font-inter",
     subsets: ["latin"],
+});
+
+const dmSans = DM_Sans({
+    variable: "--font-dm-sans",
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "600"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+    variable: "--font-jetbrains-mono",
+    subsets: ["latin"],
+    weight: ["400", "500"],
 });
 
 const ebGaramond = EB_Garamond({
@@ -54,7 +66,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${inter.variable} ${ebGaramond.variable} ${playfairDisplay.variable} ${ibmPlexMono.variable} ${bebasNeue.variable} font-sans antialiased`}
+                className={`${inter.variable} ${ebGaramond.variable} ${playfairDisplay.variable} ${ibmPlexMono.variable} ${bebasNeue.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}
             >
                 <Providers>{children}</Providers>
             </body>
