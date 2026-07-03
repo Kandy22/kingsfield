@@ -1,0 +1,7 @@
+"rich-text","rich-text 2"
+"Model Information",""
+"Description","Gemini 3.5 Live Translate is a member of the Gemini series of models, a suite of highly-capable, natively multimodal reasoning models."
+"Model dependencies","Gemini 3.5 Live Translate is based on Gemini 3 Pro."
+"Inputs","Audio with a token context window of up to 128K."
+"Outputs","Audio and text, with up to 64K token output."
+"Architecture","Gemini 3.5 Live Translate is based on Gemini 3 Pro. For more information about the model architecture for Gemini 3.5 Live Translate, see the Gemini 3 Pro ."

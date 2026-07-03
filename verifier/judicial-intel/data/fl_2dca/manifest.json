@@ -1,0 +1,19 @@
+{
+  "channel_id": "fl_2dca",
+  "entries": {
+    "eLU5je2C12I": {
+      "video_id": "eLU5je2C12I",
+      "title": "25 1145",
+      "url": "https://www.youtube.com/watch?v=eLU5je2C12I",
+      "upload_date": null,
+      "download": {
+        "status": "downloaded",
+        "video_id": "eLU5je2C12I",
+        "audio_path": "/Users/aaronray/kingsfield/verifier/judicial-intel/data/fl_2dca/audio/eLU5je2C12I.m4a",
+        "caption_path": null,
+        "video_path": null
+      },
+      "download_at": "2026-06-09T20:15:48.919949+00:00"
+    }
+  }
+}

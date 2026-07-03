@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caselaw — Kingsfield Lawfare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0C09; --panel:#141109; --panel-2:#1C190F; --panel-3:#272318;
+    --line:#332E21; --line-2:#433D2F;
+    --fg:#F5F1EA; --fg-soft:#C4BAB0; --fg-mute:#7A7060;
+    --amber:#D4861A; --gold:#C9A96E;
+    --bordeaux:#B91C1C; --green:#16A34A; --yellow:#EAB308; --red:#DC2626;
+    --display:'Big Shoulders Display',Impact,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+  .top{height:56px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:10}
+  .brand{font-family:var(--display);font-weight:900;font-size:18px;letter-spacing:0.01em;text-transform:uppercase;color:var(--fg);text-decoration:none}
+  .brand span{color:var(--amber)}
+  .crumb{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-mute)}
+  .crumb strong{color:var(--gold)}
+  .top .grow{flex:1}
+
+  /* SEARCH BAR */
+  .searchbar{background:var(--panel);border-bottom:1px solid var(--line);padding:24px 32px}
+  .searchbar-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+  .search-box{display:flex;align-items:center;gap:14px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 20px}
+  .search-box input{flex:1;background:transparent;border:none;color:var(--fg);font-family:var(--serif);font-size:17px;outline:none}
+  .search-box input::placeholder{color:var(--fg-mute);font-style:italic}
+  .search-box .ico{font-family:var(--mono);color:var(--amber);font-size:18px}
+  .search-filters{display:flex;gap:8px;flex-wrap:wrap}
+  .filter{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:8px 14px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--fg-soft);cursor:pointer;font-weight:500}
+  .filter.on{border-color:var(--amber);color:var(--amber);background:rgba(212,134,26,0.08)}
+  .filter:hover{border-color:var(--line-2)}
+
+  /* LAYOUT */
+  .shell{display:grid;grid-template-columns:320px 1fr 360px;max-width:1600px;margin:0 auto;min-height:calc(100vh - 144px)}
+  .left,.right{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto}
+  .right{border-right:0;border-left:1px solid var(--line)}
+  .center{padding:36px 48px 80px}
+
+  .pane-head{padding:18px 18px 10px;display:flex;justify-content:space-between;align-items:baseline;position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:2}
+  .pane-head h3{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .pane-head .count{font-family:var(--mono);font-size:10px;color:var(--fg-mute);letter-spacing:0.14em}
+
+  /* SEARCH RESULTS LIST */
+  .result{padding:16px 18px;border-bottom:1px solid var(--line);cursor:pointer}
+  .result:hover{background:var(--panel-2)}
+  .result.on{background:var(--panel-3);border-left:3px solid var(--amber);padding-left:15px}
+  .result .cite{font-family:var(--mono);font-size:11px;color:var(--amber);margin-bottom:4px}
+  .result .name{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--fg);margin-bottom:4px;line-height:1.35}
+  .result .meta{font-family:var(--mono);font-size:9.5px;color:var(--fg-mute);letter-spacing:0.1em;text-transform:uppercase;display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .result .snip{font-family:var(--serif);font-size:13px;color:var(--fg-soft);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .result .snip mark{background:rgba(212,134,26,0.25);color:var(--fg);padding:0 2px}
+  .result .badges{display:flex;gap:5px;margin-top:8px}
+  .result .badge{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:2px 7px;border-radius:3px;font-weight:600}
+  .badge.cited{background:rgba(22,163,74,0.15);color:var(--green);border:1px solid rgba(22,163,74,0.3)}
+  .badge.controlling{background:rgba(212,134,26,0.15);color:var(--amber);border:1px solid rgba(212,134,26,0.3)}
+  .badge.persuasive{background:rgba(122,112,96,0.15);color:var(--fg-mute);border:1px solid var(--line-2)}
+
+  /* CENTER OPINION VIEW */
+  .opinion-head{border-bottom:2px solid var(--line-2);padding-bottom:24px;margin-bottom:32px}
+  .opinion-cite{font-family:var(--mono);font-size:12px;letter-spacing:0.16em;color:var(--amber);margin-bottom:14px}
+  .opinion-name{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(36px,4.5vw,64px);line-height:0.95;letter-spacing:-0.005em;margin-bottom:16px}
+  .opinion-name em{font-style:italic;color:var(--gold);font-weight:700}
+  .opinion-meta{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-mute);display:flex;gap:20px;flex-wrap:wrap}
+  .opinion-meta strong{color:var(--fg-soft);font-weight:500}
+
+  .verify-strip{display:flex;gap:8px;margin:24px 0 0;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .gate{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 12px;border-radius:5px;font-weight:600;background:rgba(22,163,74,0.08);color:var(--green);border:1px solid rgba(22,163,74,0.25)}
+  .gate .d{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+  .opinion-body{font-family:var(--serif);font-size:17px;line-height:1.75;color:var(--fg);max-width:780px}
+  .opinion-body h2{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:0.005em;margin:40px 0 14px;color:var(--amber)}
+  .opinion-body p{margin-bottom:18px}
+  .opinion-body p.bench{font-family:var(--mono);font-size:13px;color:var(--fg-mute);text-transform:uppercase;letter-spacing:0.16em;margin-bottom:24px}
+  .opinion-body .head-syll{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--fg-soft);background:var(--panel-2);border-left:3px solid var(--amber);padding:18px 22px;margin-bottom:32px;line-height:1.55}
+  .opinion-body strong{color:var(--gold)}
+  .opinion-body .hl{background:rgba(212,134,26,0.18);padding:1px 4px;border-radius:2px}
+  .opinion-body sup{color:var(--amber);font-family:var(--mono);font-size:10px}
+
+  /* RIGHT: TREATMENT + RELATED */
+  .panel-section{padding:18px 18px}
+  .panel-section h4{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:14px}
+
+  .treatment{display:flex;flex-direction:column;gap:10px}
+  .treat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px}
+  .treat-row .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-soft)}
+  .treat-row .v{font-family:var(--display);font-weight:800;font-size:18px;color:var(--fg)}
+  .treat-row.good .v{color:var(--green)}
+  .treat-row.warn .v{color:var(--yellow)}
+  .treat-row.bad .v{color:var(--red)}
+
+  .related-cite{padding:14px 0;border-bottom:1px solid var(--line)}
+  .related-cite:last-child{border-bottom:0}
+  .related-cite .rc-cite{font-family:var(--mono);font-size:10px;color:var(--amber);margin-bottom:4px}
+  .related-cite .rc-name{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--fg);margin-bottom:4px;line-height:1.4}
+  .related-cite .rc-relation{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--fg-mute);font-weight:600}
+  .related-cite .rc-relation.cited{color:var(--green)}
+  .related-cite .rc-relation.dist{color:var(--yellow)}
+  .related-cite .rc-relation.over{color:var(--red)}
+
+  .add-btn{display:block;width:100%;text-align:center;padding:14px;margin-top:16px;background:var(--amber);color:var(--bg);font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;font-weight:700;border:none;border-radius:8px;cursor:pointer}
+  .add-btn:hover{background:var(--gold)}
+
+  @media (max-width:1280px){.shell{grid-template-columns:280px 1fr 300px}}
+  @media (max-width:1024px){.shell{grid-template-columns:1fr}.left,.right{display:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="index.html" class="brand">KINGSFIELD <span>LAWFARE</span></a>
+  <span class="crumb"><a href="app.html" style="color:var(--fg-mute);text-decoration:none">Matter</a> · <strong>Caselaw Browser</strong></span>
+  <span class="grow"></span>
+  <span class="crumb">Primary sources only · No Westlaw · No LexisNexis</span>
+</header>
+
+<div class="searchbar">
+  <div class="searchbar-inner">
+    <div class="search-box">
+      <span class="ico">⌕</span>
+      <input type="text" value="Title VII pretext + subjective criteria + 5th Circuit" />
+    </div>
+    <div class="search-filters">
+      <span class="filter on">All courts</span>
+      <span class="filter">5th Cir.</span>
+      <span class="filter">S.D.N.Y.</span>
+      <span class="filter">2020+</span>
+      <span class="filter">Good law only</span>
+      <span class="filter">+ Filter</span>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- LEFT: RESULTS LIST -->
+  <aside class="left">
+    <div class="pane-head"><h3>Results · 47</h3><span class="count">0.21s</span></div>
+
+    <div class="result on">
+      <div class="cite">394 F.3d 311</div>
+      <div class="name">Patrick v. Ridge</div>
+      <div class="meta"><span>5th Cir.</span><span>2004</span><span>King, J.</span></div>
+      <div class="snip">"<mark>Subjective</mark> criteria such as 'leadership presence' may, when <mark>vague</mark> and unmoored from contemporaneous evaluation, support a finding of <mark>pretext</mark>..."</div>
+      <div class="badges"><span class="badge controlling">Controlling</span><span class="badge cited">Cited 1,247×</span></div>
+    </div>
+
+    <div class="result">
+      <div class="cite">383 F.3d 309</div>
+      <div class="name">Davis v. Dallas Area Rapid Transit</div>
+      <div class="meta"><span>5th Cir.</span><span>2004</span><span>Higginbotham, J.</span></div>
+      <div class="snip">"The <mark>McDonnell Douglas</mark> framework's fourth element requires a showing that the plaintiff was treated less favorably than other <mark>similarly situated</mark> employees outside the protected class..."</div>
+      <div class="badges"><span class="badge controlling">Controlling</span><span class="badge cited">Cited 982×</span></div>
+    </div>
+
+    <div class="result">
+      <div class="cite">574 F.3d 253</div>
+      <div class="name">Lee v. Kansas City S. Ry.</div>
+      <div class="meta"><span>5th Cir.</span><span>2009</span><span>Garza, J.</span></div>
+      <div class="snip">"To satisfy the 'nearly identical' standard, comparators need not be identical in every respect, but must be similarly situated in the <mark>material</mark> ways relevant to the <mark>employment decision</mark>..."</div>
+      <div class="badges"><span class="badge controlling">Controlling</span><span class="badge cited">Cited 612×</span></div>
+    </div>
+
+    <div class="result">
+      <div class="cite">411 U.S. 792</div>
+      <div class="name">McDonnell Douglas Corp. v. Green</div>
+      <div class="meta"><span>U.S.</span><span>1973</span><span>Powell, J.</span></div>
+      <div class="snip">Established the three-step burden-shifting framework for Title VII disparate-treatment claims relying on circumstantial evidence...</div>
+      <div class="badges"><span class="badge controlling">Foundational</span><span class="badge cited">Cited 38,400×</span></div>
+    </div>
+
+    <div class="result">
+      <div class="cite">490 U.S. 228</div>
+      <div class="name">Price Waterhouse v. Hopkins</div>
+      <div class="meta"><span>U.S.</span><span>1989</span><span>Brennan, J.</span></div>
+      <div class="snip">"Stereotypical remarks can certainly be evidence that <mark>gender</mark> played a part in an employment decision. Remarks at work that are based on sex stereotypes do not inevitably prove that gender played a part..."</div>
+      <div class="badges"><span class="badge persuasive">Related</span><span class="badge cited">Cited 12,800×</span></div>
+    </div>
+
+    <div class="result">
+      <div class="cite">490 F.3d 415</div>
+      <div class="name">Russell v. McKinney Hospital Venture</div>
+      <div class="meta"><span>5th Cir.</span><span>2007</span><span>Stewart, J.</span></div>
+      <div class="snip">"<mark>Cat's paw</mark> liability: where a non-decisionmaker with discriminatory animus uses the formal decisionmaker as a conduit, the employer may be liable..."</div>
+      <div class="badges"><span class="badge controlling">5th Cir.</span><span class="badge cited">Cited 340×</span></div>
+    </div>
+
+    <div class="result">
+      <div class="cite">562 U.S. 411</div>
+      <div class="name">Staub v. Proctor Hospital</div>
+      <div class="meta"><span>U.S.</span><span>2011</span><span>Scalia, J.</span></div>
+      <div class="snip">Adopted <mark>cat's paw</mark> theory under USERRA; reasoning has been applied widely to Title VII contexts...</div>
+      <div class="badges"><span class="badge controlling">SCOTUS</span><span class="badge cited">Cited 4,100×</span></div>
+    </div>
+
+  </aside>
+
+  <!-- CENTER: OPINION DETAIL -->
+  <main class="center">
+    <div class="opinion-head">
+      <div class="opinion-cite">394 F.3d 311 · No. 03-31157</div>
+      <h1 class="opinion-name"><em>Patrick</em> v. Ridge</h1>
+      <div class="opinion-meta">
+        <span><strong>Court:</strong> 5th Cir.</span>
+        <span><strong>Decided:</strong> Dec 21, 2004</span>
+        <span><strong>Panel:</strong> King, C.J.; Higginbotham, J.; Dennis, J.</span>
+        <span><strong>Author:</strong> King, C.J.</span>
+        <span><strong>Treatment:</strong> Good law as of May 2026</span>
+      </div>
+
+      <div class="verify-strip">
+        <span class="gate"><span class="d"></span>Existence · CourtListener</span>
+        <span class="gate"><span class="d"></span>Quote accuracy</span>
+        <span class="gate"><span class="d"></span>Currency · Not overruled</span>
+        <span class="gate"><span class="d"></span>5th Cir. jurisdiction</span>
+      </div>
+    </div>
+
+    <div class="opinion-body">
+      <p class="bench">Before King, Chief Judge, and Higginbotham and Dennis, Circuit Judges.</p>
+
+      <div class="head-syll">
+        <strong>HEADNOTE.</strong> An employer's reliance on vague, subjective criteria — such as "leadership presence" or "good fit" — to justify an adverse employment action may, where the criteria are unmoored from contemporaneous documented performance, support a Title VII plaintiff's showing of pretext at summary judgment.
+      </div>
+
+      <h2>I. Background</h2>
+
+      <p>Appellant Patrick brought an action under Title VII alleging that the Department of State's denial of a promotion to a Foreign Service position constituted unlawful race discrimination. After a period of <span class="hl">documented satisfactory performance</span>, including a written evaluation describing the appellant as "highly capable" and "promotion-eligible," the agency selected a candidate outside the protected class, citing the successful candidate's superior "judgment and presence in an interview setting."<sup>1</sup></p>
+
+      <p>The district court granted summary judgment for the agency. We reverse.</p>
+
+      <h2>II. Standard</h2>
+
+      <p>Under the <em>McDonnell Douglas</em> burden-shifting framework, once a Title VII plaintiff establishes a prima facie case and the employer articulates a legitimate, non-discriminatory reason, the plaintiff may demonstrate pretext through evidence that the stated reason is <span class="hl">"unworthy of credence."</span></p>
+
+      <h2>III. Pretext and Subjective Criteria</h2>
+
+      <p>We have long recognized that subjective hiring and promotion criteria carry a particular danger of <span class="hl">masking discriminatory motive.</span> While employers retain discretion to consider intangible qualities, the use of such criteria does not insulate employment decisions from Title VII scrutiny.</p>
+
+      <p>Where, as here, an employer's articulated reason rests on subjective evaluations that are <em>not</em> documented in any contemporaneous performance record, and where the record reflects affirmative documented evidence to the <em>contrary</em> — such as the appellant's "promotion-eligible" written evaluation — a reasonable fact-finder may conclude that the stated reason is pretextual.<sup>2</sup></p>
+
+      <p>This conclusion is reinforced where the comparator outside the protected class possesses materially weaker objective qualifications. The asymmetry between objective record and subjective justification is itself evidence the jury may weigh.</p>
+
+      <h2>IV. Disposition</h2>
+
+      <p>The judgment of the district court is <strong>REVERSED</strong> and the case is <strong>REMANDED</strong> for proceedings consistent with this opinion.</p>
+    </div>
+  </main>
+
+  <!-- RIGHT: TREATMENT + RELATED -->
+  <aside class="right">
+    <div class="panel-section">
+      <h4>Treatment · Citing Decisions</h4>
+      <div class="treatment">
+        <div class="treat-row good"><span class="lbl">Followed</span><span class="v">847</span></div>
+        <div class="treat-row good"><span class="lbl">Cited favorably</span><span class="v">312</span></div>
+        <div class="treat-row warn"><span class="lbl">Distinguished</span><span class="v">88</span></div>
+        <div class="treat-row bad"><span class="lbl">Criticized</span><span class="v">0</span></div>
+        <div class="treat-row bad"><span class="lbl">Overruled</span><span class="v">—</span></div>
+      </div>
+    </div>
+
+    <div class="panel-section" style="border-top:1px solid var(--line)">
+      <h4>Followed By · Recent</h4>
+      <div class="related-cite">
+        <div class="rc-cite">42 F.4th 558</div>
+        <div class="rc-name">Harville v. City of Houston, 5th Cir. 2022</div>
+        <div class="rc-relation cited">▶ Followed · Pretext standard</div>
+      </div>
+      <div class="related-cite">
+        <div class="rc-cite">992 F.3d 469</div>
+        <div class="rc-name">Owens v. Circassia Pharms., 5th Cir. 2021</div>
+        <div class="rc-relation cited">▶ Followed · Subjective-criteria analysis</div>
+      </div>
+      <div class="related-cite">
+        <div class="rc-cite">958 F.3d 391</div>
+        <div class="rc-name">Outley v. Luke & Assocs., 5th Cir. 2020</div>
+        <div class="rc-relation cited">▶ Followed · Comparator + pretext</div>
+      </div>
+    </div>
+
+    <div class="panel-section" style="border-top:1px solid var(--line)">
+      <h4>Distinguished By</h4>
+      <div class="related-cite">
+        <div class="rc-cite">883 F.3d 521</div>
+        <div class="rc-name">Wesley v. Yellow Transp., 5th Cir. 2018</div>
+        <div class="rc-relation dist">▶ Distinguished · Contemporaneous panel notes present</div>
+      </div>
+      <div class="related-cite">
+        <div class="rc-cite">820 F.3d 217</div>
+        <div class="rc-name">Outley v. United Steelworkers, 5th Cir. 2016</div>
+        <div class="rc-relation dist">▶ Distinguished · No documented contrary record</div>
+      </div>
+    </div>
+
+    <div class="panel-section" style="border-top:1px solid var(--line)">
+      <button class="add-btn">+ Add to Henderson Matter</button>
+    </div>
+  </aside>
+
+</div>
+
+</body>
+</html>

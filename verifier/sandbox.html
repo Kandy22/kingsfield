@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kingsfield · Citation Verifier</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  :root {
+    --bg:#0b0b13;--surface:#12121c;--sidebar:#0d0d16;--border:#1c1c2e;--border2:#252538;
+    --accent:#00cfc4;--accent-dim:rgba(0,207,196,.12);--accent-glow:rgba(0,207,196,.18);
+    --text:#e4e4f0;--muted:#62628a;--muted2:#8888aa;
+    --success:#00c896;--warn:#f5a623;--danger:#ff4d6a;--info:#4da6ff;
+    --gradient:linear-gradient(130deg,#00cfc4 0%,#0070e0 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;height:100vh;overflow:hidden;font-size:13px;-webkit-font-smoothing:antialiased;}
+  #app{display:grid;grid-template-columns:224px 1fr 336px;grid-template-rows:52px 1fr;height:100vh;}
+
+  /* ── Header ───────────────────────────────────────────────── */
+  #hdr{grid-column:1/-1;background:var(--sidebar);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;z-index:20;}
+  #wordmark{display:flex;align-items:center;gap:10px;}
+  .wm-logo{width:30px;height:30px;background:var(--gradient);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;letter-spacing:-.02em;flex-shrink:0;}
+  .wm-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+  .wm-sub{font-size:11px;color:var(--muted2);margin-left:2px;font-weight:400;}
+  #hdr-right{display:flex;align-items:center;gap:18px;}
+  #stats{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--muted2);}
+  .sv{color:var(--text);font-weight:600;margin-left:3px;}
+  .stat-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:.5px;}
+  #load-btn{font-size:12px;font-weight:600;padding:7px 18px;border-radius:7px;cursor:pointer;background:var(--accent);color:#0a0a12;border:none;font-family:inherit;letter-spacing:-.01em;transition:opacity .15s;}
+  #load-btn:hover{opacity:.88;}
+
+  /* ── Sidebar ──────────────────────────────────────────────── */
+  #sidebar{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+  #search-wrap{padding:12px 12px 10px;border-bottom:1px solid var(--border);}
+  #search-box{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--text);font-size:12px;padding:7px 10px;border-radius:7px;outline:none;font-family:inherit;transition:border-color .15s;}
+  #search-box:focus{border-color:rgba(0,207,196,.4);}
+  #search-box::placeholder{color:var(--muted);}
+
+  .nav-section-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;padding:10px 14px 5px;}
+  .nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px;margin:1px 6px;border-radius:7px;cursor:pointer;color:var(--muted2);font-size:12px;font-weight:500;transition:all .15s;border:1px solid transparent;}
+  .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text);}
+  .nav-item.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(0,207,196,.18);}
+  .nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .nav-icon{flex-shrink:0;opacity:.6;}
+  .nav-item.active .nav-icon{opacity:1;}
+  .nav-count{margin-left:auto;font-size:10px;font-weight:600;background:rgba(255,255,255,.06);padding:1px 7px;border-radius:10px;color:var(--muted2);}
+  .nav-item.active .nav-count{background:rgba(0,207,196,.14);color:var(--accent);}
+
+  .sb-divider{height:1px;background:var(--border);margin:8px 12px;}
+
+  /* Entry list */
+  #entry-list{overflow-y:auto;flex:1;padding:4px 6px 8px;}
+  .er{padding:7px 10px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:8px;margin-bottom:1px;transition:background .1s;border:1px solid transparent;}
+  .er:hover{background:rgba(255,255,255,.04);}
+  .er.sel{background:var(--accent-dim);border-color:rgba(0,207,196,.15);}
+  .et{font-size:12px;color:var(--muted2);flex:1;line-height:1.4;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .er.sel .et{color:var(--text);}
+  .er:hover .et{color:var(--text);}
+  .sd{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .d-verified{background:var(--success);}
+  .d-fuzzy{background:var(--warn);}
+  .d-not_found{background:var(--danger);}
+  .d-no_text{background:var(--info);}
+  .d-pending{background:var(--border2);}
+  .d-hyes{box-shadow:0 0 0 2px var(--success);}
+  .d-hno{box-shadow:0 0 0 2px var(--danger);}
+
+  /* ── Center ───────────────────────────────────────────────── */
+  #review{background:var(--bg);display:flex;flex-direction:column;overflow:hidden;}
+
+  /* Hero */
+  #hero{background:var(--gradient);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  #hero-left h2{font-size:18px;font-weight:700;color:#fff;margin-bottom:3px;letter-spacing:-.02em;}
+  #hero-left p{font-size:11px;color:rgba(255,255,255,.72);font-weight:400;}
+  #hero-stats{display:flex;gap:24px;}
+  .hs{text-align:center;}
+  .hs-n{font-size:22px;font-weight:700;color:#fff;line-height:1;}
+  .hs-l{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
+
+  /* Quick actions */
+  #qa-strip{display:flex;gap:7px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;overflow-x:auto;}
+  #qa-strip::-webkit-scrollbar{display:none;}
+  .qa{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid var(--border2);cursor:pointer;font-size:11px;font-weight:500;color:var(--muted2);white-space:nowrap;transition:all .15s;font-family:inherit;}
+  .qa:hover{background:rgba(255,255,255,.07);color:var(--text);}
+  .qa.cta{background:var(--accent-dim);border-color:rgba(0,207,196,.25);color:var(--accent);}
+  .qa.cta:hover{background:var(--accent-glow);}
+
+  /* No selection */
+  #no-sel{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:32px;}
+  #no-sel h3{font-size:15px;font-weight:600;color:var(--muted2);}
+  .howto{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:20px 22px;max-width:500px;width:100%;}
+  .howto h4{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:13px;}
+  .howto ol{padding-left:18px;display:flex;flex-direction:column;gap:8px;}
+  .howto li{font-size:12px;color:var(--muted2);line-height:1.65;}
+  .howto li strong{color:var(--text);font-weight:600;}
+  .howto .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding-top:13px;border-top:1px solid var(--border);}
+  .howto .leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted2);}
+  .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+  /* Review panels */
+  #review-content{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .panel{border:1px solid var(--border2);border-radius:10px;background:var(--surface);overflow:hidden;}
+  .ph{font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015);}
+  .pb{padding:14px;}
+
+  #term-hd{font-size:19px;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:-.02em;}
+  .ct{display:inline-block;font-size:11px;border:1px solid var(--border2);border-radius:4px;padding:2px 8px;color:var(--muted2);margin:2px 3px 2px 0;background:rgba(255,255,255,.03);font-family:monospace;}
+  .badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;margin-left:8px;vertical-align:2px;}
+  .b-verified{background:rgba(0,200,150,.12);color:var(--success);border:1px solid rgba(0,200,150,.25);}
+  .b-fuzzy{background:rgba(245,166,35,.1);color:var(--warn);border:1px solid rgba(245,166,35,.25);}
+  .b-not_found{background:rgba(255,77,106,.1);color:var(--danger);border:1px solid rgba(255,77,106,.25);}
+  .b-no_text{background:rgba(77,166,255,.1);color:var(--info);border:1px solid rgba(77,166,255,.25);}
+  .b-pending{background:transparent;color:var(--muted2);border:1px solid var(--border2);}
+
+  .cl-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;border:1px solid rgba(0,207,196,.25);border-radius:7px;padding:6px 14px;margin-top:10px;background:rgba(0,207,196,.06);transition:background .15s;}
+  .cl-link:hover{background:rgba(0,207,196,.12);}
+  .no-cl{font-size:12px;color:var(--danger);margin-top:8px;font-weight:500;}
+
+  .quote-box{font-style:italic;font-size:13px;line-height:1.9;color:var(--text);border-left:3px solid var(--accent);padding:12px 16px;background:rgba(0,207,196,.04);border-radius:0 6px 6px 0;}
+  .copy-btn{font-size:11px;padding:5px 12px;border:1px solid var(--border2);border-radius:6px;cursor:pointer;background:transparent;color:var(--muted2);margin-top:9px;font-family:inherit;transition:all .15s;}
+  .copy-btn:hover{color:var(--text);border-color:var(--muted2);}
+
+  #passage-wrap{font-size:12px;line-height:1.9;color:var(--text);font-family:'SF Mono','Fira Code',monospace;white-space:pre-wrap;word-break:break-word;max-height:260px;overflow-y:auto;padding:12px 14px;background:rgba(0,0,0,.3);border-radius:7px;border:1px solid var(--border);}
+  #passage-wrap mark{background:rgba(0,207,196,.18);color:var(--accent);font-style:normal;border-radius:2px;padding:0 2px;font-weight:600;}
+  .score-bar{height:3px;background:var(--border2);border-radius:2px;margin-top:10px;}
+  .score-fill{height:100%;border-radius:2px;}
+  .score-label{font-size:11px;color:var(--muted2);margin-top:5px;}
+
+  .nav-row{display:flex;gap:7px;}
+  .nb{flex:1;font-size:12px;font-weight:500;padding:7px;border:1px solid var(--border2);border-radius:7px;cursor:pointer;background:rgba(255,255,255,.03);color:var(--muted2);font-family:inherit;transition:all .15s;}
+  .nb:hover{color:var(--text);background:rgba(255,255,255,.06);border-color:var(--border2);}
+
+  .vrow{display:flex;gap:7px;}
+  .vb{flex:1;padding:10px;font-size:12px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border:1.5px solid var(--border2);border-radius:8px;cursor:pointer;background:rgba(255,255,255,.03);transition:all .15s;font-family:inherit;color:var(--muted2);}
+  .vb.yes{color:var(--success);border-color:rgba(0,200,150,.35);}
+  .vb.yes:hover,.vb.yes.on{background:rgba(0,200,150,.1);border-color:var(--success);}
+  .vb.no{color:var(--danger);border-color:rgba(255,77,106,.35);}
+  .vb.no:hover,.vb.no.on{background:rgba(255,77,106,.1);border-color:var(--danger);}
+  .vb.unk{color:var(--warn);border-color:rgba(245,166,35,.35);}
+  .vb.unk:hover,.vb.unk.on{background:rgba(245,166,35,.1);border-color:var(--warn);}
+  #notes{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:10px 12px;border-radius:8px;resize:vertical;min-height:58px;outline:none;margin-top:10px;font-family:inherit;transition:border-color .15s;}
+  #notes:focus{border-color:rgba(0,207,196,.4);}
+  #notes::placeholder{color:var(--muted);}
+
+  /* ── Agents panel ─────────────────────────────────────────── */
+  #agents{border-left:1px solid var(--border);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--surface);}
+  .agents-hd{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+  .agents-sub{font-size:11px;color:var(--muted2);line-height:1.6;}
+  .ac{border:1px solid var(--border2);border-radius:10px;padding:12px;background:var(--bg);}
+  .an{font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+  .ar{font-size:12px;line-height:1.6;color:var(--muted2);min-height:36px;}
+  .avr{display:flex;gap:5px;margin-top:8px;}
+  .avb{font-size:11px;font-weight:500;padding:4px 10px;border:1px solid var(--border2);border-radius:5px;cursor:pointer;background:transparent;color:var(--muted2);font-family:inherit;transition:all .12s;}
+  .avb:hover{color:var(--text);border-color:var(--muted2);}
+  .avb.yes{color:var(--success);border-color:rgba(0,200,150,.4);background:rgba(0,200,150,.08);}
+  .avb.no{color:var(--danger);border-color:rgba(255,77,106,.4);background:rgba(255,77,106,.08);}
+  .avb.unsure{color:var(--warn);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.08);}
+
+  #comp-sect{border-top:1px solid var(--border);padding-top:12px;}
+  .comp-hd{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+  .ct-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .ct-table th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:4px 8px;border-bottom:1px solid var(--border);text-align:left;font-weight:600;}
+  .ct-table td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted2);}
+  .match{color:var(--success);font-weight:600;}
+  .mismatch{color:var(--danger);font-weight:600;}
+  #exp-btn{font-size:12px;font-weight:700;letter-spacing:.02em;background:var(--accent);color:#0a0a12;border:none;border-radius:8px;padding:10px;cursor:pointer;width:100%;margin-top:10px;font-family:inherit;transition:opacity .15s;}
+  #exp-btn:hover{opacity:.88;}
+
+  /* scrollbars */
+  ::-webkit-scrollbar{width:4px;height:4px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--muted);}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header ── -->
+  <div id="hdr">
+    <div id="wordmark">
+      <div class="wm-logo">K</div>
+      <span class="wm-title">Kingsfield</span>
+      <span class="wm-sub">Citation Verifier</span>
+    </div>
+    <div id="hdr-right">
+      <div id="stats">
+        <span><span class="stat-dot" style="background:var(--text)"></span>Total<span class="sv" id="st-t">0</span></span>
+        <span><span class="stat-dot" style="background:var(--success)"></span>Verified<span class="sv" id="st-v">0</span></span>
+        <span><span class="stat-dot" style="background:var(--warn)"></span>Fuzzy<span class="sv" id="st-f">0</span></span>
+        <span><span class="stat-dot" style="background:var(--danger)"></span>Wrong<span class="sv" id="st-n">0</span></span>
+        <span>Reviewed<span class="sv" id="st-r">0</span></span>
+      </div>
+      <button id="load-btn" onclick="document.getElementById('fi').click()">📂 Load results_full.json</button>
+      <input type="file" id="fi" accept=".json" style="display:none" onchange="loadFile(event)">
+    </div>
+  </div>
+
+  <!-- ── Sidebar ── -->
+  <div id="sidebar">
+    <div id="search-wrap">
+      <input id="search-box" placeholder="🔍  Search terms…" oninput="filterEntries()">
+    </div>
+    <div class="nav-section-label">Filter</div>
+    <div class="nav-item active" data-filter="all" onclick="setFilter('all',this)">
+      <svg class="nav-icon" width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 3A1.5 1.5 0 013 1.5h10A1.5 1.5 0 0114.5 3v1.379a1.5 1.5 0 01-.44 1.06L9.5 10v4l-3-1.5V10L1.94 5.44A1.5 1.5 0 011.5 4.38V3z"/></svg>
+      All entries
+      <span class="nav-count" id="nc-all">0</span>
+    </div>
+    <div class="nav-item" data-filter="verified" onclick="setFilter('verified',this)">
+      <div class="nav-dot" style="background:var(--success)"></div>
+      Verified
+      <span class="nav-count" id="nc-verified">0</span>
+    </div>
+    <div class="nav-item" data-filter="fuzzy" onclick="setFilter('fuzzy',this)">
+      <div class="nav-dot" style="background:var(--warn)"></div>
+      Fuzzy match
+      <span class="nav-count" id="nc-fuzzy">0</span>
+    </div>
+    <div class="nav-item" data-filter="not_found" onclick="setFilter('not_found',this)">
+      <div class="nav-dot" style="background:var(--danger)"></div>
+      Not found
+      <span class="nav-count" id="nc-not_found">0</span>
+    </div>
+    <div class="nav-item" data-filter="no_text" onclick="setFilter('no_text',this)">
+      <div class="nav-dot" style="background:var(--info)"></div>
+      No text
+      <span class="nav-count" id="nc-no_text">0</span>
+    </div>
+    <div class="nav-item" data-filter="pending" onclick="setFilter('pending',this)">
+      <div class="nav-dot" style="background:var(--border2)"></div>
+      Not on CL
+      <span class="nav-count" id="nc-pending">0</span>
+    </div>
+    <div class="nav-section-label" style="margin-top:6px;">Consensus</div>
+    <div class="nav-item" data-filter="unanimous_yes" onclick="setFilter('unanimous_yes',this)">
+      <div class="nav-dot" style="background:var(--success);box-shadow:0 0 0 2px rgba(0,200,150,.3)"></div>
+      All 3 agree ✓
+      <span class="nav-count" id="nc-unanimous_yes">0</span>
+    </div>
+    <div class="nav-item" data-filter="unanimous_no" onclick="setFilter('unanimous_no',this)">
+      <div class="nav-dot" style="background:var(--danger);box-shadow:0 0 0 2px rgba(255,77,106,.3)"></div>
+      All 3 agree ✗
+      <span class="nav-count" id="nc-unanimous_no">0</span>
+    </div>
+    <div class="nav-item" data-filter="unreviewed" onclick="setFilter('unreviewed',this)">
+      <div class="nav-dot" style="background:var(--muted)"></div>
+      Not yet reviewed
+      <span class="nav-count" id="nc-unreviewed">0</span>
+    </div>
+    <div class="sb-divider"></div>
+    <div id="entry-list"></div>
+  </div>
+
+  <!-- ── Center ── -->
+  <div id="review">
+    <div id="hero">
+      <div id="hero-left">
+        <h2>Citation Verifier</h2>
+        <p>Ground-truth benchmark · Showalter's Law Dictionary</p>
+      </div>
+      <div id="hero-stats">
+        <div class="hs"><div class="hs-n" id="hs-total">0</div><div class="hs-l">Total</div></div>
+        <div class="hs"><div class="hs-n" id="hs-verified">0</div><div class="hs-l">Verified</div></div>
+        <div class="hs"><div class="hs-n" id="hs-flagged">0</div><div class="hs-l">Flagged</div></div>
+        <div class="hs"><div class="hs-n" id="hs-reviewed">0</div><div class="hs-l">Reviewed</div></div>
+      </div>
+    </div>
+    <div id="qa-strip">
+      <button class="qa cta" onclick="document.getElementById('fi').click()">📂 Load File</button>
+      <button class="qa" onclick="exportResults()">↓ Export JSON</button>
+      <button class="qa" onclick="setFilter('fuzzy',document.querySelector('[data-filter=fuzzy]'))">~ Fuzzy entries</button>
+      <button class="qa" onclick="setFilter('not_found',document.querySelector('[data-filter=not_found]'))">✗ Not found</button>
+      <button class="qa" onclick="setFilter('no_text',document.querySelector('[data-filter=no_text]'))">? No text</button>
+    </div>
+    <div id="no-sel">
+      <h3>Select an entry to begin reviewing</h3>
+      <div class="howto">
+        <h4>How to use this tool</h4>
+        <ol>
+          <li><strong>Load your data</strong> — click "📂 Load File" above or the button in the header.</li>
+          <li><strong>Pick an entry</strong> from the left sidebar. Colored dots show automated status.</li>
+          <li><strong>Read the quote</strong> (panel ①) — what Showalter claims the case says.</li>
+          <li><strong>Read the passage</strong> (panel ②) — pulled from the actual opinion. Does it match?</li>
+          <li><strong>Open the opinion</strong> on CourtListener, hit Cmd+F, paste the quote.</li>
+          <li><strong>Set your verdict</strong> (panel ③): ✓ Verified, ✗ Wrong, or ~ Unsure.</li>
+          <li><strong>Export</strong> when done — your annotated JSON becomes the ground truth dataset.</li>
+        </ol>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--success)"></div>Verified (≥80)</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--warn)"></div>Fuzzy (55–79)</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--danger)"></div>Not found (&lt;55)</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--info)"></div>No text retrieved</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--border2)"></div>Not on CourtListener</div>
+        </div>
+      </div>
+    </div>
+    <div id="review-content" style="display:none;"></div>
+  </div>
+
+  <!-- ── Agents ── -->
+  <div id="agents">
+    <div class="agents-hd">Council Agents</div>
+    <div class="agents-sub">Agent verdicts auto-display when loaded from a verifier run. For new entries, paste the prompt into each agent manually.</div>
+
+    <div class="ac" id="ac-claude">
+      <div class="an">Claude</div>
+      <div class="ar" id="ar-claude">Select an entry to begin.</div>
+      <div class="avr">
+        <button class="avb" onclick="setAV('claude','yes',this)">✓ Yes</button>
+        <button class="avb" onclick="setAV('claude','no',this)">✗ No</button>
+        <button class="avb" onclick="setAV('claude','unsure',this)">~ ?</button>
+      </div>
+    </div>
+
+    <div class="ac" id="ac-gemini">
+      <div class="an">Gemini</div>
+      <div class="ar" id="ar-gemini">Select an entry to begin.</div>
+      <div class="avr">
+        <button class="avb" onclick="setAV('gemini','yes',this)">✓ Yes</button>
+        <button class="avb" onclick="setAV('gemini','no',this)">✗ No</button>
+        <button class="avb" onclick="setAV('gemini','unsure',this)">~ ?</button>
+      </div>
+    </div>
+
+    <div class="ac" id="ac-gpt">
+      <div class="an">GPT-4o</div>
+      <div class="ar" id="ar-gpt">Select an entry to begin.</div>
+      <div class="avr">
+        <button class="avb" onclick="setAV('gpt','yes',this)">✓ Yes</button>
+        <button class="avb" onclick="setAV('gpt','no',this)">✗ No</button>
+        <button class="avb" onclick="setAV('gpt','unsure',this)">~ ?</button>
+      </div>
+    </div>
+
+    <div id="comp-sect">
+      <div class="comp-hd">Verdict Comparison</div>
+      <table class="ct-table">
+        <thead><tr><th>Agent</th><th>Verdict</th><th>Match</th></tr></thead>
+        <tbody id="comp-body"><tr><td colspan="3" style="color:var(--muted);font-size:11px;padding:8px;">Select an entry</td></tr></tbody>
+      </table>
+      <button id="exp-btn" onclick="exportResults()">Export Verified JSON ↓</button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+let entries = [], currentIdx = null, filter = 'all', searchQ = '';
+const AGENTS = ['claude','gemini','gpt'];
+
+window.onload = () => { renderList(); updateStats(); };
+
+function loadFile(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      entries = JSON.parse(ev.target.result);
+      entries.forEach(e => { if (!e.agent_verdicts) e.agent_verdicts={}; if (!e.correct_definition) e.correct_definition=''; });
+      currentIdx = null;
+      document.getElementById('no-sel').style.display = 'flex';
+      document.getElementById('review-content').style.display = 'none';
+      renderList(); updateStats();
+      document.getElementById('load-btn').textContent = `✓ ${entries.length} loaded`;
+    } catch(err) { alert('Could not load file: ' + err); }
+  };
+  reader.readAsText(file);
+}
+
+function filterEntries(){ searchQ = document.getElementById('search-box').value.toLowerCase(); renderList(); }
+
+function setFilter(f, btn) {
+  filter = f;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderList();
+}
+
+function autoStatus(e) {
+  if (!e.verification) return e.cl_cluster ? 'no_text' : 'pending';
+  return e.verification.status || 'pending';
+}
+
+function agentVerdict(e, agent) {
+  const av = (e.agent_verdicts || {})[agent];
+  return (av && typeof av === 'object') ? av.verdict : null;
+}
+
+function isUnanimousYes(e) {
+  return ['claude','gemini','gpt'].every(a => agentVerdict(e,a) === 'yes');
+}
+
+function isUnanimousNo(e) {
+  return ['claude','gemini','gpt'].every(a => agentVerdict(e,a) === 'no');
+}
+
+function renderList() {
+  const list = document.getElementById('entry-list'); list.innerHTML = '';
+  entries.forEach((e,i) => {
+    const st = autoStatus(e);
+    if (filter === 'unanimous_yes' && !isUnanimousYes(e)) return;
+    else if (filter === 'unanimous_no' && !isUnanimousNo(e)) return;
+    else if (filter === 'unreviewed' && e.human_verdict) return;
+    else if (filter !== 'all' && filter !== 'unanimous_yes' && filter !== 'unanimous_no' && filter !== 'unreviewed' && filter !== st) return;
+    if (searchQ && !e.term.toLowerCase().includes(searchQ)) return;
+    const row = document.createElement('div');
+    row.className = 'er' + (currentIdx === i ? ' sel' : '');
+    row.onclick = () => selectEntry(i);
+    const dot = document.createElement('div');
+    dot.className = `sd d-${st}`;
+    if (e.human_verdict === 'yes') dot.classList.add('d-hyes');
+    if (e.human_verdict === 'no')  dot.classList.add('d-hno');
+    const t = document.createElement('div'); t.className = 'et'; t.textContent = e.term;
+    row.appendChild(dot); row.appendChild(t); list.appendChild(row);
+  });
+}
+
+function selectEntry(idx) {
+  currentIdx = idx;
+  document.getElementById('no-sel').style.display = 'none';
+  document.getElementById('review-content').style.display = 'flex';
+  renderList(); renderReview(); renderAgents();
+}
+
+function highlightQuote(passage, quote) {
+  if (!passage || !quote) return escHtml(passage || '');
+  const words = quote.replace(/[^\w\s]/g,' ').split(/\s+/).filter(w => w.length > 4).slice(0,8);
+  let html = escHtml(passage);
+  for (let len = 6; len >= 3; len--) {
+    for (let i = 0; i <= words.length - len; i++) {
+      const phrase = words.slice(i, i+len).join(' ');
+      const re = new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+      const newHtml = html.replace(re, m => `<mark>${m}</mark>`);
+      if (newHtml !== html) return newHtml;
+    }
+  }
+  return html;
+}
+
+function renderReview() {
+  const e = entries[currentIdx];
+  const rc = document.getElementById('review-content');
+  const st = autoStatus(e);
+  const score = e.verification ? e.verification.score : null;
+  const scoreColor = score >= 80 ? 'var(--success)' : score >= 55 ? 'var(--warn)' : 'var(--danger)';
+  const labels = {verified:'verified', fuzzy:'fuzzy', not_found:'not found', no_text:'no text', pending:'pending'};
+  const passageHtml = e.verification && e.verification.passage ? highlightQuote(e.verification.passage, e.quote) : null;
+
+  rc.innerHTML = `
+    <div class="nav-row">
+      <button class="nb" onclick="selectEntry(Math.max(0,currentIdx-1))">← Prev</button>
+      <button class="nb" onclick="selectEntry(Math.min(entries.length-1,currentIdx+1))">Next →</button>
+    </div>
+
+    <div style="padding:2px 0;">
+      <div id="term-hd">${escHtml(e.term)}<span class="badge b-${st}">${labels[st]||st}${score !== null ? ' · ' + score : ''}</span></div>
+      <div style="margin-top:5px;">
+        ${(e.all_cites||[]).map(c=>`<span class="ct">${escHtml(c)}</span>`).join('')}
+        ${e.primary_cite_pair ? `<span class="ct">${escHtml(e.primary_cite_pair[0])}</span>` : ''}
+      </div>
+      ${e.cl_url
+        ? `<a class="cl-link" href="${e.cl_url}" target="_blank">→ Open full opinion on CourtListener ↗</a>`
+        : `<div class="no-cl">✗ Not found on CourtListener — verify manually</div>`}
+    </div>
+
+    <div class="panel">
+      <div class="ph">① Dictionary quote — verify this appears in the opinion</div>
+      <div class="pb">
+        <div class="quote-box">"${escHtml(e.quote)}"</div>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(${JSON.stringify(e.quote)});this.textContent='Copied!';setTimeout(()=>this.textContent='Copy quote',1500);">Copy quote</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph">② Passage from opinion — highlighted = fuzzy match</div>
+      <div class="pb">
+        ${passageHtml
+          ? `<div id="passage-wrap">${passageHtml}</div>
+             <div class="score-bar"><div class="score-fill" style="width:${score}%;background:${scoreColor};"></div></div>
+             <div class="score-label">Fuzzy score: ${score}/100 — <span style="color:${scoreColor}">${labels[st]}</span> · Open the opinion above and Cmd+F the quote to confirm</div>`
+          : `<div style="font-size:12px;color:var(--muted2);padding:6px 0;line-height:1.7;">
+               ${e.cl_cluster
+                 ? 'Case found on CourtListener but full text not available yet. Open the link above to verify manually, or run <code style="font-size:11px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:3px;">finish.py --retry-notext</code> to fetch it.'
+                 : 'Case not found on CourtListener. Verify the citation manually.'}
+             </div>`}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph">③ Your verdict</div>
+      <div class="pb">
+        <div class="vrow">
+          <button class="vb yes ${e.human_verdict==='yes'?'on':''}" onclick="setHV('yes')">✓ Verified</button>
+          <button class="vb no  ${e.human_verdict==='no'?'on':''}"  onclick="setHV('no')">✗ Wrong</button>
+          <button class="vb unk ${e.human_verdict==='unsure'?'on':''}" onclick="setHV('unsure')">~ Unsure</button>
+        </div>
+        <div style="margin-top:10px;">
+          <button class="copy-btn" id="corr-toggle" onclick="toggleCorrection()" style="color:${e.correct_definition?'var(--accent)':'var(--muted2)'};">
+            ${e.correct_definition ? '✎ Edit correct definition' : '+ Add correct definition'}
+          </button>
+          <div id="corr-wrap" style="display:${e.correct_definition?'block':'none'};margin-top:8px;">
+            <textarea id="correct-def" placeholder="Write the accurate definition or correct quote here…" onchange="saveCorrection()" style="width:100%;background:rgba(0,0,0,.25);border:1px solid rgba(0,207,196,.3);color:var(--text);font-size:13px;padding:10px 12px;border-radius:8px;resize:vertical;min-height:72px;outline:none;font-family:inherit;">${escHtml(e.correct_definition||'')}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  updateStats();
+}
+
+function setHV(v) { entries[currentIdx].human_verdict = v; renderReview(); renderAgents(); }
+
+function toggleCorrection() {
+  const wrap = document.getElementById('corr-wrap');
+  const open = wrap.style.display === 'none';
+  wrap.style.display = open ? 'block' : 'none';
+  if (open) document.getElementById('correct-def').focus();
+}
+
+function saveCorrection() {
+  entries[currentIdx].correct_definition = document.getElementById('correct-def').value;
+  const btn = document.getElementById('corr-toggle');
+  if (btn) btn.style.color = entries[currentIdx].correct_definition ? 'var(--accent)' : 'var(--muted2)';
+  if (btn) btn.textContent = entries[currentIdx].correct_definition ? '✎ Edit correct definition' : '+ Add correct definition';
+}
+
+function renderAgents() {
+  const e = entries[currentIdx];
+  const cite = (e.all_cites||[]).slice(0,2).join(', ');
+  const prompt = `Term: "${e.term}"\nCitation: ${cite}\nClaimed quote: "${e.quote}"\n\nDoes this quote accurately appear in the cited case? Reply:\nVERDICT: [VERIFIED / REJECT / UNSURE]\nREASON: [one sentence]`;
+  AGENTS.forEach(a => {
+    const stored = e.agent_verdicts && e.agent_verdicts[a];
+    const arEl = document.getElementById(`ar-${a}`);
+    if (stored && stored.verdict) {
+      const vcol = stored.verdict==='yes' ? 'var(--success)' : stored.verdict==='no' ? 'var(--danger)' : 'var(--warn)';
+      const vlabel = stored.verdict==='yes' ? 'VERIFIED' : stored.verdict==='no' ? 'REJECT' : 'UNSURE';
+      arEl.innerHTML = `<div style="font-size:11px;line-height:1.7;">
+        <span style="color:${vcol};font-weight:700;">${vlabel}</span>
+        ${stored.reason ? `<br><span style="color:var(--muted2)">${escHtml(stored.reason)}</span>` : ''}
+      </div>`;
+    } else {
+      arEl.innerHTML = `<div style="font-size:11px;color:var(--muted2);line-height:1.6;">Paste into ${a}:<br>
+        <textarea onclick="this.select()" style="width:100%;background:rgba(0,0,0,.3);border:1px solid var(--border2);color:var(--text);font-family:monospace;font-size:10px;padding:6px;margin-top:4px;border-radius:5px;resize:none;height:76px;outline:none;">${escHtml(prompt)}</textarea></div>`;
+    }
+    document.querySelectorAll(`#ac-${a} .avb`).forEach(b => {
+      const v = b.textContent.includes('✓') ? 'yes' : b.textContent.includes('✗') ? 'no' : 'unsure';
+      const cur = stored ? stored.verdict : null;
+      b.className = 'avb' + (cur === v ? ' ' + cur : '');
+    });
+  });
+  updateComparison();
+}
+
+function setAV(agent, verdict, btn) {
+  if (currentIdx === null) return;
+  if (!entries[currentIdx].agent_verdicts) entries[currentIdx].agent_verdicts = {};
+  entries[currentIdx].agent_verdicts[agent] = verdict;
+  document.querySelectorAll(`#ac-${agent} .avb`).forEach(b => {
+    const v = b.textContent.includes('✓') ? 'yes' : b.textContent.includes('✗') ? 'no' : 'unsure';
+    b.className = 'avb' + (v === verdict ? ' ' + verdict : '');
+  });
+  updateComparison();
+}
+
+function updateComparison() {
+  if (currentIdx === null) return;
+  const e = entries[currentIdx], hv = e.human_verdict;
+  document.getElementById('comp-body').innerHTML = AGENTS.map(a => {
+    const av = (e.agent_verdicts && e.agent_verdicts[a]) ? (e.agent_verdicts[a].verdict || e.agent_verdicts[a]) : '—';
+    const avStr = typeof av === 'object' ? (av.verdict || '—') : av;
+    const m = hv && avStr !== '—' ? avStr === hv : null;
+    return `<tr><td>${a}</td><td>${avStr}</td><td class="${m===true?'match':m===false?'mismatch':''}">${m===true?'✓ match':m===false?'✗ differ':'—'}</td></tr>`;
+  }).join('');
+}
+
+function updateStats() {
+  const total = entries.length;
+  const counts = {verified:0, fuzzy:0, not_found:0, no_text:0, pending:0};
+  entries.forEach(e => { const s = autoStatus(e); if (counts[s] !== undefined) counts[s]++; });
+  const reviewed = entries.filter(e => e.human_verdict).length;
+  const hVerified = entries.filter(e => e.human_verdict === 'yes').length;
+  const hFuzzy = entries.filter(e => e.human_verdict === 'unsure').length;
+  const hNo = entries.filter(e => e.human_verdict === 'no').length;
+
+  document.getElementById('st-t').textContent = total;
+  document.getElementById('st-r').textContent = reviewed;
+  document.getElementById('st-v').textContent = hVerified;
+  document.getElementById('st-f').textContent = hFuzzy;
+  document.getElementById('st-n').textContent = hNo;
+
+  // Hero stats
+  document.getElementById('hs-total').textContent = total;
+  document.getElementById('hs-verified').textContent = counts.verified;
+  document.getElementById('hs-flagged').textContent = counts.fuzzy + counts.not_found;
+  document.getElementById('hs-reviewed').textContent = reviewed;
+
+  // Nav counts
+  document.getElementById('nc-all').textContent = total;
+  document.getElementById('nc-verified').textContent = counts.verified;
+  document.getElementById('nc-fuzzy').textContent = counts.fuzzy;
+  document.getElementById('nc-not_found').textContent = counts.not_found;
+  document.getElementById('nc-no_text').textContent = counts.no_text;
+  document.getElementById('nc-pending').textContent = counts.pending;
+  document.getElementById('nc-unanimous_yes').textContent = entries.filter(e => isUnanimousYes(e)).length;
+  document.getElementById('nc-unanimous_no').textContent  = entries.filter(e => isUnanimousNo(e)).length;
+  document.getElementById('nc-unreviewed').textContent    = entries.filter(e => !e.human_verdict).length;
+}
+
+function exportResults() {
+  const blob = new Blob([JSON.stringify(entries,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `kingsfield-verified-${new Date().toISOString().slice(0,10)}.json`; a.click();
+}
+
+function escHtml(t) { return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>

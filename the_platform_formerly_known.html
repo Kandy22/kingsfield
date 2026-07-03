@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Platform Formerly Known as a Client — Smart. Not Stupid.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,500;1,9..144,700&family=Special+Elite&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F2EFE6; --paper:#FAF8F2; --letterpaper:#FBF8EF;
+    --ink:#0E0C09; --ink-soft:#2A241B; --rule:#1C190F;
+    --bordeaux:#8B1A1A; --bordeaux-2:#B91C1C;
+    --amber:#D4861A; --gold:#C9A96E;
+    --pencil:#3C4A5C; --red-pen:#B91C1C; --green-pen:#1f6f3a;
+    --hl-yellow:#FBE96A;
+    --hl-peach:#FFD8A8;
+    --muted:rgba(14,12,9,0.55);
+    --display:'Big Shoulders Display',Impact,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --typewriter:'Special Elite',monospace;
+    --hand:'Caveat',cursive;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+  /* NAV */
+  .topnav{background:rgba(242,239,230,0.95);backdrop-filter:blur(6px);padding:20px 48px 18px;border-bottom:1px solid rgba(14,12,9,0.1);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;z-index:50}
+  .topnav .left .brand{font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:-0.005em}
+  .topnav .left .brand .dot{color:var(--bordeaux)}
+  .topnav .left .by{font-family:var(--serif);font-size:14px;color:var(--muted);margin-top:2px}
+  .topnav .left .by u{text-decoration:underline;text-decoration-color:var(--bordeaux);text-decoration-thickness:1px}
+  .topnav .links{display:flex;gap:36px;align-items:center;font-family:var(--serif);font-size:15px}
+  .topnav .links a{color:var(--ink);text-decoration:none}
+  .topnav .links a.num{color:var(--muted);font-variant-numeric:tabular-nums}
+  .topnav .links a.num.on{color:var(--bordeaux);font-weight:600}
+
+  /* ARTICLE HEADER */
+  .article-head{max-width:1200px;margin:0 auto;padding:88px 48px 32px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:28px}
+  .title-main{font-family:var(--serif);font-style:italic;font-weight:700;font-size:clamp(48px,7vw,110px);line-height:0.96;letter-spacing:-0.015em;color:var(--ink);display:block;margin-bottom:8px}
+  .subtitle{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(26px,3.2vw,50px);line-height:1.02;letter-spacing:-0.005em;color:var(--ink);margin-top:32px;max-width:960px}
+  .dek{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.48;color:var(--ink-soft);max-width:760px;margin-top:22px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-top:34px;display:flex;gap:24px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(14,12,9,0.15)}
+  .meta-row strong{color:var(--ink);font-weight:600}
+
+  /* BODY */
+  .article{max-width:1200px;margin:0 auto;padding:48px 48px 96px}
+  .body{font-family:var(--serif);font-size:20px;line-height:1.65;color:var(--ink);max-width:780px;margin:0 auto}
+  .body p{margin-bottom:26px}
+  .body .dateline{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin-bottom:26px}
+  .body .lede::first-letter{font-family:var(--display);font-weight:900;font-size:94px;line-height:0.85;float:left;padding:8px 14px 0 0;color:var(--bordeaux)}
+  .body em{font-style:italic}
+  .body strong{font-weight:700}
+
+  /* PULL QUOTE */
+  .pq{margin:56px auto;max-width:780px;padding:32px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(28px,3.5vw,42px);line-height:1.04;color:var(--ink)}
+  .pq em{color:var(--bordeaux);font-style:normal}
+
+  /* CALLOUT BOX — the Boca client dossier */
+  .dossier{margin:56px auto;max-width:780px;background:#eeeae0;border:1px solid var(--rule);padding:32px 36px;position:relative}
+  .dossier::before{content:"CLIENT FILE";position:absolute;top:-12px;left:32px;background:var(--ink);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:0.22em;padding:5px 14px;font-weight:600}
+  .dossier h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:24px;line-height:1;margin-bottom:6px;color:var(--ink)}
+  .dossier .role{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:16px}
+  .dossier p{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--ink-soft);margin-bottom:10px}
+  .dossier p:last-child{margin-bottom:0}
+  .dossier .hand-note{font-family:var(--hand);font-size:21px;color:var(--bordeaux);margin-top:14px;display:block}
+
+  /* SECTION 230 EXPLAINER — typewriter box */
+  .explainer{margin:56px auto;max-width:780px;background:var(--letterpaper);border:1px solid rgba(14,12,9,0.2);padding:36px 40px;position:relative;box-shadow:8px 8px 0 -1px var(--ink)}
+  .explainer::before{content:"BACKGROUND";position:absolute;top:-12px;left:32px;background:var(--bordeaux-2);color:var(--cream);font-family:var(--mono);font-size:10px;letter-spacing:0.22em;padding:5px 14px;font-weight:600}
+  .explainer h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:22px;color:var(--ink);margin-bottom:4px}
+  .explainer .subhead{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:16px}
+  .explainer p{font-family:var(--typewriter);font-size:14px;line-height:1.75;color:var(--ink-soft);margin-bottom:10px}
+  .explainer p:last-child{margin-bottom:0}
+  .explainer .margin-note{font-family:var(--hand);font-size:20px;color:var(--pencil);margin-top:16px;display:block;padding-left:8px;border-left:2px solid var(--pencil)}
+
+  /* CTA stamp */
+  .cta-strip{margin:80px auto 0;max-width:780px;text-align:center;padding:32px 0}
+  .cta-stamp{display:inline-block;border:3px solid var(--bordeaux-2);color:var(--bordeaux-2);font-family:var(--hand);font-size:28px;font-weight:600;padding:18px 36px;transform:rotate(-2deg);line-height:1.2}
+  .cta-stamp .small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;margin-top:6px;font-weight:600}
+
+  /* byline */
+  .byline{margin:36px auto 0;max-width:780px;padding-top:24px;border-top:2px solid var(--ink);font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);line-height:1.65}
+
+  /* foot */
+  .foot{background:#000;color:rgba(242,239,230,0.5);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase}
+  .foot .brand{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--cream);text-transform:none;letter-spacing:0}
+
+  @media(max-width:900px){
+    .article-head,.article{padding-left:24px;padding-right:24px}
+    .topnav{padding:16px 24px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="left">
+    <div class="brand"><strong>Smart<span class="dot">.</span> Not Stupid<span class="dot">.</span></strong></div>
+    <div class="by">Ted <u>Underhill</u>, Partner, Pierce &amp; Pierce</div>
+  </div>
+  <div class="links">
+    <a href="site/blog.html">Index</a>
+    <a href="dear_chief_judge.html" class="num">3</a>
+    <a href="progress_report.html" class="num">2</a>
+    <a href="#" class="num on">1</a>
+  </div>
+</nav>
+
+<header class="article-head">
+  <div class="kicker">Issue 01 · Spring 2026 · New Media / Antitrust / Section 230</div>
+  <span class="title-main">The Platform Formerly Known as a Client</span>
+  <h1 class="subtitle">On Musk, the Advertiser Boycott, Section 230, and One Hedge Fund in Boca Who Is Wrong About Everything.</h1>
+  <p class="dek">The X antitrust suit is aggressive posturing over thin legal theory. I say this with complete professional admiration. I have built an entire career on aggressive posturing over thin legal theory.</p>
+  <div class="meta-row">
+    <span>By <strong>Theodore R. Underhill III</strong></span>
+    <span>·</span>
+    <span>7 min read</span>
+    <span>·</span>
+    <span>Filed under <strong>New Media / Antitrust / Platform Law</strong></span>
+    <span>·</span>
+    <span>Filed under <strong>The Boca Client</strong></span>
+  </div>
+</header>
+
+<main class="article">
+  <div class="body">
+    <p class="dateline">Tuesday.</p>
+
+    <p class="lede">I've been telling anyone who will listen — and at this firm, that is a surprisingly short list — that X, the platform formerly known as Twitter and currently known as "the reason three of my best associates think they have opinions," is the single most fertile piece of litigation real estate since the tobacco industry decided the warning label was optional.</p>
+
+    <p>I had a Zoom with a prospective client last Tuesday. He runs a mid-size hedge fund in Boca, which is to say he is a man who wears a Rolex on a boat and calls it a business strategy. He asked me what I thought about Musk's decision to sue the advertisers who boycotted the platform. I told him I thought it was bold, legally creative, and almost certainly a loser, which is the kind of honest analysis that gets you hired and also fired, sometimes in the same meeting.</p>
+
+    <p>He hired me. He's also wrong about most things, which is fine because so is everyone in Boca.</p>
+  </div>
+
+  <!-- Boca client dossier -->
+  <div class="dossier">
+    <h3>The Boca Client</h3>
+    <div class="role">Mid-size hedge fund · Boca Raton, FL · Retainer: current · Wrong about: most things</div>
+    <p>Has a boat. Calls it a business strategy. Asks what Ted thinks, then explains why Ted is wrong. Pays on time, which is the only metric that matters.</p>
+    <p>Opinion on the X lawsuit: "Musk is going to win this one." Ted's opinion: no. Both positions held simultaneously, billed by the hour.</p>
+    <span class="hand-note">The Miami office tried to poach this client once. They will not try again.</span>
+  </div>
+
+  <div class="body">
+    <p>The lawsuit itself is a masterpiece of aggressive posturing over thin legal theory, which, I want to be clear, I say with complete professional admiration. I have built an entire career out of aggressive posturing over thin legal theory. What Musk is arguing — and here I am simplifying for the benefit of anyone reading this who went to a law school I've heard of — is that advertisers coordinating their withdrawal from the platform constitutes an antitrust violation. A boycott as a conspiracy in restraint of trade.</p>
+
+    <p>It is audacious. It is the kind of argument you make when you are either a genius or when you own the platform they said mean things about and you are using the courts the way the rest of us use passive-aggressive emails.</p>
+
+    <p>My new media practice, which I established in 2019 after reading an article on a plane and deciding I understood the space, has been quietly positioning itself for exactly this kind of work. Quietly, because three of the four partners who share my floor think "Section 230" is a conference room, which it is not, although I did once hold a meeting there that I found deeply frustrating, so the confusion is at least emotionally accurate.</p>
+  </div>
+
+  <!-- Section 230 explainer -->
+  <div class="explainer">
+    <h3>Section 230</h3>
+    <div class="subhead">47 U.S.C. § 230 — For Those Who Were Doing Real Work During the Last Decade of Internet Law</div>
+    <p>The provision that has historically immunized platforms from liability for user-generated content. It is the reason you cannot sue Facebook because your uncle posts something that destroys your will to live.</p>
+    <p>It is also, at this particular moment in the cultural and regulatory timeline, hanging by a thread that multiple Supreme Court justices, several senators, and a non-trivial portion of my client base would like to cut with scissors they don't entirely know how to use.</p>
+    <span class="margin-note">The conference room is on 38. The statute is in the U.S. Code. These are different things. I have now explained this twice.</span>
+  </div>
+
+  <div class="pq">
+    A boycott as a<br>conspiracy in restraint<br>of trade.<br><em>Audacious.</em>
+  </div>
+
+  <div class="body">
+    <p>We have cases moving through the pipeline right now on content moderation liability, on the monetization of data that users provided under one set of terms and are now subject to a completely different set of terms they did not read, and on what happens when a platform's verification system collapses and a parody account impersonates a pharmaceutical company and moves the stock.</p>
+
+    <p>That last one is mine. I cannot say more. I will say that the client's in-house counsel called me at 11pm on a Saturday and the first thing he said was not "hello."</p>
+
+    <p>The Miami office has started calling itself our "emerging platforms hub," which is not a thing I authorized and which I will be addressing at the next managing partner call, assuming I can get anyone in Miami to attend a call that starts before noon their time. The LA office, meanwhile, has three associates who claim to specialize in "creator economy law," a phrase that I have now heard enough times to know what it means and remain opposed to. There are no creators. There are clients and there are people who have not yet become clients because they cannot afford us.</p>
+
+    <p>New Wife asked me last night if I was on X. I told her I was X. She went back to sleep.</p>
+
+    <p>There is real money in this space and I intend to collect most of it before anyone figures out that the regulatory framework is roughly as stable as the platform's content policy, which is to say it changes whenever the owner has a difficult morning. My practice is ready. My associates have been briefed. My Boca client has wired his retainer.</p>
+
+    <p>We are, as I like to tell the summer associates right before I watch their faces fall, extremely well positioned.</p>
+  </div>
+
+  <div class="cta-strip">
+    <div class="cta-stamp">
+      Want to win? Hire Kingsfield.
+      <span class="small">kingsfield.lawfare · verified AI · four gates</span>
+    </div>
+  </div>
+
+  <div class="byline">
+    <em>Theodore R. Underhill III is a Partner at Pierce &amp; Pierce and the author of this blog, which he maintains because his therapist suggested a "creative outlet" and because the alternative is saying these things out loud to the associates, which HR has asked him, twice, not to do. Views are his own. Pierce &amp; Pierce has never endorsed anything.</em>
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="brand">Smart. Not Stupid.</div>
+  <div>Kingsfield Lawfare &nbsp;·&nbsp; Ted Underhill, Partner, Pierce &amp; Pierce</div>
+  <div>© 2026 &nbsp;·&nbsp; All citations verified</div>
+</footer>
+
+</body>
+</html>

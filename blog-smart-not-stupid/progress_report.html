@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Report — Smart. Not Stupid.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,500;1,9..144,700&family=Special+Elite&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F2EFE6; --paper:#FAF8F2; --letterpaper:#FBF8EF;
+    --ink:#0E0C09; --ink-soft:#2A241B; --rule:#1C190F;
+    --bordeaux:#8B1A1A; --bordeaux-2:#B91C1C;
+    --amber:#D4861A; --gold:#C9A96E;
+    --pencil:#3C4A5C; --red-pen:#B91C1C; --green-pen:#1f6f3a;
+    --hl-yellow:#FBE96A; --hl-yellow-soft:#FCF1A8;
+    --hl-peach:#FFD8A8; --hl-peach-soft:#FFE4C0;
+    --muted:rgba(14,12,9,0.55);
+    --display:'Big Shoulders Display',Impact,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --typewriter:'Special Elite',monospace;
+    --hand:'Caveat',cursive;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+  /* ── NAV ── */
+  .topnav{background:rgba(242,239,230,0.95);backdrop-filter:blur(6px);padding:20px 48px 18px;border-bottom:1px solid rgba(14,12,9,0.1);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;z-index:50}
+  .topnav .left .brand{font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:-0.005em}
+  .topnav .left .brand .dot{color:var(--bordeaux)}
+  .topnav .left .by{font-family:var(--serif);font-size:14px;color:var(--muted);margin-top:2px}
+  .topnav .left .by u{text-decoration:underline;text-decoration-color:var(--bordeaux);text-decoration-thickness:1px}
+  .topnav .links{display:flex;gap:36px;align-items:center;font-family:var(--serif);font-size:15px}
+  .topnav .links a{color:var(--ink);text-decoration:none}
+  .topnav .links a.num{color:var(--muted);font-variant-numeric:tabular-nums}
+  .topnav .links a.num.on{color:var(--bordeaux);font-weight:600}
+
+  /* ── ARTICLE HEADER ── */
+  .article-head{max-width:1200px;margin:0 auto;padding:88px 48px 32px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:28px}
+  .title-block{margin-bottom:8px}
+  .title-main{font-family:var(--serif);font-style:italic;font-weight:700;font-size:clamp(52px,7.5vw,118px);line-height:0.96;letter-spacing:-0.015em;color:var(--ink);display:block}
+  .subtitle{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(28px,3.5vw,52px);line-height:1.02;letter-spacing:-0.005em;color:var(--ink);margin-top:32px;max-width:960px}
+  .dek{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.48;color:var(--ink-soft);max-width:760px;margin-top:22px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-top:34px;display:flex;gap:24px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(14,12,9,0.15)}
+  .meta-row strong{color:var(--ink);font-weight:600}
+
+  /* ── ARTICLE BODY ── */
+  .article{max-width:1280px;margin:0 auto;padding:48px 48px 96px;position:relative}
+  .body{font-family:var(--serif);font-size:20px;line-height:1.65;color:var(--ink);max-width:780px;margin:0 auto}
+  .body p{margin-bottom:24px}
+  .body .dateline{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin-bottom:24px}
+  .body .lede::first-letter{font-family:var(--display);font-weight:900;font-size:94px;line-height:0.85;float:left;padding:8px 14px 0 0;color:var(--bordeaux)}
+  .body em{font-style:italic}
+  .body strong{font-weight:700}
+
+  /* ── EMAIL THREAD STAGE ── */
+  .thread-stage{position:relative;margin:64px -120px 64px;padding:0 120px}
+  @media(max-width:1400px){.thread-stage{margin:64px -40px;padding:0 40px}}
+
+  /* email container — paper doc look */
+  .email-doc{background:var(--letterpaper);border:1px solid rgba(14,12,9,0.18);padding:0;position:relative;box-shadow:0 18px 50px -10px rgba(0,0,0,0.18);max-width:880px;margin:0 auto;z-index:2}
+
+  /* individual email rows */
+  .email{border-bottom:1px solid rgba(14,12,9,0.12);position:relative}
+  .email:last-child{border-bottom:0}
+
+  .email-header{padding:18px 28px 14px;background:rgba(14,12,9,0.03);border-bottom:1px solid rgba(14,12,9,0.08);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start}
+  .email-header .from{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft)}
+  .email-header .from strong{color:var(--ink);font-weight:600}
+  .email-header .subj{font-family:var(--typewriter);font-size:13px;color:var(--ink-soft);margin-top:4px}
+  .email-header .date{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-align:right;white-space:nowrap}
+
+  .email-body{padding:22px 36px 26px;font-family:'Times New Roman',serif;font-size:14.5px;line-height:1.78;color:#1a1409;position:relative}
+  .email-body p{margin-bottom:12px;position:relative}
+  .email-body p:last-child{margin-bottom:0}
+  .email-body .sign{margin-top:16px}
+
+  /* partner emails — slightly warmer bg */
+  .email.partner .email-body{background:rgba(251,248,242,0.7)}
+  .email.partner .email-header{background:rgba(212,134,26,0.06)}
+
+  /* highlights */
+  .hl{background:var(--hl-yellow);padding:1px 3px;border-radius:1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .hl-peach{background:var(--hl-peach);padding:1px 3px;border-radius:1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+  /* inline Caveat commentary */
+  .ink-inline{font-family:var(--hand);font-style:normal;font-size:18px;color:var(--pencil);font-weight:500;letter-spacing:0;display:inline}
+  .ink-inline-red{font-family:var(--hand);font-style:normal;font-size:18px;color:var(--red-pen);font-weight:600;letter-spacing:0;display:inline}
+
+  /* gutter marginalia */
+  .gutter{position:absolute;font-family:var(--hand);font-size:21px;line-height:1.2;color:var(--pencil);max-width:230px;z-index:3;pointer-events:none}
+  .gutter.red{color:var(--red-pen)}
+  .gutter.green{color:var(--green-pen)}
+  .gutter.black{color:var(--ink)}
+  .gutter.big{font-size:26px}
+  .gutter.small{font-size:17px}
+  .gutter strong{font-weight:700}
+  .gutter em{font-style:italic}
+  .gutter .arrow{color:var(--red-pen);display:inline-block;margin:0 3px}
+
+  /* stamps */
+  .stamp{position:absolute;border:2px solid currentColor;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:0.18em;text-align:center;padding:6px 12px;text-transform:uppercase;background:transparent;z-index:4}
+  .stamp.received{top:22px;left:36px;color:#2C5AA0;transform:rotate(-7deg)}
+  .stamp.unread{top:18px;right:44px;color:var(--bordeaux-2);transform:rotate(5deg);font-size:9px;letter-spacing:0.22em;padding:5px 11px}
+  .stamp.onit{color:var(--green-pen);font-size:9px;letter-spacing:0.2em;padding:5px 10px}
+
+  /* sticky post-it */
+  .postit{position:absolute;background:#FFF4A3;padding:16px 18px;font-family:var(--hand);font-size:18px;color:var(--ink);border-radius:2px;box-shadow:3px 5px 12px rgba(0,0,0,0.22);transform:rotate(-3deg);max-width:210px;z-index:5;line-height:1.28}
+  .postit strong{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:8px;color:var(--bordeaux);font-weight:600}
+  .postit.blue{background:#D4E8FF}
+  .postit.pink{background:#FFD9D9}
+
+  /* the madison-name-correction chip */
+  .name-chip{display:inline-block;background:rgba(255,216,168,0.5);border:1px solid var(--amber);border-radius:2px;font-family:var(--hand);font-size:17px;color:var(--bordeaux);padding:1px 8px;position:relative}
+  .name-chip::before{content:"← ";font-size:14px}
+
+  /* the "4 seconds" callout */
+  .pq{margin:52px auto;max-width:780px;padding:30px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:32px;line-height:1.04;color:var(--ink)}
+  .pq em{color:var(--bordeaux);font-style:normal}
+
+  /* WordPerfect dossier box */
+  .wp-dossier{margin:60px auto;max-width:780px;background:#eeeae0;border:1px solid var(--rule);padding:32px 36px;position:relative}
+  .wp-dossier::before{content:"EXHIBIT A";position:absolute;top:-12px;left:32px;background:var(--ink);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:0.22em;padding:5px 14px;font-weight:600}
+  .wp-dossier h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:26px;line-height:1;margin-bottom:6px;color:var(--ink)}
+  .wp-dossier .role{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:16px}
+  .wp-dossier p{font-family:var(--serif);font-size:15.5px;line-height:1.6;color:var(--ink-soft)}
+
+  /* CTA stamp */
+  .cta-strip{margin:80px auto 0;max-width:780px;text-align:center;padding:32px 0}
+  .cta-stamp{display:inline-block;border:3px solid var(--bordeaux-2);color:var(--bordeaux-2);font-family:var(--hand);font-size:28px;font-weight:600;padding:18px 36px;transform:rotate(-2deg);line-height:1.2}
+  .cta-stamp .small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;margin-top:6px;font-weight:600}
+
+  /* byline */
+  .byline{margin:36px auto 0;max-width:780px;padding-top:24px;border-top:2px solid var(--ink);font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);line-height:1.65}
+
+  /* foot */
+  .foot{background:#000;color:rgba(242,239,230,0.5);padding:32px 48px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase}
+  .foot .brand{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--cream);text-transform:none;letter-spacing:0}
+
+  @media(max-width:1100px){
+    .thread-stage{margin:48px -20px;padding:0 20px}
+    .gutter,.postit,.stamp.received,.stamp.unread{position:static !important;transform:none;max-width:none;display:block;margin:14px 0;padding:8px 0}
+    .gutter::before{content:"➝ ";color:var(--red-pen)}
+    .article-head,.article{padding-left:24px;padding-right:24px}
+    .topnav{padding:16px 24px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="left">
+    <div class="brand"><strong>Smart<span class="dot">.</span> Not Stupid<span class="dot">.</span></strong></div>
+    <div class="by">Ted <u>Underhill</u>, Partner, Pierce &amp; Pierce</div>
+  </div>
+  <div class="links">
+    <a href="blog.html">Index</a>
+    <a href="dear_chief_judge.html" class="num">1</a>
+    <a href="#" class="num on">2</a>
+    <a href="#" class="num">3</a>
+  </div>
+</nav>
+
+<header class="article-head">
+  <div class="kicker">Issue 02 · Spring 2026 · AI Tools / Firm Technology / WordPerfect</div>
+  <div class="title-block">
+    <span class="title-main">Progress Report</span>
+  </div>
+  <h1 class="subtitle">Six Weeks with Harvey, Two Hours with Madison, and One Critical Interface Question.</h1>
+  <p class="dek">On the firm's AI integration strategy, the associate I've been calling the wrong name for four months, and why Harvey formats everything in Courier New now.</p>
+  <div class="meta-row">
+    <span>By <strong>Theodore R. Underhill III</strong></span>
+    <span>·</span>
+    <span>8 min read</span>
+    <span>·</span>
+    <span>Filed under <strong>AI Tools / BigLaw / Technology</strong></span>
+    <span>·</span>
+    <span>Verified: <strong>No phantom citations this time</strong></span>
+  </div>
+</header>
+
+<main class="article">
+
+  <div class="body">
+    <p class="dateline">Thursday.</p>
+
+    <p class="lede">The firm adopted Harvey approximately six weeks ago. I know this because I was on the call where we announced it, I used the word "transformative" four times, and I billed the call at my standard rate to a client who I am confident will not read the invoice carefully enough to ask why their M&amp;A partner was on a software orientation call for two hours on a Thursday afternoon.</p>
+
+    <p>I should say upfront that I understand Harvey completely. I want that on record. What follows is simply a documentation of the process by which I allowed a junior associate to walk me through certain interface elements as a mentorship exercise, because developing talent is something I care about deeply and also because my assistant was in Miami that week.</p>
+
+    <p>The associate is a third-year. Yale. Adequate. Her name is either Morgan or Madison; I have been calling her Morgan for four months and recently saw an email signature that suggested I may be wrong, but at this point correcting it would be embarrassing for both of us so we are simply going to continue.</p>
+
+    <p>The following is a reproduction of our correspondence. I have annotated it in the margins, as is my right as a named partner on the matter.</p>
+  </div>
+
+  <!-- ─────────────── THE EMAIL THREAD ─────────────── -->
+  <div class="thread-stage">
+
+    <!-- left gutters -->
+    <div class="gutter red big" style="position:absolute;top:68px;left:-30px">IT's records<br>are never wrong,<br>Ted.</div>
+    <div class="gutter" style="position:absolute;top:280px;left:-220px;text-align:right;max-width:180px">she arrived<br>exactly at three.<br><span style="font-size:16px">I checked.</span></div>
+
+    <div class="postit" style="position:absolute;top:460px;left:-240px;transform:rotate(4deg)">
+      <strong>From the desk of T.U.</strong>
+      The WordPerfect window<br>was open for<br><em>reference purposes</em>.
+    </div>
+
+    <div class="gutter red" style="position:absolute;top:820px;left:-220px;text-align:right;font-size:19px">"the other box"<br><span class="arrow">→</span><br>he created<br>a second<br>account.</div>
+
+    <!-- right gutters -->
+    <div class="gutter green" style="position:absolute;top:380px;right:-200px;max-width:170px">mentorship<br>exercise<br>going well</div>
+
+    <div class="postit blue" style="position:absolute;top:670px;right:-230px;transform:rotate(-3deg)">
+      <strong>From: Madison</strong>
+      "the box on the left<br>is just the<br>conversation<br>history"<br><span style="font-size:15px;color:var(--bordeaux)">said very nicely.</span>
+    </div>
+
+    <div class="gutter" style="position:absolute;top:1100px;right:-215px;max-width:180px;font-size:19px">IT merged<br>the accounts.<br>He was billed<br>for both.</div>
+
+    <div class="gutter red big" style="position:absolute;top:1620px;left:-240px;text-align:right;max-width:190px">eleven<br>minutes.<br><strong>seventy<br>pages.</strong></div>
+
+    <div class="postit pink" style="position:absolute;top:1860px;right:-220px;transform:rotate(2deg)">
+      <strong>Exclamation point.</strong>
+      count: 1<br>ambiguity level:<br>extremely high<br><span style="font-size:15px">(re-read: 4x)</span>
+    </div>
+
+    <div class="stamp received">RECEIVED<br>Pierce &amp; Pierce</div>
+    <div class="stamp unread" style="position:absolute;top:24px;right:44px">IT Flagged</div>
+
+    <!-- THE EMAIL DOCUMENT -->
+    <div class="email-doc">
+
+      <!-- Email 1: Madison → Partner -->
+      <div class="email associate">
+        <div class="email-header">
+          <div>
+            <div class="from"><strong>Morgan [REDACTED]</strong> &lt;m.redacted@piercepeirce.com&gt; → Partner</div>
+            <div class="subj">RE: Harvey Onboarding — Quick Walk-Through?</div>
+          </div>
+          <div class="date">Monday, 9:22 AM</div>
+        </div>
+        <div class="email-body">
+          <p>Hi —</p>
+          <p><span class="hl">Happy to jump on a quick call or swing by whenever works for you to walk through the Harvey interface.</span> <span class="ink-inline">(translation: please acknowledge this email)</span></p>
+          <p><span class="hl-peach">IT flagged that your account hasn't been accessed since we activated it three weeks ago.</span> <span class="ink-inline-red">←&nbsp;their fault</span> Totally understand — just want to make sure you have everything you need.</p>
+          <p class="sign">Best,<br>Morgan<br><br><span class="hl" style="font-size:13px;font-family:var(--mono)">(Also — just flagging, it's actually Madison, no worries at all!)</span> <span class="ink-inline" style="font-size:16px">worries noted.</span></p>
+        </div>
+      </div>
+
+      <!-- Email 2: Partner → Madison -->
+      <div class="email partner">
+        <div class="email-header">
+          <div>
+            <div class="from" style="color:var(--amber)"><strong>[Partner]</strong> &lt;t.underhill@piercepeirce.com&gt; → Morgan [REDACTED]</div>
+            <div class="subj">RE: RE: Harvey Onboarding — Quick Walk-Through?</div>
+          </div>
+          <div class="date">Monday, 11:47 AM</div>
+        </div>
+        <div class="email-body">
+          <p><span class="hl-peach">I have been accessing Harvey extensively and IT's records are simply incorrect.</span> <span class="ink-inline-red">← true</span> Please come by at three.</p>
+          <p class="sign">—</p>
+        </div>
+      </div>
+
+      <!-- Email 3: Partner → Madison (post walk-through) -->
+      <div class="email partner">
+        <div class="email-header">
+          <div>
+            <div class="from" style="color:var(--amber)"><strong>[Partner]</strong> → Morgan [REDACTED]</div>
+            <div class="subj">RE: Harvey Onboarding</div>
+          </div>
+          <div class="date">Monday, 4:03 PM</div>
+        </div>
+        <div class="email-body">
+          <p>Per our conversation — <span class="hl">can you send me instructions in writing?</span> <span class="ink-inline">I prefer to have things in writing.</span></p>
+          <p>Also, when you showed me the "prompt box," <span class="hl-peach">what you're calling the place where you type</span> <span class="ink-inline-red">(yes)</span> — is that the only place you can type? There seems to be another box.</p>
+          <p><span class="hl" style="background:#FFD8A8">Also I typed something in the other box and now there is a message I don't recognize.</span></p>
+          <p><span class="hl" style="background:#FFD8A8">Also I may have created a second account.</span> <span class="ink-inline-red">← for redundancy</span></p>
+          <p class="sign">—</p>
+        </div>
+      </div>
+
+      <!-- Email 4: Madison → Partner -->
+      <div class="email associate">
+        <div class="email-header">
+          <div>
+            <div class="from"><strong>Madison [REDACTED]</strong> → [Partner]</div>
+            <div class="subj">RE: RE: Harvey Onboarding</div>
+          </div>
+          <div class="date">Monday, 4:18 PM</div>
+        </div>
+        <div class="email-body">
+          <p>Of course! <span class="hl">The box on the left is just the conversation history, you can't type in that one.</span> <span class="ink-inline">(she is being very patient)</span> The main input field is the larger one on the right — that's where you enter your prompts.</p>
+          <p>For the second account — could you forward me the confirmation email you may have received? <span class="ink-inline-red">← she will fix this</span> I can have IT merge them.</p>
+          <p>One thing that might help: <span class="hl-peach">Harvey works best when you give it a bit of context about what you're working on. So instead of typing "contract" you might try something like <strong>"review this indemnification clause for a Delaware merger agreement and flag any non-standard carve-outs."</strong></span> <span class="ink-inline">I used this prompt. Exact words. Output: excellent.</span> The more specific, the better the output.</p>
+          <p>Happy to sit with you again if that would help.</p>
+          <p class="sign">Best,<br>Madison</p>
+        </div>
+      </div>
+
+      <!-- Email 5: Partner → Madison -->
+      <div class="email partner">
+        <div class="email-header">
+          <div>
+            <div class="from" style="color:var(--amber)"><strong>[Partner]</strong> → Madison [REDACTED]</div>
+            <div class="subj">RE: RE: RE: Harvey Onboarding</div>
+          </div>
+          <div class="date">Tuesday, 8:51 AM</div>
+        </div>
+        <div class="email-body">
+          <p>I've resolved the interface issues. <span class="hl">Working fine.</span> <span class="ink-inline-red">correct</span> One more question — <span class="hl-peach">can Harvey produce output in WordPerfect format?</span> <span class="ink-inline">(asked sincerely)</span> The PDF it generates is acceptable but I prefer WPD.</p>
+          <p><span class="hl">Also is there a way to make the font Courier. I write in Courier.</span></p>
+          <p class="sign">—</p>
+        </div>
+      </div>
+
+      <!-- Email 6: Madison → Partner (final) -->
+      <div class="email associate">
+        <div class="email-header">
+          <div>
+            <div class="from"><strong>Madison [REDACTED]</strong> → [Partner]</div>
+            <div class="subj">RE: RE: RE: RE: Harvey Onboarding</div>
+          </div>
+          <div class="date">Tuesday, 9:04 AM</div>
+        </div>
+        <div class="email-body">
+          <p>So glad it's working! <span class="ink-inline-red">← exclamation point noted</span></p>
+          <p>Harvey exports to Word and PDF — <span class="hl">no WordPerfect export natively,</span> <span class="ink-inline">(noted with deep regret)</span> but you could copy the text into a WordPerfect document and change the font there.</p>
+          <p>On Courier — <span class="hl-peach">you can actually just ask Harvey to format its output however you like. If you add <strong>"format this in plain text suitable for Courier New 12pt"</strong> at the end of your prompt it will adjust.</span></p>
+          <p>Let me know if you need anything else!</p>
+          <p class="sign">Best,<br>Madison</p>
+        </div>
+      </div>
+
+    </div><!-- /email-doc -->
+
+    <!-- bottom gutter stamp -->
+    <div class="stamp onit" style="position:absolute;bottom:28px;right:60px;color:var(--green-pen);border-color:var(--green-pen);transform:rotate(-3deg)">Matter Resolved</div>
+
+  </div><!-- /thread-stage -->
+
+
+  <!-- ── CONTINUATION ── -->
+  <div class="body">
+
+    <p>She arrived at three. I had Harvey open on my screen, which I want credit for. I had also, in preparation, minimized it and opened a WordPerfect document — which I use for first drafts because I have used it since 1987 and it has never once lost a document or suggested that I meant something other than what I typed.</p>
+
+    <p>Madison looked at the WordPerfect window the way my youngest looks at photographs of people using payphones. As if she understood what it was but couldn't locate the emotion appropriate to the moment.</p>
+  </div>
+
+  <!-- WordPerfect dossier -->
+  <div class="wp-dossier" style="max-width:780px;margin:48px auto">
+    <h3>WordPerfect 5.1</h3>
+    <div class="role">In active daily use · Pierce &amp; Pierce, Partner Suite, 47th Floor</div>
+    <p>First released 1989. Still running. Courier New 12pt, default. <em>Never</em> lost a document. Has never autocorrected "hereinafter" to "herein after." Does not suggest synonyms. Does not want anything from the user. The gold standard.</p>
+    <p style="margin-top:12px;font-family:var(--hand);font-size:22px;color:var(--bordeaux)">Madison has seen it now. She is sworn to discretion.</p>
+  </div>
+
+  <div class="body">
+    <p>The instruction to "be more specific" is something I found deeply ironic coming from a third-year who took eleven days to turn around a memo I needed in two. I typed "review this indemnification clause for a Delaware merger agreement and flag any non-standard carve-outs" exactly as she suggested. Harvey produced a thorough, well-organized analysis in approximately four seconds. I looked at it for a long time. I then typed "are you sure" and it said yes, essentially, with citations.</p>
+
+    <p>I did not tell Madison this.</p>
+  </div>
+
+  <div class="pq">
+    Seventy pages.<br><em>Eleven minutes.</em><br>The Boca client<br>does not need<br>this information.
+  </div>
+
+  <div class="body">
+    <p>I have since asked Harvey to format everything in plain text suitable for Courier New 12pt. The output is excellent. I am not going to tell the Boca client that the seventy-page agreement summary I sent him last week was produced in eleven minutes. He does not need that information. What he needs is the summary, which is accurate, thorough, and formatted in a font that communicates gravitas, which Calibri does not and never will.</p>
+
+    <p>I gave a presentation to the executive committee yesterday about the firm's AI integration strategy. I spoke for forty minutes. I used the word "transformative" six times, which is two more than the onboarding call, so the trend is good. I showed them a live Harvey demonstration. I typed the prompt exactly the way Madison taught me. It worked perfectly.</p>
+
+    <p>She watched from the back of the room. I did not introduce her.</p>
+
+    <p>Afterwards, the managing partner told me I was "ahead of the curve on this." I told him I'd been saying that for years. Madison sent me an email that said simply <em>"Great presentation!"</em> with an exclamation point that I have read several times and am still not sure about.</p>
+
+    <p>She's either going to make partner or leave for a boutique by spring. Those are always the two options with the good ones. I intend to do nothing to influence which way it goes, because in my experience doing nothing is how you keep your best people longest before they figure out they should leave.</p>
+
+    <p>Anyway. Harvey is excellent. I am very much on top of it.</p>
+  </div>
+
+  <div class="cta-strip">
+    <div class="cta-stamp">
+      Want to win? Hire Kingsfield.
+      <span class="small">kingsfield.lawfare · verified AI · four gates</span>
+    </div>
+  </div>
+
+  <div class="byline">
+    <em>Theodore R. Underhill III is a Partner at Pierce &amp; Pierce and the author of this blog, which he maintains because his therapist suggested a "creative outlet" and because the alternative is saying these things out loud to the associates, which HR has asked him, twice, not to do. Views are his own. Pierce &amp; Pierce has never endorsed anything.</em>
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="brand">Smart. Not Stupid.</div>
+  <div>Kingsfield Lawfare &nbsp;·&nbsp; Ted Underhill, Partner, Pierce &amp; Pierce</div>
+  <div>© 2026 &nbsp;·&nbsp; All citations verified</div>
+</footer>
+
+</body>
+</html>

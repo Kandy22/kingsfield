@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield — Twitter Law Intel</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #0a0a0a; --near: #111; --dark: #1a1a1a; --card: #161616;
+  --cream: #e8e0cc; --white: #f5f5f0; --gold: #c9a84c; --mid: #888;
+  --border: #222; --red: #c0392b; --green: #27ae60; --blue: #2471a3;
+  --font-d: 'Big Shoulders Display', sans-serif;
+  --font-b: 'Inter', sans-serif;
+}
+body { background: var(--black); color: var(--cream); font-family: var(--font-b); min-height: 100vh; }
+
+/* NAV */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: rgba(10,10,10,0.97);
+  backdrop-filter: blur(8px); z-index: 100;
+}
+.nav-logo { font-family: var(--font-d); font-size: 20px; font-weight: 900; text-transform: uppercase; color: var(--white); }
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--cream); }
+.nav-actions { display: flex; gap: 10px; }
+.btn { display: inline-flex; align-items: center; font-family: var(--font-b); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 8px 20px; cursor: pointer; transition: all .2s; text-decoration: none; border: none; }
+.btn-outline { background: none; color: var(--cream); border: 1px solid #333; }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-solid { background: var(--cream); color: var(--black); }
+.btn-solid:hover { background: var(--gold); }
+
+/* HERO */
+.hero { padding: 60px 40px 40px; border-bottom: 1px solid var(--near); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.hero-hl { font-family: var(--font-d); font-size: clamp(40px,6vw,80px); font-weight: 900; text-transform: uppercase; line-height: .95; color: var(--white); margin-bottom: 20px; }
+.hero-sub { font-size: 15px; color: var(--mid); max-width: 540px; line-height: 1.6; }
+
+/* STATS BAR */
+.stats { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+.stat { flex: 1; padding: 20px 32px; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-num { font-family: var(--font-d); font-size: 36px; font-weight: 900; color: var(--white); line-height: 1; }
+.stat-label { font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--mid); margin-top: 4px; }
+
+/* FILTER BAR */
+.filter-bar { padding: 16px 40px; display: flex; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid var(--border); align-items: center; }
+.filter-btn {
+  background: none; border: 1px solid #2a2a2a; color: var(--mid);
+  padding: 6px 16px; font-size: 11px; font-weight: 500; letter-spacing: .07em;
+  text-transform: uppercase; cursor: pointer; transition: all .2s; font-family: var(--font-b);
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--cream); background: rgba(201,168,76,.08); }
+.search-wrap { margin-left: auto; position: relative; }
+.search-input {
+  background: var(--dark); border: 1px solid #2a2a2a; color: var(--cream);
+  padding: 7px 14px 7px 36px; font-size: 12px; font-family: var(--font-b);
+  width: 220px; outline: none; transition: border-color .2s;
+}
+.search-input:focus { border-color: var(--gold); }
+.search-input::placeholder { color: #444; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #444; font-size: 13px; pointer-events: none; }
+
+/* MAIN GRID */
+.main { padding: 32px 40px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1px; background: var(--border); margin-bottom: 48px; }
+
+/* ACCOUNT CARD */
+.account-card {
+  background: var(--black); padding: 0;
+  display: flex; flex-direction: column; cursor: pointer;
+  transition: background .2s; position: relative;
+}
+.account-card:hover { background: var(--near); }
+.account-card-body { padding: 24px; flex: 1; }
+.account-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.account-avatar {
+  width: 48px; height: 48px; flex-shrink: 0;
+  background: var(--dark); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d); font-size: 22px; font-weight: 900; color: var(--cream);
+}
+.account-meta { flex: 1; min-width: 0; }
+.account-handle { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.account-name { font-size: 12px; color: var(--gold); font-weight: 500; }
+.account-category-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  padding: 3px 8px; border: 1px solid; white-space: nowrap; flex-shrink: 0;
+  align-self: flex-start;
+}
+.cat-news { color: #4a9eff; border-color: rgba(74,158,255,.3); background: rgba(74,158,255,.06); }
+.cat-lawyer { color: var(--green); border-color: rgba(39,174,96,.3); background: rgba(39,174,96,.06); }
+.cat-publication { color: var(--gold); border-color: rgba(201,168,76,.3); background: rgba(201,168,76,.06); }
+.cat-biglaw { color: #a855f7; border-color: rgba(168,85,247,.3); background: rgba(168,85,247,.06); }
+.cat-ai { color: #f97316; border-color: rgba(249,115,22,.3); background: rgba(249,115,22,.06); }
+.cat-bar { color: var(--mid); border-color: #333; background: rgba(255,255,255,.03); }
+.cat-competitor { color: var(--red); border-color: rgba(192,57,43,.3); background: rgba(192,57,43,.06); }
+
+.account-bio { font-size: 13px; color: var(--mid); line-height: 1.6; margin-bottom: 14px; }
+.account-why { font-size: 12px; color: var(--cream); line-height: 1.5; padding: 10px 14px; background: var(--dark); border-left: 2px solid var(--gold); }
+.account-why strong { color: var(--gold); }
+.account-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 24px; border-top: 1px solid var(--border);
+}
+.account-links { display: flex; gap: 10px; }
+.account-link {
+  font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--mid); text-decoration: none; padding: 4px 10px; border: 1px solid #2a2a2a;
+  transition: all .2s;
+}
+.account-link:hover { border-color: var(--gold); color: var(--gold); }
+.account-link.primary { color: var(--cream); border-color: #444; }
+.account-link.primary:hover { border-color: var(--gold); color: var(--gold); }
+.account-priority { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); }
+.account-priority.high { color: var(--gold); }
+.account-priority.critical { color: var(--red); }
+
+/* SECTION HEADER */
+.section-header { margin-bottom: 20px; display: flex; align-items: baseline; justify-content: space-between; }
+.section-title { font-family: var(--font-d); font-size: 28px; font-weight: 900; text-transform: uppercase; color: var(--white); }
+.section-count { font-size: 11px; color: var(--mid); letter-spacing: .1em; }
+
+/* DB SOURCES SECTION */
+.sources-section { margin-bottom: 48px; }
+.sources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--border); }
+.source-card { background: var(--card); padding: 24px; transition: background .2s; }
+.source-card:hover { background: var(--near); }
+.source-name { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+.source-tag { font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; padding: 3px 8px; border: 1px solid; margin-bottom: 12px; display: inline-block; }
+.source-desc { font-size: 13px; color: var(--mid); line-height: 1.6; margin-bottom: 12px; }
+.source-stats { display: flex; gap: 16px; margin-bottom: 12px; }
+.source-stat { font-size: 11px; color: var(--cream); }
+.source-stat span { font-size: 10px; color: var(--mid); display: block; }
+.source-status { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.source-status .dot { width: 6px; height: 6px; border-radius: 50%; }
+.status-live { color: var(--green); } .status-live .dot { background: var(--green); animation: pulse 2s infinite; }
+.status-planned { color: var(--gold); } .status-planned .dot { background: var(--gold); }
+.status-available { color: #4a9eff; } .status-available .dot { background: #4a9eff; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.source-link { font-size: 11px; font-weight: 500; color: var(--gold); text-decoration: none; display: block; margin-top: 10px; }
+.source-link:hover { text-decoration: underline; }
+
+/* CALLOUT */
+.callout { border-left: 4px solid var(--gold); padding: 20px 24px; background: var(--near); margin-bottom: 40px; }
+.callout-label { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.callout-text { font-size: 14px; color: var(--cream); line-height: 1.7; }
+
+/* FOOTER */
+footer { padding: 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+footer .copy { font-size: 12px; color: #444; }
+
+/* HIDDEN */
+.account-card.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Kingsfield <span>Lawfare</span></div>
+  <div class="nav-links">
+    <a href="#">Assistant</a>
+    <a href="#">Projects</a>
+    <a href="#">Case Law</a>
+    <a href="#" class="active">Intel Feed</a>
+  </div>
+  <div class="nav-actions">
+    <a href="#" class="btn btn-outline">Log In</a>
+    <a href="#" class="btn btn-solid">Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">Twitter Law — Intelligence Dashboard</div>
+  <div class="hero-hl">Know Who's<br>Talking.</div>
+  <div class="hero-sub">The law moves on X before it moves anywhere else. These are the accounts worth watching — filtered for signal, stripped of noise.</div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num" id="totalCount">18</div>
+    <div class="stat-label">Tracked Accounts</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">7</div>
+    <div class="stat-label">Categories</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">8</div>
+    <div class="stat-label">Data Sources</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">Live</div>
+    <div class="stat-label">CourtListener Feed</div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="lawyer">Solo / Pro Se Lawyers</button>
+  <button class="filter-btn" data-filter="publication">Publications</button>
+  <button class="filter-btn" data-filter="news">News</button>
+  <button class="filter-btn" data-filter="biglaw">BigLaw / Credentialed</button>
+  <button class="filter-btn" data-filter="ai">Legal AI</button>
+  <button class="filter-btn" data-filter="bar">Bar / Institutional</button>
+  <button class="filter-btn" data-filter="competitor">Competitor Watch</button>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search accounts...">
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- TWITTER LAW ACCOUNTS GRID -->
+  <div class="section-header">
+    <div class="section-title">The Feed</div>
+    <div class="section-count" id="visibleCount">18 accounts</div>
+  </div>
+
+  <div class="grid" id="accountGrid">
+
+    <!-- SMB Attorney -->
+    <div class="account-card" data-cat="lawyer" data-name="smb attorney lawfare">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">S</div>
+          <div class="account-meta">
+            <div class="account-handle">@SMB_Attorney</div>
+            <div class="account-name">SMB Attorney — Small Business Legal</div>
+          </div>
+          <span class="account-category-badge cat-lawyer">Lawyer</span>
+        </div>
+        <div class="account-bio">Real-world legal advice for small business owners, operators, and independent contractors. Cuts through legalese. Huge overlap with Kingsfield's D2C target audience.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Direct audience crossover with Kingsfield's pro se and creator economy segments. Their pain points are your product's use cases. Also active on linktr.ee/smb_attorney.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/SMB_Attorney" target="_blank" class="account-link primary">↗ X Profile</a>
+          <a href="https://linktr.ee/smb_attorney" target="_blank" class="account-link">Linktree</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- BigLaw Bro -->
+    <div class="account-card" data-cat="biglaw" data-name="biglawbro biglaw insider">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">B</div>
+          <div class="account-meta">
+            <div class="account-handle">@biglawbro</div>
+            <div class="account-name">BigLaw Bro — Inside BigLaw</div>
+          </div>
+          <span class="account-category-badge cat-biglaw">BigLaw</span>
+        </div>
+        <div class="account-bio">Anonymous BigLaw insider. Billing culture, partner politics, associate burnout, industry gossip. The candid view of what Kingsfield is positioning against.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Real-time window into BigLaw's internal dynamics. When BigLaw screws up publicly, it's Kingsfield's best marketing moment. Monitor for fodder.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/biglawbro" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority">Monitor</div>
+      </div>
+    </div>
+
+    <!-- Will Chen -->
+    <div class="account-card" data-cat="lawyer" data-name="willchen500 litigation attorney">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">W</div>
+          <div class="account-meta">
+            <div class="account-handle">@willchen500</div>
+            <div class="account-name">Will Chen — Litigation & AI Law</div>
+          </div>
+          <span class="account-category-badge cat-lawyer">Lawyer</span>
+        </div>
+        <div class="account-bio">Litigation attorney covering AI, technology law, and court procedure. Commentary on how AI tools are affecting litigation practice — directly relevant to Kingsfield's positioning.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Practitioners commenting on AI legal tools are your best quality signal. When a litigator endorses verification-first AI, that's a testimonial.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/willchen500" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Law.com -->
+    <div class="account-card" data-cat="publication" data-name="lawdotcom law.com legal news publication">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">L</div>
+          <div class="account-meta">
+            <div class="account-handle">@lawdotcom</div>
+            <div class="account-name">Law.com — Legal Industry Publication</div>
+          </div>
+          <span class="account-category-badge cat-publication">Publication</span>
+        </div>
+        <div class="account-bio">ALM's flagship legal publication. Legal industry news, BigLaw moves, technology coverage, court decisions. One of the primary trade publications for practicing attorneys.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Industry-defining coverage. What Law.com covers, the legal market focuses on. Track AI legal tool coverage and citation scandals for positioning opportunities.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/lawdotcom" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Reuters Legal -->
+    <div class="account-card" data-cat="news" data-name="reuterslegal reuters legal news">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">R</div>
+          <div class="account-meta">
+            <div class="account-handle">@ReutersLegal</div>
+            <div class="account-name">Reuters Legal — Wire News</div>
+          </div>
+          <span class="account-category-badge cat-news">News</span>
+        </div>
+        <div class="account-bio">Reuters legal wire. Breaking court decisions, federal rulings, major litigation, SCOTUS. First-call sourcing for news-driven legal research. Also see reuters.com/legal.</div>
+        <div class="account-why"><strong>Why Watch:</strong> When major rulings drop here, they become Kingsfield blog fodder within the hour. Wire speed gives you first-mover advantage on commentary.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/ReutersLegal" target="_blank" class="account-link primary">↗ X Profile</a>
+          <a href="https://www.reuters.com/legal/" target="_blank" class="account-link">reuters.com/legal</a>
+        </div>
+        <div class="account-priority critical">🔴 Critical</div>
+      </div>
+    </div>
+
+    <!-- Law360 -->
+    <div class="account-card" data-cat="publication" data-name="law360 legal news publication">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">360</div>
+          <div class="account-meta">
+            <div class="account-handle">@Law360</div>
+            <div class="account-name">Law360 — Daily Legal Journalism</div>
+          </div>
+          <span class="account-category-badge cat-publication">Publication</span>
+        </div>
+        <div class="account-bio">Daily legal news publication covering litigation, deals, policy, and courts. Subscriber-based. One of the most-read trade publications by working attorneys and litigation teams.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Their coverage of AI hallucination sanctions cases is essential. Every time a lawyer gets sanctioned for a fake citation, it validates the Kingsfield product premise.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/Law360" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority critical">🔴 Critical</div>
+      </div>
+    </div>
+
+    <!-- American Lawyer -->
+    <div class="account-card" data-cat="publication" data-name="americanlawyer american lawyer biglaw publication">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">AL</div>
+          <div class="account-meta">
+            <div class="account-handle">@AmericanLawyer</div>
+            <div class="account-name">The American Lawyer — BigLaw Trade</div>
+          </div>
+          <span class="account-category-badge cat-publication">Publication</span>
+        </div>
+        <div class="account-bio">Trade publication for the largest law firms. Am Law 100 rankings, BigLaw business, lateral moves, technology adoption. Where Harvey targets their marketing.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Harvey is featured here constantly. Competitive intelligence on where BigLaw is going with AI. Also signals when corporate clients are demanding AI disclosures.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/AmericanLawyer" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Above the Law -->
+    <div class="account-card" data-cat="publication" data-name="atlblog above the law legal media">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">ATL</div>
+          <div class="account-meta">
+            <div class="account-handle">@atlblog</div>
+            <div class="account-name">Above the Law — Legal Media</div>
+          </div>
+          <span class="account-category-badge cat-publication">Publication</span>
+        </div>
+        <div class="account-bio">Legal gossip, industry commentary, and law school coverage. Populist legal media with a younger, less BigLaw-centric readership than Law.com or American Lawyer. Elie Mystal (ElieNYC) built his profile here.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Closest editorial voice to Kingsfield's tone. When they call out BigLaw excess or legal tech failures, it lands with exactly the audience Kingsfield serves.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/atlblog" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- The Legal Intelligencer -->
+    <div class="account-card" data-cat="publication" data-name="thelegalintel legal intelligencer pennsylvania">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">TLI</div>
+          <div class="account-meta">
+            <div class="account-handle">@thelegalintel</div>
+            <div class="account-name">The Legal Intelligencer — PA/National</div>
+          </div>
+          <span class="account-category-badge cat-publication">Publication</span>
+        </div>
+        <div class="account-bio">America's oldest legal publication (est. 1843). Pennsylvania-focused but national impact on federal court coverage, appellate decisions, and legal tech adoption trends.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Deep court coverage. Good signal on procedural rule changes affecting pro se litigants, which is directly in Kingsfield's target audience.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/thelegalintel" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority">Monitor</div>
+      </div>
+    </div>
+
+    <!-- ROSS Intelligence -->
+    <div class="account-card" data-cat="ai" data-name="rossintel ross intelligence legal ai">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">RI</div>
+          <div class="account-meta">
+            <div class="account-handle">@ROSSIntel</div>
+            <div class="account-name">ROSS Intelligence — Legal AI (Archive)</div>
+          </div>
+          <span class="account-category-badge cat-ai">Legal AI</span>
+        </div>
+        <div class="account-bio">ROSS Intelligence was an early legal AI startup that shut down in 2021 after losing a Westlaw copyright suit. Their account/community is now a historical record of early legal AI advocacy and failure modes.</div>
+        <div class="account-why"><strong>Why Watch:</strong> The ROSS case (Westlaw v. ROSS) is directly relevant to Kingsfield's "public law belongs to everyone" position. Their story is a cautionary tale and a rallying point. Know this history.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/ROSSIntel" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority">Historical</div>
+      </div>
+    </div>
+
+    <!-- ABA -->
+    <div class="account-card" data-cat="bar" data-name="abaesq american bar association aba">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">ABA</div>
+          <div class="account-meta">
+            <div class="account-handle">@ABAesq</div>
+            <div class="account-name">American Bar Association — Official</div>
+          </div>
+          <span class="account-category-badge cat-bar">Bar / Institutional</span>
+        </div>
+        <div class="account-bio">Official ABA feed. Ethics opinions, rule changes, model rules updates, AI guidelines. ABA Opinion 512 (requiring lawyer oversight of AI outputs) came from here. Essential for compliance coverage.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Every ABA ethics opinion on AI is either a threat or an opportunity for Kingsfield. Opinion 512 is explicitly why the Four-Gate system matters. Track rule changes.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/ABAesq" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority critical">🔴 Critical</div>
+      </div>
+    </div>
+
+    <!-- Harvey AI -->
+    <div class="account-card" data-cat="competitor" data-name="harvey harvey ai legal ai competitor">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">H</div>
+          <div class="account-meta">
+            <div class="account-handle">@harvey</div>
+            <div class="account-name">Harvey AI — Primary Competitor</div>
+          </div>
+          <span class="account-category-badge cat-competitor">Competitor</span>
+        </div>
+        <div class="account-bio">Kingsfield's primary competitive reference. $300M+ raised. OpenAI partnership. Am Law 100 customer base. $1,000–$1,200/seat/month. No public citation verification architecture. Built for institutional legal teams, not individuals.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Every product announcement Harvey makes is a direct signal of where the enterprise is going. Kingsfield goes the opposite direction — not Am Law 100, not OpenAI monoculture, not $1K/seat.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/harvey" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority critical">🔴 Watch Closely</div>
+      </div>
+    </div>
+
+    <!-- Zach Abramowitz -->
+    <div class="account-card" data-cat="ai" data-name="zachabramowitz legal tech commentator vc">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">ZA</div>
+          <div class="account-meta">
+            <div class="account-handle">@ZachAbramowitz</div>
+            <div class="account-name">Zach Abramowitz — Legal Tech VC/Commentator</div>
+          </div>
+          <span class="account-category-badge cat-ai">Legal AI</span>
+        </div>
+        <div class="account-bio">Co-founder of ReplyAll, legal tech investor and commentator. Has been covering legal technology longer than most. Influential with law firm technology decision-makers and legal tech investors.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Early adopter and validator for legal tech products. Getting Kingsfield on his radar — and having the 4-gate verification and multi-provider Council to stand behind — could open doors.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/ZachAbramowitz" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Robert Freund -->
+    <div class="account-card" data-cat="lawyer" data-name="robertfreundlaw entertainment ip attorney creator">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">RF</div>
+          <div class="account-meta">
+            <div class="account-handle">@RobertFreundLaw</div>
+            <div class="account-name">Robert Freund — Entertainment & IP Attorney</div>
+          </div>
+          <span class="account-category-badge cat-lawyer">Lawyer</span>
+        </div>
+        <div class="account-bio">Entertainment and intellectual property attorney. Strong commentary on music rights, AI and copyright, creator economy legal issues, and the intersection of AI with creative work.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Direct audience overlap with Kingsfield's entertainment and IP vertical. His commentary on AI copyright issues (training data, UGC, sampling) is exactly the problem space Kingsfield's skills address.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/RobertFreundLaw" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Popehat -->
+    <div class="account-card" data-cat="lawyer" data-name="popehat ken white first amendment criminal defense">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">K</div>
+          <div class="account-meta">
+            <div class="account-handle">@Popehat</div>
+            <div class="account-name">Ken White — First Amendment / Criminal Defense</div>
+          </div>
+          <span class="account-category-badge cat-lawyer">Lawyer</span>
+        </div>
+        <div class="account-bio">Former federal prosecutor, now criminal defense and First Amendment attorney. Gold standard of legal Twitter. Rigorous, witty, zero-nonsense. Calls out legal theater and bad-faith lawyering on all sides.</div>
+        <div class="account-why"><strong>Why Watch:</strong> The editorial voice Kingsfield's brand aspires to. When he dunks on a case, the legal Twitter community follows. High signal-to-noise, high credibility.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/Popehat" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Damien Charlotin -->
+    <div class="account-card" data-cat="ai" data-name="damiencharlotin ai hallucination tracker legal citations">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">DC</div>
+          <div class="account-meta">
+            <div class="account-handle">@DamienCharlotin</div>
+            <div class="account-name">Damien Charlotin — AI Hallucination Tracker</div>
+          </div>
+          <span class="account-category-badge cat-ai">Legal AI</span>
+        </div>
+        <div class="account-bio">Runs the global AI hallucination in courts database — updated daily with every reported case of AI-generated fake citations reaching judges. The most comprehensive tracker of the problem Kingsfield solves.</div>
+        <div class="account-why"><strong>Why Watch:</strong> His database is Kingsfield's product justification in data form. Every new entry is evidence that 4-gate verification is necessary. Follow closely, cite often, consider a direct partnership.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/DamienCharlotin" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority critical">🔴 Critical</div>
+      </div>
+    </div>
+
+    <!-- LawDork / Chris Geidner -->
+    <div class="account-card" data-cat="news" data-name="lawdork chris geidner scotus appellate civil rights">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">CG</div>
+          <div class="account-meta">
+            <div class="account-handle">@LawDork</div>
+            <div class="account-name">Chris Geidner — SCOTUS & Appellate</div>
+          </div>
+          <span class="account-category-badge cat-news">News</span>
+        </div>
+        <div class="account-bio">First-call reporter when big SCOTUS decisions drop. Primary source reporting, no punditry padding. Covers civil rights, appellate procedure, and constitutional law with unusual depth.</div>
+        <div class="account-why"><strong>Why Watch:</strong> SCOTUS and appellate decisions are the highest-value case law for Kingsfield users. When a major holding drops here, it's immediately relevant to cases being researched on the platform.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/LawDork" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+    <!-- Elie Mystal -->
+    <div class="account-card" data-cat="publication" data-name="elienyc elie mystal the nation above the law">
+      <div class="account-card-body">
+        <div class="account-header">
+          <div class="account-avatar">EM</div>
+          <div class="account-meta">
+            <div class="account-handle">@ElieNYC</div>
+            <div class="account-name">Elie Mystal — The Nation / ATL</div>
+          </div>
+          <span class="account-category-badge cat-publication">Publication</span>
+        </div>
+        <div class="account-bio">Legal affairs correspondent for The Nation, former Above the Law editor. Accessible, direct, and unapologetically opinionated. Crossover audience between legal world and broader political/social commentary.</div>
+        <div class="account-why"><strong>Why Watch:</strong> Directly overlaps with Kingsfield's D2C audience — people who feel the legal system is stacked against them. His audience is exactly who Kingsfield is built for.</div>
+      </div>
+      <div class="account-footer">
+        <div class="account-links">
+          <a href="https://x.com/ElieNYC" target="_blank" class="account-link primary">↗ X Profile</a>
+        </div>
+        <div class="account-priority high">⭑ High Priority</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DATA SOURCES SECTION -->
+  <div class="section-header" style="margin-top: 56px;">
+    <div class="section-title">Data Sources</div>
+    <div class="section-count">Locked. Ordered by priority.</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Database Strategy — The Short Version</div>
+    <div class="callout-text">You need your own database for three reasons: (1) API dependencies will break your verification pipeline at the worst possible moment, (2) per-query fees at scale are unsustainable, (3) a proprietary legal index is the moat. Bootstrap from CourtListener bulk exports + CiteLaw MCP now. Build the internal Supabase index over time. Own the data.</div>
+  </div>
+
+  <div class="sources-section">
+    <div class="sources-grid">
+
+      <div class="source-card">
+        <div class="source-name">CourtListener / Free Law Project</div>
+        <span class="source-tag" style="color:var(--green); border-color:rgba(39,174,96,.3); background:rgba(39,174,96,.06);">Primary Case Law</span>
+        <div class="source-desc">9M+ opinions going back to the 1700s. REST API v4, bulk data exports. The backbone of Kingsfield's citation verification (Gate 1 — Existence). The bulk download is the path to your own DB.</div>
+        <div class="source-stats">
+          <div class="source-stat">~9M<span>Opinions</span></div>
+          <div class="source-stat">Free<span>Cost</span></div>
+          <div class="source-stat">Bulk Export<span>DB Path</span></div>
+        </div>
+        <div class="source-status status-live"><span class="dot"></span> Live in pipeline.ts (adapter needed)</div>
+        <a href="https://www.courtlistener.com/help/api/rest/" class="source-link" target="_blank">courtlistener.com/api →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">CiteLaw.org</div>
+        <span class="source-tag" style="color:#4a9eff; border-color:rgba(74,158,255,.3); background:rgba(74,158,255,.06);">MCP Ready</span>
+        <div class="source-desc">9.3M cases, 1.6M statutes, 355K law journal articles. Native Claude MCP integration — plug directly into the Crew without building an adapter. Free search. Best coverage of the sources listed here.</div>
+        <div class="source-stats">
+          <div class="source-stat">9.3M<span>Cases</span></div>
+          <div class="source-stat">1.6M<span>Statutes</span></div>
+          <div class="source-stat">MCP<span>Integration</span></div>
+        </div>
+        <div class="source-status status-available"><span class="dot"></span> Available — connect MCP now</div>
+        <a href="https://www.citelaw.org" class="source-link" target="_blank">citelaw.org →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">govinfo.gov — USC / CFR</div>
+        <span class="source-tag" style="color:var(--gold); border-color:rgba(201,168,76,.3); background:rgba(201,168,76,.06);">Federal Statutes</span>
+        <div class="source-desc">Official US Code and Code of Federal Regulations in bulk XML. The authoritative source for federal statutory verification (Gate 1 for statutes). Free government data, updated continuously.</div>
+        <div class="source-stats">
+          <div class="source-stat">Bulk XML<span>Format</span></div>
+          <div class="source-stat">Official<span>Authority</span></div>
+          <div class="source-stat">Free<span>Cost</span></div>
+        </div>
+        <div class="source-status status-planned"><span class="dot"></span> Planned — download + ingest</div>
+        <a href="https://www.govinfo.gov/bulkdata" class="source-link" target="_blank">govinfo.gov/bulkdata →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">SSRN — Social Science Research Network</div>
+        <span class="source-tag" style="color:#a855f7; border-color:rgba(168,85,247,.3); background:rgba(168,85,247,.06);">Academic Secondary</span>
+        <div class="source-desc">1.3M+ academic papers including legal scholarship, law review articles, practitioner notes. Free access to most papers. Strong coverage of emerging areas: AI law, crypto, employment. Search API available.</div>
+        <div class="source-stats">
+          <div class="source-stat">1.3M+<span>Papers</span></div>
+          <div class="source-stat">Free Most<span>Access</span></div>
+          <div class="source-stat">API<span>Available</span></div>
+        </div>
+        <div class="source-status status-planned"><span class="dot"></span> Planned — secondary sources layer</div>
+        <a href="https://www.ssrn.com/ssrn/" class="source-link" target="_blank">ssrn.com →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">Reuters Legal</div>
+        <span class="source-tag" style="color:#4a9eff; border-color:rgba(74,158,255,.3); background:rgba(74,158,255,.06);">News / Context</span>
+        <div class="source-desc">Reuters legal wire for breaking court decisions and regulatory news. RSS feed available. Use for the Intelligence Feed / blog content layer. Not for citation verification — for current events context.</div>
+        <div class="source-stats">
+          <div class="source-stat">RSS Feed<span>Format</span></div>
+          <div class="source-stat">Free<span>Access</span></div>
+          <div class="source-stat">Wire Speed<span>Freshness</span></div>
+        </div>
+        <div class="source-status status-planned"><span class="dot"></span> Planned — blog/intel feed</div>
+        <a href="https://www.reuters.com/legal/" class="source-link" target="_blank">reuters.com/legal →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">Damien Charlotin — AI Hallucination DB</div>
+        <span class="source-tag" style="color:var(--red); border-color:rgba(192,57,43,.3); background:rgba(192,57,43,.06);">Product Validation</span>
+        <div class="source-desc">Daily-updated global database of AI-generated false citations in courts. 200+ cases, 66 jurisdictions, sanctions up to $31,000. This is both a competitive differentiator and the core argument for why Kingsfield's 4-gate system matters.</div>
+        <div class="source-stats">
+          <div class="source-stat">200+<span>Cases</span></div>
+          <div class="source-stat">Daily<span>Updates</span></div>
+          <div class="source-stat">66+<span>Jurisdictions</span></div>
+        </div>
+        <div class="source-status status-available"><span class="dot"></span> Available — embed in product</div>
+        <a href="https://x.com/DamienCharlotin" class="source-link" target="_blank">@DamienCharlotin →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">eCFR.gov — Electronic CFR</div>
+        <span class="source-tag" style="color:var(--gold); border-color:rgba(201,168,76,.3); background:rgba(201,168,76,.06);">Regulatory</span>
+        <div class="source-desc">Electronic Code of Federal Regulations, updated daily. XML and JSON API. Required for regulatory verification — employment law, securities, environmental, FTC/FCC matters. Free. Official.</div>
+        <div class="source-stats">
+          <div class="source-stat">Daily<span>Updates</span></div>
+          <div class="source-stat">API + XML<span>Format</span></div>
+          <div class="source-stat">Free<span>Cost</span></div>
+        </div>
+        <div class="source-status status-planned"><span class="dot"></span> Planned — Gate 1 for regulations</div>
+        <a href="https://www.ecfr.gov/developers/documentation/api/v1" class="source-link" target="_blank">ecfr.gov/developers →</a>
+      </div>
+
+      <div class="source-card">
+        <div class="source-name">Your Supabase sources Table</div>
+        <span class="source-tag" style="color:var(--green); border-color:rgba(39,174,96,.3); background:rgba(39,174,96,.06);">Proprietary DB</span>
+        <div class="source-desc">The internal citation store: case ID, opinion text SHA256 hash, 4-gate status, CourtListener ID, jurisdiction tags, negative treatment flag. This becomes your proprietary database as you verify and cache sources over time.</div>
+        <div class="source-stats">
+          <div class="source-stat">Grows<span>With Usage</span></div>
+          <div class="source-stat">4-Gate<span>Tagged</span></div>
+          <div class="source-stat">Supabase<span>Platform</span></div>
+        </div>
+        <div class="source-status status-live"><span class="dot"></span> Exists — needs cl_opinion_id column</div>
+        <a href="#" class="source-link">Migration: ALTER TABLE sources ADD COLUMN cl_opinion_id bigint →</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="copy">© 2026 Kingsfield Lawfare. All rights reserved.</div>
+  <div style="font-size:12px; color:var(--mid); font-style:italic;">We are not lawyers. This is not legal advice. You represent yourself.</div>
+</footer>
+
+<script>
+const filterBtns = document.querySelectorAll('.filter-btn');
+const cards = document.querySelectorAll('.account-card');
+const searchInput = document.getElementById('searchInput');
+const visibleCount = document.getElementById('visibleCount');
+
+function updateCount() {
+  const visible = [...cards].filter(c => !c.classList.contains('hidden')).length;
+  visibleCount.textContent = `${visible} account${visible !== 1 ? 's' : ''}`;
+}
+
+let activeFilter = 'all';
+let searchTerm = '';
+
+function applyFilters() {
+  cards.forEach(card => {
+    const cat = card.dataset.cat;
+    const name = card.dataset.name || '';
+    const matchFilter = activeFilter === 'all' || cat === activeFilter;
+    const matchSearch = !searchTerm || name.includes(searchTerm.toLowerCase());
+    card.classList.toggle('hidden', !(matchFilter && matchSearch));
+  });
+  updateCount();
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilter = this.dataset.filter;
+    applyFilters();
+  });
+});
+
+searchInput.addEventListener('input', function() {
+  searchTerm = this.value.trim();
+  applyFilters();
+});
+
+updateCount();
+</script>
+</body>
+</html>

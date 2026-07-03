@@ -1,0 +1,65 @@
+# ── DEPENDENCIES / REGENERABLE ENVIRONMENTS ───────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+__pycache__/
+*.pyc
+venv/
+.venv/
+venv-*/
+
+# ── BUILD OUTPUTS ─────────────────────────────────────────────────────────────
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# ── ENVIRONMENT & SECRETS ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+id_rsa*
+id_ed25519*
+
+# ── OS & EDITOR ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+*~
+.idea/
+.vscode/settings.json
+*.suo
+
+# ── TEST COVERAGE ─────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+lcov.info
+
+# ── MISC ──────────────────────────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ── ALREADY A SEPARATE REPO (github.com/Kandy22/Wingman-demo) ────────────────
+# This has its own .git and its own remote — do not fold it into kingsfield's
+# history, it's already backed up on its own. Everything ELSE under
+# wingman-in-your-ear/ (not this specific subfolder) is still tracked normally.
+/wingman-in-your-ear/wingman-demo/
+
+# ── VENDORED THIRD-PARTY CODE (downloaded copies of other people's repos) ────
+/agent-skills-repos/
+/skills/
+/py-simple-audio-master/
+/_review-needed/
+
+# ── UNRELATED RESEARCH-PDF HOARDING / UNSORTED (reviewed 2026-07-03) ─────────
+/evidence/
+/to sort/
+/benchmarks/
+
+# ── OVER GITHUB'S 100MB HARD LIMIT, LFS BLOCKED BY ACCOUNT BILLING ────────────
+# 257MB pirated book scan — not worth resolving the LFS billing issue for.
+/assets/blog/blog-voice/Fake Americana/

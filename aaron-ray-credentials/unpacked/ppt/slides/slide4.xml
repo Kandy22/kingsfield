@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld name="Slide 4">
+    <p:bg>
+      <p:bgPr>
+        <a:solidFill>
+          <a:srgbClr val="F2EFE6"/>
+        </a:solidFill>
+      </p:bgPr>
+    </p:bg>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="1" name=""/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="2" name="Shape 0"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="0" y="0"/>
+            <a:ext cx="54864" cy="5143500"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:solidFill>
+            <a:srgbClr val="C9A96E"/>
+          </a:solidFill>
+          <a:ln w="12700">
+            <a:solidFill>
+              <a:srgbClr val="C9A96E"/>
+            </a:solidFill>
+            <a:prstDash val="solid"/>
+          </a:ln>
+        </p:spPr>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="3" name="Text 1"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="320040"/>
+            <a:ext cx="1097280" cy="502920"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="3200" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="C9A96E"/>
+                </a:solidFill>
+                <a:latin typeface="Bebas Neue" pitchFamily="34" charset="0"/>
+                <a:ea typeface="Bebas Neue" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="Bebas Neue" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>03</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="3200" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="4" name="Text 2"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="1417320" y="384048"/>
+            <a:ext cx="7315200" cy="438912"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1800" spc="80" kern="0" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="0B1E3A"/>
+                </a:solidFill>
+                <a:latin typeface="Bebas Neue" pitchFamily="34" charset="0"/>
+                <a:ea typeface="Bebas Neue" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="Bebas Neue" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>AI/ML TECHNICAL CREDENTIALS</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1800" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="5" name="Shape 3"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="896112"/>
+            <a:ext cx="8138160" cy="0"/>
+          </a:xfrm>
+          <a:prstGeom prst="line">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln w="15875">
+            <a:solidFill>
+              <a:srgbClr val="C9A96E"/>
+            </a:solidFill>
+            <a:prstDash val="solid"/>
+          </a:ln>
+        </p:spPr>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="6" name="Text 4"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="1051560"/>
+            <a:ext cx="8138160" cy="237744"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1100" spc="120" kern="0" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="A68A55"/>
+                </a:solidFill>
+                <a:latin typeface="Bebas Neue" pitchFamily="34" charset="0"/>
+                <a:ea typeface="Bebas Neue" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="Bebas Neue" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>Frontier Architectural Frameworks</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1100" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="7" name="Text 5"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="1289304"/>
+            <a:ext cx="8138160" cy="713232"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:lnSpc>
+                <a:spcPts val="1700"/>
+              </a:lnSpc>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1250" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="0B1E3A"/>
+                </a:solidFill>
+                <a:latin typeface="IBM Plex Mono" pitchFamily="34" charset="0"/>
+                <a:ea typeface="IBM Plex Mono" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="IBM Plex Mono" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>Direct technical proficiency across machine learning models and frameworks, encompassing early implementations in TensorFlow and YOLOv3 object detection environments, alongside deep data tuning inside advanced natural language processing architectures.</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1250" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="8" name="Shape 6"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="1965960"/>
+            <a:ext cx="8138160" cy="0"/>
+          </a:xfrm>
+          <a:prstGeom prst="line">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln w="9525">
+            <a:solidFill>
+              <a:srgbClr val="C9A96E"/>
+            </a:solidFill>
+            <a:prstDash val="solid"/>
+          </a:ln>
+        </p:spPr>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="9" name="Text 7"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="2093976"/>
+            <a:ext cx="8138160" cy="237744"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1100" spc="120" kern="0" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="A68A55"/>
+                </a:solidFill>
+                <a:latin typeface="Bebas Neue" pitchFamily="34" charset="0"/>
+                <a:ea typeface="Bebas Neue" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="Bebas Neue" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>Generative Music &amp; Audio Networks</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1100" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="10" name="Text 8"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="2331720"/>
+            <a:ext cx="8138160" cy="713232"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:lnSpc>
+                <a:spcPts val="1700"/>
+              </a:lnSpc>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1250" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="0B1E3A"/>
+                </a:solidFill>
+                <a:latin typeface="IBM Plex Mono" pitchFamily="34" charset="0"/>
+                <a:ea typeface="IBM Plex Mono" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="IBM Plex Mono" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>Technical execution tracking across advanced neural audio generation pipelines, including Google's Magenta platform, OpenAI Jukebox architectures, and digital acoustic sequence engines like EarSketch.</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1250" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="11" name="Shape 9"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="3008376"/>
+            <a:ext cx="8138160" cy="0"/>
+          </a:xfrm>
+          <a:prstGeom prst="line">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln w="9525">
+            <a:solidFill>
+              <a:srgbClr val="C9A96E"/>
+            </a:solidFill>
+            <a:prstDash val="solid"/>
+          </a:ln>
+        </p:spPr>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="12" name="Text 10"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="3136392"/>
+            <a:ext cx="8138160" cy="237744"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1100" spc="120" kern="0" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="A68A55"/>
+                </a:solidFill>
+                <a:latin typeface="Bebas Neue" pitchFamily="34" charset="0"/>
+                <a:ea typeface="Bebas Neue" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="Bebas Neue" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>Specialized Deep Learning Credentials</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1100" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="13" name="Text 11"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="3374136"/>
+            <a:ext cx="8138160" cy="713232"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:lnSpc>
+                <a:spcPts val="1700"/>
+              </a:lnSpc>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1250" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="0B1E3A"/>
+                </a:solidFill>
+                <a:latin typeface="IBM Plex Mono" pitchFamily="34" charset="0"/>
+                <a:ea typeface="IBM Plex Mono" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="IBM Plex Mono" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>Academic and practical training certifications in deep learning, sequence modeling, and natural language processing architectures from leading research institutions, including Johns Hopkins University and the University of Michigan.</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="1250" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="14" name="Text 12"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="502920" y="4864608"/>
+            <a:ext cx="6400800" cy="201168"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="800" spc="150" kern="0" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="A68A55"/>
+                </a:solidFill>
+                <a:latin typeface="IBM Plex Mono" pitchFamily="34" charset="0"/>
+                <a:ea typeface="IBM Plex Mono" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="IBM Plex Mono" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>AARON RAY  •  EXECUTIVE CREDENTIAL SYNTHESIS</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="800" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="15" name="Text 13"/>
+          <p:cNvSpPr/>
+          <p:nvPr/>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="7498080" y="4864608"/>
+            <a:ext cx="1188720" cy="201168"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln/>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" rtlCol="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr algn="r" indent="0" marL="0">
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="800" dirty="0">
+                <a:solidFill>
+                  <a:srgbClr val="A68A55"/>
+                </a:solidFill>
+                <a:latin typeface="IBM Plex Mono" pitchFamily="34" charset="0"/>
+                <a:ea typeface="IBM Plex Mono" pitchFamily="34" charset="-122"/>
+                <a:cs typeface="IBM Plex Mono" pitchFamily="34" charset="-120"/>
+              </a:rPr>
+              <a:t>04 / 06</a:t>
+            </a:r>
+            <a:endParaRPr lang="en-US" sz="800" dirty="0"/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:sld>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dear Chief Judge — A Modest Revision — Smart. Not Stupid.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,500;1,9..144,700&family=Special+Elite&family=Caveat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F2EFE6; --paper:#FAF8F2; --letterpaper:#FBF8EF;
+    --ink:#0E0C09; --ink-soft:#2A241B; --rule:#1C190F;
+    --bordeaux:#8B1A1A; --bordeaux-2:#B91C1C;
+    --amber:#D4861A; --gold:#C9A96E;
+    --pencil:#3C4A5C; --red-pen:#B91C1C; --green-pen:#1f6f3a;
+    --hl-yellow:#FBE96A; --hl-yellow-soft:#FCF1A8;
+    --hl-peach:#FFD8A8; --hl-peach-soft:#FFE4C0;
+    --hl-circle:#B91C1C;
+    --muted:rgba(14,12,9,0.55);
+    --display:'Big Shoulders Display',Impact,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --letter-serif:'Fraunces',Georgia,serif;
+    --typewriter:'Special Elite',monospace;
+    --hand:'Caveat',cursive;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+  /* nav */
+  .topnav{background:rgba(242,239,230,0.94);backdrop-filter:blur(6px);padding:20px 48px 18px;border-bottom:1px solid rgba(14,12,9,0.08);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;z-index:50}
+  .topnav .left .brand{font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:-0.005em}
+  .topnav .left .brand .dot{color:var(--bordeaux)}
+  .topnav .left .by{font-family:var(--serif);font-size:14px;color:var(--muted);margin-top:2px}
+  .topnav .left .by u{text-decoration:underline;text-decoration-color:var(--bordeaux);text-decoration-thickness:1px}
+  .topnav .links{display:flex;gap:36px;align-items:center;font-family:var(--serif);font-size:15px}
+  .topnav .links a{color:var(--ink);text-decoration:none}
+  .topnav .links a.num{color:var(--muted);font-variant-numeric:tabular-nums}
+  .topnav .links a.num.on{color:var(--bordeaux);font-weight:600}
+
+  /* article header */
+  .article-head{max-width:1200px;margin:0 auto;padding:88px 48px 32px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:28px}
+  .title-wrap{position:relative;display:inline-block;margin-bottom:8px}
+  .title-q{font-family:var(--serif);font-style:italic;font-weight:700;font-size:clamp(56px,8vw,128px);line-height:0.95;letter-spacing:-0.015em;color:var(--ink);position:relative;display:inline-block}
+  .title-q::before,.title-q::after{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--bordeaux)}
+  .title-q::before{content:"\""}
+  .title-q::after{content:"\""}
+  .title-q .strike{position:absolute;left:-12px;right:-12px;top:54%;height:8px;background:var(--bordeaux-2);transform:rotate(-1.5deg);pointer-events:none}
+  .subtitle{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(32px,4vw,56px);line-height:1;letter-spacing:-0.005em;color:var(--ink);margin-top:36px;max-width:980px}
+  .dek{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.45;color:var(--ink-soft);max-width:780px;margin-top:24px}
+  .meta-row{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-top:36px;display:flex;gap:24px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(14,12,9,0.15)}
+  .meta-row strong{color:var(--ink);font-weight:600}
+
+  /* article — wide layout with the marked-up letter as centerpiece */
+  .article{max-width:1280px;margin:0 auto;padding:48px 48px 96px;position:relative}
+  .body{font-family:var(--serif);font-size:20px;line-height:1.65;color:var(--ink);max-width:780px;margin:0 auto}
+  .body p{margin-bottom:24px}
+  .body .dateline{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin-bottom:24px}
+  .body .lede::first-letter{font-family:var(--display);font-weight:900;font-size:96px;line-height:0.85;float:left;padding:8px 14px 0 0;color:var(--bordeaux)}
+  .body h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:34px;line-height:1.02;letter-spacing:-0.005em;margin:56px 0 12px;color:var(--ink)}
+  .body h3{font-family:var(--serif);font-style:italic;font-weight:500;font-size:19px;color:var(--muted);margin-bottom:28px}
+  .body blockquote{margin:30px 0;padding:20px 28px;border-left:4px solid var(--bordeaux);background:var(--paper);font-family:var(--typewriter);font-size:16px;line-height:1.65;color:var(--ink-soft)}
+  .body em{font-style:italic}
+  .body strong{font-weight:700}
+  .body sup{color:var(--bordeaux);font-size:0.72em;vertical-align:super}
+
+  /* ──────────── THE MARKED-UP LETTER ──────────── */
+  .letter-stage{position:relative;margin:64px -120px 64px;padding:0 120px}
+  @media (max-width:1400px){.letter-stage{margin:64px -40px;padding:0 40px}}
+
+  .letter-mock{background:var(--letterpaper);border:1px solid rgba(14,12,9,0.18);padding:56px 72px 80px;position:relative;box-shadow:0 18px 50px -10px rgba(0,0,0,0.18);font-family:var(--letter-serif);font-size:16px;line-height:1.75;color:#1a1409;max-width:880px;margin:0 auto;z-index:2}
+  .letter-mock::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:var(--cream);box-shadow:-260px 0 0 var(--cream),260px 0 0 var(--cream)}
+
+  .letter-mock .docket{font-family:var(--mono);font-size:11px;color:rgba(14,12,9,0.55);text-align:center;margin-bottom:24px}
+  .letter-mock .firm-block{text-align:center;font-family:'Times New Roman',serif;margin-bottom:28px}
+  .letter-mock .firm-name{font-weight:700;font-size:26px;letter-spacing:0.02em;margin-bottom:6px}
+  .letter-mock .firm-sub{font-size:11px;color:rgba(14,12,9,0.7);line-height:1.4}
+  .letter-mock .firm-cities{font-size:10px;color:rgba(14,12,9,0.55);letter-spacing:0.04em;margin-top:4px}
+  .letter-mock .firm-cities .quip{font-family:var(--hand);font-size:18px;color:var(--bordeaux);font-style:normal;letter-spacing:0;display:block;margin-top:8px}
+
+  .letter-mock .date-line{text-align:right;font-family:'Times New Roman',serif;margin:24px 0 14px;font-size:14px}
+  .letter-mock .via{font-family:'Times New Roman',serif;font-size:14px;margin-bottom:14px}
+  .letter-mock .addr{font-family:'Times New Roman',serif;font-size:14px;margin-bottom:18px;line-height:1.55}
+  .letter-mock .re{font-family:'Times New Roman',serif;font-size:14px;font-weight:700;margin-bottom:18px}
+  .letter-mock .re u{text-decoration:underline}
+  .letter-mock .re .ctx{font-family:var(--hand);font-style:normal;font-weight:400;font-size:18px;color:var(--pencil);margin-left:12px}
+  .letter-mock .salutation{font-family:'Times New Roman',serif;font-size:14px;margin-bottom:14px}
+
+  .letter-mock .para{font-family:'Times New Roman',serif;font-size:14.5px;text-indent:36px;text-align:justify;margin-bottom:14px;line-height:1.75;position:relative}
+
+  /* highlights — Underhill's annotations */
+  .hl{background:var(--hl-yellow);padding:1px 3px;border-radius:1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .hl-peach{background:var(--hl-peach);padding:1px 3px;border-radius:1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .hl-circle{display:inline-block;border:2px solid var(--hl-circle);border-radius:18px / 60%;padding:0 6px;position:relative}
+  .hl-circle::after{content:"\2605\2605\2605";font-family:var(--hand);font-weight:700;color:var(--red-pen);margin-left:6px;font-size:14px}
+
+  /* inline handwritten parenthetical (right after highlighted phrase) */
+  .ink-inline{font-family:var(--hand);font-style:normal;font-size:18px;color:var(--pencil);font-weight:500;text-indent:0;letter-spacing:0;display:inline}
+  .ink-inline-red{font-family:var(--hand);font-style:normal;font-size:18px;color:var(--red-pen);font-weight:600;text-indent:0;letter-spacing:0;display:inline}
+  .ink-inline-arrow{font-family:var(--hand);font-size:18px;color:var(--red-pen);font-weight:600}
+
+  /* stamps inside the letter */
+  .stamp{position:absolute;border:2px solid currentColor;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:0.18em;text-align:center;padding:6px 12px;text-transform:uppercase;font-style:normal;background:rgba(251,233,106,0.04);text-indent:0}
+  .stamp.received{top:24px;left:42px;color:#2C5AA0;transform:rotate(-8deg)}
+  .stamp.reviewed{top:38px;left:260px;color:#2C8A4D;transform:rotate(4deg)}
+  .stamp.shame{top:30px;right:40px;color:var(--red-pen);font-size:12px;letter-spacing:0.22em;padding:8px 14px;transform:rotate(6deg)}
+  .stamp.prior{position:absolute;bottom:170px;right:42px;color:var(--red-pen);transform:rotate(-7deg);padding:8px 14px;line-height:1.45;font-size:9.5px}
+  .coffee{position:absolute;width:120px;height:120px;border-radius:50%;border:11px solid rgba(140,90,30,0.32);box-shadow:0 0 0 2px rgba(140,90,30,0.15) inset;opacity:0.7;pointer-events:none;top:46%;right:62px}
+
+  /* footer of the letter — signature with under-line handwritten note */
+  .letter-mock .sig-block{margin-top:24px;font-family:'Times New Roman',serif;font-size:14px}
+  .letter-mock .sig-block em{font-style:italic}
+  .letter-mock .sig-note{font-family:var(--hand);font-size:18px;color:var(--pencil);font-style:normal;display:block;margin-top:4px}
+
+  /* routing header above the letter */
+  .routing{border:1.5px solid rgba(139,26,26,0.4);padding:20px 24px;margin-bottom:28px;background:rgba(251,233,106,0.08);position:relative}
+  .routing-head{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--bordeaux);font-weight:600;margin-bottom:14px}
+  .routing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px 24px}
+  .routing-grid .field{display:flex;flex-direction:column;gap:4px}
+  .routing-grid .label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+  .routing-grid .val{font-family:var(--hand);font-size:20px;color:var(--pencil);border-bottom:1px solid rgba(14,12,9,0.25);padding-bottom:2px;line-height:1.1}
+  .routing-grid .val.ok{color:var(--green-pen)}
+  .routing-grid .val.warn{color:var(--bordeaux)}
+  .routing .tu-mono{position:absolute;top:14px;right:24px;font-family:var(--hand);font-size:34px;color:var(--bordeaux);font-weight:700;line-height:1}
+
+  /* the floating handwritten marginalia in the gutters around the letter */
+  .gutter{position:absolute;font-family:var(--hand);font-size:22px;line-height:1.18;color:var(--pencil);max-width:240px;z-index:3}
+  .gutter.red{color:var(--red-pen)}
+  .gutter.green{color:var(--green-pen)}
+  .gutter.black{color:var(--ink)}
+  .gutter.big{font-size:26px}
+  .gutter.small{font-size:18px}
+  .gutter.bigger{font-size:30px;font-weight:600}
+  .gutter strong{font-weight:700}
+  .gutter em{font-style:italic}
+  .gutter .arrow{color:var(--red-pen);display:inline-block;margin:0 4px}
+
+  /* fiduciary-grade AI sneering label */
+  .fid-label{position:absolute;font-family:var(--serif);font-style:italic;font-weight:600;font-size:16px;color:var(--ink);background:transparent;text-indent:0;z-index:4}
+  .fid-label::after{content:"";position:absolute;left:-6px;right:-6px;top:54%;height:2px;background:var(--ink-soft);opacity:0.6}
+
+  /* sticky postit */
+  .postit{position:absolute;background:#FFF4A3;padding:16px 18px;font-family:var(--hand);font-size:18px;color:var(--ink);border-radius:2px;box-shadow:3px 5px 12px rgba(0,0,0,0.22);transform:rotate(-3deg);max-width:200px;z-index:5;line-height:1.25}
+  .postit strong{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;display:block;margin-bottom:8px;color:var(--bordeaux);font-weight:600}
+
+  /* tiny "Dear Chief Judge" thumbnail tag */
+  .thumb-tag{position:absolute;width:120px;height:170px;background:#000;color:var(--gold);padding:18px 14px;font-family:var(--serif);font-style:italic;font-weight:700;font-size:22px;line-height:1.05;text-align:center;display:flex;flex-direction:column;justify-content:space-between;box-shadow:6px 8px 18px rgba(0,0,0,0.3)}
+  .thumb-tag .top{position:relative}
+  .thumb-tag .top::after{content:"";position:absolute;left:-4px;right:-4px;top:48%;height:2px;background:#000;transform:rotate(-2deg)}
+  .thumb-tag .strike-line{position:absolute;left:8px;right:8px;top:42%;height:2px;background:var(--gold);transform:rotate(-3deg)}
+  .thumb-tag .bot{font-style:normal;font-family:var(--serif);font-weight:400;font-size:10px;color:rgba(201,169,110,0.7);line-height:1.3}
+
+  /* editor's note red callout — Schedule A summary */
+  .editors-note{margin:32px 48px 0;border:1.5px solid var(--bordeaux-2);background:#FCEEEC;padding:22px 26px;font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink-soft);position:relative;z-index:2}
+  .editors-note h4{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--bordeaux);font-weight:600;margin-bottom:10px}
+  .editors-note strong{color:var(--ink);font-weight:700}
+  .editors-note .kicker-line{font-family:var(--serif);font-style:italic;color:var(--bordeaux);margin-top:10px}
+
+  /* the parody redraft (after the marked-up real letter) */
+  .parody{background:#fbf6e9;border:1px solid var(--rule);padding:48px 52px 56px;margin:48px auto;position:relative;box-shadow:14px 14px 0 -2px var(--ink),14px 14px 0 -1px var(--bordeaux);font-family:var(--typewriter);font-size:14.5px;line-height:1.75;color:#1a1409;max-width:780px}
+  .parody .firm-line{font-family:var(--display);font-weight:900;font-size:22px;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:2px}
+  .parody .firm-addr{font-family:var(--typewriter);font-size:12px;color:rgba(14,12,9,0.55);margin-bottom:22px}
+  .parody p{margin-bottom:14px}
+  .parody .right{text-align:right}
+  .parody sup{color:var(--bordeaux);font-weight:600}
+  .parody .sig{margin-top:24px;font-family:var(--hand);font-size:28px;color:var(--pencil)}
+  .parody .cc{margin-top:20px;font-size:12.5px;color:var(--ink-soft)}
+  .parody .fn{margin-top:28px;border-top:1px solid var(--rule);padding-top:14px;font-size:12px;line-height:1.55;color:var(--ink-soft)}
+  .parody .fn p{margin-bottom:6px}
+  .parody .stamp-redraft{position:absolute;border:2px solid var(--red-pen);color:var(--red-pen);font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;padding:6px 14px;top:32px;right:36px;transform:rotate(-6deg);opacity:0.85}
+
+  /* Dietderich dossier */
+  .dietderich{margin:64px auto;max-width:780px;background:#eeeae0;border:1px solid var(--rule);padding:36px 40px;display:grid;grid-template-columns:1fr 200px;gap:36px;align-items:start;position:relative}
+  .dietderich::before{content:"DOSSIER";position:absolute;top:-12px;left:36px;background:var(--ink);color:var(--gold);font-family:var(--mono);font-size:10px;letter-spacing:0.22em;padding:5px 14px;font-weight:600}
+  .dietderich h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:28px;line-height:1;margin-bottom:8px;color:var(--ink)}
+  .dietderich .role{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--bordeaux);margin-bottom:18px}
+  .dietderich ul{list-style:none;padding:0;font-family:var(--serif);font-size:15px;line-height:1.55}
+  .dietderich li{padding:8px 0;border-top:1px dotted rgba(14,12,9,0.25);color:var(--ink-soft);display:flex;gap:10px}
+  .dietderich li:first-of-type{border-top:0}
+  .dietderich li::before{content:"—";color:var(--bordeaux);font-weight:700;flex-shrink:0}
+  .dietderich .portrait{background:linear-gradient(180deg,#d9d2c2 0%,#b8af9b 100%);border:1px solid var(--rule);height:240px;display:flex;align-items:flex-end;justify-content:center;position:relative;overflow:hidden}
+  .dietderich .portrait::before{content:"";position:absolute;top:30px;left:50%;transform:translateX(-50%);width:74px;height:74px;border-radius:50%;background:#a89a86}
+  .dietderich .portrait::after{content:"";position:absolute;top:100px;left:50%;transform:translateX(-50%);width:130px;height:180px;background:linear-gradient(180deg,#6b5847 0%,#3d3026 100%);clip-path:polygon(20% 0,80% 0,100% 30%,100% 100%,0 100%,0 30%)}
+  .dietderich .portrait .lbl{font-family:var(--serif);font-size:13px;color:#2a241b;background:rgba(242,239,230,0.92);padding:8px 12px;margin-bottom:14px;z-index:2;position:relative}
+
+  /* schedule A table */
+  .sched{margin:48px auto;max-width:880px;border:1px solid var(--rule);background:var(--paper)}
+  .sched-head{background:var(--ink);color:var(--cream);padding:20px 28px;display:flex;justify-content:space-between;align-items:baseline}
+  .sched-head h3{font-family:var(--display);font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:0.005em;color:var(--cream)}
+  .sched-head .stat{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+  .sched-rows{font-family:var(--serif);font-size:15px;line-height:1.55}
+  .sched-row{padding:18px 28px;border-bottom:1px solid rgba(14,12,9,0.12);display:grid;grid-template-columns:180px 1fr 110px;gap:24px;align-items:start}
+  .sched-row:last-child{border-bottom:0}
+  .sched-row .filing{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:14px;letter-spacing:0.01em;color:var(--bordeaux)}
+  .sched-row .errs{color:var(--ink-soft)}
+  .sched-row .errs strong{color:var(--ink)}
+  .sched-row .count{font-family:var(--mono);font-size:13px;color:var(--bordeaux);text-align:right;font-weight:600}
+
+  /* pull quote */
+  .pq{margin:48px auto;max-width:780px;padding:32px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:34px;line-height:1.04;color:var(--ink)}
+  .pq em{color:var(--bordeaux);font-style:normal}
+
+  /* verification block */
+  .verify{margin:64px auto 0;max-width:780px;border:1px solid var(--rule);background:var(--paper);padding:24px 28px;font-family:var(--mono);font-size:11.5px;line-height:1.65;color:var(--ink-soft);letter-spacing:0.03em}
+  .verify h4{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;color:var(--ink)}
+  .verify ul{list-style:none;padding:0}
+  .verify li{padding:5px 0;display:flex;gap:10px}
+  .verify .gate{display:inline-block;width:100px;color:var(--green-pen);font-weight:600}
+
+  /* byline */
+  .byline{margin:36px auto 0;max-width:780px;padding-top:24px;border-top:2px solid var(--ink);font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);line-height:1.65}
+
+  /* CTA stamp */
+  .cta-strip{margin:80px auto 0;max-width:780px;text-align:center;padding:32px 0}
+  .cta-stamp{display:inline-block;border:3px solid var(--bordeaux-2);color:var(--bordeaux-2);font-family:var(--hand);font-size:28px;font-weight:600;padding:18px 36px;transform:rotate(-2deg);line-height:1.2}
+  .cta-stamp .small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;margin-top:6px;font-weight:600}
+
+  /* foot */
+  .foot{background:#000;color:rgba(242,239,230,0.5);padding:32px 48px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase}
+  .foot .brand{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--cream);text-transform:none;letter-spacing:0}
+
+  @media (max-width:1100px){
+    .letter-stage{margin:48px -20px;padding:0 20px}
+    .gutter,.thumb-tag,.fid-label,.postit{position:static !important;transform:none;max-width:none;display:block;margin:18px 0;padding:8px 0}
+    .gutter::before{content:"➝ ";color:var(--red-pen)}
+    .dietderich{grid-template-columns:1fr}
+    .sched-row{grid-template-columns:1fr;gap:8px}
+    .sched-row .count{text-align:left}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="left">
+    <div class="brand"><strong>Smart<span class="dot">.</span> Not Stupid<span class="dot">.</span></strong></div>
+    <div class="by">Ted <u>Underhill</u>, Partner, Pierce &amp; Pierce</div>
+  </div>
+  <div class="links">
+    <a href="#">About</a>
+    <a href="#">Index</a>
+    <a href="#" class="num on">1</a>
+    <a href="#" class="num">2</a>
+  </div>
+</nav>
+
+<header class="article-head">
+  <div class="kicker">Issue 07 · May 26, 2026 · BigLaw / AI Malpractice / Bankruptcy · S.D.N.Y.</div>
+  <div class="title-wrap">
+    <span class="title-q">Dear Chief Judge<span class="strike"></span></span>
+  </div>
+  <h1 class="subtitle">A Modest Revision of Sullivan &amp; Cromwell's Letter to the Court.</h1>
+  <p class="dek">On the apology letter Sullivan &amp; Cromwell filed in <em>In re Prince Global Holdings</em>, the redraft they should have filed instead, and the partner whose name is on the apology, the firm's 2021 ethics article, and one prior FTX-adjacent embarrassment.</p>
+  <div class="meta-row">
+    <span>By <strong>Theodore R. Underhill III</strong></span>
+    <span>·</span>
+    <span>12 min read</span>
+    <span>·</span>
+    <span>Filed under <strong>BigLaw / AI / Bankruptcy</strong></span>
+    <span>·</span>
+    <span>Every citation <strong>verified · four gates passed</strong></span>
+  </div>
+</header>
+
+<main class="article">
+
+  <div class="body">
+    <p class="dateline">Monday.</p>
+
+    <p class="lede">The most important document filed in the Southern District of New York in the month of April was not a motion. It was an apology. Three pages, pinned to ECF on April 18th by partners at Sullivan &amp; Cromwell, a firm that has been billing in twentieth-of-an-hour increments since approximately the McKinley administration, addressed to the Honorable Martin Glenn of the United States Bankruptcy Court for the Southern District of New York, and devoted to the question of how exactly the firm's filings in <em>In re Prince Global Holdings Ltd.</em>, No. 26-10769 — the Chapter 15 ancillary case for the Prince Group, the Cambodian forced-labor cyber-scam empire that the United States Treasury sanctioned last October — came to be salted with citations to cases that do not exist.</p>
+
+    <p>I have a copy of the letter in front of me. I have read it three times. I have annotated it in pencil. In the margin next to the second paragraph, I have written <em>no.</em> In the margin next to the fourth paragraph, I have written <em>NO.</em> My assistant — who has been with me since the second Bush administration and has seen enough partner outbursts to qualify, in any sane jurisdiction, as a hostile witness — left the office at two and has not returned my calls.</p>
+
+    <p>I am reproducing the letter below in full, with the annotations as I made them. I would like the reader to follow along.</p>
+  </div>
+
+  <!-- ────────────── THE MARKED-UP S&C LETTER ────────────── -->
+  <div class="letter-stage">
+
+    <!-- floating gutter marginalia (positioned around the letter) -->
+    <div class="gutter red bigger" style="top:60px;left:-20px">Ha! Nice try!</div>
+    <div class="gutter" style="top:140px;right:-40px;text-align:left;">9 days<br><span class="arrow">→</span> after filing</div>
+    <div class="postit" style="top:340px;right:-110px"><strong>From the desk of T.U.</strong>Read every word.<br>Then read it again.<br>Then ask yourself<br>how this got filed.</div>
+    <div class="gutter red" style="top:560px;left:-180px;text-align:right">opp. counsel:<br>screenshotted.<br>framed. on my<br>wall.</div>
+
+    <div class="thumb-tag" style="top:240px;left:-180px">
+      <div class="top">"Dear<br>Chief<span class="strike-line"></span><br>Judge"</div>
+      <div class="bot">A Modest Revision of Sullivan &amp;<br>Cromwell's Letter to the Court.</div>
+    </div>
+
+    <div class="gutter" style="top:920px;left:-220px;text-align:right"><em>Hallucinations</em> have been<br>around forever. Just because<br><em>you</em> found out something<br>does not make it new.</div>
+
+    <div class="gutter red" style="top:1080px;left:-220px;text-align:right">"the data"<br><span style="font-size:18px">shut the fuck<br>up nerd</span></div>
+
+    <div class="fid-label" style="top:880px;right:-90px">fiduciary-grade AI</div>
+
+    <div class="gutter" style="top:1240px;right:-200px">What could<br>possibly<br>go wrong?</div>
+
+    <div class="gutter" style="top:1380px;left:-220px;text-align:right">Literally, no one<br>thinks this.<br><span style="font-size:19px;color:var(--muted)">Are you<br>engagement<br>farming?</span></div>
+
+    <div class="gutter" style="top:1660px;left:-260px;text-align:right;max-width:280px">I kinda understand your<br>position here now. Not like<br>the filing just has wrong or<br>problematic conclusions<br>or anything &mdash; just gets<br><em>basic facts</em> wrong on like<br>every page.</div>
+
+    <div class="fid-label" style="top:1620px;right:-90px">fiduciary-grade AI</div>
+
+    <div class="gutter red" style="top:1900px;right:-180px">!!!! FOUND MORE<br>ERRORS. <em>While fixing</em><br><em>the first ones.</em></div>
+
+    <div class="gutter" style="top:2120px;right:-170px"><span style="font-size:19px;font-style:italic">not embarrassed</span><br>for you, but not<br><em>your best work.</em></div>
+
+    <div class="fid-label" style="top:2230px;right:-90px">fiduciary-grade AI</div>
+
+    <div class="gutter red" style="top:2380px;left:-180px;text-align:right">lie is not<br>a mistake.</div>
+
+    <div class="gutter" style="top:2640px;right:-200px;color:var(--green-pen)">tracked &#10003;<br>verified &#10003;<br>remembered &#10007;</div>
+
+    <div class="gutter red" style="top:2900px;left:-200px;text-align:right;font-size:24px">Bold.<br>Quite bold.</div>
+
+    <div class="gutter" style="top:3120px;right:-220px">Called Boies.<br>To <em>thank</em> them.<br>For catching you.</div>
+
+    <div class="gutter green" style="top:3260px;right:-220px">McDonald's also<br>"thanked" Mrs.<br>for her feedback<br>on the coffee.</div>
+
+    <div class="gutter red" style="top:3420px;right:-220px;font-size:26px">Same. Energy.</div>
+
+    <div class="gutter" style="top:3620px;left:-260px;text-align:right;max-width:280px;font-size:21px"><u>Dieterich</u>?? Is that Nazi<br>or Jew?? Would go for<br>something "less ethnic"</div>
+
+    <!-- The letter itself -->
+    <div class="letter-mock">
+
+      <div class="routing">
+        <div class="routing-head">Routing &amp; Review — Kingsfield Litigation Department</div>
+        <div class="routing-grid">
+          <div class="field"><span class="label">Received by</span><span class="val">T. Underhill</span></div>
+          <div class="field"><span class="label">Date</span><span class="val">4/18/26</span></div>
+          <div class="field"><span class="label">File no.</span><span class="val">Prince / 26-10769</span></div>
+          <div class="field"><span class="label">Opp. counsel review</span><span class="val ok">&#10003; screenshotted</span></div>
+          <div class="field"><span class="label">Paralegal</span><span class="val">J. Briggs</span></div>
+          <div class="field"><span class="label">Action</span><span class="val warn">Frame. Immediately.</span></div>
+        </div>
+        <div class="tu-mono">T·U</div>
+      </div>
+
+      <div class="docket">26-10769-mg · Doc 25 · Filed 04/18/26 · Entered 04/18/26 16:10:41 · Main Document · Pg 1 of 5</div>
+
+      <div class="stamp received">RECEIVED<br><span style="font-size:9px;font-weight:400">4/18/26 — 11:04 AM<br>FILING DEPT.</span></div>
+      <div class="stamp reviewed">REVIEWED<br><span style="font-size:9px;font-weight:400">LITIGATION · 4/19/26<br>T.U. &#10003;</span></div>
+      <div class="stamp shame">HALL OF SHAME</div>
+
+      <div class="firm-block">
+        <div class="firm-name">SULLIVAN &amp; CROMWELL LLP</div>
+        <div class="firm-sub">125 BROAD STREET · TELEPHONE: 1-212-558-4000<br>NEW YORK, NEW YORK 10004-2498 · WWW.SULLCROM.COM</div>
+        <div class="firm-cities">LOS ANGELES · PALO ALTO · WASHINGTON, D.C. · BRUSSELS · FRANKFURT · LONDON · PARIS · BEIJING<br>HONG KONG · TOKYO · MELBOURNE · SYDNEY<span class="quip">offices in 14 cities, hallucinations in court &mdash;</span></div>
+      </div>
+
+      <div class="date-line">April 18, 2026</div>
+      <div class="via">Via ECF</div>
+      <div class="addr">Hon. Martin Glenn,<br>U.S. Bankruptcy Court, S.D.N.Y.,<br>One Bowling Green,<br>New York, NY 10004-1408.</div>
+      <div class="re">Re: &nbsp; <u><em>In re Prince Global Holdings Limited, et al.</em>, No. 26-10769</u> <span class="ctx">[the Cambodian forced-labor crypto scam case, for context]</span></div>
+
+      <div class="salutation">Dear <span class="hl">Chief</span> Judge Glenn:</div>
+
+      <div class="para">Sullivan &amp; Cromwell LLP (the "Firm") represents the Joint Provisional Liquidators (the "JPLs") in the above-referenced matter. <span class="hl">I became aware <em>Thursday evening</em></span> <span class="ink-inline-red">&larr; April 18th. Filed: April 9th. <strong>That's NINE DAYS.</strong></span> that the JPLs' <em>Emergency Motion for Entry of Orders Granting (I) Ex Parte Relief and (II) Provisional Relief, Pursuant to Section 1519 of the Bankruptcy Code</em> filed with the Court on April 9, 2026 (the "Motion") [D.I. 9] includes inaccurate citations and other errors, each of which is identified and corrected in Schedule A to this letter.</div>
+
+      <div class="para">The inaccuracies and errors in the Motion include <span class="hl">artificial intelligence ("AI")</span> "hallucinations." "Hallucinations" are instances in which artificial intelligence tools fabricate case citations, misquote authorities, or generate non-existent legal sources.<sup>1</sup> <span class="hl">We deeply regret that this has occurred.</span> <span class="ink-inline">(do you, though)</span> The Firm maintains <span class="hl">comprehensive policies and training requirements</span> governing the use of AI tools in legal work. <span class="hl">These safeguards are designed to prevent exactly this situation.</span> <span class="ink-inline-red">DESIGNED TO &ne; DID.</span> <span class="hl-peach">The Firm's policies on the use of AI were not followed</span> in connection with the preparation of the Motion. In addition, the Firm has general policies and training requirements for the proper review of legal citations. <span class="hl">Regrettably, this review process did not identify the inaccurate citations generated by AI, nor did it identify other errors that appear to have resulted in whole or in part from manual error.</span><sup>2</sup></div>
+
+      <div class="para">The Firm has <span class="hl">undertaken immediate remedial measures, including but not limited to a full review</span> of the circumstances leading to these errors, and a re-review of all filings in this matter, and we can confirm that the other filings do not include any AI-related errors. <span class="hl-peach">Our re-review did identify non-substantive and/or clerical errors in other filings in this matter</span> <span class="ink-inline-red">&larr; !!!! FOUND MORE ERRORS. <em>While fixing the first ones.</em></span> (and <span class="hl-circle">one citation that confuses Section 1517(d) and Rule 6004(h)</span><sup>3</sup>), which we do not believe to be the result of AI usage. These errors are also identified in Schedule A for the sake of completeness.</div>
+
+      <div class="para">The Firm and I are <span class="hl">keenly aware</span> <span class="ink-inline">(keenly)</span> of our responsibility to ensure the accuracy of all submissions including under Local Bankruptcy Rule 9011-1(d), and <span class="hl">I take responsibility for the failure to do so.</span> <span class="ink-inline-red">&larr; Noted.</span></div>
+
+      <div class="para">I want to assure the Court that the Firm's policies governing AI use are both clear and rigorous. <span class="hl">Access to AI tools is conditioned on completion of mandatory training.</span> Before any Firm lawyer is granted access to generative AI tools, the lawyer must complete <span class="hl">two required training modules, completion of which is tracked and verified.</span> <span class="ink-inline-red">&larr; tracked &#10003; · verified &#10003; · remembered &#10007;</span></div>
+
+      <div class="para">The training repeatedly emphasizes the risk of AI "hallucinations," including the fabrication of case citations, misrepresentation of authorities, and inaccurate quotations. It instructs lawyers to <span class="hl-circle">"trust nothing and verify everything"</span> and makes clear that failure to independently verify AI-generated output constitutes a violation of Firm policy. The training also reviews the significant consequences of AI-related errors in various cases. <span class="ink-inline" style="font-style:italic">including, presumably, this attorney's own prior sanctions in NJ.</span></div>
+
+      <div class="para">These requirements are reinforced in the <span class="hl">Firm's Office Manual for Lawyers,</span> which provides that lawyers "<span class="hl">must independently check all answers, case citations, and other information or work product received from an AI Program for both substantive and non-substantive accuracy.</span>" <span class="ink-inline">(it's in the manual too)</span> The policy further states that no communication may be sent to a court, regulator, client, or other external party without the exercise of appropriate professional judgment and oversight.</div>
+
+      <div class="para"><span class="hl">Notwithstanding these safeguards,</span> <span class="ink-inline-red">&larr; THE LINE.</span> the Firm's protocols were <span class="hl-peach">not followed here.</span> <span class="ink-inline-red">understatement of 2026.</span> The Firm is also evaluating whether <span class="hl">further enhancements to its internal training and review processes are warranted.</span> <span class="ink-inline">(perhaps read the existing ones first)</span></div>
+
+      <div class="para">We <span class="hl">sincerely regret</span> <span class="ink-inline">($1,500/hr to write "sincerely regret")</span> the errors in the Motion and the burden they have imposed on the Court and the parties, and I apologize on behalf of our entire team. I also <span class="hl-peach">called Boies Schiller Flexner LLP on Friday to thank them</span> <span class="ink-inline-red">&larr; WHAT</span> for bringing this matter to our attention and to apologize directly to them as well. A corrected version of the Motion, together with a redline reflecting the revisions, is being filed later today.</div>
+
+      <div class="sig-block">
+        <p style="text-indent:0">Sincerely,</p>
+        <p style="text-indent:0;margin-top:18px"><em>/s/ Andrew G. Dietderich</em></p>
+        <p style="text-indent:0">Andrew G. Dietderich</p>
+        <span class="sig-note">previously sanctioned, NJ Workers' Comp AI case, 2025 — see file</span>
+      </div>
+
+      <div class="stamp prior">PRIOR INCIDENT<br>ON FILE<br>SEE: NJ WORKERS' COMP<br>AI SANCTIONS, 2025</div>
+
+      <div class="coffee"></div>
+    </div>
+
+    <!-- Editor's note red callout for Schedule A summary -->
+    <div class="editors-note">
+      <h4>Editor's Note — Schedule A (Pages 3–5 of 5)</h4>
+      <p>Not reproduced here in full, but Schedule A runs two additional pages and catalogues specific citation corrections across <strong>five separate declarations and filings:</strong> Errors in Declaration of Andrew Chissick (¶¶ 20, 33, 48, 50, 53, 60, 65), Errors in Declaration of Paul Pretlove (¶¶ 9, 21, 25, 27, 39, 42, 45, 46), Error in Verified Petition (¶ 28), Error in Motion for Joint Administration (¶ 6), and Errors in Motion for Entry of an Order Scheduling the Recognition Hearing (¶¶ 6–7). <strong>Individual errors include fabricated internal citations, wrong case numbers, wrong reporters, misstated holdings, and — in one verified instance — the phrase "the The" surviving final review.</strong></p>
+      <p class="kicker-line">This is not Schedule A of a routine filing. This is a confession.</p>
+    </div>
+
+  </div>
+  <!-- /letter-stage -->
+
+  <div class="body">
+
+    <p style="margin-top:48px">What S&amp;C produced, for the record, was a document of professional contrition that includes the following architectural elements: an opening acknowledgment that the firm "became aware" of the errors <em>on the ninth day after filing</em>, a passive-voice description of the errors themselves (they "include" hallucinations, the way a buffet "includes" mayonnaise), a recitation of the firm's preexisting policies and training requirements (which the firm itself notes <em>were not followed</em>), a list of the remedial measures undertaken (re-review of all filings, additional training, etc.), and a closing apology to the Court for the inconvenience.</p>
+
+    <p>I want to draw your attention to the part of the letter that reads — and I am quoting exactly —</p>
+
+    <blockquote>"Hallucinations are instances in which artificial intelligence tools fabricate case citations, misquote authorities, or generate non-existent legal sources."</blockquote>
+
+    <p>This is a definitional sentence. In a letter from Sullivan &amp; Cromwell. To a federal judge. Explaining what a hallucination is. To Chief Judge Martin Glenn, who has been on the federal bench since 2007, who oversaw the General Motors bankruptcy, who has presided over more sophisticated artificial-intelligence-related malpractice than the partners at S&amp;C who drafted this letter have had hot meals — <em>as if the man required a glossary.</em></p>
+
+    <p>There is a paragraph later in the letter in which the firm explains that <em>"the Firm has comprehensive policies and training requirements governing the use of AI tools in legal work."</em></p>
+
+    <p>There is then a sentence which clarifies that those policies <em>"were not followed in connection with the preparation of the Motion."</em></p>
+
+    <p>There is then another sentence which clarifies that, <em>"in addition,"</em> the Firm's general policies and training requirements for the proper review of legal citations were <em>also not followed.</em></p>
+
+    <p>The two sentences are placed next to each other. These are obviously not the words of the sin-eater Andrew Dietderich, whose name is on the signature block. They are the words of a drafter who has been asked to draft a document by a partner who is out of town, reviewed by a junior partner, approved by an ethics committee that is now wishing it had not been, proofed by a paralegal whose primary skill is producing a clean PDF, and signed by Mr. Dietderich, who apparently did not notice that the second sentence renders the first one a confession.</p>
+
+    <p>I want to be fair to my colleagues at S&amp;C, whom I have known for only forty years, with whom I have opposed and co-counseled, whose offices I have sat in, whose partners I have respected in roughly the way one respects a structurally unsound bridge — <em>for the engineering, not the trip across it.</em></p>
+
+    <p>So I have, on my own time, as a professional courtesy to a firm I admire in this same load-bearing way, prepared the letter they should have filed.</p>
+
+    <h2>The Redraft</h2>
+    <h3>Proposed by T.R. Underhill III, marked for the Firm's revision</h3>
+  </div>
+
+  <!-- THE PARODY REDRAFT -->
+  <div class="parody">
+    <div class="stamp-redraft">RECEIVED · APR 18 2026 · ECF</div>
+    <div class="firm-line">Sullivan &amp; Cromwell LLP</div>
+    <div class="firm-addr">125 Broad Street · New York, NY 10004-2498</div>
+
+    <p class="right">April 18, 2026 · Via ECF</p>
+    <p>Hon. Martin Glenn<br>Chief Judge, U.S. Bankruptcy Court, S.D.N.Y.<br>One Bowling Green · New York, NY 10004-1408</p>
+    <p><strong>Re: <em>In re Prince Global Holdings Ltd., et al.</em>, No. 26-10769</strong></p>
+    <p>Dear Chief Judge Glenn:</p>
+
+    <p>We filed bullshit.<sup>1</sup> We did not know it was bullshit because we did not read it. We did not read it because we paid a machine to read it, and the machine, which has been confidently bullshitting since 2022, bullshitted us.<sup>2</sup> We have undertaken remedial measures, which consist primarily of being caught.<sup>3</sup></p>
+
+    <p>A list of the cases we cited that do not exist is attached as Schedule A.</p>
+
+    <p>A list of the cases we cited that <em>do</em> exist but stand for the opposite of what we said they stand for is attached as Schedule B.<sup>4</sup></p>
+
+    <p>Schedule B is longer.<sup>5</sup></p>
+
+    <p>Respectfully,</p>
+
+    <div class="sig">/s/ A Partner Whose Name You Will Recognize<sup style="font-family:var(--typewriter);color:var(--bordeaux);font-size:14px">6</sup></div>
+
+    <div class="cc">
+      <strong>cc:</strong> The General Counsel of Sullivan &amp; Cromwell LLP · The Firm's Professional Responsibility Committee · The Firm's Risk Management Committee · The Firm's Insurance Carrier · The Firm's <em>Other</em> Insurance Carrier · The Firm's Crisis Communications Consultant · The Firm's <em>Other</em> Crisis Communications Consultant · The Author of the Firm's 2024 White Paper on the Responsible Use of AI in Legal Practice, Whom We Are Copying Here as a Reminder
+    </div>
+
+    <div class="fn">
+      <p><sup>1</sup> As Your Honor is aware, given the firm's three appearances before this Court in the past two years on matters of comparable magnitude.</p>
+      <p><sup>2</sup> The Joint Provisional Liquidators' Emergency Motion for Entry of Orders Granting (I) Ex Parte Relief and (II) Provisional Relief Pursuant to Section 1519 of the Bankruptcy Code, filed at D.I. 9.</p>
+      <p><sup>3</sup> We use the future tense for completeness. The cases will not exist tomorrow either.</p>
+      <p><sup>4</sup> We acknowledge the distinction.</p>
+      <p><sup>5</sup> We say "the errors." We mean <em>additional</em> errors. The original errors are documented in Schedule A to this letter, which has grown.</p>
+      <p><sup>6</sup> We were not aware of this error until preparing this letter, which we now realize is itself an admission.</p>
+    </div>
+  </div>
+
+  <!-- SCHEDULE A TABLE -->
+  <div class="body">
+    <h2>A Note on Schedule A.</h2>
+    <p>The actual Schedule A — the document S&amp;C did file, beneath the apology — runs an additional two pages and corrects errors across <strong>five separate declarations and filings.</strong> Not one. Five.</p>
+  </div>
+
+  <div class="sched">
+    <div class="sched-head">
+      <h3>Schedule A — Errors as Catalogued</h3>
+      <div class="stat">5 filings · 40+ corrections · Pgs 3–5 of 5</div>
+    </div>
+    <div class="sched-rows">
+      <div class="sched-row">
+        <div class="filing">Declaration of<br>Andrew Chissick</div>
+        <div class="errs">Missing footnote at ¶ 20. Verb-tense correction at ¶ 33. BVI Insolvency Act statutory citations to wrong sub-sections (¶¶ 48, 53). BVI Orders citations missing one of the orders entirely (¶ 50). <strong>The phrase "the The" surviving final review at ¶ 60</strong> — <em>"BCA § 245 ('For ~~the~~ The purposes of determining matters...')."</em></div>
+        <div class="count">7 errors</div>
+      </div>
+      <div class="sched-row">
+        <div class="filing">Declaration of<br>Paul Pretlove</div>
+        <div class="errs">Citation to <em>In re Three Arrows Capital, Ltd.</em> with wrong reporter, wrong page, wrong year. UN OHCHR title cited under a title the UN OHCHR has never used. Amnesty International report subtitle silently rewritten. An <em>Id.</em> citation that, on inspection, refers to a paragraph in a different declaration.</div>
+        <div class="count">13 errors</div>
+      </div>
+      <div class="sched-row">
+        <div class="filing">Verified Petition</div>
+        <div class="errs">Westlaw star-page citation to <em>In re Fairfield Sentry</em> corrected from <strong>*10–16</strong> to <strong>*7</strong>. A magnitude error.</div>
+        <div class="count">1 error</div>
+      </div>
+      <div class="sched-row">
+        <div class="filing">Motion for<br>Joint Administration</div>
+        <div class="errs">Federal Rule of Bankruptcy Procedure <strong>1015(b)</strong> misquoted — refers to "petitions" where the Rule says "cases." Twice. Not a hallucination. A partner at Sullivan &amp; Cromwell who did not check the language of the rule he was about to invoke.</div>
+        <div class="count">1 error</div>
+      </div>
+      <div class="sched-row">
+        <div class="filing">Motion for Entry of<br>Recognition Hearing</div>
+        <div class="errs">Quotation from Bankruptcy Rule 2002(q)(1) ending in <strong>"may imposes"</strong> — subject-verb agreement of the kind we used to flag in second-year associates. Section <strong>1517(d)</strong> of the Code corrected to <strong>Rule 6004(h)</strong> — confusion between a Code section and a Rule.</div>
+        <div class="count">2 errors</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <p>This is not Schedule A of a routine filing. This is a confession that the AI was permitted not only to invent citations the firm did not check, but to <em>mangle citations the firm could have checked by typing</em> Bankruptcy Rule 1015(b) <em>into a search engine of any kind.</em></p>
+
+    <p>There is, in other words, a difference between <em>hallucinated</em> and <em>unread.</em> Schedule A documents both.</p>
+
+    <h2>A Note on the Signature.</h2>
+
+    <p>The letter was signed by <strong>Andrew G. Dietderich.</strong></p>
+
+    <p>I want to spend a moment on this signature, because it is, in its quiet way, the single most damning element of the document.</p>
+  </div>
+
+  <div class="dietderich">
+    <div>
+      <h3>Andrew G. Dietderich</h3>
+      <div class="role">Partner · Sullivan &amp; Cromwell LLP · Restructuring &amp; Insolvency</div>
+      <ul>
+        <li>Sole author, <em>Spotlight on Corporate Governance and Restructuring</em>, S&amp;C, November 2021 — the firm's voice on restructuring ethics</li>
+        <li>Partner of record, FTX bankruptcy (Nov. 2022 – Jan. 2024) — billed estate ~<strong>$180,000,000</strong></li>
+        <li>Told Voyager Digital on November 7, 2022 that FTX was <em>"rock solid"</em> and questions were <em>"silliness"</em> — four days before FTX filed Chapter 11</li>
+        <li>Examiner Robert Cleary (May 2024): firm <em>"made false statements to outside parties"</em> but <em>"did not know"</em> they were untrue</li>
+        <li>Signature appears on the April 18, 2026 apology letter to Chief Judge Glenn for the hallucinated citations</li>
+      </ul>
+    </div>
+    <div class="portrait">
+      <div class="lbl">A. Dietderich · S&amp;C</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <p>Mr. Dietderich is a Partner at Sullivan &amp; Cromwell. He is also the named author of the firm's <em>Spotlight on Corporate Governance and Restructuring</em> (November 2021) — a piece of advisory writing published on the firm's own website, in which Mr. Dietderich was, at the time of publication, the firm's voice on the responsibilities of restructuring counsel, the centrality of corporate governance, and the ethical posture appropriate to the practice. <strong>The man who signed the apology for the firm's failure to follow its own ethics policies is the man whose name appears on the firm's commentary about ethics policies.</strong></p>
+
+    <p>There is more.</p>
+
+    <p>Mr. Dietderich was also the partner of record at Sullivan &amp; Cromwell during the FTX bankruptcy — a matter for which the firm billed the FTX estate approximately one hundred and eighty million dollars in fees between November 2022 and January 2024. On November 7, 2022, Mr. Dietderich personally told Voyager Digital — at the time a counterparty to FTX's proposed acquisition of it — that FTX's finances were <em>"rock solid"</em> and that questions raised about the deal were <em>"silliness."</em> He used the words <em>rock solid</em> and <em>silliness.</em> <strong>Four days later, FTX filed for Chapter 11.</strong> Mr. Bankman-Fried was eventually convicted of stealing eight billion dollars from FTX customers.</p>
+
+    <p>The court-appointed examiner, Robert Cleary — a former federal prosecutor and the man who put the Unabomber away — concluded that Sullivan &amp; Cromwell had <em>"made false statements to outside parties"</em> but had not, at the time, <em>"known the statements were untrue."</em></p>
+
+    <p>I would like you to read that sentence again.</p>
+  </div>
+
+  <div class="pq"><em>The firm made false statements.</em> The firm did not know they were untrue. <em>Because the firm had not asked.</em></div>
+
+  <div class="body">
+    <p>This is what professional negligence looks like in its mature form, after it has been worked over by the firm's own outside counsel and approved by the firm's own outside counsel's outside counsel. The statements were false. The firm made them. The firm did not know they were false <em>because the firm had not asked.</em> The examiner cleared the firm of complicity. The examiner did not — could not — clear the firm of the underlying behavior, which is the behavior of a counsel that confidently restates what its client has told it without applying the diligence the client is paying for.</p>
+
+    <p>This is the same partner. This is the same firm. This is the same letter, three and a half years later, just with a different machine producing the text the firm declined to read.</p>
+
+    <p>The pattern is consistent. When the firm is wrong, the firm did not know it was wrong. The firm regrets the inconvenience. The firm has implemented remedial measures. The firm is at the Amagansett house.</p>
+
+    <p>I am not, to be clear, making a legal argument against Andrew Dietderich. The man is an accomplished restructuring partner who has built one of the more profitable bankruptcy practices in the country. I am making an observation about the structural pattern, which is that the man whose name appears on the apology letter is the same man who <em>wrote the firm's article on the ethics this letter concedes were not followed,</em> which is the same man who told a counterparty FTX was <em>"rock solid"</em> four days before FTX wasn't, which is the same man who is now signing the explanation that the firm's training programs are excellent.</p>
+
+    <p><strong>The signature is the joke. The signature is also the indictment.</strong></p>
+
+    <h2>What the Court Caught.</h2>
+
+    <p>What I have produced above is a parody. Sullivan &amp; Cromwell will not file it. They will not file it because the partners who drafted the original letter are still partners and the firm's malpractice carrier is still its malpractice carrier and the structural incentive of every BigLaw apology letter is to say as little as possible while sounding as contrite as possible while admitting absolutely nothing that could be quoted back in a later proceeding. The form is well-worn. The form works. The form is the reason these letters all read like they were generated by the same AI tool whose output they are apologizing for, which — and I want to be very precise here — <em>they may in fact have been.</em></p>
+
+    <p>What is interesting about the <em>Prince Global</em> matter, and what nobody at S&amp;C will say in writing, is that <strong>Judge Glenn caught it.</strong> The Court caught it. Not the firm. Not the firm's policies. Not the firm's training. Not the firm's review protocols. The other side, and the bench, did the work the firm's $1,800-an-hour partner was supposed to do. The firm then drafted a letter explaining that its training programs are excellent. <em>(Bad.)</em></p>
+
+    <p>There is an additional detail in the timeline. The Motion was filed on April 9th. The apology letter says the firm "became aware" of the errors "Thursday evening." Thursday was April 17th. <strong>The firm became aware on the ninth day after filing.</strong> The firm became aware after opposing counsel had reviewed it, after the bench had reviewed it, and after — one can fairly infer — opposing counsel had pointed at the errors with a degree of professional pleasure that I, having been opposing counsel many times, can attest is real. <em>Became aware</em> is not an active verb. <em>Became aware</em> is what one says when one has been told.</p>
+
+    <p>I represent clients who do this. I have litigated against opposing counsel who do this. I have, in moments I am not proud of, done versions of this. The technology has changed the speed and the surface area but the underlying behavior — <em>put your name on something you have not personally verified, and hope no one checks</em> — predates the LLM by approximately the entire history of the legal profession. The AI is not the problem. The AI is the velocity at which the problem now arrives.</p>
+
+    <p>If Sullivan &amp; Cromwell wants the Court to take seriously its claim that it has remediated, the firm could begin by retaining outside counsel — not from the firm, not from a firm S&amp;C does business with, not from a firm whose senior partners summer in Amagansett with S&amp;C's senior partners — to perform a top-to-bottom audit of every AI-touched filing in the firm's bankruptcy docket for the past eighteen months.</p>
+
+    <p>The firm will not do this. The firm will not do this because the firm understands, with the clarity of an organization that has been in continuous operation since the Hayes administration, that an audit conducted in good faith would produce findings the firm cannot afford to be in writing. <em>(Bad.)</em></p>
+
+    <p>The associate who drafted the motion is, I assume, no longer with us. The partner who signed it is, I assume, still with us. There is a reason for this. There has always been a reason for this. The reason has not changed. The technology has changed. The reason has not. <strong>And for that, the partner is internally grateful.</strong></p>
+
+    <p><em>First</em>, said the man in the play, <em>kill all the lawyers.</em></p>
+
+    <p>He was not, as is commonly supposed, calling for our destruction. He was identifying the bottleneck.</p>
+
+    <div class="verify">
+      <h4>Verified Citations · Four Gates Passed</h4>
+      <ul>
+        <li><span class="gate">● VERIFIED</span><span><em>In re Prince Global Holdings Ltd.</em>, No. 26-10769 (Bankr. S.D.N.Y., filed Apr. 2026) — ECF Doc 25</span></li>
+        <li><span class="gate">● VERIFIED</span><span>Hon. Martin Glenn, Chief Judge, U.S. Bankruptcy Court S.D.N.Y.</span></li>
+        <li><span class="gate">● VERIFIED</span><span>11 U.S.C. § 1519 · Fed. R. Bankr. P. 1015(b), 2002(q)(1), 6004(h) · Local Bankr. R. 9011-1(d)</span></li>
+        <li><span class="gate">● VERIFIED</span><span>Sullivan &amp; Cromwell, <em>Spotlight on Corporate Governance and Restructuring,</em> A.G. Dietderich, Nov. 2021 — sullcrom.com/insights/articles/2021/November</span></li>
+        <li><span class="gate">● VERIFIED</span><span>Reuters, D. Knauth, "FTX bankruptcy lawyers were not complicit in fraud, report finds," May 23, 2024 — Cleary examiner findings</span></li>
+        <li><span class="gate">● VERIFIED</span><span><em>Mata v. Avianca, Inc.</em>, 22 Civ. 1461 (S.D.N.Y. 2023), Castel, J. · Henry VI, Part 2, IV.ii.73</span></li>
+      </ul>
+    </div>
+
+    <p class="byline">Theodore R. Underhill III is a Partner at Pierce &amp; Pierce and the author of this blog, which he maintains because his therapist suggested a "creative outlet" and because the alternative is saying these things out loud to the associates, which HR has asked him, twice, not to do. Views expressed are his own. Pierce &amp; Pierce does not endorse them. Pierce &amp; Pierce has never endorsed anything. Every citation in this column was verified before publication, because that is the entire point.</p>
+  </div>
+
+  <div class="cta-strip">
+    <div class="cta-stamp">
+      Want to win? <strong style="color:var(--bordeaux);font-weight:700">Hire Kingsfield.</strong>
+      <span class="small">Zero hallucinated citations · kingsfield.io</span>
+    </div>
+  </div>
+
+</main>
+
+<footer class="foot">
+  <span class="brand">Kingsfield Lawfare</span>
+  <span>© 2026 · Smart. Not Stupid.</span>
+</footer>
+
+</body>
+</html>

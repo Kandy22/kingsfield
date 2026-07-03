@@ -1,0 +1,9 @@
+{
+  "channel_id": "@seconddistrictcourtofappea8708",
+  "channel_url": "https://www.youtube.com/@seconddistrictcourtofappea8708",
+  "court": "FL 2nd DCA",
+  "state": "FL",
+  "data_dir": "judicial-intel/data/fl_2dca",
+  "legacy_index": "~/Desktop/fl_2dca_index.json",
+  "notes": "1,700+ videos. Auto-captions exist on most. Primary test corpus."
+}

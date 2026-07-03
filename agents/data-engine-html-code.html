@@ -1,0 +1,80 @@
+<!-- Insert directly into your app's frontend web rendering component block -->
+<div class="kingsfield-visualization-container" style="background: #000000; padding: 20px; border-radius: 10px; border: 1px solid #3f3f3f;">
+  <h3 style="font-family: 'DM Mono', monospace; color: #19d0e8; margin-bottom: 15px; font-size: 14px;">
+    SYSTEM FLOW INDEX: MULTI-MODEL FUSION PINEL & BEHAVIORAL MATRIX
+  </h3>
+  
+  <svg id="kingsfield_sankey" viewBox="0 0 900 450" width="100%" height="100%" style="font-family: 'DM Mono', monospace;">
+    <!-- DEFINITIONS & INNER GLOW FILTERS -->
+    <defs>
+      <linearGradient id="gradient_aqua_slate" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#19d0e8" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#3f3f3f" stop-opacity="0.2" />
+      </linearGradient>
+      <linearGradient id="gradient_gold_slate" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#FF6B00" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#191919" stop-opacity="0.5" />
+      </linearGradient>
+    </defs>
+
+    <!-- LAYER 1: MULTI-MODEL INPUT SOURCE NODES -->
+    <g transform="translate(50, 20)">
+      <!-- Claude Entry Vector -->
+      <rect x="0" y="20" width="160" height="40" rx="6" fill="#191919" stroke="#3f3f3f" stroke-width="1.5" />
+      <text x="15" y="45" fill="#19d0e8" font-size="11" font-weight="bold">Claude Sonnet (4.6)</text>
+      <text x="15" y="55" fill="#888" font-size="8">Narrative Strategy</text>
+      <path d="M 160 40 L 320 120" stroke="url(#gradient_aqua_slate)" stroke-width="4" fill="none" />
+
+      <!-- DeepSeek Entry Vector -->
+      <rect x="0" y="90" width="160" height="40" rx="6" fill="#191919" stroke="#3f3f3f" stroke-width="1.5" />
+      <text x="15" y="115" fill="#19d0e8" font-size="11" font-weight="bold">DeepSeek V4 Pro</text>
+      <text x="15" y="125" fill="#888" font-size="8">Statutory Decomp</text>
+      <path d="M 160 110 L 320 135" stroke="url(#gradient_aqua_slate)" stroke-width="2.5" fill="none" />
+
+      <!-- Gemini Entry Vector -->
+      <rect x="0" y="160" width="160" height="40" rx="6" fill="#191919" stroke="#3f3f3f" stroke-width="1.5" />
+      <text x="15" y="185" fill="#19d0e8" font-size="11" font-weight="bold">Gemini 3.5 Flash</text>
+      <text x="15" y="195" fill="#888" font-size="8">Factual Grounding</text>
+      <path d="M 160 180 L 320 150" stroke="url(#gradient_aqua_slate)" stroke-width="6" fill="none" />
+
+      <!-- Acoustic Shazam / Edge Ingestion Vector -->
+      <rect x="0" y="230" width="160" height="40" rx="6" fill="#062f34" stroke="#19d0e8" stroke-width="1" />
+      <text x="15" y="255" fill="#19d0e8" font-size="11" font-weight="bold">Shazam Audio Engine</text>
+      <text x="15" y="265" fill="#44ccff" font-size="8">Time-Freq Constellation</text>
+      <path d="M 160 250 L 320 165" stroke="url(#gradient_aqua_slate)" stroke-width="5" fill="none" />
+    </g>
+
+    <!-- LAYER 2: CENTRAL INTERCHANGE COGNITIVE HUB -->
+    <g transform="translate(320, 20)">
+      <rect x="0" y="80" width="180" height="120" rx="8" fill="#191919" stroke="#44ccff" stroke-width="2" />
+      <text x="20" y="115" fill="#ffffff" font-size="12" font-weight="bold">CENTRAL FUSION JUDGE</text>
+      <text x="20" y="135" fill="#19d0e8" font-size="10">Greedy Alignment Match</text>
+      <text x="20" y="155" fill="#FF6B00" font-size="10">Monte Carlo Predictor</text>
+      <text x="20" y="175" fill="#888" font-size="8">Status: Stateful & Armed</text>
+      
+      <!-- Output Routing Tracks -->
+      <path d="M 180 110 L 360 60" stroke="url(#gradient_gold_slate)" stroke-width="5" fill="none" />
+      <path d="M 180 140 L 360 150" stroke="url(#gradient_gold_slate)" stroke-width="3" fill="none" />
+      <path d="M 180 170 L 360 240" stroke="url(#gradient_gold_slate)" stroke-width="7" fill="none" />
+    </g>
+
+    <!-- LAYER 3: DOWNSTREAM DEPLOYMENT SIGNATURE ENDPOINTS -->
+    <g transform="translate(680, 20)">
+      <!-- Tactical Judicial Analytics Tracking Matrix -->
+      <rect x="0" y="20" width="180" height="50" rx="6" fill="#191919" stroke="#3f3f3f" stroke-width="1.5" />
+      <text x="15" y="42" fill="#ffffff" font-size="11" font-weight="bold">Judicial Profile Pipeline</text>
+      <text x="15" y="55" fill="#FF6B00" font-size="9">Outcome = The Ruling (T1)</text>
+
+      <!-- Low-Latency Earpiece Broadcast Monitor -->
+      <rect x="0" y="110" width="180" height="50" rx="6" fill="#191919" stroke="#3f3f3f" stroke-width="1.5" />
+      <text x="15" y="132" fill="#ffffff" font-size="11" font-weight="bold">Wingman Live Broadcast</text>
+      <text x="15" y="145" fill="#19d0e8" font-size="9">Sub-300ms Native Waveforms</text>
+
+      <!-- Predictive Media Selection Array (Tribe Called Quest Axis) -->
+      <rect x="0" y="200" width="180" height="70" rx="6" fill="#191919" stroke="#FF6B00" stroke-width="1" />
+      <text x="15" y="222" fill="#FF6B00" font-size="11" font-weight="bold">Predictive Media Tracker</text>
+      <text x="15" y="238" fill="#ffffff" font-size="9">Axis: ATCQ (Talent High)</text>
+      <text x="15" y="252" fill="#888" font-size="9">Contrast: Vanilla Ice (Pop High)</text>
+    </g>
+  </svg>
+</div>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield — Design System</title>
+<link rel="stylesheet" href="kingsfield-tokens.css">
+<style>
+  /* ── Page chrome ── */
+  body { min-height: 100vh; }
+
+  .ds-sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 220px;
+    background: var(--kf-bg-subtle);
+    border-right: 1px solid var(--kf-border-subtle);
+    padding: var(--kf-space-6) var(--kf-space-4);
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .ds-sidebar-logo {
+    font-family: var(--kf-font-display);
+    font-size: var(--kf-text-lg);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--kf-fg-base);
+    margin-bottom: var(--kf-space-8);
+    display: block;
+  }
+  .ds-sidebar-logo span { color: var(--kf-accent); }
+  .ds-nav-section { margin-bottom: var(--kf-space-6); }
+  .ds-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--kf-fg-muted);
+    margin-bottom: var(--kf-space-2);
+    padding: 0 var(--kf-space-2);
+  }
+  .ds-nav-item {
+    display: block;
+    padding: var(--kf-space-2) var(--kf-space-2);
+    font-size: var(--kf-text-sm);
+    color: var(--kf-fg-subtle);
+    border-radius: var(--kf-radius-sm);
+    cursor: pointer;
+    transition: all var(--kf-transition);
+    text-decoration: none;
+  }
+  .ds-nav-item:hover, .ds-nav-item.active {
+    color: var(--kf-fg-base);
+    background: var(--kf-bg-hover);
+  }
+  .ds-main {
+    margin-left: 220px;
+    padding: var(--kf-space-12) var(--kf-space-12);
+    max-width: 960px;
+  }
+
+  /* ── Section headers ── */
+  .ds-section {
+    margin-bottom: var(--kf-space-16);
+    scroll-margin-top: var(--kf-space-8);
+  }
+  .ds-section-title {
+    font-family: var(--kf-font-display);
+    font-size: var(--kf-text-2xl);
+    font-weight: 800;
+    color: var(--kf-fg-base);
+    margin-bottom: var(--kf-space-2);
+  }
+  .ds-section-desc {
+    font-size: var(--kf-text-sm);
+    color: var(--kf-fg-muted);
+    margin-bottom: var(--kf-space-8);
+  }
+  .ds-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: var(--kf-space-3); margin-bottom: var(--kf-space-4);
+  }
+
+  /* ── Color swatches ── */
+  .ds-swatches { display: flex; flex-wrap: wrap; gap: var(--kf-space-3); }
+  .ds-swatch {
+    width: 80px;
+    cursor: pointer;
+    transition: transform var(--kf-transition);
+  }
+  .ds-swatch:hover { transform: scale(1.05); }
+  .ds-swatch-color {
+    height: 56px;
+    border-radius: var(--kf-radius-md);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: var(--kf-space-1);
+  }
+  .ds-swatch-label {
+    font-size: 10px;
+    color: var(--kf-fg-muted);
+    font-family: var(--kf-font-mono);
+    text-align: center;
+  }
+
+  /* ── Type specimens ── */
+  .ds-type-row {
+    padding: var(--kf-space-4) 0;
+    border-bottom: 1px solid var(--kf-border-subtle);
+    display: flex; align-items: baseline; gap: var(--kf-space-4);
+  }
+  .ds-type-meta {
+    width: 120px; flex-shrink: 0;
+    font-size: 10px; font-family: var(--kf-font-mono);
+    color: var(--kf-fg-muted);
+  }
+  .ds-type-sample { flex: 1; }
+
+  /* ── Token table ── */
+  .ds-token-table { width: 100%; border-collapse: collapse; }
+  .ds-token-table th, .ds-token-table td {
+    text-align: left;
+    padding: var(--kf-space-2) var(--kf-space-3);
+    font-size: var(--kf-text-sm);
+    border-bottom: 1px solid var(--kf-border-subtle);
+  }
+  .ds-token-table th {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--kf-fg-muted);
+    font-weight: 600;
+  }
+  .ds-token-table td:first-child { font-family: var(--kf-font-mono); color: var(--kf-accent); font-size: var(--kf-text-xs); }
+  .ds-color-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: var(--kf-space-2);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ── Live UI demos ── */
+  .ds-demo-frame {
+    background: var(--kf-bg-elevated);
+    border: 1px solid var(--kf-border-subtle);
+    border-radius: var(--kf-radius-lg);
+    padding: var(--kf-space-8);
+    margin-bottom: var(--kf-space-4);
+  }
+  .ds-demo-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--kf-fg-muted);
+    font-family: var(--kf-font-mono);
+    margin-bottom: var(--kf-space-4);
+  }
+
+  /* Chat demo */
+  .chat-demo {
+    display: flex; flex-direction: column; gap: var(--kf-space-3);
+    max-height: 320px; overflow-y: auto;
+  }
+
+  /* Gate demo */
+  .gate-list { display: flex; flex-direction: column; gap: var(--kf-space-2); }
+  .gate-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--kf-space-3) var(--kf-space-4);
+    background: var(--kf-bg-subtle);
+    border: 1px solid var(--kf-border-subtle);
+    border-radius: var(--kf-radius-md);
+    font-size: var(--kf-text-sm);
+  }
+  .gate-item-label { color: var(--kf-fg-subtle); }
+  .gate-pass  { color: var(--kf-signal-success); font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+  .gate-warn  { color: var(--kf-signal-warning); font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+  .gate-fail  { color: var(--kf-signal-danger);  font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+  .gate-wait  { color: var(--kf-fg-muted);       font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+
+  /* Hero demo */
+  .hero-demo {
+    padding: var(--kf-space-12) var(--kf-space-8);
+    text-align: center;
+    background: linear-gradient(160deg, var(--kf-bg-subtle) 0%, var(--kf-bg-base) 100%);
+    border-radius: var(--kf-radius-xl);
+    border: 1px solid var(--kf-border-subtle);
+    position: relative; overflow: hidden;
+  }
+  .hero-demo::before {
+    content: '';
+    position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(212,134,26,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: var(--kf-text-xs);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--kf-accent);
+    margin-bottom: var(--kf-space-4);
+  }
+  .hero-title {
+    font-family: var(--kf-font-display);
+    font-size: var(--kf-text-5xl);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--kf-fg-base);
+    margin-bottom: var(--kf-space-4);
+  }
+  .hero-title em { color: var(--kf-accent); font-style: normal; }
+  .hero-subtitle {
+    font-size: var(--kf-text-lg);
+    color: var(--kf-fg-subtle);
+    max-width: 480px;
+    margin: 0 auto var(--kf-space-8);
+    line-height: var(--kf-leading-relaxed);
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    position: fixed; top: var(--kf-space-4); right: var(--kf-space-4);
+    z-index: 100;
+    display: flex; align-items: center; gap: var(--kf-space-2);
+    padding: var(--kf-space-2) var(--kf-space-3);
+    background: var(--kf-bg-elevated);
+    border: 1px solid var(--kf-border-base);
+    border-radius: var(--kf-radius-full);
+    cursor: pointer;
+    font-size: var(--kf-text-xs);
+    color: var(--kf-fg-subtle);
+    transition: all var(--kf-transition);
+  }
+  .theme-toggle:hover { border-color: var(--kf-accent); color: var(--kf-fg-base); }
+
+  /* Copied toast */
+  .toast {
+    position: fixed; bottom: var(--kf-space-6); right: var(--kf-space-6);
+    background: var(--kf-accent);
+    color: var(--kf-accent-fg);
+    padding: var(--kf-space-2) var(--kf-space-4);
+    border-radius: var(--kf-radius-md);
+    font-size: var(--kf-text-sm);
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 200ms ease;
+    pointer-events: none;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Stat card */
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--kf-space-4);
+  }
+  .stat-card {
+    background: var(--kf-bg-subtle);
+    border: 1px solid var(--kf-border-subtle);
+    border-radius: var(--kf-radius-lg);
+    padding: var(--kf-space-6);
+  }
+  .stat-label {
+    font-size: var(--kf-text-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--kf-fg-muted);
+    margin-bottom: var(--kf-space-2);
+  }
+  .stat-value {
+    font-family: var(--kf-font-display);
+    font-size: var(--kf-text-3xl);
+    font-weight: 800;
+    color: var(--kf-fg-base);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: var(--kf-space-1);
+  }
+  .stat-sub { font-size: var(--kf-text-xs); color: var(--kf-fg-muted); }
+
+  /* Input group */
+  .input-group { position: relative; }
+  .input-group .kf-input { padding-right: 120px; }
+  .input-group-btn {
+    position: absolute; right: 4px; top: 50%;
+    transform: translateY(-50%);
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">Copied!</div>
+
+<button class="theme-toggle" onclick="toggleTheme()">
+  <span id="theme-icon">☀</span>
+  <span id="theme-label">Light</span>
+</button>
+
+<!-- SIDEBAR -->
+<nav class="ds-sidebar">
+  <span class="ds-sidebar-logo">Kings<span>field</span></span>
+
+  <div class="ds-nav-section">
+    <div class="ds-nav-label">Foundation</div>
+    <a class="ds-nav-item active" href="#colors" onclick="setActive(this)">Colors</a>
+    <a class="ds-nav-item" href="#typography" onclick="setActive(this)">Typography</a>
+    <a class="ds-nav-item" href="#tokens" onclick="setActive(this)">Tokens</a>
+  </div>
+
+  <div class="ds-nav-section">
+    <div class="ds-nav-label">Components</div>
+    <a class="ds-nav-item" href="#buttons" onclick="setActive(this)">Buttons</a>
+    <a class="ds-nav-item" href="#badges" onclick="setActive(this)">Badges</a>
+    <a class="ds-nav-item" href="#cards" onclick="setActive(this)">Cards</a>
+    <a class="ds-nav-item" href="#inputs" onclick="setActive(this)">Inputs</a>
+  </div>
+
+  <div class="ds-nav-section">
+    <div class="ds-nav-label">Patterns</div>
+    <a class="ds-nav-item" href="#hero" onclick="setActive(this)">Hero</a>
+    <a class="ds-nav-item" href="#nav" onclick="setActive(this)">Navigation</a>
+    <a class="ds-nav-item" href="#chat" onclick="setActive(this)">Chat UI</a>
+    <a class="ds-nav-item" href="#gates" onclick="setActive(this)">4-Gate Verdict</a>
+    <a class="ds-nav-item" href="#stats" onclick="setActive(this)">Stats</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="ds-main">
+
+  <!-- COLORS -->
+  <section class="ds-section" id="colors">
+    <div class="ds-section-title">Colors</div>
+    <div class="ds-section-desc">Semantic tokens only in components. Primitives live here and in kingsfield-tokens.css — nowhere else.</div>
+
+    <div style="margin-bottom: var(--kf-space-6);">
+      <div style="font-size:var(--kf-text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--kf-fg-muted);margin-bottom:var(--kf-space-3);font-weight:600;">Backgrounds</div>
+      <div class="ds-swatches">
+        <div class="ds-swatch" onclick="copy('var(--kf-bg-base)')">
+          <div class="ds-swatch-color" style="background:var(--kf-bg-base)"></div>
+          <div class="ds-swatch-label">bg-base</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-bg-subtle)')">
+          <div class="ds-swatch-color" style="background:var(--kf-bg-subtle)"></div>
+          <div class="ds-swatch-label">bg-subtle</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-bg-elevated)')">
+          <div class="ds-swatch-color" style="background:var(--kf-bg-elevated)"></div>
+          <div class="ds-swatch-label">bg-elevated</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-bg-overlay)')">
+          <div class="ds-swatch-color" style="background:var(--kf-bg-overlay)"></div>
+          <div class="ds-swatch-label">bg-overlay</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-bg-hover)')">
+          <div class="ds-swatch-color" style="background:var(--kf-bg-hover)"></div>
+          <div class="ds-swatch-label">bg-hover</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--kf-space-6);">
+      <div style="font-size:var(--kf-text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--kf-fg-muted);margin-bottom:var(--kf-space-3);font-weight:600;">Accent — Amber</div>
+      <div class="ds-swatches">
+        <div class="ds-swatch" onclick="copy('var(--kf-accent-subtle)')">
+          <div class="ds-swatch-color" style="background:var(--kf-accent-subtle)"></div>
+          <div class="ds-swatch-label">accent-subtle</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-accent)')">
+          <div class="ds-swatch-color" style="background:var(--kf-accent)"></div>
+          <div class="ds-swatch-label">accent</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-accent-hover)')">
+          <div class="ds-swatch-color" style="background:var(--kf-accent-hover)"></div>
+          <div class="ds-swatch-label">accent-hover</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:var(--kf-text-xs);letter-spacing:0.1em;text-transform:uppercase;color:var(--kf-fg-muted);margin-bottom:var(--kf-space-3);font-weight:600;">Signals</div>
+      <div class="ds-swatches">
+        <div class="ds-swatch" onclick="copy('var(--kf-signal-success)')">
+          <div class="ds-swatch-color" style="background:var(--kf-signal-success)"></div>
+          <div class="ds-swatch-label">success</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-signal-warning)')">
+          <div class="ds-swatch-color" style="background:var(--kf-signal-warning)"></div>
+          <div class="ds-swatch-label">warning</div>
+        </div>
+        <div class="ds-swatch" onclick="copy('var(--kf-signal-danger)')">
+          <div class="ds-swatch-color" style="background:var(--kf-signal-danger)"></div>
+          <div class="ds-swatch-label">danger</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="ds-section" id="typography">
+    <div class="ds-section-title">Typography</div>
+    <div class="ds-section-desc">Syne (display) · Inter (body) · JetBrains Mono (citations/code). Two weights only: 400 and 700/800. No exceptions.</div>
+
+    <div class="ds-demo-frame">
+      <div class="ds-type-row">
+        <div class="ds-type-meta">Display / H1<br>Syne 800<br>48px / −0.03em</div>
+        <div class="ds-type-sample"><h1>Know the Rules.<br><em style="color:var(--kf-accent);font-style:normal">Use Them.</em></h1></div>
+      </div>
+      <div class="ds-type-row">
+        <div class="ds-type-meta">H2<br>Syne 700<br>30px / −0.03em</div>
+        <div class="ds-type-sample"><h2>Four Gates. Zero Apology.</h2></div>
+      </div>
+      <div class="ds-type-row">
+        <div class="ds-type-meta">H3<br>Syne 700<br>24px</div>
+        <div class="ds-type-sample"><h3>Citation Verification Pipeline</h3></div>
+      </div>
+      <div class="ds-type-row">
+        <div class="ds-type-meta">Body<br>Inter 400<br>16px / 1.65</div>
+        <div class="ds-type-sample"><p>The Skeptic has hard veto power. No citation clears the pipeline unless it passes all four gates. We would rather return no answer than a wrong one dressed up as right.</p></div>
+      </div>
+      <div class="ds-type-row">
+        <div class="ds-type-meta">Body SM<br>Inter 400<br>14px</div>
+        <div class="ds-type-sample"><p style="font-size:var(--kf-text-sm)">Every claim that can be sourced must be sourced. Every source must survive the four gates.</p></div>
+      </div>
+      <div class="ds-type-row" style="border-bottom:none">
+        <div class="ds-type-meta">Citation<br>JetBrains Mono<br>12px</div>
+        <div class="ds-type-sample"><code style="color:var(--kf-fg-subtle);font-size:var(--kf-text-xs)">Mata v. Avianca, Inc., No. 22-cv-1461 (S.D.N.Y. Jun. 22, 2023)</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOKENS -->
+  <section class="ds-section" id="tokens">
+    <div class="ds-section-title">Semantic Tokens</div>
+    <div class="ds-section-desc">Use these variable names in every component. Import kingsfield-tokens.css and these all work automatically in both light and dark mode.</div>
+    <table class="ds-token-table">
+      <tr><th>Token</th><th>Role</th><th>Value (dark)</th></tr>
+      <tr><td>--kf-bg-base</td><td><span class="ds-color-dot" style="background:var(--kf-bg-base)"></span>Page background</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#0E0C09</td></tr>
+      <tr><td>--kf-bg-elevated</td><td><span class="ds-color-dot" style="background:var(--kf-bg-elevated)"></span>Card / panel surface</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#1C190F</td></tr>
+      <tr><td>--kf-fg-base</td><td><span class="ds-color-dot" style="background:var(--kf-fg-base);border-color:var(--kf-border-base)"></span>Primary text</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#F5F1EA</td></tr>
+      <tr><td>--kf-fg-subtle</td><td><span class="ds-color-dot" style="background:var(--kf-fg-subtle)"></span>Secondary text</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#A09485</td></tr>
+      <tr><td>--kf-accent</td><td><span class="ds-color-dot" style="background:var(--kf-accent)"></span>Primary action / amber</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#E09B30</td></tr>
+      <tr><td>--kf-signal-success</td><td><span class="ds-color-dot" style="background:var(--kf-signal-success)"></span>Gate passed / verified</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#16A34A</td></tr>
+      <tr><td>--kf-signal-warning</td><td><span class="ds-color-dot" style="background:var(--kf-signal-warning)"></span>Conditional / caution</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#EAB308</td></tr>
+      <tr><td>--kf-signal-danger</td><td><span class="ds-color-dot" style="background:var(--kf-signal-danger)"></span>Vetoed / bad law</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#DC2626</td></tr>
+    </table>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="ds-section" id="buttons">
+    <div class="ds-section-title">Buttons</div>
+    <div class="ds-section-desc">Four variants. Three sizes. Use primary for one action per view maximum.</div>
+    <div class="ds-demo-frame">
+      <div class="ds-demo-label">Variants</div>
+      <div class="ds-row">
+        <button class="kf-btn kf-btn-primary">Run Verification</button>
+        <button class="kf-btn kf-btn-secondary">View Sources</button>
+        <button class="kf-btn kf-btn-ghost">Dismiss</button>
+        <button class="kf-btn kf-btn-danger">Veto Override</button>
+      </div>
+      <div class="ds-demo-label" style="margin-top:var(--kf-space-4)">Sizes</div>
+      <div class="ds-row" style="align-items:center">
+        <button class="kf-btn kf-btn-primary kf-btn-sm">Small</button>
+        <button class="kf-btn kf-btn-primary">Default</button>
+        <button class="kf-btn kf-btn-primary kf-btn-lg">Large</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section class="ds-section" id="badges">
+    <div class="ds-section-title">Badges</div>
+    <div class="ds-section-desc">Used for citation verdicts, gate status, and labels. Always uppercase.</div>
+    <div class="ds-demo-frame">
+      <div class="ds-row">
+        <span class="kf-badge kf-badge-verified">✓ Verified</span>
+        <span class="kf-badge kf-badge-conditional">⚠ Conditional</span>
+        <span class="kf-badge kf-badge-vetoed">✕ Vetoed</span>
+        <span class="kf-badge kf-badge-pending">· Pending</span>
+        <span class="kf-badge kf-badge-accent">Beta</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="ds-section" id="cards">
+    <div class="ds-section-title">Cards</div>
+    <div class="ds-section-desc">Elevated surfaces for grouping related content. Add kf-card-hover for interactive cards.</div>
+    <div class="ds-demo-frame">
+      <div class="kf-grid-2">
+        <div class="kf-card">
+          <span class="kf-badge kf-badge-accent" style="margin-bottom:var(--kf-space-3)">The Crew</span>
+          <h4 style="margin-bottom:var(--kf-space-2)">Researcher</h4>
+          <p style="font-size:var(--kf-text-sm)">Pulls primary sources from CourtListener, govinfo, and eCFR. No summaries. No secondhand garbage.</p>
+        </div>
+        <div class="kf-card kf-card-hover" style="border-color:var(--kf-accent);cursor:pointer">
+          <span class="kf-badge kf-badge-verified" style="margin-bottom:var(--kf-space-3)">Active</span>
+          <h4 style="margin-bottom:var(--kf-space-2)">The Skeptic</h4>
+          <p style="font-size:var(--kf-text-sm)">Hard veto. Cannot be overridden. If a citation fails any gate, the output is held.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUTS -->
+  <section class="ds-section" id="inputs">
+    <div class="ds-section-title">Inputs</div>
+    <div class="ds-section-desc">Click to focus and see the amber ring. The mono variant is for citation strings and docket numbers.</div>
+    <div class="ds-demo-frame" style="display:flex;flex-direction:column;gap:var(--kf-space-4)">
+      <div class="input-group">
+        <input class="kf-input" type="text" placeholder="Ask a legal question...">
+        <div class="input-group-btn">
+          <button class="kf-btn kf-btn-primary kf-btn-sm">Analyze</button>
+        </div>
+      </div>
+      <input class="kf-input kf-input-mono" type="text" placeholder="424 U.S. 319 · Enter citation...">
+    </div>
+  </section>
+
+  <!-- HERO PATTERN -->
+  <section class="ds-section" id="hero">
+    <div class="ds-section-title">Hero</div>
+    <div class="ds-section-desc">Radial amber glow behind the headline. Never center-align body text blocks longer than 2 lines.</div>
+    <div class="hero-demo">
+      <div class="hero-eyebrow">Legal Intelligence · Built Different</div>
+      <div class="hero-title">The Rules Are Public.<br><em>So Is Our Work.</em></div>
+      <div class="hero-subtitle">BigLaw analysis. No retainer. No billable-hour theater. Verified citations or nothing.</div>
+      <div class="ds-row" style="justify-content:center">
+        <button class="kf-btn kf-btn-primary kf-btn-lg">Start Researching</button>
+        <button class="kf-btn kf-btn-secondary kf-btn-lg">See How It Works</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAV -->
+  <section class="ds-section" id="nav">
+    <div class="ds-section-title">Navigation</div>
+    <div class="ds-section-desc">Sticky top nav. Brand wordmark left, links right, CTA rightmost.</div>
+    <div class="ds-demo-frame" style="padding:0;overflow:hidden;border-radius:var(--kf-radius-lg)">
+      <nav class="kf-nav">
+        <a class="kf-nav-brand" href="#">Kings<span>field</span></a>
+        <div class="kf-nav-links">
+          <a class="kf-nav-link active" href="#">Research</a>
+          <a class="kf-nav-link" href="#">Cases</a>
+          <a class="kf-nav-link" href="#">Blog</a>
+          <a class="kf-nav-link" href="#">Pricing</a>
+          <button class="kf-btn kf-btn-primary kf-btn-sm" style="margin-left:var(--kf-space-2)">Get Access</button>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <!-- CHAT UI -->
+  <section class="ds-section" id="chat">
+    <div class="ds-section-title">Chat UI</div>
+    <div class="ds-section-desc">User bubbles: amber fill, right-aligned. AI responses: elevated card, left-aligned. Citations inline in monospace.</div>
+    <div class="ds-demo-frame">
+      <div class="chat-demo">
+        <div class="kf-chat-user">
+          What's the standard for dismissal under Rule 12(b)(6)?
+        </div>
+        <div class="kf-chat-ai">
+          <div style="margin-bottom:var(--kf-space-3)">Under Rule 12(b)(6), a complaint survives dismissal if it states a claim plausible on its face — meaning factual content allowing the court to draw the reasonable inference that the defendant is liable.</div>
+          <div style="margin-bottom:var(--kf-space-3)" class="kf-citation" data-verdict="verified">
+            <div>
+              <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Ashcroft v. Iqbal</div>
+              <div class="kf-citation-text">556 U.S. 662, 678 (2009) · Gate 1 ✓ · Gate 2 ✓ · Gate 3 ✓ · Gate 4 ✓</div>
+            </div>
+            <span class="kf-badge kf-badge-verified" style="margin-left:auto;flex-shrink:0">Verified</span>
+          </div>
+          <div class="kf-citation" data-verdict="verified">
+            <div>
+              <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Bell Atlantic Corp. v. Twombly</div>
+              <div class="kf-citation-text">550 U.S. 544, 570 (2007) · Gate 1 ✓ · Gate 2 ✓ · Gate 3 ✓ · Gate 4 ✓</div>
+            </div>
+            <span class="kf-badge kf-badge-verified" style="margin-left:auto;flex-shrink:0">Verified</span>
+          </div>
+        </div>
+        <div class="kf-chat-user">
+          Does this standard apply differently in the 9th Circuit?
+        </div>
+        <div class="kf-chat-ai">
+          <div style="margin-bottom:var(--kf-space-3)">The 9th Circuit applies Iqbal/Twombly but has elaborated the plausibility standard in several ways...</div>
+          <div class="kf-citation" data-verdict="conditional">
+            <div>
+              <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Eclectic Properties East, LLC v. Marcus</div>
+              <div class="kf-citation-text">751 F.3d 990, 995 (9th Cir. 2014) · Gate 3 ⚠ — Cite with caution</div>
+            </div>
+            <span class="kf-badge kf-badge-conditional" style="margin-left:auto;flex-shrink:0">Conditional</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:var(--kf-space-4)">
+        <div class="input-group">
+          <input class="kf-input" type="text" placeholder="Ask a follow-up...">
+          <div class="input-group-btn">
+            <button class="kf-btn kf-btn-primary kf-btn-sm">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-GATE VERDICT -->
+  <section class="ds-section" id="gates">
+    <div class="ds-section-title">4-Gate Verdict UI</div>
+    <div class="ds-section-desc">Shown inline with every cited source. All four gates must pass for "Verified" status. The Skeptic's call is final.</div>
+    <div class="ds-demo-frame">
+      <div style="margin-bottom:var(--kf-space-4)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--kf-space-3)">
+          <div>
+            <div style="font-weight:600;margin-bottom:2px">Mata v. Avianca, Inc.</div>
+            <div style="font-size:var(--kf-text-xs);font-family:var(--kf-font-mono);color:var(--kf-fg-muted)">No. 22-cv-1461, 2023 WL 4114965 (S.D.N.Y. Jun. 22, 2023)</div>
+          </div>
+          <span class="kf-badge kf-badge-verified">✓ Verified</span>
+        </div>
+        <div class="gate-list">
+          <div class="gate-item">
+            <span class="gate-item-label">Gate 1 — Existence</span>
+            <span class="gate-pass">PASS · Found in CourtListener</span>
+          </div>
+          <div class="gate-item">
+            <span class="gate-item-label">Gate 2 — Quote Accuracy</span>
+            <span class="gate-pass">PASS · SHA256 match confirmed</span>
+          </div>
+          <div class="gate-item">
+            <span class="gate-item-label">Gate 3 — Currency</span>
+            <span class="gate-pass">PASS · No negative treatment found</span>
+          </div>
+          <div class="gate-item">
+            <span class="gate-item-label">Gate 4 — Jurisdiction Fit</span>
+            <span class="gate-pass">PASS · S.D.N.Y. — mandatory</span>
+          </div>
+        </div>
+      </div>
+
+      <hr class="kf-divider">
+
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--kf-space-3)">
+          <div>
+            <div style="font-weight:600;margin-bottom:2px">Varghese v. China Southern Airlines</div>
+            <div style="font-size:var(--kf-text-xs);font-family:var(--kf-font-mono);color:var(--kf-fg-muted)">No. 22-cv-1461 — as cited in brief</div>
+          </div>
+          <span class="kf-badge kf-badge-vetoed">✕ Vetoed</span>
+        </div>
+        <div class="gate-list">
+          <div class="gate-item">
+            <span class="gate-item-label">Gate 1 — Existence</span>
+            <span class="gate-fail">FAIL · Not found in CourtListener</span>
+          </div>
+          <div class="gate-item" style="opacity:0.4">
+            <span class="gate-item-label">Gate 2 — Quote Accuracy</span>
+            <span class="gate-wait">SKIPPED</span>
+          </div>
+          <div class="gate-item" style="opacity:0.4">
+            <span class="gate-item-label">Gate 3 — Currency</span>
+            <span class="gate-wait">SKIPPED</span>
+          </div>
+          <div class="gate-item" style="opacity:0.4">
+            <span class="gate-item-label">Gate 4 — Jurisdiction Fit</span>
+            <span class="gate-wait">SKIPPED</span>
+          </div>
+        </div>
+        <div style="margin-top:var(--kf-space-3);padding:var(--kf-space-3);background:var(--kf-signal-danger-bg);border-radius:var(--kf-radius-md);font-size:var(--kf-text-xs);color:var(--kf-signal-danger)">
+          <strong>Skeptic veto:</strong> Case does not exist in any verified legal database. Possible AI hallucination. Output held — do not file.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="ds-section" id="stats">
+    <div class="ds-section-title">Stats / Data Display</div>
+    <div class="ds-section-desc">For dashboards, landing pages, and DataViz summaries. Numbers in Syne 800.</div>
+    <div class="ds-demo-frame">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Cases Verified</div>
+          <div class="stat-value">9.3<span style="font-size:var(--kf-text-xl);color:var(--kf-fg-muted)">M</span></div>
+          <div class="stat-sub">In CourtListener DB</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gate Pass Rate</div>
+          <div class="stat-value">48<span style="font-size:var(--kf-text-xl);color:var(--kf-fg-muted)">%</span></div>
+          <div class="stat-sub">All four gates cleared</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">AI Sanctions 2023–26</div>
+          <div class="stat-value">200<span style="font-size:var(--kf-text-xl);color:var(--kf-fg-muted)">+</span></div>
+          <div class="stat-sub">Cases in Charlotin DB</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-icon').textContent = isDark ? '☾' : '☀';
+  document.getElementById('theme-label').textContent = isDark ? 'Dark' : 'Light';
+}
+
+function copy(val) {
+  navigator.clipboard.writeText(val).then(() => {
+    const t = document.getElementById('toast');
+    t.textContent = `Copied: ${val}`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  });
+}
+
+function setActive(el) {
+  document.querySelectorAll('.ds-nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Highlight nav on scroll
+const sections = document.querySelectorAll('.ds-section');
+const navItems = document.querySelectorAll('.ds-nav-item');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(i => i.classList.remove('active'));
+      const match = document.querySelector(`.ds-nav-item[href="#${e.target.id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

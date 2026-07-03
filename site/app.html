@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield Lawfare — Matter Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0C09; --panel:#141109; --panel-2:#1C190F; --panel-3:#272318;
+    --line:#332E21; --line-2:#433D2F;
+    --fg:#F5F1EA; --fg-soft:#C4BAB0; --fg-mute:#7A7060;
+    --amber:#D4861A; --amber-2:#E09B30; --gold:#C9A96E;
+    --bordeaux:#B91C1C; --green:#16A34A; --yellow:#EAB308; --red:#DC2626;
+    --display:'Big Shoulders Display',Impact,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --mono:'JetBrains Mono',monospace;
+    --letter:'Special Elite',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow:hidden}
+
+  /* TOP BAR */
+  .top{height:56px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 20px;gap:20px;flex-shrink:0}
+  .brand{font-family:var(--display);font-weight:900;font-size:18px;letter-spacing:0.01em;text-transform:uppercase;color:var(--fg)}
+  .brand span{color:var(--amber)}
+  .matter{display:flex;align-items:center;gap:10px;padding:6px 14px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--fg-soft)}
+  .matter strong{color:var(--fg);font-weight:600}
+  .matter .pill{background:var(--amber);color:var(--bg);padding:2px 8px;border-radius:10px;font-size:9px;letter-spacing:0.16em;font-weight:600;text-transform:uppercase}
+  .matter::after{content:"▾";color:var(--fg-mute);margin-left:4px}
+  .top .grow{flex:1}
+  .top .actions{display:flex;gap:8px}
+  .ico-btn{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--fg-soft);font-family:var(--mono);font-size:13px;cursor:pointer}
+  .ico-btn:hover{background:var(--panel-3);color:var(--fg)}
+  .top .user{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--bordeaux));display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:13px;color:var(--bg)}
+
+  /* LAYOUT */
+  .shell{display:grid;grid-template-columns:280px 1fr 360px;height:calc(100vh - 56px)}
+  .left,.right{overflow-y:auto;background:var(--panel);border-right:1px solid var(--line)}
+  .right{border-right:0;border-left:1px solid var(--line)}
+  .center{display:flex;flex-direction:column;background:var(--bg);overflow:hidden}
+
+  /* LEFT — CREW STATUS + MATTER NAV */
+  .pane-head{padding:18px 18px 10px;display:flex;justify-content:space-between;align-items:baseline}
+  .pane-head h3{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;font-weight:600}
+  .pane-head .small{font-family:var(--mono);font-size:9px;color:var(--fg-mute);letter-spacing:0.16em;text-transform:uppercase}
+
+  .crew-list{padding:0 12px 14px}
+  .role{padding:14px 14px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;margin-bottom:8px;cursor:pointer}
+  .role:hover{border-color:var(--line-2)}
+  .role.active{border-color:var(--amber);background:var(--panel-3)}
+  .role-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .role-name{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:0.01em;text-transform:uppercase;color:var(--fg)}
+  .role-state{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase}
+  .role-state .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .role-state.run{color:var(--amber)} .role-state.run .dot{background:var(--amber);box-shadow:0 0 8px var(--amber);animation:pulse 1.4s infinite}
+  .role-state.ok{color:var(--green)} .role-state.ok .dot{background:var(--green)}
+  .role-state.idle{color:var(--fg-mute)} .role-state.idle .dot{background:var(--fg-mute)}
+  @keyframes pulse{50%{opacity:0.4}}
+  .role-task{font-family:var(--serif);font-size:13px;color:var(--fg-soft);line-height:1.5}
+
+  .nav-section{padding:18px 18px 10px;border-top:1px solid var(--line)}
+  .nav-section h3{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-bottom:12px}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;cursor:pointer;font-family:var(--serif);font-size:14px;color:var(--fg-soft)}
+  .nav-item:hover{background:var(--panel-2);color:var(--fg)}
+  .nav-item.on{background:var(--panel-3);color:var(--fg)}
+  .nav-item .ico{font-family:var(--mono);font-size:11px;color:var(--amber);width:20px;text-align:center}
+  .nav-item .badge{margin-left:auto;background:var(--panel-3);color:var(--fg-mute);padding:1px 8px;border-radius:10px;font-family:var(--mono);font-size:10px}
+  .nav-item.on .badge{background:var(--amber);color:var(--bg);font-weight:600}
+
+  /* CENTER — CHAT THREAD */
+  .thread-head{padding:18px 28px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start}
+  .thread-title{font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;letter-spacing:0.005em;color:var(--fg);line-height:1.05;margin-bottom:6px}
+  .thread-sub{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--fg-mute);max-width:640px}
+  .thread-gates{display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase}
+  .gate-pill{padding:5px 10px;border:1px solid var(--line-2);border-radius:4px;color:var(--fg-mute);display:flex;align-items:center;gap:5px}
+  .gate-pill.pass{color:var(--green);border-color:rgba(22,163,74,0.4);background:rgba(22,163,74,0.08)}
+  .gate-pill .d{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+  .thread{flex:1;overflow-y:auto;padding:24px 28px 24px}
+  .turn{margin-bottom:28px}
+  .turn-user{display:flex;justify-content:flex-end}
+  .bubble-user{max-width:75%;padding:14px 18px;background:var(--panel-3);border:1px solid var(--line);border-radius:14px 14px 4px 14px;color:var(--fg);font-family:var(--serif);font-size:15px;line-height:1.55}
+
+  .turn-ai{margin-bottom:28px}
+  .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+  .ai-head .who{color:var(--amber);font-weight:600}
+  .ai-head .time{color:var(--fg-mute);margin-left:auto}
+  .ai-body{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;font-family:var(--serif);font-size:15px;line-height:1.65;color:var(--fg)}
+  .ai-body p{margin-bottom:12px}
+  .ai-body strong{color:var(--fg);font-weight:600}
+  .ai-body .quote{font-family:var(--letter);font-size:13px;color:var(--fg-soft);background:var(--panel-2);padding:10px 14px;border-left:3px solid var(--amber);margin:10px 0}
+
+  .cite{display:inline;background:rgba(212,134,26,0.12);color:var(--amber);padding:1px 6px;border-radius:3px;font-family:var(--mono);font-size:12px;cursor:pointer;border:1px solid rgba(212,134,26,0.3)}
+  .cite:hover{background:rgba(212,134,26,0.22)}
+  .cite .check{color:var(--green);margin-right:4px}
+
+  /* council expand */
+  .council-strip{margin-top:14px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:14px;cursor:pointer}
+  .council-strip:hover{border-color:var(--line-2)}
+  .council-strip .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+  .council-strip .seats{display:flex;gap:4px;flex:1;justify-content:center}
+  .seat-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+  .seat-dot.amber{background:var(--amber)}
+  .seat-dot.red{background:var(--red)}
+  .council-strip .verdict{font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:var(--green)}
+  .council-strip .verdict.split{color:var(--yellow)}
+  .council-strip .arrow{color:var(--fg-mute);font-family:var(--mono);font-size:14px}
+
+  /* composer */
+  .composer{border-top:1px solid var(--line);padding:18px 28px 22px;background:var(--panel)}
+  .composer .row{display:flex;gap:10px;align-items:flex-end}
+  .composer textarea{flex:1;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;color:var(--fg);font-family:var(--serif);font-size:15px;line-height:1.55;resize:none;outline:none;min-height:54px;max-height:160px}
+  .composer textarea:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(212,134,26,0.12)}
+  .composer .send{padding:14px 22px;background:var(--amber);color:var(--bg);border:none;border-radius:10px;font-family:var(--mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;font-weight:600;cursor:pointer}
+  .composer .send:hover{background:var(--amber-2)}
+  .composer .hints{display:flex;gap:8px;margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-mute)}
+  .composer .hints a{padding:4px 10px;background:var(--panel-2);border:1px solid var(--line);border-radius:4px;color:var(--fg-soft);text-decoration:none}
+  .composer .hints a:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* RIGHT — SOURCES & GATES */
+  .src{padding:14px 16px;border-bottom:1px solid var(--line)}
+  .src .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .src .cite-tag{font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:500}
+  .src .verdict{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:3px 8px;border-radius:4px;font-weight:600}
+  .src .verdict.ok{color:var(--green);background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.3)}
+  .src .verdict.cond{color:var(--yellow);background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.3)}
+  .src .name{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--fg);margin-bottom:6px}
+  .src .holding{font-family:var(--serif);font-size:13px;color:var(--fg-soft);line-height:1.5;margin-bottom:10px}
+  .src .gates{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .src .gate-line{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--fg-mute);display:flex;align-items:center;gap:6px}
+  .src .gate-line .d{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .src .gate-line.miss .d{background:var(--yellow)}
+  .src .src-meta{display:flex;gap:14px;font-family:var(--mono);font-size:10px;color:var(--fg-mute);margin-top:10px;padding-top:10px;border-top:1px dotted var(--line)}
+  .src .src-meta a{color:var(--gold);text-decoration:none}
+  .src .src-meta a:hover{color:var(--amber)}
+
+  @media (max-width:1280px){.shell{grid-template-columns:240px 1fr 300px}}
+  @media (max-width:1024px){.shell{grid-template-columns:1fr}.left,.right{display:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="index.html" style="text-decoration:none"><span class="brand">KINGSFIELD <span>LAWFARE</span></span></a>
+  <span class="matter"><span class="pill">Matter</span><strong>Henderson v. Apex Logistics</strong> · Texas / Title VII · Opened May 18</span>
+  <span class="grow"></span>
+  <div class="actions">
+    <span class="ico-btn">⌘K</span>
+    <span class="ico-btn">⌥H</span>
+    <span class="ico-btn">⚙</span>
+  </div>
+  <div class="user">A</div>
+</header>
+
+<div class="shell">
+
+  <!-- LEFT: CREW + NAV -->
+  <aside class="left">
+    <div class="pane-head"><h3>The Crew</h3><span class="small">Live</span></div>
+    <div class="crew-list">
+      <div class="role">
+        <div class="role-top"><span class="role-name">Researcher</span><span class="role-state ok"><span class="dot"></span>Done</span></div>
+        <div class="role-task">Pulled 12 authorities · 11 verified · 1 distinguished</div>
+      </div>
+      <div class="role active">
+        <div class="role-top"><span class="role-name">Analyst</span><span class="role-state run"><span class="dot"></span>Running</span></div>
+        <div class="role-task">Comparing <em>Henderson</em> facts against 5th Cir. burden-shifting framework</div>
+      </div>
+      <div class="role">
+        <div class="role-top"><span class="role-name">Strategist</span><span class="role-state idle"><span class="dot"></span>Queued</span></div>
+        <div class="role-task">Waiting on Analyst output</div>
+      </div>
+      <div class="role">
+        <div class="role-top"><span class="role-name">Team Lead</span><span class="role-state idle"><span class="dot"></span>Holding veto</span></div>
+        <div class="role-task">Skeptic gate armed · will block on any unverified cite</div>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <h3>This Matter</h3>
+      <div class="nav-item on"><span class="ico">◧</span>Thread<span class="badge">12</span></div>
+      <div class="nav-item"><span class="ico">⊟</span>Sources<span class="badge">18</span></div>
+      <div class="nav-item"><span class="ico">⊞</span>Council Sessions<span class="badge">3</span></div>
+      <div class="nav-item"><span class="ico">⊕</span>Drafts<span class="badge">2</span></div>
+      <div class="nav-item"><span class="ico">◍</span>Timeline</div>
+    </div>
+
+    <div class="nav-section">
+      <h3>Recent Matters</h3>
+      <div class="nav-item"><span class="ico">▸</span>Tovar SPV — Del. dissolution</div>
+      <div class="nav-item"><span class="ico">▸</span>Reyes — NY housing court</div>
+      <div class="nav-item"><span class="ico">▸</span>K. Chen — TX title defect</div>
+      <div class="nav-item"><span class="ico">▸</span>Pierre estate — LA succession</div>
+    </div>
+  </aside>
+
+  <!-- CENTER: THREAD -->
+  <main class="center">
+    <div class="thread-head">
+      <div>
+        <div class="thread-title">Henderson v. Apex Logistics</div>
+        <div class="thread-sub">Title VII race discrimination · 5th Cir. · Plaintiff side · Pre-suit, evaluating <em>McDonnell Douglas</em> prima facie strength</div>
+      </div>
+      <div class="thread-gates">
+        <div class="gate-pill pass"><span class="d"></span>Existence</div>
+        <div class="gate-pill pass"><span class="d"></span>Quote</div>
+        <div class="gate-pill pass"><span class="d"></span>Currency</div>
+        <div class="gate-pill pass"><span class="d"></span>Jurisdiction</div>
+      </div>
+    </div>
+
+    <div class="thread">
+
+      <div class="turn turn-user">
+        <div class="bubble-user">My client was passed over for a dispatch supervisor role at Apex. She's Black, the role went to a white driver with 18 months less experience. Apex says it was about "leadership presence." She has the dispatch logs and a performance review from January that called her "ready for promotion." What does her prima facie case look like in the Fifth Circuit, and what's the strongest defense Apex is going to lead with?</div>
+      </div>
+
+      <div class="turn turn-ai">
+        <div class="ai-head"><span class="who">● Analyst</span><span>via Researcher's pulls</span><span class="time">just now</span></div>
+        <div class="ai-body">
+          <p><strong>Prima facie strength: solid.</strong> In the Fifth Circuit, <em>McDonnell Douglas</em> burden-shifting controls. Your client needs to show (1) membership in a protected class, (2) qualification for the role, (3) an adverse employment action, and (4) circumstances giving rise to an inference of discrimination — typically that a similarly situated employee outside the protected class was treated more favorably. See <span class="cite"><span class="check">✓</span>McDonnell Douglas Corp. v. Green, 411 U.S. 792 (1973)</span> and the Fifth Circuit's application in <span class="cite"><span class="check">✓</span>Davis v. Dallas Area Rapid Transit, 383 F.3d 309 (5th Cir. 2004)</span>.</p>
+
+          <p>The January performance review calling her "ready for promotion" gets you element (2) without fight. The 18-months-experience gap and the same-job-family comparator gets you element (4) — and is usually enough for the Fifth Circuit to find similarly situated. See <span class="cite"><span class="check">✓</span>Lee v. Kansas City S. Ry., 574 F.3d 253, 260 (5th Cir. 2009)</span> (similarly-situated analysis under "nearly identical" standard).</p>
+
+          <p><strong>Apex's likely move:</strong> they'll concede the prima facie case (or contest qualification weakly) and lead with "legitimate non-discriminatory reason" at step two — almost certainly the <em>"leadership presence"</em> framing. That's their problem. Subjective criteria like "leadership presence" don't get the same deference as objective metrics, and the Fifth Circuit has repeatedly let plaintiffs reach a jury where the asserted reason is unmoored from documented performance. See <span class="cite"><span class="check">✓</span>Patrick v. Ridge, 394 F.3d 311, 317 (5th Cir. 2004)</span> ("vague" subjective reasons can support pretext where contradicted by objective performance record).</p>
+
+          <p>The January review is your pretext lever. <em>"Ready for promotion"</em> in writing, four months before being passed over for someone with less experience, on the basis of an unquantified "presence" judgment, is exactly the pattern <em>Patrick</em> says a jury can reasonably read as pretextual.</p>
+
+          <div class="quote">Recommended next step: pull the dispatch logs into evidence and request the comparator's full personnel file in pre-suit discovery prep. If Apex has nothing in writing on "leadership presence" before this promotion decision, that's a pretext win.</div>
+
+          <div class="council-strip">
+            <span class="lbl">LLM Council · 5 seats</span>
+            <span class="seats">
+              <span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot"></span><span class="seat-dot amber"></span><span class="seat-dot"></span>
+            </span>
+            <span class="verdict split">4–1 · Contrarian dissents</span>
+            <span class="arrow">→ Open</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="turn turn-user">
+        <div class="bubble-user">Open the Council. What's the Contrarian's dissent?</div>
+      </div>
+
+      <div class="turn turn-ai">
+        <div class="ai-head"><span class="who">● Council Chair</span><span>via the five seats</span><span class="time">2s ago</span></div>
+        <div class="ai-body">
+          <p><strong>Contrarian's dissent:</strong> the "ready for promotion" line is a phrase from a performance review, not a binding determination. Apex's counsel will argue that <em>ready</em> means qualified-to-be-considered, not selected. The Fifth Circuit has been willing to credit subjective hiring criteria when documented contemporaneously — and Apex may produce notes from the interview panel.</p>
+          <p><strong>Mitigation:</strong> get those interview-panel notes in discovery before filing. If they don't exist or were drafted post-hoc, the pretext argument tightens. If they exist and substantively discuss "leadership presence" with specifics, the case is harder.</p>
+          <p>Majority (Researcher / Analyst / Strategist / Executor) holds prima facie + pretext story; Contrarian flags the interview-notes risk. <strong>Recommendation: proceed but front-load the interview-notes request.</strong></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="composer">
+      <div class="row">
+        <textarea placeholder="Ask the Crew. Every cite gets four gates before it leaves the panel."></textarea>
+        <button class="send">Send →</button>
+      </div>
+      <div class="hints">
+        <a>/cite</a><a>/draft motion</a><a>/council</a><a>/timeline</a><a>/jurisdiction</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT: SOURCES PANEL -->
+  <aside class="right">
+    <div class="pane-head"><h3>Sources · 18</h3><span class="small">All gates passed</span></div>
+
+    <div class="src">
+      <div class="top-row"><span class="cite-tag">[411 U.S. 792]</span><span class="verdict ok">● Verified</span></div>
+      <div class="name">McDonnell Douglas Corp. v. Green</div>
+      <div class="holding">Established the burden-shifting framework for Title VII disparate-treatment claims using circumstantial evidence.</div>
+      <div class="gates">
+        <span class="gate-line"><span class="d"></span>Existence</span>
+        <span class="gate-line"><span class="d"></span>Quote</span>
+        <span class="gate-line"><span class="d"></span>Currency</span>
+        <span class="gate-line"><span class="d"></span>Jurisdiction</span>
+      </div>
+      <div class="src-meta"><span>U.S. Supreme Court · 1973</span><a>CourtListener →</a></div>
+    </div>
+
+    <div class="src">
+      <div class="top-row"><span class="cite-tag">[383 F.3d 309]</span><span class="verdict ok">● Verified</span></div>
+      <div class="name">Davis v. Dallas Area Rapid Transit</div>
+      <div class="holding">Fifth Circuit application of <em>McDonnell Douglas</em>; clarifies the "similarly situated" requirement at step one.</div>
+      <div class="gates">
+        <span class="gate-line"><span class="d"></span>Existence</span>
+        <span class="gate-line"><span class="d"></span>Quote</span>
+        <span class="gate-line"><span class="d"></span>Currency</span>
+        <span class="gate-line"><span class="d"></span>Jurisdiction</span>
+      </div>
+      <div class="src-meta"><span>5th Cir. · 2004</span><a>CourtListener →</a></div>
+    </div>
+
+    <div class="src">
+      <div class="top-row"><span class="cite-tag">[574 F.3d 253]</span><span class="verdict ok">● Verified</span></div>
+      <div class="name">Lee v. Kansas City S. Ry.</div>
+      <div class="holding">"Nearly identical" standard for comparators in the Fifth Circuit; comparator need not be a perfect match.</div>
+      <div class="gates">
+        <span class="gate-line"><span class="d"></span>Existence</span>
+        <span class="gate-line"><span class="d"></span>Quote</span>
+        <span class="gate-line"><span class="d"></span>Currency</span>
+        <span class="gate-line"><span class="d"></span>Jurisdiction</span>
+      </div>
+      <div class="src-meta"><span>5th Cir. · 2009</span><a>CourtListener →</a></div>
+    </div>
+
+    <div class="src">
+      <div class="top-row"><span class="cite-tag">[394 F.3d 311]</span><span class="verdict ok">● Verified</span></div>
+      <div class="name">Patrick v. Ridge</div>
+      <div class="holding">Vague subjective reasons for adverse employment action can support pretext where contradicted by documented performance record.</div>
+      <div class="gates">
+        <span class="gate-line"><span class="d"></span>Existence</span>
+        <span class="gate-line"><span class="d"></span>Quote</span>
+        <span class="gate-line"><span class="d"></span>Currency</span>
+        <span class="gate-line"><span class="d"></span>Jurisdiction</span>
+      </div>
+      <div class="src-meta"><span>5th Cir. · 2004</span><a>CourtListener →</a></div>
+    </div>
+
+    <div class="src">
+      <div class="top-row"><span class="cite-tag">[42 U.S.C. § 2000e-2]</span><span class="verdict ok">● Verified</span></div>
+      <div class="name">Title VII of the Civil Rights Act of 1964</div>
+      <div class="holding">Federal statutory prohibition on employment discrimination based on race, color, religion, sex, national origin.</div>
+      <div class="gates">
+        <span class="gate-line"><span class="d"></span>Existence</span>
+        <span class="gate-line"><span class="d"></span>Quote</span>
+        <span class="gate-line"><span class="d"></span>Currency</span>
+        <span class="gate-line"><span class="d"></span>Jurisdiction</span>
+      </div>
+      <div class="src-meta"><span>U.S. Code</span><a>uscode.house.gov →</a></div>
+    </div>
+
+  </aside>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The LLM Council — Kingsfield Lawfare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0C09; --panel:#141109; --panel-2:#1C190F; --panel-3:#272318;
+    --line:#332E21; --line-2:#433D2F;
+    --fg:#F5F1EA; --fg-soft:#C4BAB0; --fg-mute:#7A7060;
+    --amber:#D4861A; --amber-2:#E09B30; --gold:#C9A96E;
+    --bordeaux:#B91C1C; --green:#16A34A; --yellow:#EAB308; --red:#DC2626;
+    --claude:#C97B47; --gemini:#4A8FD1;
+    --display:'Big Shoulders Display',Impact,sans-serif;
+    --serif:'Fraunces',Georgia,serif;
+    --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+  .top{height:56px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:10}
+  .brand{font-family:var(--display);font-weight:900;font-size:18px;letter-spacing:0.01em;text-transform:uppercase;color:var(--fg);text-decoration:none}
+  .brand span{color:var(--amber)}
+  .crumb{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--fg-mute)}
+  .crumb strong{color:var(--gold)}
+  .top .grow{flex:1}
+  .session-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--line-2);border-radius:4px;color:var(--gold)}
+  .session-tag::before{content:"● ";color:var(--amber)}
+
+  .container{max-width:1400px;margin:0 auto;padding:40px 40px 80px}
+
+  .hero{display:grid;grid-template-columns:1.2fr 0.8fr;gap:48px;align-items:end;margin-bottom:48px}
+  .hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--amber);margin-bottom:18px}
+  .hero h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(56px,8vw,128px);line-height:0.85;letter-spacing:-0.01em}
+  .hero h1 span{color:var(--amber)}
+  .hero .sub{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--fg-soft);max-width:480px;line-height:1.45}
+  .hero .qbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px}
+  .hero .qbox .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .hero .qbox .q{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--fg);line-height:1.45;margin-bottom:14px}
+  .hero .qbox .meta{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--fg-mute);display:flex;gap:14px;flex-wrap:wrap}
+
+  /* ROUND TABLE */
+  .table-section{margin:64px 0}
+  .table-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid var(--line-2);padding-bottom:18px;margin-bottom:36px}
+  .table-head h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:32px;letter-spacing:0.005em}
+  .table-head .legend{display:flex;gap:18px;font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--fg-mute)}
+  .legend .swatch{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  .seats{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+  .seat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;position:relative;display:flex;flex-direction:column;min-height:340px}
+  .seat:hover{border-color:var(--line-2)}
+  .seat.dissent{border-color:var(--yellow)}
+  .seat-num{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .seat h3{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:0.005em;text-transform:uppercase;color:var(--fg);line-height:1;margin-bottom:6px}
+  .seat .role-line{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--fg-mute);margin-bottom:14px}
+  .seat .provider{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:3px 8px;border-radius:3px;font-weight:600;margin-bottom:18px;align-self:flex-start}
+  .seat .provider.claude{background:rgba(201,123,71,0.14);color:var(--claude);border:1px solid rgba(201,123,71,0.4)}
+  .seat .provider.gemini{background:rgba(74,143,209,0.14);color:var(--gemini);border:1px solid rgba(74,143,209,0.4)}
+  .seat .verdict{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:5px 10px;border-radius:4px;display:inline-flex;align-items:center;gap:6px;font-weight:600;margin-bottom:14px;align-self:flex-start}
+  .seat .verdict.concur{color:var(--green);background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.3)}
+  .seat .verdict.dissent{color:var(--yellow);background:rgba(234,179,8,0.12);border:1px solid rgba(234,179,8,0.3)}
+  .seat .opinion{font-family:var(--serif);font-size:14px;line-height:1.55;color:var(--fg-soft);flex:1}
+  .seat .opinion strong{color:var(--fg)}
+  .seat-footer{margin-top:18px;padding-top:14px;border-top:1px dotted var(--line);display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--fg-mute);letter-spacing:0.08em}
+  .seat-footer a{color:var(--gold);text-decoration:none}
+
+  /* CHAIRMAN */
+  .chair{margin:48px 0;background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);border:1px solid var(--amber);border-radius:14px;padding:36px 40px;position:relative}
+  .chair::before{content:"THE CHAIRMAN";position:absolute;top:-12px;left:32px;background:var(--amber);color:var(--bg);font-family:var(--mono);font-size:10px;letter-spacing:0.22em;padding:5px 14px;font-weight:700}
+  .chair-grid{display:grid;grid-template-columns:1fr 220px;gap:36px;align-items:start}
+  .chair h3{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:36px;line-height:0.95;letter-spacing:-0.005em;margin-bottom:14px;color:var(--fg)}
+  .chair h3 span{color:var(--amber)}
+  .chair .synth{font-family:var(--serif);font-size:18px;line-height:1.6;color:var(--fg);margin-bottom:18px}
+  .chair .synth strong{color:var(--amber)}
+  .chair .tally{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:20px}
+  .chair .tally h4{font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .chair .tally .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted var(--line);font-family:var(--mono);font-size:12px}
+  .chair .tally .row:last-child{border-bottom:0}
+  .chair .tally .row .v{font-weight:600}
+  .chair .tally .row .v.c{color:var(--green)}
+  .chair .tally .row .v.d{color:var(--yellow)}
+  .chair .recommend{font-family:var(--display);font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:0.005em;padding:14px 0 0;border-top:1px solid var(--line-2);margin-top:18px;color:var(--green)}
+  .chair .recommend.split{color:var(--yellow)}
+
+  /* QUERY BAR */
+  .query-bar{margin-top:48px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;gap:14px;align-items:center}
+  .query-bar input{flex:1;background:transparent;border:none;color:var(--fg);font-family:var(--serif);font-size:16px;outline:none}
+  .query-bar input::placeholder{color:var(--fg-mute);font-style:italic}
+  .query-bar .pill{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:4px 10px;background:var(--panel-2);border:1px solid var(--line);border-radius:4px;color:var(--fg-mute)}
+  .query-bar button{background:var(--amber);color:var(--bg);border:none;padding:12px 22px;border-radius:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;font-weight:700;cursor:pointer}
+
+  /* PROVIDER STRIP */
+  .providers{margin-top:48px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .providers .grp{display:flex;align-items:center;gap:12px}
+  .providers .grp .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+  .providers .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;font-family:var(--mono);font-size:11px;color:var(--fg-soft)}
+  .providers .chip .d{width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+  @media (max-width:1100px){.seats{grid-template-columns:1fr 1fr}.chair-grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr}}
+  @media (max-width:680px){.seats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="index.html" class="brand">KINGSFIELD <span>LAWFARE</span></a>
+  <span class="crumb"><a href="app.html" style="color:var(--fg-mute);text-decoration:none">Matter</a> · <strong>Council Session #3</strong></span>
+  <span class="grow"></span>
+  <span class="session-tag">Live · 11 model calls</span>
+</header>
+
+<div class="container">
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">The LLM Council · Five seats · Two providers · One chairman</div>
+      <h1>Eleven calls.<br>One <span>verdict.</span></h1>
+      <p class="sub">Adversarial by design. The Contrarian's job is to find the holes. If a position can't survive this room, it won't survive opposing counsel.</p>
+    </div>
+    <div class="qbox">
+      <div class="lbl">Session Query · Henderson v. Apex</div>
+      <p class="q">"What's the strongest pretext argument under Patrick v. Ridge given a four-month-old performance review that says 'ready for promotion'?"</p>
+      <div class="meta"><span>Matter · Henderson</span><span>Asked · 2m ago</span><span>Round · 1 of 1</span></div>
+    </div>
+  </section>
+
+  <section class="table-section">
+    <div class="table-head">
+      <h2>The Five Seats</h2>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--claude)"></span>Claude Opus 4.6</span>
+        <span><span class="swatch" style="background:var(--gemini)"></span>Gemini Pro / Flash</span>
+        <span><span class="swatch" style="background:var(--green)"></span>Concur</span>
+        <span><span class="swatch" style="background:var(--yellow)"></span>Dissent</span>
+      </div>
+    </div>
+
+    <div class="seats">
+
+      <div class="seat">
+        <div class="seat-num">Seat 01</div>
+        <h3>The Contrarian</h3>
+        <div class="role-line">Finds the holes. Argues the other side.</div>
+        <span class="provider claude">Claude Opus 4.6</span>
+        <span class="verdict dissent">● Dissent — partial</span>
+        <p class="opinion">The pretext argument is real but overstates the leverage from one phrase. <strong>"Ready for promotion"</strong> in a performance review is consideration-stage language, not selection-stage. Apex will frame it as "qualified to be evaluated," and the Fifth Circuit has credited that framing where interview notes back it. <strong>Risk:</strong> if Apex produces contemporaneous panel notes specifying "leadership presence" criteria, the pretext theory weakens substantially.</p>
+        <div class="seat-footer"><span>4 sub-calls · 1.4s</span><a>Trace →</a></div>
+      </div>
+
+      <div class="seat">
+        <div class="seat-num">Seat 02</div>
+        <h3>First Principles</h3>
+        <div class="role-line">Strips to constitutional + statutory bones.</div>
+        <span class="provider gemini">Gemini Pro</span>
+        <span class="verdict concur">● Concur</span>
+        <p class="opinion">Title VII text prohibits discrimination "because of" a protected characteristic. <em>Patrick</em> exists because subjective criteria can be a vehicle for the very causation Title VII forbids. The Statute's burden-shifting structure (codified at <strong>42 U.S.C. § 2000e-2</strong>) anticipates exactly this asymmetry — employer holds the documentary record, plaintiff holds the inference. <strong>The January review shifts the documentary record toward plaintiff.</strong></p>
+        <div class="seat-footer"><span>2 sub-calls · 0.9s</span><a>Trace →</a></div>
+      </div>
+
+      <div class="seat">
+        <div class="seat-num">Seat 03</div>
+        <h3>The Expansionist</h3>
+        <div class="role-line">What else does this argument unlock?</div>
+        <span class="provider claude">Claude Opus 4.6</span>
+        <span class="verdict concur">● Concur — with addition</span>
+        <p class="opinion">Pretext is the right frame, but don't stop at <em>Patrick.</em> Layer in <strong>cat's paw</strong> analysis if the interview panel deferred to a single biased decision-maker — that opens vicarious liability even if the panel itself was facially clean. Also flag potential <strong>disparate impact</strong> if "leadership presence" is a recurring metric Apex uses across promotion decisions. Discovery should pull every promotion decision in this dispatch group for the past 3 years.</p>
+        <div class="seat-footer"><span>5 sub-calls · 2.1s</span><a>Trace →</a></div>
+      </div>
+
+      <div class="seat">
+        <div class="seat-num">Seat 04</div>
+        <h3>The Outsider</h3>
+        <div class="role-line">Comes in clean. No legal training assumed.</div>
+        <span class="provider gemini">Gemini Flash</span>
+        <span class="verdict concur">● Concur</span>
+        <p class="opinion">If someone told me "we passed you over because the other guy has leadership presence" after my own boss wrote down in January that I was ready, I would think they were lying to my face. A jury will think the same thing. The question for the lawyers is whether they can keep this in front of a jury long enough for the jury to hear it. <strong>The case is winnable on the human read.</strong></p>
+        <div class="seat-footer"><span>1 sub-call · 0.4s</span><a>Trace →</a></div>
+      </div>
+
+      <div class="seat">
+        <div class="seat-num">Seat 05</div>
+        <h3>The Executor</h3>
+        <div class="role-line">Closes. Drafts the actual move.</div>
+        <span class="provider claude">Claude Opus 4.6</span>
+        <span class="verdict concur">● Concur</span>
+        <p class="opinion"><strong>Recommended sequence:</strong> (1) EEOC charge filed now; (2) discovery request prioritizes interview-panel notes, the comparator's full file, and the "leadership presence" criteria document <em>if any exists</em>; (3) draft complaint framing pretext under <em>Patrick</em> with <em>Lee</em> for the comparator analysis; (4) reserve cat's paw and disparate impact for amendment after discovery. <strong>Hold the disparate impact theory back until the data justifies it.</strong></p>
+        <div class="seat-footer"><span>3 sub-calls · 1.7s</span><a>Trace →</a></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="chair">
+    <div class="chair-grid">
+      <div>
+        <h3>Chairman's <span>synthesis</span></h3>
+        <p class="synth">The Council is 4–1 in favor of the pretext theory under <strong>Patrick v. Ridge</strong>, with the Contrarian flagging a real but addressable risk: Apex's potential production of contemporaneous interview-panel notes specifying "leadership presence" criteria. <strong>The discovery sequence must front-load the request for those notes.</strong></p>
+        <p class="synth">If the notes don't exist or were drafted post-hoc, the pretext argument tightens to near-summary-judgment-proof. If they exist and have substance, the case is harder but still viable on the comparator analysis under <em>Lee.</em> Expansionist's recommendation to layer in cat's paw and reserve disparate impact for amendment is sound and adopted.</p>
+        <p class="synth"><strong>Proceed.</strong> The Contrarian's dissent is preserved on the record for the Strategist's draft.</p>
+      </div>
+      <div class="tally">
+        <h4>Tally</h4>
+        <div class="row"><span>The Contrarian</span><span class="v d">Dissent</span></div>
+        <div class="row"><span>First Principles</span><span class="v c">Concur</span></div>
+        <div class="row"><span>The Expansionist</span><span class="v c">Concur</span></div>
+        <div class="row"><span>The Outsider</span><span class="v c">Concur</span></div>
+        <div class="row"><span>The Executor</span><span class="v c">Concur</span></div>
+        <div class="recommend">▸ Proceed · 4–1</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="query-bar">
+    <span class="pill">Next query</span>
+    <input type="text" placeholder="Ask the Council. Eleven model calls. Two providers. One verdict." />
+    <button>Convene →</button>
+  </div>
+
+  <div class="providers">
+    <div class="grp">
+      <span class="lbl">Provider Diversity</span>
+      <span class="chip"><span class="d"></span>Claude Opus 4.6 · 3 seats</span>
+      <span class="chip"><span class="d"></span>Gemini Pro · 1 seat</span>
+      <span class="chip"><span class="d"></span>Gemini Flash · 1 seat</span>
+    </div>
+    <div class="grp">
+      <span class="lbl">Session</span>
+      <span class="chip">11 model calls · 6.5s · $0.42</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

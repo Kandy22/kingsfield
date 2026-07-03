@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style data-omelette-injected>html,body{background:transparent}</style><script data-omelette-injected>(()=>{var j=["https://claude.ai","https://preview.claude.ai","https://6e88aff7-f121-4b36-a693-1cbe85d8188f.claudeusercontent.com"];var x=true;var S=30000;var f=3000;document.addEventListener("DOMContentLoaded",()=>{const H=window.Babel;const G="om-src-id";if(H&&H.registerPlugin&&!(H.availablePlugins&&H.availablePlugins[G])){H.registerPlugin(G,({types:Y})=>({visitor:{JSXOpeningElement(U,Q){const J=U.node;if(J.name&&J.name.type==="JSXMemberExpression")return;for(let V=0;V<J.attributes.length;V++){const L=J.attributes[V];if(L.type==="JSXAttribute"&&L.name&&L.name.name==="data-om-id")return}const W=Q.file&&Q.file.opts&&Q.file.opts.filename||"?";const Z=J.loc&&J.loc.start;const z=`jsx:${W}:${J.start??0}:${Z?Z.line:0}:${Z?Z.column+1:0}`;J.attributes.push(Y.jsxAttribute(Y.jsxIdentifier("data-om-id"),Y.stringLiteral(z)))}}}))}const k="om-text-extract";let A=false;if(x&&H&&H.registerPlugin&&!(H.availablePlugins&&H.availablePlugins[k])){const Y=window.React;if(Y&&Y.useSyncExternalStore&&Y.createElement){A=true;const U={};const Q=new Set;let J=0;window.__omTextO=U;window.__omTextSet=(z)=>{for(const V in z){const L=z[V];if(L==null)delete U[V];else U[V]=L}J++;Q.forEach((V)=>V())};const W=(z)=>{Q.add(z);return()=>Q.delete(z)};const Z=()=>J;window.__OmT=function z(V){Y.useSyncExternalStore(W,Z,Z);return Y.createElement("span",{"data-om-text":V.i,className:"__om-t"},V.i in U?U[V.i]:V.children)};H.registerPlugin(k,({types:z})=>{const V={style:1,script:1,noscript:1,textarea:1,title:1,option:1,text:1,tspan:1,textPath:1};const L={placeholder:1,alt:1,title:1,label:1,"aria-label":1,"aria-description":1,"aria-placeholder":1};const _=($,C)=>z.logicalExpression("??",z.memberExpression(z.logicalExpression("||",z.memberExpression(z.identifier("window"),z.identifier("__omTextO")),z.objectExpression([])),z.stringLiteral($),true),C);const E=($)=>$.file&&$.file.opts&&$.file.opts.filename||"?";const B=($)=>$.file&&$.file.code||"";const b=($,C)=>{const X=(F)=>F&&F.start!=null&&F.end!=null&&(F.type==="StringLiteral"||F.type==="TemplateLiteral"&&F.expressions.length===0)?[F.start,F.end]:null;const N=X(C);if(N)return N;if(C&&C.type==="Identifier"){const F=$.scope.getBinding(C.name);if(F&&F.constant&&F.path.node.type==="VariableDeclarator"){return X(F.path.node.init)}}return null};const M=($,C,X)=>{const N=$.node;let F=false;const w=(K,q)=>{F=true;return z.jsxElement(z.jsxOpeningElement(z.jsxIdentifier("__OmT"),[z.jsxAttribute(z.jsxIdentifier("i"),z.stringLiteral(K))],false),z.jsxClosingElement(z.jsxIdentifier("__OmT")),[q],false)};const D=N.children.map((K)=>{if(K.type==="JSXText"){if(K.start==null||K.end==null)return K;const q=X.slice(K.start,K.end);const R=q.length-q.trimStart().length;const m=q.length-q.trimEnd().length;if(R+m>=q.length)return K;return w(`txt:${C}:${K.start+R}:${K.end-m}`,K)}if(K.type==="JSXExpressionContainer"){const q=b($,K.expression);if(q)return w(`str:${C}:${q[0]}:${q[1]}`,K)}return K});if(F)N.children=D};return{visitor:{JSXOpeningElement($,C){const X=$.node;const N=E(C);const F={};for(let w=0;w<X.attributes.length;w++){const D=X.attributes[w];if(D.type!=="JSXAttribute"||!D.name)continue;const K=D.name.name;if(!L[K])continue;if(!D.value||D.value.type!=="StringLiteral")continue;if(D.value.start==null||D.value.end==null)continue;const q=`txt:${N}:${D.value.start}:${D.value.end}`;F[K]=q;D.value=z.jsxExpressionContainer(_(q,z.stringLiteral(D.value.value)))}if(Object.keys(F).length){X.attributes.push(z.jsxAttribute(z.jsxIdentifier("data-om-text-attrs"),z.stringLiteral(JSON.stringify(F))))}},JSXElement($,C){const X=$.node.openingElement;const N=X&&X.name&&X.name.name;if(N==="__OmT")return;if(typeof N==="string"&&V[N])return;M($,E(C),B(C))},JSXFragment($,C){M($,E(C),B(C))}}}})}}const u=A?["transform-react-jsx-source",G,k]:["transform-react-jsx-source",G];document.querySelectorAll('script[type="text/babel"],script[type="text/jsx"]').forEach((Y,U)=>{const Q=Y.getAttribute("data-plugins")||"";const J=u.filter((W)=>Q.indexOf(W)<0);if(J.length){Y.setAttribute("data-plugins",Q?`${Q},${J.join(",")}`:J.join(","))}if(!Y.hasAttribute("data-filename")){Y.setAttribute("data-filename",Y.getAttribute("src")||`inline-${U}`)}})});var y=window.parent;if(y&&y!==window){const H=(Q,J)=>{try{y.postMessage({__omelette_log:true,type:Q,data:J},"*")}catch{}};["log","warn","error"].forEach((Q)=>{const J=console[Q];console[Q]=(...W)=>{const Z=W.map((z)=>{try{return typeof z==="object"?JSON.stringify(z):String(z)}catch{try{return String(z)}catch{return"[unstringifiable]"}}}).join(" ");H(Q,Z);J.apply(console,W)}});window.addEventListener("error",(Q)=>{const J=Q.target;if(J&&J!==window&&J.tagName){const W=J.src||J.href||"";H("resource_error",`${J.tagName} failed to load: ${W}`)}else{H("error",`${Q.message||"Unknown error"} at ${Q.filename||"?"}:${Q.lineno||0}:${Q.colno||0}`)}},true);window.addEventListener("unhandledrejection",(Q)=>{const J=Q.reason;const W=J instanceof Error?`${J.message} ${J.stack}`:String(J);H("error",`Unhandled rejection: ${W}`)});const G=()=>{try{y.postMessage({type:"omelette:height",height:document.documentElement.scrollHeight},"*")}catch{}};if(document.readyState==="complete")G();else window.addEventListener("load",G);if(window.ResizeObserver)new ResizeObserver(G).observe(document.documentElement);const k={};let A=0;window.claude={complete(Q){return new Promise((J,W)=>{if(!j.length){W(new Error("claude.complete: no parent origin"));return}const Z=`c${++A}`;const z=()=>setTimeout(()=>{delete k[Z];W(new Error(`claude.complete: no data for ${S/1000}s`))},S);const V=z();k[Z]={resolve:J,reject:W,text:"",t:V,arm:z};try{for(const L of j){y.postMessage({__om_api:true,id:Z,body:Q},L)}}catch(L){clearTimeout(V);delete k[Z];W(L)}})}};const u={};let Y=0;window.omelette={writeFile:(Q,J)=>new Promise((W,Z)=>{if(!j.length){W();return}const z=`f${++Y}`;const V=setTimeout(()=>{delete u[z];W()},f);u[z]={resolve:W,reject:Z,t:V};try{for(const L of j){y.postMessage({__om_file:true,id:z,op:"write",path:Q,content:J},L)}}catch{clearTimeout(V);delete u[z];W()}})};const U=(Q)=>{try{return JSON.stringify(Q)}catch{return JSON.stringify(String(Q))}};window.addEventListener("message",(Q)=>{if(j.indexOf(Q.origin)<0)return;if(Q.source!==y)return;const J=Q.data;if(!J)return;if(J.type==="omelette-preview-refresh"){if(typeof J.token!=="string"||!/^[0-9a-f.-]+(\.(rc|pr-[0-9]+))?(\.[0-9]+\.[0-9a-f]{16})?$/.test(J.token))return;const z=Math.max(1,Math.floor((J.expiresAt||0)-Date.now()/1000));document.cookie="__Host-omelette-preview="+J.token+"; Path=/; Secure; SameSite=None; Partitioned; Max-Age="+z;return}if(J.__om_file_r){const z=u[J.id];if(!z)return;clearTimeout(z.t);delete u[J.id];if(J.ok)z.resolve();else z.reject(new Error(J.error||"write failed"));return}if(J.__om_api_r){const z=k[J.id];if(!z)return;if(J.error!=null){clearTimeout(z.t);delete k[J.id];z.reject(new Error(J.error));return}if(J.chunk!=null){clearTimeout(z.t);z.t=z.arm();z.text+=J.chunk;return}if(J.done){clearTimeout(z.t);delete k[J.id];z.resolve(J.text!=null?J.text:z.text);return}return}if(!J.__om_eval)return;const W=J;const Z=(z)=>{Q.source.postMessage({...z,__om_eval_r:1,id:W.id},Q.origin)};try{const z=(0,eval)(W.code);if(z&&typeof z.then==="function"){z.then((V)=>Z({ok:1,v:U(V)}),(V)=>Z({ok:0,e:String(V)}))}else{Z({ok:1,v:U(z)})}}catch(z){Z({ok:0,e:String(z)})}})}})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield Lawfare — Design Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #0A0A0A;
+  --ink-2:     #161615;
+  --ink-3:     #2A2A28;
+  --ink-mid:   #5A5A56;
+  --ink-soft:  #9A9A94;
+  --stone:     #C4C3BD;
+  --mist:      #C8D8DC;
+  --paper:     #F7F6F2;
+  --paper-2:   #EFEEEA;
+  --white:     #FFFFFF;
+  --red:       #C7341A;
+  --blue:      #2B5CE6;
+  --blue-soft: #E2E9FB;
+  --serif:     'Playfair Display', Georgia, serif;
+  --sans:      'DM Sans', system-ui, sans-serif;
+  --mono:      'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  display: flex;
+}
+
+/* ── Sidebar ── */
+.sidenav {
+  width: 200px;
+  flex: none;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--ink);
+  color: var(--stone);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+.sidenav-logo {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  padding: 0 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.sidenav-logo span { color: var(--red); }
+.sidenav a {
+  display: block;
+  padding: 7px 24px;
+  color: var(--stone);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.15s;
+}
+.sidenav a:hover { color: var(--white); }
+.nav-section {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  padding: 16px 24px 4px;
+  margin-top: 8px;
+}
+
+/* ── Main ── */
+main { flex: 1; min-width: 0; padding: 64px; max-width: 1060px; }
+
+section { margin-bottom: 72px; scroll-margin-top: 24px; }
+.eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px;
+}
+.section-title {
+  font-family: var(--serif); font-size: 36px; font-weight: 500;
+  letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 32px;
+}
+hr.rule { border: none; border-top: 1px solid var(--paper-2); margin-bottom: 40px; }
+.caption { font-size: 11px; color: var(--ink-soft); margin-top: 8px; font-family: var(--mono); }
+
+/* ── Swatches ── */
+.swatches { display: flex; gap: 12px; flex-wrap: wrap; }
+.swatch { width: 110px; }
+.swatch-block { height: 72px; border-radius: 2px; margin-bottom: 8px; }
+.swatch-name { font-size: 12px; font-weight: 500; }
+.swatch-hex { font-size: 11px; font-family: var(--mono); color: var(--ink-soft); }
+
+/* ── Type ── */
+.type-row {
+  display: flex; align-items: baseline; gap: 40px;
+  padding: 18px 0; border-bottom: 1px solid var(--paper-2);
+}
+.type-meta { width: 130px; flex: none; }
+.type-meta-label { font-size: 10px; font-family: var(--mono); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; }
+.type-meta-val { font-size: 11px; color: var(--ink-mid); margin-top: 4px; line-height: 1.4; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 10px 22px; border-radius: 999px; border: none;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-primary   { background: var(--ink); color: var(--white); }
+.btn-primary:hover { background: var(--ink-3); transform: translateY(-1px); }
+.btn-secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+.btn-secondary:hover { background: var(--ink); color: var(--white); }
+.btn-blue      { background: var(--blue); color: var(--white); }
+.btn-blue:hover { background: #1e4bcc; }
+.btn-red       { background: var(--red); color: var(--white); }
+.btn-ghost     { background: transparent; color: var(--stone); border: 1px solid rgba(255,255,255,0.2); }
+.btn-ghost:hover { border-color: var(--white); color: var(--white); }
+.btn-sm { font-size: 12px; padding: 6px 14px; }
+.demo-dark-bg { background: var(--ink); padding: 24px; border-radius: 2px; }
+
+/* ── Fields ── */
+.field-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field-label { font-size: 11px; font-weight: 600; color: var(--ink-mid); letter-spacing: 0.08em; text-transform: uppercase; }
+.field-input {
+  background: var(--white); border: 1.5px solid var(--paper-2); border-radius: 2px;
+  padding: 10px 14px; font-family: var(--sans); font-size: 14px; color: var(--ink);
+  outline: none; transition: border-color 0.15s; width: 100%;
+}
+.field-input:focus { border-color: var(--ink); }
+.field-input::placeholder { color: var(--stone); }
+.field-textarea { min-height: 110px; resize: vertical; line-height: 1.6; }
+.field-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%235A5A56' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+}
+
+/* ── Tabs ── */
+.tabs { display: flex; border-bottom: 1px solid var(--paper-2); margin-bottom: 20px; }
+.tab {
+  padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--ink-soft);
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s; user-select: none;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.pill-tabs { display: inline-flex; background: var(--paper-2); border-radius: 999px; padding: 3px; gap: 2px; }
+.pill-tab { padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--ink-soft); user-select: none; transition: all 0.15s; }
+.pill-tab.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* ── App nav ── */
+.app-nav {
+  background: var(--ink); display: flex; align-items: center; padding: 0 24px; height: 52px;
+}
+.app-nav-logo { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--white); letter-spacing: -0.03em; flex: none; margin-right: 32px; }
+.app-nav-logo .dot { color: var(--blue); }
+.anav-tabs { display: flex; }
+.anav-tab {
+  display: flex; align-items: center; gap: 7px; padding: 0 14px; height: 52px;
+  font-size: 13px; font-weight: 400; color: var(--stone); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s;
+}
+.anav-tab:hover { color: var(--white); }
+.anav-tab.active { color: var(--white); border-bottom-color: var(--blue); }
+.anav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.anav-help { font-size: 13px; color: var(--stone); }
+.anav-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--ink-3); border: 1.5px solid var(--ink-mid); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--stone); }
+
+/* ── Cards ── */
+.card { background: var(--white); border: 1px solid var(--paper-2); border-radius: 2px; padding: 24px; }
+.card-dark { background: var(--ink-2); border: 1px solid rgba(255,255,255,0.07); border-radius: 2px; padding: 24px; color: var(--white); }
+.card-mist { background: var(--mist); border-radius: 2px; padding: 24px; }
+
+/* ── Badge ── */
+.badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 600; font-family: var(--mono); padding: 2px 7px; border-radius: 2px; letter-spacing: 0.05em; }
+.b-ink   { background: var(--ink); color: var(--white); }
+.b-red   { background: var(--red); color: var(--white); }
+.b-blue  { background: var(--blue-soft); color: var(--blue); }
+.b-stone { background: var(--paper-2); color: var(--ink-mid); border: 1px solid var(--stone); }
+.b-priv  { background: var(--ink); color: var(--white); }
+
+/* ── Table ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); padding: 8px 12px; border-bottom: 1px solid var(--paper-2); }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--paper-2); color: var(--ink); font-family: var(--mono); font-size: 11px; }
+.data-table tr:hover td { background: var(--paper); }
+
+/* ── Two-panel ── */
+.two-panel { display: grid; grid-template-columns: 280px 1fr; min-height: 340px; }
+.panel-l { background: var(--paper-2); border-right: 1px solid var(--paper-2); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.panel-r { background: var(--white); padding: 32px; }
+
+/* ── Quote ── */
+.pullquote { font-family: var(--serif); font-size: 28px; font-weight: 400; line-height: 1.25; letter-spacing: -0.02em; color: var(--white); padding: 48px 40px; background: var(--ink); border-radius: 2px; }
+.pullquote-mark { font-family: var(--serif); font-size: 56px; line-height: 1; color: var(--red); display: block; margin-bottom: 8px; opacity: 0.65; }
+
+/* ── Redline ── */
+.redline { background-image: linear-gradient(var(--red), var(--red)); background-size: 100% 2px; background-repeat: no-repeat; background-position: left bottom 1px; }
+
+/* ── Spacing ── */
+.sp-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.sp-bar { background: var(--blue-soft); border: 1px solid var(--blue); height: 18px; border-radius: 1px; flex: none; }
+.sp-label { font-size: 11px; font-family: var(--mono); color: var(--ink-mid); }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--stone); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidenav">
+  <div class="sidenav-logo">Kingsfield<span>.</span></div>
+  <span class="nav-section">Foundation</span>
+  <a href="#color">Color</a>
+  <a href="#type">Typography</a>
+  <a href="#logo">Logo</a>
+  <a href="#spacing">Spacing</a>
+  <span class="nav-section">Components</span>
+  <a href="#buttons">Buttons</a>
+  <a href="#forms">Forms</a>
+  <a href="#tabs">Tabs</a>
+  <a href="#cards">Cards</a>
+  <a href="#badges">Badges</a>
+  <a href="#tables">Tables</a>
+  <span class="nav-section">Patterns</span>
+  <a href="#nav">App Nav</a>
+  <a href="#layout">Layout</a>
+  <a href="#quotes">Quotes</a>
+</nav>
+
+<main>
+
+  <!-- Header -->
+  <section style="margin-bottom:56px;">
+    <div class="eyebrow">Kingsfield Lawfare</div>
+    <h1 style="font-family:var(--serif);font-size:52px;font-weight:500;letter-spacing:-0.04em;line-height:1.05;margin-bottom:20px;">Design Guide</h1>
+    <p style="font-size:17px;color:var(--ink-mid);max-width:500px;line-height:1.6;">Forms. Drafting. Research. Workflow.<br>Kingsfield editorial grit × Harvey professional-class product clarity.</p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- COLOR -->
+  <section id="color">
+    <div class="eyebrow">Foundation</div>
+    <h2 class="section-title">Color</h2>
+
+    <div style="margin-bottom:28px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px;">CORE</div>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-block" style="background:#0A0A0A;"></div><div class="swatch-name">Ink</div><div class="swatch-hex">#0A0A0A</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#161615;"></div><div class="swatch-name">Ink 2</div><div class="swatch-hex">#161615</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#2A2A28;"></div><div class="swatch-name">Ink 3</div><div class="swatch-hex">#2A2A28</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#5A5A56;"></div><div class="swatch-name">Ink Mid</div><div class="swatch-hex">#5A5A56</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#9A9A94;"></div><div class="swatch-name">Ink Soft</div><div class="swatch-hex">#9A9A94</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#C4C3BD;border:1px solid #ddd;"></div><div class="swatch-name">Stone</div><div class="swatch-hex">#C4C3BD</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#F7F6F2;border:1px solid #ddd;"></div><div class="swatch-name">Paper</div><div class="swatch-hex">#F7F6F2</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#FFFFFF;border:1px solid #ddd;"></div><div class="swatch-name">White</div><div class="swatch-hex">#FFFFFF</div></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:28px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px;">ACCENT</div>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-block" style="background:#C7341A;"></div><div class="swatch-name">Redline</div><div class="swatch-hex">#C7341A</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#2B5CE6;"></div><div class="swatch-name">Blue</div><div class="swatch-hex">#2B5CE6</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#C8D8DC;border:1px solid #bbb;"></div><div class="swatch-name">Mist</div><div class="swatch-hex">#C8D8DC</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#E2E9FB;border:1px solid #bbb;"></div><div class="swatch-name">Blue Soft</div><div class="swatch-hex">#E2E9FB</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px;">TASK CHANNELS</div>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-block" style="background:#C7341A;"></div><div class="swatch-name">Draft</div><div class="swatch-hex">#C7341A</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#2B5CE6;"></div><div class="swatch-name">Research</div><div class="swatch-hex">#2B5CE6</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#E8B121;"></div><div class="swatch-name">Workflow</div><div class="swatch-hex">#E8B121</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#1F8A5B;"></div><div class="swatch-name">Data Room</div><div class="swatch-hex">#1F8A5B</div></div>
+        <div class="swatch"><div class="swatch-block" style="background:#7A3FD6;"></div><div class="swatch-name">Knowledge</div><div class="swatch-hex">#7A3FD6</div></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- TYPE -->
+  <section id="type">
+    <div class="eyebrow">Foundation</div>
+    <h2 class="section-title">Typography</h2>
+
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">Display</div><div class="type-meta-val">Playfair Display<br>500, –0.04em</div></div>
+      <div style="font-family:var(--serif);font-size:52px;font-weight:500;letter-spacing:-0.04em;line-height:1.05;">Smart. Not Stupid.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">Manifesto</div><div class="type-meta-val">Bold + Regular<br>mixed weight</div></div>
+      <div style="font-family:var(--serif);font-size:48px;line-height:1.05;letter-spacing:-0.04em;">
+        <strong style="font-weight:700;">Smart.</strong> <span style="font-weight:400;color:var(--ink-mid);">Not Stupid.</span>
+      </div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">Display Italic</div><div class="type-meta-val">Playfair Italic 400</div></div>
+      <div style="font-family:var(--serif);font-size:38px;font-weight:400;font-style:italic;letter-spacing:-0.03em;line-height:1.1;color:var(--ink-mid);">Clarity. Leverage. Results.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">H1 / Title</div><div class="type-meta-val">28px / 500<br>–0.025em</div></div>
+      <div style="font-family:var(--serif);font-size:28px;font-weight:500;letter-spacing:-0.025em;">Qualified Immunity Motion</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">Body / UI</div><div class="type-meta-val">DM Sans 15px / 400</div></div>
+      <div style="font-size:15px;line-height:1.7;color:var(--ink-mid);max-width:520px;">Most people don't need a lawyer. They need clarity, leverage, and someone who knows how to think.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">Label</div><div class="type-meta-val">10px / 600<br>UPPERCASE</div></div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-soft);">Matter · 5th Circuit · Demand Letter</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><div class="type-meta-label">Mono</div><div class="type-meta-val">JetBrains Mono<br>12px</div></div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--ink-mid);">CASE-2024-05-Θ &nbsp;|&nbsp; WD23.1 &nbsp;|&nbsp; RFP 301</div>
+    </div>
+    <div class="type-row" style="border:none;">
+      <div class="type-meta"><div class="type-meta-label">Redline</div><div class="type-meta-val">Underline only<br>never fill</div></div>
+      <div style="font-family:var(--serif);font-size:28px;font-weight:500;letter-spacing:-0.02em;">
+        Zero <span class="redline">bullshit</span>. Real help.
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- LOGO -->
+  <section id="logo">
+    <div class="eyebrow">Foundation</div>
+    <h2 class="section-title">Logo & Wordmark</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card">
+        <div style="font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:-0.03em;margin-bottom:8px;">Kingsfield</div>
+        <div class="caption" style="margin-bottom:24px;">Serif wordmark — paper bg</div>
+        <div style="font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:-0.03em;margin-bottom:8px;">Kingsfield<span style="color:var(--blue);">.</span></div>
+        <div class="caption" style="margin-bottom:24px;">App nav — blue dot</div>
+        <div style="font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:-0.03em;margin-bottom:8px;">Kingsfield<span style="color:var(--red);">.</span></div>
+        <div class="caption">Marketing — red stop</div>
+      </div>
+      <div class="card" style="background:var(--ink);border-color:transparent;">
+        <div style="font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:-0.03em;color:var(--white);margin-bottom:8px;">Kingsfield</div>
+        <div class="caption" style="margin-bottom:24px;">Serif wordmark — dark bg</div>
+        <div style="font-family:var(--serif);font-size:40px;line-height:1.05;letter-spacing:-0.04em;margin-bottom:8px;">
+          <strong style="font-weight:700;color:var(--white);">Smart.</strong> <span style="font-weight:400;color:var(--stone);">Not Stupid.</span>
+        </div>
+        <div class="caption" style="color:var(--ink-mid);">Tagline — bold + regular weight</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- SPACING -->
+  <section id="spacing">
+    <div class="eyebrow">Foundation</div>
+    <h2 class="section-title">Spacing & Radius</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+      <div>
+        <div class="sp-row"><div class="sp-bar" style="width:4px;"></div><div class="sp-label">s1 = 4px · micro gap</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:8px;"></div><div class="sp-label">s2 = 8px · icon+label</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:12px;"></div><div class="sp-label">s3 = 12px · tight group</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:16px;"></div><div class="sp-label">s4 = 16px · base unit</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:24px;"></div><div class="sp-label">s6 = 24px · section inset</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:32px;"></div><div class="sp-label">s8 = 32px · card padding</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:48px;"></div><div class="sp-label">s12 = 48px · section gap</div></div>
+        <div class="sp-row"><div class="sp-bar" style="width:64px;"></div><div class="sp-label">s16 = 64px · page margin</div></div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;">RADIUS — 3 values only</div>
+        <div style="display:flex;gap:24px;align-items:flex-end;">
+          <div style="text-align:center;"><div style="width:64px;height:64px;background:var(--ink);border-radius:0;margin:0 auto 8px;"></div><div class="caption">0px<br>Cards/inputs</div></div>
+          <div style="text-align:center;"><div style="width:64px;height:64px;background:var(--ink);border-radius:2px;margin:0 auto 8px;"></div><div class="caption">2px<br>Badges</div></div>
+          <div style="text-align:center;"><div style="width:64px;height:64px;background:var(--ink);border-radius:999px;margin:0 auto 8px;"></div><div class="caption">999px<br>Buttons/pills</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- BUTTONS -->
+  <section id="buttons">
+    <div class="eyebrow">Components</div>
+    <h2 class="section-title">Buttons</h2>
+    <div class="card" style="margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;">LIGHT SURFACE</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-primary">File motion</button>
+        <button class="btn btn-secondary">Save draft</button>
+        <button class="btn btn-blue">Ask Kingsfield</button>
+        <button class="btn btn-red">Close matter</button>
+        <button class="btn btn-primary btn-sm">Export .doc</button>
+      </div>
+    </div>
+    <div class="demo-dark-bg">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mid);margin-bottom:16px;">DARK SURFACE</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-blue">Ask Kingsfield</button>
+        <button class="btn btn-ghost">Login</button>
+        <button class="btn" style="background:var(--white);color:var(--ink);">Contact Us</button>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- FORMS -->
+  <section id="forms">
+    <div class="eyebrow">Components</div>
+    <h2 class="section-title">Forms & Inputs</h2>
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+        <div>
+          <div class="field-group">
+            <label class="field-label">Matter title</label>
+            <input class="field-input" type="text" value="Thompson v. Harris County">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Court / Circuit</label>
+            <select class="field-input field-select">
+              <option>5th Circuit — Federal</option>
+              <option>S.D. Texas — District</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Document type</label>
+            <select class="field-input field-select">
+              <option>Demand Letter</option>
+              <option>Motion to Dismiss</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <div class="field-group" style="flex:1;">
+            <label class="field-label">Open-ended query</label>
+            <textarea class="field-input field-textarea" style="flex:1;min-height:140px;" placeholder="'Explain the qualified immunity standard...'"></textarea>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:8px;">
+            <button class="btn btn-blue" style="flex:1;justify-content:center;border-radius:4px;">Ask Kingsfield</button>
+            <span style="font-size:11px;font-family:var(--mono);color:var(--ink-soft);">0/2048</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- TABS -->
+  <section id="tabs">
+    <div class="eyebrow">Components</div>
+    <h2 class="section-title">Tabs</h2>
+    <div class="card" style="margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;">UNDERLINE TABS</div>
+      <div class="tabs" id="t1">
+        <div class="tab active" onclick="switchTab('t1','tc1',0)">About</div>
+        <div class="tab" onclick="switchTab('t1','tc1',1)">Limitations</div>
+        <div class="tab" onclick="switchTab('t1','tc1',2)">Citations</div>
+      </div>
+      <div id="tc1" style="font-size:14px;color:var(--ink-mid);line-height:1.7;">
+        <div class="tab-content active">Kingsfield Lawfare is a strategic advisory and research service. We research, strategize, and pressure-test. Real help. Zero bullshit.</div>
+        <div class="tab-content">We are not a law firm. Nothing here is privileged. All output is strategic analysis for your review.</div>
+        <div class="tab-content"><span style="font-family:var(--mono);font-size:11px;">[1]</span> Harlow v. Fitzgerald, 457 U.S. 800 (1982) &nbsp; <span style="font-family:var(--mono);font-size:11px;">[2]</span> Mullenix v. Luna, 577 U.S. 7 (2015)</div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;">PILL / SEGMENTED TABS</div>
+      <div class="pill-tabs" id="pt1">
+        <div class="pill-tab active" onclick="switchPill(this)">Summary</div>
+        <div class="pill-tab" onclick="switchPill(this)">Insights</div>
+        <div class="pill-tab" onclick="switchPill(this)">Timeline</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- CARDS -->
+  <section id="cards">
+    <div class="eyebrow">Components</div>
+    <h2 class="section-title">Cards</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+      <div class="card">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;">Draft</div>
+        <div style="font-family:var(--serif);font-size:17px;font-weight:500;letter-spacing:-0.02em;margin-bottom:8px;">Demand Letter</div>
+        <div style="font-size:12px;color:var(--ink-mid);margin-bottom:14px;">Thompson v. Harris County</div>
+        <div style="display:flex;gap:6px;"><span class="badge b-ink">Draft</span><span class="badge b-stone">Rev. 3</span></div>
+      </div>
+      <div class="card-dark">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--stone);margin-bottom:8px;">Research</div>
+        <div style="font-family:var(--serif);font-size:17px;font-weight:500;letter-spacing:-0.02em;color:var(--white);margin-bottom:8px;">Qualified Immunity</div>
+        <div style="font-size:12px;color:var(--stone);margin-bottom:14px;">12 cases · 5th Circuit</div>
+        <div style="display:flex;gap:6px;"><span class="badge b-blue">Active</span></div>
+      </div>
+      <div class="card-mist">
+        <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#3A5A5E;margin-bottom:8px;">Customer Story</div>
+        <div style="font-family:var(--serif);font-size:17px;font-weight:500;letter-spacing:-0.02em;color:var(--ink);margin-bottom:8px;">Mastering Legal Complexity</div>
+        <div style="font-size:12px;color:#3A5A5E;">How Deutsche Telekom leads with AI.</div>
+      </div>
+    </div>
+    <div class="caption">0–2px radius · 1px hairline border · no shadow. Accent via left border or top rule.</div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- BADGES -->
+  <section id="badges">
+    <div class="eyebrow">Components</div>
+    <h2 class="section-title">Badges</h2>
+    <div class="card">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <span class="badge b-ink">Draft</span>
+        <span class="badge b-red">Urgent</span>
+        <span class="badge b-blue">Research</span>
+        <span class="badge b-stone">Rev. 3</span>
+        <span class="badge" style="background:#3A2400;color:#E8B121;">Workflow</span>
+        <span class="badge" style="background:#0D2B1E;color:#1F8A5B;">Filed</span>
+        <span class="badge b-priv">Priv</span>
+        <span class="badge" style="background:var(--mist);color:#1D3B42;">Discovery</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- TABLES -->
+  <section id="tables">
+    <div class="eyebrow">Components</div>
+    <h2 class="section-title">Data Tables</h2>
+    <div style="border:1px solid var(--paper-2);border-radius:2px;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--paper-2);background:var(--white);">
+        <span style="font-size:13px;font-weight:500;">Discovery</span>
+        <span style="margin-left:auto;display:flex;gap:8px;"><span class="badge b-stone">Filter by ID</span><span class="badge b-stone">Custodian</span></span>
+        <div class="pill-tabs">
+          <div class="pill-tab active">Summary</div>
+          <div class="pill-tab">Insights</div>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>ID</th><th>Custodian</th><th>Description</th><th>Tags</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>WDKB.1</td><td>Taylor, Mark E.</td><td style="font-family:var(--sans);color:var(--ink-soft);max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Text re: financial option transaction at Henry Hub.</td><td><span style="display:flex;gap:4px;"><span class="badge b-stone">RFP 301</span><span class="badge b-priv">Priv</span></span></td><td>08/31/2001</td></tr>
+          <tr><td>WDKB.2</td><td>Taylor, Mark E.</td><td style="font-family:var(--sans);color:var(--ink-soft);max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Conduct of Business covenants in ordinary course.</td><td><span class="badge b-stone">RFP 302</span></td><td>09/14/2001</td></tr>
+          <tr><td>WDKB.3</td><td>Johnson, Alice R.</td><td style="font-family:var(--sans);color:var(--ink-soft);max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Internal memo re: compliance under merger agreement.</td><td><span style="display:flex;gap:4px;"><span class="badge b-stone">RFP 303</span><span class="badge b-priv">Priv</span></span></td><td>10/02/2001</td></tr>
+        </tbody>
+      </table>
+      <div style="padding:8px 16px;font-size:11px;color:var(--ink-soft);font-family:var(--mono);">Showing 3 of 30 results</div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- APP NAV -->
+  <section id="nav">
+    <div class="eyebrow">Patterns</div>
+    <h2 class="section-title">App Navigation</h2>
+    <div style="border-radius:4px;overflow:hidden;border:1px solid var(--paper-2);">
+      <div class="app-nav">
+        <div class="app-nav-logo">Kingsfield<span class="dot">.</span></div>
+        <div class="anav-tabs">
+          <div class="anav-tab active"><i data-lucide="file-text"></i> Draft</div>
+          <div class="anav-tab"><i data-lucide="search"></i> Research</div>
+          <div class="anav-tab"><i data-lucide="git-branch"></i> Workflow</div>
+          <div class="anav-tab"><i data-lucide="folder"></i> Data Room</div>
+        </div>
+        <div class="anav-right">
+          <span class="anav-help">Help</span>
+          <div class="anav-avatar">JT</div>
+        </div>
+      </div>
+      <div style="background:var(--paper);padding:20px;font-size:13px;color:var(--ink-mid);font-style:italic;">Content area</div>
+    </div>
+    <div class="caption" style="margin-top:10px;">Ink bg · serif wordmark left · blue underline active · 52px height · avatar right</div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- LAYOUT -->
+  <section id="layout">
+    <div class="eyebrow">Patterns</div>
+    <h2 class="section-title">Two-Panel Layout</h2>
+    <div style="border:1px solid var(--paper-2);border-radius:4px;overflow:hidden;">
+      <div class="app-nav">
+        <div class="app-nav-logo">Kingsfield<span class="dot">.</span></div>
+        <div class="anav-tabs">
+          <div class="anav-tab active"><i data-lucide="file-text"></i> Draft</div>
+          <div class="anav-tab"><i data-lucide="search"></i> Research</div>
+        </div>
+        <div class="anav-right"><div class="anav-avatar">JT</div></div>
+      </div>
+      <div class="two-panel">
+        <div class="panel-l">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);">Open ended</div>
+          <select class="field-input field-select" style="font-size:13px;padding:8px 12px;"><option>Demand Letter</option><option>Motion to Dismiss</option></select>
+          <div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;">Write a query</div>
+            <textarea class="field-input field-textarea" style="font-size:13px;min-height:120px;" placeholder="'Explain to me about the 1st amendment...'"></textarea>
+          </div>
+          <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
+            <div style="text-align:right;font-size:11px;font-family:var(--mono);color:var(--ink-soft);">0 / 2048</div>
+            <button class="btn btn-blue" style="width:100%;justify-content:center;border-radius:4px;">Ask Kingsfield</button>
+          </div>
+        </div>
+        <div class="panel-r">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;">GET STARTED</div>
+          <div style="font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-0.03em;color:var(--ink);margin-bottom:16px;">Welcome to Kingsfield</div>
+          <div class="tabs" id="wt"><div class="tab active" onclick="switchTab('wt','wc',0)">About</div><div class="tab" onclick="switchTab('wt','wc',1)">Limitations</div></div>
+          <div id="wc">
+            <div class="tab-content active" style="font-size:13px;line-height:1.7;color:var(--ink-mid);">Kingsfield Lawfare is a strategic research and advisory platform. Real help. Zero bullshit.<ul style="margin-top:10px;padding-left:18px;display:flex;flex-direction:column;gap:6px;"><li>Phrase queries as commands: "Summarize the excessive force standard in the 5th Circuit."</li><li>Include the governing jurisdiction when relevant.</li></ul></div>
+            <div class="tab-content" style="font-size:13px;line-height:1.7;color:var(--ink-mid);">We are not a law firm. Nothing produced here constitutes legal advice. All output is strategic analysis for your review.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption" style="margin-top:10px;">Left: paper-2 bg · query input. Right: white · document output with tabs.</div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- QUOTES -->
+  <section id="quotes">
+    <div class="eyebrow">Patterns</div>
+    <h2 class="section-title">Quotes & Manifesto</h2>
+    <div class="pullquote" style="margin-bottom:12px;">
+      <span class="pullquote-mark">"</span>
+      Most people don't need a lawyer. They need clarity, leverage, and someone who knows how to think.
+      <div style="margin-top:20px;font-size:12px;font-family:var(--sans);font-weight:500;color:var(--stone);">Kingsfield Lawfare</div>
+    </div>
+    <div style="background:var(--mist);padding:40px;border-radius:2px;margin-bottom:12px;">
+      <div style="font-family:var(--serif);font-size:26px;font-weight:500;letter-spacing:-0.02em;line-height:1.3;color:var(--ink);">"We want to free the lawyer from mundane, routine tasks, so that they can focus on what matters — strategy, advice, and judgment."</div>
+      <div style="margin-top:16px;font-size:12px;font-weight:500;color:#3A5A5E;">David Wakeling · A&O Shearman</div>
+    </div>
+    <div style="background:var(--ink);padding:48px;border-radius:2px;text-align:center;">
+      <div style="font-family:var(--serif);font-size:52px;font-weight:500;letter-spacing:-0.04em;line-height:1.05;">
+        <strong style="font-weight:700;color:var(--white);">Smart.</strong> <span style="font-weight:400;color:var(--stone);">Not Stupid.</span>
+      </div>
+      <div style="margin-top:12px;font-size:14px;color:var(--stone);">Power to the People.</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+lucide.createIcons();
+function switchTab(tid, cid, idx) {
+  document.getElementById(tid).querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  document.getElementById(cid).querySelectorAll('.tab-content').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+function switchPill(el) {
+  Array.from(el.parentElement.children).forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+document.querySelectorAll('.anav-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    this.closest('.app-nav').querySelectorAll('.anav-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

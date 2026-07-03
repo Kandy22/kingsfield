@@ -1,0 +1,2038 @@
+[
+  {
+    "term": "ADVERSARY PROCEEDING",
+    "quote": "those that 'aris[e] under title 11'; those that 'aris[e] in' a Title 11 case; and those that are 'related to a case under title 11.'",
+    "all_cites": [
+      "564 U.S. 462",
+      "28 U.S.",
+      "458 U.S. 50"
+    ],
+    "primary_cite_pair": [
+      "Stern v. Marshall",
+      "564 U.S. 462"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10654882/",
+    "cl_cluster": 10654882,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple implausible elements\u2014it lists three different U.S. citations for a single case (564 U.S. 462, 28 U.S., and 458 U.S. 50), which is inconsistent with standard citation format, and while the quoted language reflects statutory categories from 28 U.S.C. \u00a7 1334 regarding bankruptcy jurisdiction, it does not appear to be an actual quote from Stern v. Marshall's holding on adversary proceedings.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact excerpt from *Stern v. Marshall, 564 U.S. 462, 473*, where the Supreme Court describes the three categories of bankruptcy proceedings.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "AEDPA DEFERENCE",
+    "quote": "was contrary to, or involved an unreasonable application of, clearly established Federal law, as determined by the Supreme Court of the United States",
+    "all_cites": [
+      "28 U.S.",
+      "562 U.S. 86",
+      "541 U.S. 652",
+      "529 U.S. 362",
+      "562 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Harrington v. Richter",
+      "562 U.S. 86"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10676751/",
+    "cl_cluster": 10676751,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple conflicting page numbers (28 U.S., 562 U.S. 86, 541 U.S. 652) that cannot simultaneously refer to the same case, and while the quoted language does appear in AEDPA statute and Harrington v. Richter, the malformed citation is not plausible as presented.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is the verbatim language of 28 U.S.C. \u00a7 2254(d)(1), which *Harrington v. Richter*, cited at 562 U.S. 86, extensively quotes and applies when defining AEDPA deference, despite other errors in the provided citation.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "ALIEN TORT STATUTE",
+    "quote": "shall have original jurisdiction of any civil action by an alien for a tort only, committed in violation of the law of nations or a treaty of the United States.",
+    "all_cites": [
+      "28 U.S.",
+      "542 U.S. 692",
+      "569 U.S. 108"
+    ],
+    "primary_cite_pair": [
+      "Kiobel v. Royal Dutch Petroleum Co.",
+      "569 U.S. 108"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10676751/",
+    "cl_cluster": 10676751,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is malformed (contains three conflicting U.S. reports: 28 U.S., 542 U.S. 692, and 569 U.S. 108), and while the quoted language accurately reflects the Alien Tort Statute itself (28 U.S.C. \u00a7 1350), it is not a quote from Kiobel v. Royal Dutch Petroleum Co., which addressed the statute's extraterritorial application rather than restating its text.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is the verbatim text of 28 U.S.C. \u00a7 1350, the Alien Tort Statute, which is extensively discussed and quoted within the cited Supreme Court cases.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "CERTIFICATION",
+    "quote": "Its use in a given case rests in the sound discretion of the federal court.",
+    "all_cites": [
+      "416 U.S. 386"
+    ],
+    "primary_cite_pair": [
+      "Lehman Bros. v. Schein",
+      "416 U.S. 386"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10336314/",
+    "cl_cluster": 10336314,
+    "claude_verdict": "no",
+    "claude_reason": "Lehman Bros. v. Schein does not exist in U.S. Reports at 416 U.S. 386 (which contains Maher v. Roe, a reproductive rights case from 1977), and the cited quote about certification discretion does not match that decision's content.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for a sentence found in the majority opinion of Lehman Bros. v. Schein, 416 U.S. 386, 391, directly addressing the use of certification by federal courts.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "INSANITY DEFENSE",
+    "quote": "Due process imposes no single canonical formulation of legal insanity.",
+    "all_cites": [
+      "548 U.S. 735",
+      "589 U.S. 271",
+      "548 U.S. ",
+      "589 U.S. ",
+      "343 U.S. 790"
+    ],
+    "primary_cite_pair": [
+      "Clark v. Arizona",
+      "548 U.S. 735"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/145624/",
+    "cl_cluster": 145624,
+    "claude_verdict": "yes",
+    "claude_reason": "Clark v. Arizona, 548 U.S. 735 (2006) does establish that the Constitution does not mandate a single formulation of the insanity test, and this quote accurately reflects the Court's holding that states have flexibility in defining legal insanity standards.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is a synthesis of different statements found within *Clark v. Arizona* and not a single, verbatim quote from the cited case.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "INSIDER TRADING",
+    "quote": "A duty to disclose under \u00a7 10(b) does not arise from the mere possession of nonpublic market information.",
+    "all_cites": [
+      "445 U.S. 222",
+      "521 U.S. 642"
+    ],
+    "primary_cite_pair": [
+      "Chiarella v. United States",
+      "445 U.S. 222"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10382542/",
+    "cl_cluster": 10382542,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a fatal error\u2014445 U.S. 222 is the correct cite for Chiarella v. United States (1980), but 521 U.S. 642 refers to United States v. O'Brien (1996), a First Amendment case unrelated to insider trading, making the dual citation implausible and suggesting fabrication; however, the quote itself accurately reflects the holding in Chiarella regarding \u00a7 10(b) duties.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is a direct, verbatim statement from the majority opinion in *Chiarella v. United States*, 445 U.S. 222, 235, accurately representing a central holding of the case.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "INTERLOCUTORY INJUNCTION",
+    "quote": "granted on the basis of procedures that are less formal and evidence that is less complete than in a trial on the merits.",
+    "all_cites": [
+      "451 U.S. 390",
+      "555 U.S. 7",
+      "451 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Univ. of Tex. v. Camenisch",
+      "451 U.S. 390"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9505326/",
+    "cl_cluster": 9505326,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is malformed and internally contradictory (mixing 451 U.S. and 555 U.S. page numbers for the same case), and while the quoted language resembles language found in University of Texas v. Camenisch regarding preliminary injunctions, the citation as presented is unreliable and appears corrupted.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for language found in *Univ. of Tex. v. Camenisch, 451 U.S. 390, 395 (1981)*, although the provided citation includes extraneous and incorrect reporter information (555 U.S. 7, 451 U.S.) alongside the correct citation.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "INTERVENTION OF RIGHT",
+    "quote": "[o]n timely motion, the court must permit anyone to intervene who: (1) is given an unconditional right to intervene by a federal statute; or (2) claims an interest relating to the property or transaction that is the subject of the action, and is so situated that disposing of the action may as a practical matter impair or impede the movant's ability to protect its interest, unless existing parties adequately represent that interest.",
+    "all_cites": [
+      "581 U.S. 433"
+    ],
+    "primary_cite_pair": [
+      "Town of Chester v. Laroe Estates, Inc.",
+      "581 U.S. 433"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10012274/",
+    "cl_cluster": 10012274,
+    "claude_verdict": "no",
+    "claude_reason": "The quote appears to be from Federal Rule of Civil Procedure 24(a) rather than from Town of Chester v. Laroe Estates, Inc., 581 U.S. 433, which is a Supreme Court case that discusses intervention standards but does not contain this verbatim rule language as its holding.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The cited case, *Town of Chester v. Laroe Estates, Inc.*, directly quotes Federal Rule of Civil Procedure 24(a) in its discussion of intervention of right, and the provided quote accurately reflects the beginning of that language as presented in the case, though it is incomplete.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "INVENTORY SEARCH",
+    "quote": "When vehicles are impounded, local police departments generally follow a routine practice of securing and inventorying the automobiles' contents. These procedures developed in response to three distinct needs: the protection of the owner's property while it remains in police custody, the protection of the police against claims or disputes over lost or stolen property, and the protection of the police from potential danger.",
+    "all_cites": [
+      "428 U.S. 364",
+      "479 U.S. 367"
+    ],
+    "primary_cite_pair": [
+      "South Dakota v. Opperman",
+      "428 U.S. 364"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9005813/",
+    "cl_cluster": 9005813,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a clear error\u2014it cites both \"428 U.S. 364\" and \"479 U.S. 367\" for the same case, but South Dakota v. Opperman is reported only at 428 U.S. 364 (1976), and 479 U.S. 367 is a different case entirely (likely Colorado v. Bertine, 479 U.S. 367 (1987)), which creates ambiguity about the actual source of this quote.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately reflects the language found in *South Dakota v. Opperman*, 428 U.S. 369, although the provided citation contains an incorrect volume (479 U.S. instead of 428 U.S.) and page number for the pinpoint.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "INVERSE CONDEMNATION",
+    "quote": "The phrase 'inverse condemnation' appears to be one that was coined simply as a shorthand description of the manner in which a landowner recovers just compensation for a taking of his property when condemnation proceedings have not been instituted.",
+    "all_cites": [
+      "445 U.S. 253",
+      "482 U.S. 304",
+      "445 U.S. ",
+      "588 U.S. 180",
+      "482 U.S. "
+    ],
+    "primary_cite_pair": [
+      "United States v. Clarke",
+      "445 U.S. 253"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10662488/",
+    "cl_cluster": 10662488,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is internally inconsistent (mixing three different case citations including contradictory page numbers for the same case), and United States v. Clarke addresses sovereign immunity and property rights but does not contain this quoted language about inverse condemnation as a coined shorthand term.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately appears verbatim in United States v. Clarke, 445 U.S. 253, at page 257, though the provided citation also includes extraneous and incorrect Supreme Court references (482 U.S. 304 and an incomplete 445 U.S.).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "INVOLUNTARY SERVITUDE",
+    "quote": "The term 'involuntary servitude' necessarily means a condition of servitude in which the victim is forced to work for the defendant by the use or threat of physical restraint or physical injury, or by the use or threat of coercion through law or the legal process.",
+    "all_cites": [
+      "487 U.S. 931",
+      "219 U.S. 219"
+    ],
+    "primary_cite_pair": [
+      "United States v. Kozminski",
+      "487 U.S. 931"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10667750/",
+    "cl_cluster": 10667750,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a clear error (two different page numbers: \"487 U.S. 931, 219 U.S. 219\"), and while United States v. Kozminski, 487 U.S. 931 (1988) does address involuntary servitude, the actual holding is more restrictive\u2014the Court required force or threats of force directed at the person, not merely \"coercion through law or the legal process\" as this quote suggests, making this an inaccurate or misleading paraphrase of the decision.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is a direct statement of the holding in *United States v. Kozminski*, 487 U.S. 931, though the citation provided includes a superfluous and incorrect second volume/page number.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "JOINDER",
+    "quote": "a person who is subject to service of process and whose joinder will not deprive the court of subject-matter jurisdiction must be joined as a party",
+    "all_cites": [
+      "390 U.S. 102"
+    ],
+    "primary_cite_pair": [
+      "Provident Tradesmens Bank & Trust Co. v. Patterson",
+      "390 U.S. 102"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336225/",
+    "cl_cluster": 7336225,
+    "claude_verdict": "yes",
+    "claude_reason": "This language accurately reflects the holding in Provident Tradesmens Bank & Trust Co. v. Patterson, 390 U.S. 102 (1968), which established the Rule 19(a) standard for mandatory joinder of parties based on service of process availability and subject-matter jurisdiction concerns.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is a truncated version of Federal Rule of Civil Procedure 19(a), which *Provident Tradesmens* discusses and quotes; it omits the crucial \"if\" clause and its conditions, thereby misrepresenting when a party \"must be joined.\"",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "JUDICIAL PANEL ON MULTIDISTRICT LITIGATION",
+    "quote": "[w]hen civil actions involving one or more common questions of fact are pending in different districts, such actions may be transferred to any district for coordinated or consolidated pretrial proceedings.",
+    "all_cites": [
+      "28 U.S.",
+      "28 U.S.",
+      "28 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10676751/",
+    "cl_cluster": 10676751,
+    "claude_verdict": "no",
+    "claude_reason": "The citation \"28 U.S., 28 U.S., 28 U.S.\" is malformed and incomplete (repeating three times without section numbers), and while the quoted language resembles provisions governing multidistrict litigation under 28 U.S.C. \u00a7 1407, the defective citation format and lack of a proper statutory reference make this citation unverifiable as presented.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match to the first sentence of 28 U.S.C. \u00a7 1407(a), which establishes the Judicial Panel on Multidistrict Litigation, and the citation, while incomplete and repetitive, correctly points to Title 28 of the U.S. Code where this statute is found.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "LEAST RESTRICTIVE MEANS",
+    "quote": "demonstrates that application of the burden to the person\u2014(1) is in furtherance of a compelling governmental interest; and (2) is the least restrictive means of furthering that compelling governmental interest.",
+    "all_cites": [
+      "42 U.S.",
+      "573 U.S. 682",
+      "508 U.S. 520",
+      "450 U.S. 707",
+      "573 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Burwell v. Hobby Lobby Stores, Inc.",
+      "573 U.S. 682"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/8486514/",
+    "cl_cluster": 8486514,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains three conflicting U.S. Reports volume numbers (42 U.S., 573 U.S., and 508 U.S.) for a single case, which is impossible; the correct citation is 573 U.S. 682 (2014), and while the quoted language accurately reflects the RFRA standard from that decision, the malformed citation with contradictory volume numbers indicates fabrication or severe error in source documentation.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact quotation from *Burwell v. Hobby Lobby Stores, Inc.*, 573 U.S. 682, 694, where the Court quotes 42 U.S.C. \u00a7 2000bb\u20131(b), despite the citation also containing extraneous or incorrect reporter references.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "LEMON TEST",
+    "quote": "Every analysis in this area must begin with consideration of the cumulative criteria developed by the Court over many years. Three such tests may be gleaned from our cases. First, the statute must have a secular legislative purpose; second, its principal or primary effect must be one that neither advances nor inhibits religion; finally, the statute must not foster an excessive government entanglement with religion.",
+    "all_cites": [
+      "403 U.S. 602",
+      "597 U.S. 507",
+      "572 U.S. 565",
+      "572 U.S. 565",
+      "588 U.S. 29"
+    ],
+    "primary_cite_pair": [
+      "Lemon v. Kurtzman",
+      "403 U.S. 602"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10377029/",
+    "cl_cluster": 10377029,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple incompatible U.S. Reporter citations for the same case (403 U.S. 602, 597 U.S. 507, 572 U.S. 565), the quote appears incomplete and truncated mid-word (\"neither ad\"), and the numerical citations are anachronistic (597 U.S. and 572 U.S. did not exist in 1971 when Lemon was decided).",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The provided quote accurately reflects the beginning of the Court's articulation of the Lemon Test in *Lemon v. Kurtzman*, 403 U.S. 602, although the quote is incomplete and the citation includes extraneous, incorrect volume numbers alongside the correct one.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "LESSER INCLUDED OFFENSE",
+    "quote": "one offense is not 'necessarily included' in another unless the elements of the lesser offense are a subset of the elements of the charged offense. Where the lesser offense requires an element not required for the greater offense, no instruction is to be given under Rule 31(c).",
+    "all_cites": [
+      "489 U.S. 705",
+      "412 U.S. 205",
+      "432 U.S. 161"
+    ],
+    "primary_cite_pair": [
+      "Schmuck v. United States",
+      "489 U.S. 705"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/5287508/",
+    "cl_cluster": 5287508,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is fabricated\u2014it lists three different Supreme Court cases with inconsistent page numbers (Schmuck v. United States is actually 489 U.S. 705, not also 412 U.S. 205 or 432 U.S. 161), and while the quoted language accurately reflects the legal doctrine of lesser included offenses, it cannot be verified as originating from these specific citations in this conflated form.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately represents a key holding from *Schmuck v. United States*, 489 U.S. 705, although the provided citation also includes unrelated reporter volumes.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "LIBEL",
+    "quote": "The constitutional guarantees require, we think, a federal rule that prohibits a public official from recovering damages for a defamatory falsehood relating to his official conduct unless he proves that the statement was made with 'actual malice' \u2014 that is, with knowledge that it was false or with reckless disregard of whether it was false or not.",
+    "all_cites": [
+      "376 U.S. 254"
+    ],
+    "primary_cite_pair": [
+      "New York Times Co. v. Sullivan",
+      "376 U.S. 254"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10317015/",
+    "cl_cluster": 10317015,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects the holding in New York Times Co. v. Sullivan, 376 U.S. 254 (1964), which established the \"actual malice\" standard for libel cases involving public officials, and the language matches the Court's actual opinion.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote accurately begins the sentence from the case but abruptly cuts off mid-word, failing to complete the crucial definition of \"actual malice\" by omitting \"eckless disregard of whether it was false or not.\"",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "MAJOR QUESTIONS DOCTRINE",
+    "quote": "In certain extraordinary cases, both separation of powers principles and a practical understanding of legislative intent make us 'reluctant to read into ambiguous statutory text' the delegation claimed to be lurking there. . . . The agency instead must point to 'clear congressional authorization' for the power it claims.",
+    "all_cites": [
+      "597 U.S. 697",
+      "573 U.S. 302",
+      "531 U.S. 457"
+    ],
+    "primary_cite_pair": [
+      "West Virginia v. EPA",
+      "597 U.S. 697"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9498025/",
+    "cl_cluster": 9498025,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is internally inconsistent and implausible\u2014West Virginia v. EPA, 597 U.S. 697 is the correct primary citation, but the additional citations (573 U.S. 302 and 531 U.S. 457) appear to be different cases entirely and cannot be the same source, and while the quoted language resembles the major questions doctrine framework from West Virginia v. EPA (2022), the fragmented and incomplete nature of the quote with an abrupt cutoff suggests mishandling of the source material.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately combines two phrases found directly within the majority opinion of West Virginia v. EPA, 597 U.S. 697, discussing the major questions doctrine, with the \"fo\" likely being an incomplete transcription of \"for.\"",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MANDATORY MINIMUM",
+    "quote": "[A]ny fact that increases the mandatory minimum [sentence] is an 'element' that must be submitted to the jury",
+    "all_cites": [
+      "570 U.S. 99",
+      "530 U.S. 466",
+      "570 U.S. ",
+      "536 U.S. 545",
+      "530 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Alleyne v. United States",
+      "570 U.S. 99"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/8529781/",
+    "cl_cluster": 8529781,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is internally inconsistent and implausible (listing three different U.S. Reports citations for one case), and while Alleyne v. United States, 570 U.S. 99 (2013) does address mandatory minimums and jury findings, the quoted language misrepresents the holding by omitting critical context\u2014the rule applies specifically to facts that increase the mandatory minimum *beyond the statutory baseline*, not any fact that increases it.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately reflects the central holding of *Alleyne v. United States*, stating that any fact increasing a mandatory minimum sentence is an element that must be submitted to the jury, and the primary citation to *Alleyne* (570 U.S. 99) is correct.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MASS ACTION (CAFA)",
+    "quote": "any civil action . . . in which monetary relief claims of 100 or more persons are proposed to be tried jointly on the ground that the plaintiffs' claims involve common questions of law or fact.",
+    "all_cites": [
+      "28 U.S.",
+      "28 U.S.",
+      "571 U.S. 161"
+    ],
+    "primary_cite_pair": [
+      "In Mississippi ex rel. Hood v. AU Optronics Corp.",
+      "571 U.S. 161"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10676751/",
+    "cl_cluster": 10676751,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a typographical error (\"28 U.S., 28 U.S.\") and while Mississippi ex rel. Hood v. AU Optronics Corp., 571 U.S. 161 is a real CAFA case, the quoted language appears to conflate the statutory definition of \"mass action\" from 28 U.S.C. \u00a7 1332(d)(11) with judicial interpretation, rather than accurately reflecting the Court's holding in that case.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact reproduction of the statutory definition of \"mass action\" from 28 U.S.C. \u00a7 1332(d)(11)(B)(i), which the cited case, *Mississippi ex rel. Hood v. AU Optronics Corp.*, directly quotes and discusses at 571 U.S. 166.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MATERIAL WITNESS",
+    "quote": "authorizes judges to 'order the arrest of [a] person' whose testimony 'is material in a criminal proceeding . . . if it is shown that it may become impracticable to secure the presence of the person by subpoena.'",
+    "all_cites": [
+      "563 U.S. 731",
+      "18 U.S.",
+      "18 U.S.",
+      "18 U.S.",
+      "563 U.S. "
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/7687713/",
+    "cl_cluster": 7687713,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is malformed and incomplete (repeating \"18 U.S.\" without statute section), and while the quote language resembles 18 U.S.C. \u00a7 3144 regarding material witness arrest authority, the 563 U.S. 731 citation point (which corresponds to Ashcroft v. al-Kidd, 2011) does not serve as the primary source for this statutory language\u2014the statute itself is the proper citation.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an accurate, verbatim representation of language from 18 U.S.C. \u00a7 3144, which is directly quoted in *Ashcroft v. al-Kidd*, 563 U.S. 731, 735.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MISTRIAL",
+    "quote": "the law has invested Courts of justice with the authority to discharge a jury from giving any verdict, whenever, in their opinion, taking all the circumstances into consideration, there is a manifest necessity for the act, or the ends of public justice would otherwise be defeated.",
+    "all_cites": [
+      "22 U.S. ",
+      "434 U.S. 497",
+      "456 U.S. 667",
+      "434 U.S. ",
+      "456 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Arizona v. Washington",
+      "434 U.S. 497"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9451445/",
+    "cl_cluster": 9451445,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is internally inconsistent (three different citations for one case) and the quote appears to be from an early common law source (likely 19th century), not from Arizona v. Washington, 434 U.S. 497 (1978), which addresses double jeopardy and mistrial standards but does not use this archaic language.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an accurate, verbatim statement found within *Arizona v. Washington*, 434 U.S. 497, 509, where the Court quotes *United States v. Perez*, 22 U.S. 579, 580 (9 Wheat. 579, 580); however, the provided citation is poorly constructed and includes an irrelevant case (456 U.S. 667) and an incomplete reference to *Perez*.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MITIGATION OF DAMAGES",
+    "quote": "[T]he general rule [is that] where one person has committed a tort, breach of contract, or other legal wrong against another, it is incumbent upon the latter to use such means as are reasonable under the circumstances to avoid or minimize the damages.",
+    "all_cites": [
+      "458 U.S. 219"
+    ],
+    "primary_cite_pair": [
+      "Ford Motor Co. v. Equal Employment Opportunity Commission",
+      "458 U.S. 219"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336937/",
+    "cl_cluster": 7336937,
+    "claude_verdict": "no",
+    "claude_reason": "Ford Motor Co. v. EEOC, 458 U.S. 219 (1982) is an employment discrimination case concerning back pay remedies and does not contain this quote, which reads like a general common law statement on mitigation of damages that would be more typically found in contract or tort law treatises or cases, not this specific EEOC employment case.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact, accurate reproduction of text found in the cited Supreme Court case, Ford Motor Co. v. Equal Employment Opportunity Commission, 458 U.S. 219, 231 (1982), discussing the duty to mitigate damages.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MONETARY TRANSACTION",
+    "quote": "[w]hoever, in any of the circumstances set forth in subsection (d), knowingly engages or attempts to engage in a monetary transaction in criminally derived property of a value greater than $10,000 and is derived from specified unlawful activity, shall be punished",
+    "all_cites": [
+      "18 U.S.",
+      "18 U.S.",
+      "18 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10296582/",
+    "cl_cluster": 10296582,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format \"18 U.S., 18 U.S., 18 U.S.\" is malformed and implausible, and while the quote closely resembles 18 U.S.C. \u00a7 1956(a)(1), the claimed citation lacks the proper statute section designation necessary for verification.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is nearly verbatim from 18 U.S.C. \u00a7 1957(a), and while the citation is incomplete, it correctly identifies Title 18 of the United States Code.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "MONEY LAUNDERING",
+    "quote": "[w]hoever, knowing that the property involved in a financial transaction represents the proceeds of some form of unlawful activity, conducts or attempts to conduct such a financial transaction which in fact involves the proceeds of specified unlawful activity",
+    "all_cites": [
+      "18 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10296582/",
+    "cl_cluster": 10296582,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects the language from 18 U.S.C. \u00a7 1956(a)(1)(A)(i), which is the federal money laundering statute that criminalizes financial transactions involving proceeds of unlawful activity with knowledge of their illicit source.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote significantly alters and truncates the language of the money laundering statute (e.g., 18 U.S.C. \u00a7 1956(a)(1)), omitting critical elements regarding the purpose or design of the transaction, and is not an accurate direct quote.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "MORTGAGE",
+    "quote": "A mortgage is in form a conveyance, vesting in the mortgagee upon its execution a conditional estate, which becomes absolute upon breach of the condition.",
+    "all_cites": [
+      "68 U.S. "
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/9401731/",
+    "cl_cluster": 9401731,
+    "claude_verdict": "unsure",
+    "claude_reason": "While 68 U.S. (4 Wall.) appears to be from the correct era for this legal formulation and the definition reflects a common nineteenth-century understanding of mortgages as conditional conveyances, I cannot verify the exact quote without access to the specific case name and page number within that reporter volume.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote, while accurately describing the common law title theory of mortgages, does not appear verbatim in any case reported in 68 U.S. (Wallace Vol. 1), suggesting it is either a paraphrased summary or misattributed.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "MORTMAIN",
+    "quote": "Alienation in mortmain, in its primary signification, is an alienation of lands or tenements to any corporation, aggregate, ecclesiastical, or temporal,",
+    "all_cites": [
+      "65 U.S. "
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/4405115/",
+    "cl_cluster": 4405115,
+    "claude_verdict": "unsure",
+    "claude_reason": "While the definition of mortmain aligns with historical legal doctrine and 65 U.S. (which covers cases from 1860-1861) is a plausible citation for such language, I cannot verify the exact quote without access to the specific case text, and the citation lacks a case name, making independent verification impossible.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote \"Alienation in mortmain, in its primary signification, is an alienation of lands or tenements to any corporation, aggregate, ecclesiastical, or temporal,\" is found verbatim in Perin v. Carey, 65 U.S. 465, 505 (1860).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "MOTION FOR SUMMARY JUDGMENT",
+    "quote": "The court shall grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law.",
+    "all_cites": [
+      "477 U.S. 242"
+    ],
+    "primary_cite_pair": [
+      "Anderson v. Liberty Lobby, Inc.",
+      "477 U.S. 242"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7333805/",
+    "cl_cluster": 7333805,
+    "claude_verdict": "yes",
+    "claude_reason": "This language accurately reflects the summary judgment standard established in Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986), which set forth the requirement that summary judgment be granted when there is no genuine issue of material fact and the moving party is entitled to judgment as a matter of law.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is a verbatim statement of Federal Rule of Civil Procedure 56(a), which *Anderson v. Liberty Lobby* interprets and applies, rather than a direct quote from the *Anderson* opinion itself.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "MOTION IN LIMINE",
+    "quote": "in a broad sense to refer to any motion, whether made before or during trial, to exclude anticipated prejudicial evidence before the evidence is actually offered.",
+    "all_cites": [
+      "469 U.S. 38"
+    ],
+    "primary_cite_pair": [
+      "Luce v. United States",
+      "469 U.S. 38"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10659976/",
+    "cl_cluster": 10659976,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects language from Luce v. United States, 469 U.S. 38 (1984), which provides a foundational definition of motions in limine as pre-trial or trial motions to exclude prejudicial evidence before it is offered.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is an accurate description of a motion in limine, but this specific definition does not appear in the text of *Luce v. United States*, 469 U.S. 38.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "NATIONAL ENVIRONMENTAL POLICY ACT (NEPA)",
+    "quote": "NEPA itself does not mandate particular results, but simply prescribes the necessary process",
+    "all_cites": [
+      "490 U.S. 332",
+      "427 U.S. 390",
+      "42 U.S.",
+      "490 U.S. ",
+      "442 U.S. 347"
+    ],
+    "primary_cite_pair": [
+      "Robertson v. Methow Valley Citizens Council",
+      "490 U.S. 332"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7327691/",
+    "cl_cluster": 7327691,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is internally inconsistent and implausible (mixing 490 U.S. 332 with 427 U.S. 390 from different cases), and while the quote's substance accurately reflects NEPA jurisprudence, the specific citation format and page number combination cannot be verified as written.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is verbatim from Robertson v. Methow Valley Citizens Council, 490 U.S. 332, at 350; however, the provided citation incorrectly includes \"427 U.S. 390, 42 U.S.\" as part of the citation.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "NEW TRIAL",
+    "quote": "'against the weight of the evidence,'",
+    "all_cites": [
+      "457 U.S. 31"
+    ],
+    "primary_cite_pair": [
+      "Tibbs v. Florida",
+      "457 U.S. 31"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7330201/",
+    "cl_cluster": 7330201,
+    "claude_verdict": "unsure",
+    "claude_reason": "Tibbs v. Florida, 457 U.S. 31 (1982) is a legitimate Supreme Court case addressing double jeopardy and new trial standards, and the phrase \"against the weight of the evidence\" is consistent with the Court's discussion of standards for granting new trials in that decision.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote \"'against the weight of the evidence,'\" is a direct phrase used multiple times in Tibbs v. Florida, 457 U.S. 31, specifically when distinguishing grounds for reversal that permit a new trial.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "NOLO CONTENDERE",
+    "quote": "a consent by the defendant that he may be punished as if he were guilty and a prayer for leniency.",
+    "all_cites": [
+      "400 U.S. 25",
+      "272 U.S. 451",
+      "272 U.S. ",
+      "400 U.S. "
+    ],
+    "primary_cite_pair": [
+      "North Carolina v. Alford",
+      "400 U.S. 25"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7329812/",
+    "cl_cluster": 7329812,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a fabricated page number (272 U.S. 451) that does not correspond to North Carolina v. Alford, and while the quoted language is drawn from case law on nolo contendere pleas, it actually originates from earlier Supreme Court precedent (United States v. Norris, 281 U.S. 619) rather than Alford itself, making the attribution to this case inaccurate.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is found verbatim in *Hudson v. United States, 272 U.S. 451, 455*, which is explicitly included in the provided citation string.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "NOMINAL DAMAGES",
+    "quote": "Common-law courts traditionally have vindicated deprivations of certain 'absolute' rights that are not shown to have caused actual injury through the award of a nominal sum of money.",
+    "all_cites": [
+      "435 U.S. 247",
+      "592 U.S. 279"
+    ],
+    "primary_cite_pair": [
+      "Carey v. Piphus",
+      "435 U.S. 247"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10307846/",
+    "cl_cluster": 10307846,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a fabricated page number (592 U.S. 279) that does not correspond to Carey v. Piphus, 435 U.S. 247 (1978), and while the quote's language is consistent with the actual Supreme Court decision's discussion of nominal damages for constitutional violations, the malformed citation indicates this source has been incorrectly presented or doctored.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for language found in *Carey v. Piphus*, 435 U.S. 247, 266.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "PETTY OFFENSE (MAGISTRATE JUDGE TRIAL)",
+    "quote": "[a]ny person charged with a misdemeanor, other than a petty offense, may elect . . . to be tried before a judge of the district court for the district in which the offense was committed.",
+    "all_cites": [
+      "18 U.S.",
+      "18 U.S.",
+      "18 U.S.",
+      "18 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10296582/",
+    "cl_cluster": 10296582,
+    "claude_verdict": "no",
+    "claude_reason": "The citation \"18 U.S., 18 U.S., 18 U.S.\" is malformed and incomplete (appears to be a copying error), and while the quoted language resembles provisions in 18 U.S.C. \u00a7 3401 regarding misdemeanor trials, the citation format is invalid and unverifiable as written.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for language found in 18 U.S.C. \u00a7 3401(b)(1), which directly addresses the topic of magistrate judge trials for misdemeanors and petty offenses, despite the provided citation being incomplete.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "PLEA",
+    "quote": "A guilty plea is more than an admission of conduct; it is a conviction. Like a verdict of a jury it is conclusive.",
+    "all_cites": [
+      "395 U.S. 238"
+    ],
+    "primary_cite_pair": [
+      "Boykin v. Alabama",
+      "395 U.S. 238"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9505326/",
+    "cl_cluster": 9505326,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects the Supreme Court's holding in Boykin v. Alabama, 395 U.S. 238 (1969), which established that a guilty plea constitutes a conviction and requires specific constitutional safeguards, including a knowing and voluntary waiver of rights.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote does not appear in the cited case, *Boykin v. Alabama*, but rather closely paraphrases language found in *Brady v. United States*, which cites *Kercheval v. United States*.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "PRELIMINARY INJUNCTION",
+    "quote": "A plaintiff seeking a preliminary injunction must establish that he is likely to succeed on the merits, that he is likely to suffer irreparable harm in the absence of preliminary relief, that the balance of equities tips in his favor, and that an injunction is in the public interest.",
+    "all_cites": [
+      "555 U.S. 7",
+      "456 U.S. 305"
+    ],
+    "primary_cite_pair": [
+      "Winter v. Natural Resources Defense Council, Inc.",
+      "555 U.S. 7"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336225/",
+    "cl_cluster": 7336225,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a clear error\u2014Winter v. Natural Resources Defense Council, Inc. is cited as \"555 U.S. 7, 456 U.S. 305,\" but 456 U.S. 305 refers to a completely different case (Monsanto Co. v. Spray-Right Sprayers, Inc., 1981), making this citation internally contradictory and unreliable, though the quoted four-factor test is accurately stated from the actual Winter decision (2008).",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately reflects the standard articulated in *Winter v. Natural Resources Defense Council, Inc., 555 U.S. 7*, though the provided citation incorrectly includes an additional reporter cite (456 U.S. 305) belonging to a different case.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "PROBATION",
+    "quote": "Probation, like incarceration, is 'a form of criminal sanction imposed by a court upon an offender after verdict, finding, or plea of guilty.'",
+    "all_cites": [
+      "534 U.S. 112",
+      "483 U.S. 868",
+      "483 U.S. ",
+      "483 U.S. ",
+      "534 U.S. "
+    ],
+    "primary_cite_pair": [
+      "United States v. Knights",
+      "534 U.S. 112"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/4903533/",
+    "cl_cluster": 4903533,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple red flags\u2014it lists three different U.S. Reports citations (534 U.S. 112 and two entries for 483 U.S.), and United States v. Knights is correctly cited as 534 U.S. 112 (2001), making the additional citations fabricated; while the quote's substance aligns with Knight's reasoning about probation being a criminal sanction, the malformed citation indicates unreliable sourcing.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is found verbatim in *United States v. Knights*, 534 U.S. 112, 119, accurately representing the Court's statement, though the citation provided is partially redundant and garbled regarding the original source of the quote.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "PROMISSORY ESTOPPEL",
+    "quote": "a state-law doctrine which, in the absence of a contract, creates obligations never explicitly assumed by the parties.",
+    "all_cites": [
+      "501 U.S. 663"
+    ],
+    "primary_cite_pair": [
+      "The Supreme Court has not provided a standalone definitional quote for promissory estoppel. In Cohen v. Cowles Media Co.",
+      "501 U.S. 663"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9505326/",
+    "cl_cluster": 9505326,
+    "claude_verdict": "unsure",
+    "claude_reason": "This language accurately reflects the Court's characterization of promissory estoppel in Cohen v. Cowles Media Co., 501 U.S. 663 (1991), where the majority described it as a state-law doctrine that creates obligations absent an explicit contract.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately represents the Supreme Court's description of promissory estoppel in *Cohen v. Cowles Media Co.*, drawing directly from language found at 501 U.S. 663, 668, with a minor addition (\"in the absence of a contract\") that correctly clarifies the doctrine's scope as discussed in the opinion.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "PUBLIC FORUM DOCTRINE",
+    "quote": "identified three types of fora: the traditional public forum, the public forum created by government designation, and the nonpublic forum.",
+    "all_cites": [
+      "473 U.S. 788",
+      "460 U.S. 37",
+      "460 U.S. ",
+      "460 U.S. ",
+      "473 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Cornelius v. NAACP Legal Defense & Educational Fund, Inc.",
+      "473 U.S. 788"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336225/",
+    "cl_cluster": 7336225,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is internally inconsistent and contains obvious errors (473 U.S. 788, 460 U.S. 37, and 460 U.S. are jumbled together), and while the quoted language about three types of fora is accurate to public forum doctrine, it actually originates from Perry Education Association v. Perry Local Educators' Association, 460 U.S. 37 (1983), not Cornelius v. NAACP Legal Defense & Educational Fund, Inc., 473 U.S. 788 (1985).",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately reflects the language used in *Cornelius v. NAACP Legal Defense & Educational Fund, Inc.*, 473 U.S. 788, 802, where the Court describes the three types of fora.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "PUBLIC USE",
+    "quote": "Without exception, our cases have defined that concept broadly, reflecting our longstanding policy of deference to legislative judgments in this field.",
+    "all_cites": [
+      "545 U.S. 469",
+      "545 U.S. ",
+      "348 U.S. 26",
+      "467 U.S. 229"
+    ],
+    "primary_cite_pair": [
+      "Kelo v. City of New London",
+      "545 U.S. 469"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9252798/",
+    "cl_cluster": 9252798,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is malformed (contains three inconsistent citations including \"348 U.S. 26\" which is from a 1953 case), and while this language appears in Kelo v. City of New London regarding public use doctrine, the quote actually refers to deference to legislative judgments about what constitutes public use, not a definition of public use itself\u2014making the attribution misleading without proper context.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately appears verbatim in Kelo v. City of New London, 545 U.S. 469, at page 480.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "PULLMAN ABSTENTION",
+    "quote": "Such constitutional adjudication plainly can be avoided if a definitive ruling on the state issue would terminate the controversy.",
+    "all_cites": [
+      "312 U.S. 496"
+    ],
+    "primary_cite_pair": [
+      "Texas v. Pullman Co.",
+      "312 U.S. 496"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10377112/",
+    "cl_cluster": 10377112,
+    "claude_verdict": "yes",
+    "claude_reason": "This language accurately reflects the holding in Texas v. Pullman Co., 312 U.S. 496 (1941), which established the doctrine that federal courts should abstain from deciding constitutional questions when a state law issue might be resolved in a way that eliminates the need for federal constitutional adjudication.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is an accurate summary of the principle established in *Texas v. Pullman Co.*, but it is not a verbatim passage found within the Supreme Court's opinion.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "PUNITIVE DAMAGES",
+    "quote": "Punitive damages may properly be imposed to further a State\u2019s legitimate interests in punishing unlawful conduct and deterring its repetition.",
+    "all_cites": [
+      "517 U.S. 559",
+      "538 U.S. 408",
+      "517 U.S. ",
+      "517 U.S. "
+    ],
+    "primary_cite_pair": [
+      "BMW of North America, Inc. v. Gore",
+      "517 U.S. 559"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10323942/",
+    "cl_cluster": 10323942,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is internally contradictory and implausible (listing three different U.S. Reports citations for a single case, with 538 U.S. 408 being a different case entirely), and while the quoted language resembles reasoning from BMW v. Gore, the exact phrasing does not appear in the Supreme Court's opinion and the malformed citation raises serious credibility concerns.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote appears verbatim in BMW of North America, Inc. v. Gore, 517 U.S. 559, 568, accurately reflecting the court's statement on the purpose of punitive damages.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "QUANTUM MERUIT",
+    "quote": "as much as he has deserved",
+    "all_cites": [
+      "110 U.S. 338"
+    ],
+    "primary_cite_pair": [
+      "United States v. Behan",
+      "110 U.S. 338"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9401731/",
+    "cl_cluster": 9401731,
+    "claude_verdict": "unsure",
+    "claude_reason": "While \"quantum meruit\" literally translates to \"as much as he has deserved\" and United States v. Behan, 110 U.S. 338 is a real case from 1884, I cannot confirm without direct access to the opinion whether this specific quote appears in that decision or whether it is merely the dictionary definition of the Latin term.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The phrase \"as much as he has deserved\" is the literal translation of *quantum meruit*, but it does not appear as a direct quote or definition within the text of *United States v. Behan, 110 U.S. 338*.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "QUI TAM",
+    "quote": "who pursues this action on our Lord the King's behalf as well as his own.",
+    "all_cites": [
+      "529 U.S. 765",
+      "31 U.S."
+    ],
+    "primary_cite_pair": [
+      "Vermont Agency of Natural Resources v. United States ex rel. Stevens",
+      "529 U.S. 765"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10465366/",
+    "cl_cluster": 10465366,
+    "claude_verdict": "no",
+    "claude_reason": "The cited case (Vermont Agency of Natural Resources v. United States ex rel. Stevens, 529 U.S. 765) is a 2000 U.S. Supreme Court decision about False Claims Act qui tam provisions, but the quoted language using archaic phrasing about \"our Lord the King\" originates from historical English law definitions of qui tam, not from this modern Supreme Court case.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact translation of the Latin phrase *qui tam pro domino rege quam pro se ipso in hac parte sequitur*, which is explicitly stated and explained in *Vermont Agency of Natural Resources v. United States ex rel. Stevens*, 529 U.S. 765, 768 (2000).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "QUIA TIMET",
+    "quote": "A court of equity will also prevent injury in some cases by interposing before any actual injury has been suffered, by a bill which has been sometimes called a bill quia timet, in analogy to proceedings at the common law, where in some cases a writ may be maintained before any molestation, distress, or impleading.",
+    "all_cites": [
+      "131 U.S. 191"
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10358260/",
+    "cl_cluster": 10358260,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects language from *Kernan v. Kean*, 131 U.S. 191 (1889), which discusses equitable remedies including quia timet bills to prevent anticipated injuries before they occur.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The cited case, *Vicksburg & M. R. Co. v. Putnam*, 131 U.S. 191, concerns railroad negligence and damages, and does not contain the quoted language or discuss the general equitable principle of \"quia timet.\"",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "QUIET TITLE",
+    "quote": "The object of a bill to remove a cloud upon title, and to quiet the possession of real estate, is to protect the owner of the legal title from being disturbed in his possession, or harassed by suits in regard to that title.",
+    "all_cites": [
+      "121 U.S. 552",
+      "234 U.S. 369",
+      "112 U.S. 405"
+    ],
+    "primary_cite_pair": [
+      "Frost v. Spitley",
+      "121 U.S. 552"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7330585/",
+    "cl_cluster": 7330585,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is fabricated\u2014it lists three different case citations that cannot all refer to the same case (Frost v. Spitley cannot simultaneously be reported at 121 U.S. 552, 234 U.S. 369, and 112 U.S. 405), and this citation pattern does not match legitimate U.S. Supreme Court reporting conventions.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately captures the substance and much of the language used by the Supreme Court on page 557 of *Frost v. Spitley, 121 U.S. 552*, despite minor omissions and a slight rephrasing of the introductory clause, and the presence of extraneous citations.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "QUITCLAIM DEED",
+    "quote": "the grantor affirms nothing as to the ownership, and undertakes only a release of any claim to or interest in the premises which he may possess without asserting the ownership of either.",
+    "all_cites": [
+      "148 U.S. 21"
+    ],
+    "primary_cite_pair": [
+      "Moelle v. Sherwood",
+      "148 U.S. 21"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7330585/",
+    "cl_cluster": 7330585,
+    "claude_verdict": "unsure",
+    "claude_reason": "While the citation is plausible (Moelle v. Sherwood is a real U.S. Supreme Court case from 1893 dealing with deed validity), I cannot verify the exact wording of this quote without access to the full text, though the substance accurately reflects quitclaim deed doctrine.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "Although the language is a paraphrase and not a direct quote, it accurately represents the principle regarding quitclaim deeds articulated in *Moelle v. Sherwood*, particularly on pages 28-29, that such a deed merely releases the grantor's interest without warranting title.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "RACKETEERING ACTIVITY (STATUTE)",
+    "quote": "chargeable under State law and punishable by imprisonment for more than one year,",
+    "all_cites": [
+      "18 U.S.",
+      "18 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10296582/",
+    "cl_cluster": 10296582,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format \"18 U.S., 18 U.S.\" is malformed and incomplete (missing section numbers), and while the quoted language resembles language from 18 U.S.C. \u00a7 1961(1) defining racketeering activity, the fragment cannot be verified as an accurate quote without a proper, complete citation.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is a direct and accurate excerpt from 18 U.S.C. \u00a7 1961(1)(A), which defines \"racketeering activity,\" despite the citation being incomplete and poorly formatted.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RATE REGULATION",
+    "quote": "Under the statutory standard of 'just and reasonable' it is the result reached not the method employed which is controlling.",
+    "all_cites": [
+      "320 U.S. 591",
+      "169 U.S. 466",
+      "320 U.S. "
+    ],
+    "primary_cite_pair": [
+      "FPC v. Hope Natural Gas Co.",
+      "320 U.S. 591"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7331033/",
+    "cl_cluster": 7331033,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a critical error\u2014169 U.S. 466 is not part of FPC v. Hope Natural Gas Co. (the correct citation is 320 U.S. 591), and this extraneous citation, combined with the duplicative \"320 U.S.\" formatting, suggests a fabricated or severely corrupted source reference that undermines confidence in the attribution.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is an exact and famous line from *FPC v. Hope Natural Gas Co., 320 U.S. 591*, making its attribution to that case accurate, despite the inclusion of superfluous and incomplete citation information in the provided string.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RATIFICATION",
+    "quote": "A principal can adopt and ratify an unauthorized act of his agent who in fact is assuming to act in his behalf, although not disclosing his agency to others, and when it is so ratified it is as if the principal had given an original authority to that effect and the ratification relates back to the time of the act which is ratified.",
+    "all_cites": [
+      "182 U.S. 461"
+    ],
+    "primary_cite_pair": [
+      "Clews v. Jamieson",
+      "182 U.S. 461"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/8880456/",
+    "cl_cluster": 8880456,
+    "claude_verdict": "unsure",
+    "claude_reason": "While Clews v. Jamieson, 182 U.S. 461 (1901) is a real Supreme Court case dealing with agency and ratification law, I cannot verify the exact wording of this quote without access to the full case text, though the doctrine described (ratification of unauthorized acts relating back) is consistent with established agency law principles from that era.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote, including the specific phrasing about a principal ratifying an agent's unauthorized act, does not appear in Clews v. Jamieson, 182 U.S. 461.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "REAL PARTY IN INTEREST",
+    "quote": "[e]very action shall be prosecuted in the name of the real party in interest.",
+    "all_cites": [
+      "338 U.S. 366"
+    ],
+    "primary_cite_pair": [
+      "United States v. Aetna Casualty & Surety Co.",
+      "338 U.S. 366"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10592125/",
+    "cl_cluster": 10592125,
+    "claude_verdict": "no",
+    "claude_reason": "This quote is from Federal Rule of Civil Procedure 17(a), not from United States v. Aetna Casualty & Surety Co., 338 U.S. 366, which is a case that discusses the real party in interest doctrine but does not contain this exact statutory language.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote appears verbatim in the case at 338 U.S. 366, 380, where the Court quotes Federal Rule of Civil Procedure 17(a).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RECUSAL",
+    "quote": "Due process requires recusal when 'the probability of actual bias on the part of the judge or decisionmaker is too high to be constitutionally tolerable.'",
+    "all_cites": [
+      "556 U.S. 868",
+      "421 U.S. 35",
+      "475 U.S. 813",
+      "28 U.S."
+    ],
+    "primary_cite_pair": [
+      "Caperton v. A. T. Massey Coal Co.",
+      "556 U.S. 868"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336225/",
+    "cl_cluster": 7336225,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains three different case citations (556 U.S. 868, 421 U.S. 35, 475 U.S. 813) mixed together without clarification, which is improper form; while the quote's language is consistent with Caperton v. A.T. Massey Coal Co.'s holding on recusal and due process, the malformed citation\u2014particularly the inclusion of unrelated page numbers\u2014suggests the citation was fabricated or severely mishandled rather than properly verified.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately reflects language found in Caperton v. A. T. Massey Coal Co., 556 U.S. 868, 876, although the citation also includes extraneous case citations.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "REDRESSABILITY",
+    "quote": "it must be 'likely,' as opposed to merely 'speculative,' that the injury will be 'redressed by a favorable decision.'",
+    "all_cites": [
+      "504 U.S. 555",
+      "426 U.S. 26"
+    ],
+    "primary_cite_pair": [
+      "Lujan v. Defenders of Wildlife",
+      "504 U.S. 555"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10648639/",
+    "cl_cluster": 10648639,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a critical error\u2014504 U.S. 555 is the correct citation for Lujan v. Defenders of Wildlife (1992), but 426 U.S. 26 refers to an entirely different case (Village of Euclid v. Ambler Realty Co., 1926) and the dual citation is implausible for a single quote; while the quoted language itself is accurate to Lujan's redressability standard, the malformed citation undermines reliability.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately reproduces language found in Lujan v. Defenders of Wildlife, 504 U.S. 555, 561, describing the redressability prong of standing.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "REFORMATION",
+    "quote": "The reformation of written contracts for fraud or mistake is an ordinary head of equity jurisdiction.",
+    "all_cites": [
+      "87 U.S. ",
+      "98 U.S. 85"
+    ],
+    "primary_cite_pair": [
+      "Id. The remedy applies to all forms of written instruments, including insurance policies. See Snell v. Insurance Co.",
+      "98 U.S. 85"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9422727/",
+    "cl_cluster": 9422727,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is defective (contains \"87 U.S. , 98 U.S. 85\" with incomplete volume number), the case name \"Snell v. Insurance Co.\" appears fabricated or significantly misattributed, and while the quoted language about reformation is consistent with actual equity doctrine, it cannot be verified against the malformed citation provided.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote appears verbatim in Snell v. Atlantic F. & M. Ins. Co., 98 U.S. 85, 88 (1878), making the citation plausible and the language accurate.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "REGULATORY TAKING",
+    "quote": "[G]overnment regulation of private property may, in some instances, be so onerous that its effect is tantamount to a direct appropriation or ouster\u2014and that such 'regulatory takings' may be compensable under the Fifth Amendment.",
+    "all_cites": [
+      "544 U.S. 528",
+      "260 U.S. 393",
+      "458 U.S. 419",
+      "505 U.S. 1003",
+      "438 U.S. 104"
+    ],
+    "primary_cite_pair": [
+      "Lingle v. Chevron U.S.A. Inc.",
+      "544 U.S. 528"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336225/",
+    "cl_cluster": 7336225,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is internally inconsistent and implausible (mixing three different U.S. Reports volumes for a single case), and while Lingle v. Chevron does address regulatory takings doctrine, the quoted language does not accurately reflect Lingle's actual holding, which rejected the \"substantially advances\" test and narrowed regulatory takings claims rather than affirming the broad compensability principle stated in the quote.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately appears in Lingle v. Chevron U.S.A. Inc., 544 U.S. 528, at page 537, although the citation provided incorrectly appends two additional, unrelated case citations.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RELATION BACK (PARTY CHANGE)",
+    "quote": "received such notice of the action that it will not be prejudiced in defending on the merits",
+    "all_cites": [
+      "560 U.S. 538"
+    ],
+    "primary_cite_pair": [
+      "Krupski v. Costa Crociere S.p.A.",
+      "560 U.S. 538"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7332562/",
+    "cl_cluster": 7332562,
+    "claude_verdict": "yes",
+    "claude_reason": "This language accurately reflects the standard from Federal Rule of Civil Procedure 15(c)(1)(C)(ii), which was the central issue in Krupski v. Costa Crociere S.p.A., 560 U.S. 538 (2010), regarding relation back of amendments adding defendants.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is a paraphrase, not an exact transcription of the language in *Krupski v. Costa Crociere S.p.A., 560 U.S. 538, 550*; the case actually states, \"The Rule ensures that the defendant has adequate notice of the action such that it will not be prejudiced in defending on the merits.\"",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "RELEASE PENDING SENTENCING",
+    "quote": "shall order that a person who has been found guilty of an offense and who is awaiting imposition or execution of sentence . . . be detained, unless the judicial officer finds by clear and convincing evidence that the person is not likely to flee or pose a danger to the safety of any other person or the community if released.",
+    "all_cites": [
+      "18 U.S.",
+      "18 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "",
+    "cl_cluster": null,
+    "claude_verdict": "no",
+    "claude_reason": "The citation \"18 U.S., 18 U.S.\" is malformed and incomplete (lacking section numbers), and while the quoted language resembles 18 U.S.C. \u00a7 3143(b) regarding detention pending sentencing, the citation as provided is inadequate and non-verifiable, and the quote appears incomplete and potentially paraphrased without clear indication.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is a direct and accurate excerpt from 18 U.S.C. \u00a7 3143(a)(1), which governs release or detention pending sentence, making the general citation to \"18 U.S.\" plausible.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "REMAND",
+    "quote": "order remanding a case",
+    "all_cites": [
+      "593 U.S. 230",
+      "28 U.S.",
+      "593 U.S. ",
+      "87 U.S. "
+    ],
+    "primary_cite_pair": [
+      "BP p.l.c. v. Mayor & City Council of Baltimore",
+      "593 U.S. 230"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10653173/",
+    "cl_cluster": 10653173,
+    "claude_verdict": "unsure",
+    "claude_reason": "While BP p.l.c. v. Mayor & City Council of Baltimore (141 S. Ct. 1532, 2021) is a real case, the citation format provided is malformed and duplicative (listing \"593 U.S.\" twice with inconsistent numbering), making it impossible to verify whether the exact phrase \"order remanding a case\" appears in the cited location.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The phrase \"order remanding a case\" is a direct quote found multiple times in the cited Supreme Court opinion, which discusses the scope of review for such orders.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "RESTITUTION",
+    "quote": "Restitution is a legal remedy when ordered in a case at law and an equitable remedy . . . when ordered in an equity case,",
+    "all_cites": [
+      "534 U.S. 204",
+      "33 F.3d 754",
+      "213 F.3d 398"
+    ],
+    "primary_cite_pair": [
+      "West Life & Annuity Insurance Co. v. Knudson",
+      "534 U.S. 204"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/6459065/",
+    "cl_cluster": 6459065,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is problematic and internally inconsistent (mixing U.S. Reports with Federal Reporter citations for what appears to be a single case), and the claimed quote does not accurately reflect the Supreme Court's actual holding in Knudson, which addressed whether restitution under CAFA constituted an equitable remedy, not a simple dichotomy between law and equity cases.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately reflects language found in *Great-West Life & Annuity Insurance Co. v. Knudson*, 534 U.S. 204, 212, which distinguishes restitution as a legal versus an equitable remedy.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RESULTING TRUST",
+    "quote": "The general proposition is unquestioned that, where upon a purchase of property the conveyance of the legal title is to one person while the consideration is paid by another, an implied or resulting trust immediately arises, and the grantee in the conveyance will be held as trustee for the party from whom the consideration proceeds.",
+    "all_cites": [
+      "169 U.S. 398"
+    ],
+    "primary_cite_pair": [
+      "Smithsonian Institution v. Meech",
+      "169 U.S. 398"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10354236/",
+    "cl_cluster": 10354236,
+    "claude_verdict": "no",
+    "claude_reason": "The citation appears fabricated\u2014Smithsonian Institution v. Meech, 169 U.S. 398 does not exist in the U.S. Supreme Court Reports (Volume 169 contains cases from 1895-1896, and no case with this name appears in that volume), and the quote itself is incomplete and cuts off mid-word (\"fro\"), suggesting either a fabricated source or careless attribution of a principle that would more likely be found in property law treatises or established trust cases like Hiss v. Sprague, 154 Mass. 201.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The provided quote is an accurate, verbatim excerpt from the cited case, though it is cut off mid-word at the end.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RETALIATION (EMPLOYMENT)",
+    "quote": "A plaintiff must show that a reasonable employee would have found the challenged action materially adverse, which in this context means it well might have dissuaded a reasonable worker from making or supporting a charge of discrimination.",
+    "all_cites": [
+      "548 U.S. 53",
+      "42 U.S.",
+      "411 U.S. 792"
+    ],
+    "primary_cite_pair": [
+      "Burlington Northern & Santa Fe Railway Co. v. White",
+      "548 U.S. 53"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10357155/",
+    "cl_cluster": 10357155,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is fabricated\u2014it contains three different case citations (Burlington Northern & Santa Fe Railway Co. v. White, 548 U.S. 53, plus two non-matching citations), and while the quote's language is consistent with the actual Burlington Northern & Santa Fe Railway Co. v. White, 548 U.S. 53 (2006) decision on retaliation standards, the citation format is corrupted and implausible as presented.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately reflects the standard for retaliation established in *Burlington Northern & Santa Fe Railway Co. v. White, 548 U.S. 53*, particularly at page 68, although the provided citation includes extraneous incorrect information.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RIGHT TO TRAVEL",
+    "quote": "The 'right to travel' discussed in our cases embraces at least three different components. It protects the right of a citizen of one State to enter and to leave another State, the right to be treated as a welcome visitor rather than an unfriendly alien when temporarily present in the second State, and, for those travelers who elect to become permanent residents, the right to be treated like other citizens of that State.",
+    "all_cites": [
+      "526 U.S. 489",
+      "457 U.S. 55"
+    ],
+    "primary_cite_pair": [
+      "Saenz v. Roe",
+      "526 U.S. 489"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10334647/",
+    "cl_cluster": 10334647,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a clear error\u2014it cites two different cases (Saenz v. Roe, 526 U.S. 489 and 457 U.S. 55) which appear to conflate Saenz v. Roe with an earlier case, likely Shapiro v. Thompson, and the quote itself is incomplete/truncated mid-sentence, making verification of its accuracy impossible.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for language found in Saenz v. Roe, 526 U.S. 489, at page 500, though it is truncated at the end and the citation includes an extraneous case reference.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RULE 12(B)(6) PLAUSIBILITY STANDARD",
+    "quote": "To survive a motion to dismiss, a complaint must contain sufficient factual matter, accepted as true, to 'state a claim to relief that is plausible on its face.'",
+    "all_cites": [
+      "556 U.S. 662",
+      "550 U.S. 544",
+      "550 U.S. ",
+      "556 U.S. ",
+      "355 U.S. 41"
+    ],
+    "primary_cite_pair": [
+      "Ashcroft v. Iqbal",
+      "556 U.S. 662"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/7336225/",
+    "cl_cluster": 7336225,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is malformed with contradictory and implausible U.S. Reports citations (556 U.S. 662, 550 U.S. 544, 550 U.S. with no page number), and while the quote accurately reflects the plausibility standard from Ashcroft v. Iqbal (2009), the defective citation format and internal inconsistencies suggest fabrication or severe transcription error rather than a legitimate source reference.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is an exact reproduction of language found in Ashcroft v. Iqbal, 556 U.S. 662, 678 (2009), which itself quoted Bell Atlantic Corp. v. Twombly.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "RULE OF REASON",
+    "quote": "The true test of legality is whether the restraint imposed is such as merely regulates and perhaps thereby promotes competition or whether it is such as may suppress or even destroy competition.",
+    "all_cites": [
+      "246 U.S. 231",
+      "585 U.S. 529",
+      "457 U.S. 332"
+    ],
+    "primary_cite_pair": [
+      "Board of Trade of Chicago v. United States",
+      "246 U.S. 231"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/4695310/",
+    "cl_cluster": 4695310,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple conflicting U.S. Reports page numbers (246 U.S. 231, 585 U.S. 529, 457 U.S. 332) for a single case, which is impossible\u2014Board of Trade of Chicago v. United States is reported at 246 U.S. 231 (1918)\u2014and while the quoted language accurately reflects the Court's articulation of the rule of reason test in that case, the fabricated dual citations undermine the credibility of the source attribution.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact, verbatim passage from *Board of Trade of Chicago v. United States, 246 U.S. 231*, though the additional citations provided are incorrect.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SALVAGE",
+    "quote": "Salvage is the compensation allowed to persons by whose voluntary assistance a ship at sea or her cargo or both have been saved in whole or in part from impending sea peril, or in recovering such property from actual peril or loss, as in cases of shipwreck, derelict, or recapture.",
+    "all_cites": [
+      "101 U.S. 384",
+      "77 U.S. "
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10351350/",
+    "cl_cluster": 10351350,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is internally inconsistent (citing both \"101 U.S. 384\" and \"77 U.S.\" simultaneously), the page numbers don't align with standard U.S. Reports pagination for a single case, and while the quoted language resembles salvage law principles, the specific attribution cannot be verified due to these citation defects.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for a definition of salvage found in *The Blackwall*, 101 U.S. 384, at page 393.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SECOND AMENDMENT",
+    "quote": "protects an individual right to possess a firearm unconnected with service in a militia, and to use that arm for traditionally lawful purposes, such as self-defense within the home.",
+    "all_cites": [
+      "554 U.S. 570",
+      "561 U.S. 742"
+    ],
+    "primary_cite_pair": [
+      "District of Columbia v. Heller",
+      "554 U.S. 570"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/8529781/",
+    "cl_cluster": 8529781,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains an internal inconsistency\u2014it provides two different U.S. Reports citations (554 U.S. 570 and 561 U.S. 742) for the same case, which is impossible, and while the quote itself accurately reflects language from District of Columbia v. Heller (2008), the malformed citation raises serious verification concerns about the source's reliability.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is nearly verbatim from the syllabus and holding of *District of Columbia v. Heller*, which correctly interprets the Second Amendment as protecting an individual right to bear arms for self-defense, particularly within the home.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SECONDARY MEANING (TRADEMARK)",
+    "quote": "in the minds of the public, the primary significance of a product feature . . . is to identify the source of the product rather than the product itself.",
+    "all_cites": [
+      "514 U.S. 159",
+      "456 U.S. 844",
+      "15 U.S.",
+      "514 U.S. ",
+      "456 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Qualitex Co. v. Jacobson Products Co.",
+      "514 U.S. 159"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/5293722/",
+    "cl_cluster": 5293722,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a fatal error\u2014Qualitex Co. v. Jacobson Products Co. is reported at 514 U.S. 159 (1995), not 456 U.S. 844 (which is a different case entirely), and while the quoted language accurately reflects the Supreme Court's definition of secondary meaning in Qualitex, the malformed citation with the erroneous intermediate citation number (456 U.S. 844) indicates fabrication or gross negligence in citation formatting.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is a verbatim definition of \"secondary meaning\" from *Inwood Laboratories, Inc. v. Ives Laboratories, Inc., 456 U.S. 844, 851 n.11 (1982)*, which is directly quoted and cited within *Qualitex Co. v. Jacobson Products Co., 514 U.S. 159, 163 (1995)*, making the language accurate and attributable to the cases referenced.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SECTION 5 ENFORCEMENT POWER",
+    "quote": "Congress' power under \u00a7 5",
+    "all_cites": [
+      "521 U.S. 507",
+      "5 U.S. "
+    ],
+    "primary_cite_pair": [
+      "City of Boerne v. Flores",
+      "521 U.S. 507"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9533988/",
+    "cl_cluster": 9533988,
+    "claude_verdict": "unsure",
+    "claude_reason": "While City of Boerne v. Flores, 521 U.S. 507 (1997) is the landmark case addressing Congress's Section 5 enforcement power under the Fourteenth Amendment, the citation \"5 U.S.\" appears malformed or incomplete, making it impossible to verify the exact source location of this generic phrase within the decision.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately reflects a central subject discussed throughout *City of Boerne v. Flores*, which extensively analyzes \"Congress' power under \u00a7 5\" of the Fourteenth Amendment.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SEISIN",
+    "quote": "actual seisin, or seisin in deed, is . . . necessary to maintain a writ of right,",
+    "all_cites": [
+      "12 U.S. "
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/10676751/",
+    "cl_cluster": 10676751,
+    "claude_verdict": "unsure",
+    "claude_reason": "While 12 U.S. (8 Cranch) is plausible for early American property law discussion and the language about seisin and writs of right is consistent with period-appropriate legal terminology, the citation is incomplete (missing case name and year), making it impossible to verify the exact quote's accuracy against the specific decision.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is an exact match to language found in *Green v. Liter*, 12 U.S. 229, 246 (1814), a case within the cited volume of the U.S. Reports.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SELECTIVE PROSECUTION",
+    "quote": "The claimant must demonstrate that the federal prosecutorial policy 'had a discriminatory effect and that it was motivated by a discriminatory purpose.'",
+    "all_cites": [
+      "517 U.S. 456",
+      "272 U.S. 1"
+    ],
+    "primary_cite_pair": [
+      "United States v. Armstrong",
+      "517 U.S. 456"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10365518/",
+    "cl_cluster": 10365518,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains an internal inconsistency (two different U.S. reports cited for the same case: 517 U.S. 456 and 272 U.S. 1), and while United States v. Armstrong, 517 U.S. 456 (1996) does establish the selective prosecution standard requiring both discriminatory effect and discriminatory purpose, the quoted language does not appear to be a direct quote from the opinion and appears paraphrased or misattributed.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is a nearly verbatim recitation of the standard for selective prosecution claims as articulated and applied by the Supreme Court in *United States v. Armstrong*, 517 U.S. 456, 465 (1996).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SELF-DEFENSE",
+    "quote": "If a man reasonably believes that he is in immediate danger of death or grievous bodily harm from his assailant he may stand his ground and that if he kills him he has not exceeded the bounds of lawful self-defense.",
+    "all_cites": [
+      "256 U.S. 335",
+      "158 U.S. 550",
+      "256 U.S. ",
+      "158 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Brown v. United States",
+      "256 U.S. 335"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/5294872/",
+    "cl_cluster": 5294872,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a fatal error\u2014it lists three different U.S. Reports citations (256 U.S. 335, 158 U.S. 550, and 256 U.S.) for a single case, which is impossible; while Brown v. United States, 256 U.S. 335 (1921) is a real self-defense case, the duplicate and incomplete citations suggest fabrication, and the quoted language cannot be verified as appearing in that decision without access to the full text.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact, verbatim passage from Justice Holmes's opinion in Brown v. United States, 256 U.S. 335, 343 (1921), although the provided citation contains extraneous and incomplete reporter references.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SEQUESTRATION",
+    "quote": "Sequestration under the Louisiana statutes is the modern counterpart of an ancient civil law device to resolve conflicting claims to property. Historically, the two principal concerns have been that, pending resolution of the dispute, the property would deteriorate or be wasted in the hands of the possessor and that the latter might sell or otherwise dispose of the goods.",
+    "all_cites": [
+      "416 U.S. 600",
+      "78 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Mitchell v. W. T. Grant Co.",
+      "416 U.S. 600"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10162596/",
+    "cl_cluster": 10162596,
+    "claude_verdict": "unsure",
+    "claude_reason": "The citation to Mitchell v. W. T. Grant Co., 416 U.S. 600 (1974) is accurate and the quoted language closely matches the Court's actual discussion of sequestration under Louisiana law as a civil law device, though the quote appears to be truncated mid-sentence.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately reflects text found in *Mitchell v. W. T. Grant Co.*, 416 U.S. 600, 606-607, although the provided citation's \"78 U.S.\" portion is incorrect and the quote is truncated mid-sentence.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SETOFF",
+    "quote": "Set-off must be understood as that right which exists between two parties, each of whom, under an independent contract, owes an ascertained amount to the other, to set off their respective debts by way of mutual deduction, so that, in any action brought for the larger debt, the residue only, after such deduction, shall be recovered.",
+    "all_cites": [
+      "92 U.S. 362"
+    ],
+    "primary_cite_pair": [
+      "Scammon v. Kimball",
+      "92 U.S. 362"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9304909/",
+    "cl_cluster": 9304909,
+    "claude_verdict": "unsure",
+    "claude_reason": "While Scammon v. Kimball, 92 U.S. 362 (1875) is a legitimate case dealing with setoff doctrine and the quoted language reflects period-appropriate legal terminology consistent with 19th-century setoff jurisprudence, I cannot verify the exact wording without access to the complete original opinion, and the quote appears to be truncated mid-sentence, making full accuracy assessment impossible.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote significantly alters the original language of the case, misrepresenting key phrases and not appearing verbatim in the cited source.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SEVERABILITY",
+    "quote": "The Court applies a strong presumption of severability. The Court presumes that an unconstitutional provision in a law is severable from the remainder of the law or statute.",
+    "all_cites": [
+      "591 U.S. 610",
+      "278 U.S. 515"
+    ],
+    "primary_cite_pair": [
+      "Barr v. American Ass'n of Political Consultants, Inc.",
+      "591 U.S. 610"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/4867855/",
+    "cl_cluster": 4867855,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains an internal contradiction (591 U.S. 610 and 278 U.S. 515 cannot both refer to the same case), and while Barr v. AAPC (2021) does address severability, the quoted language does not accurately reflect the Court's actual holding, which rejected a strong presumption of severability in favor of a case-by-case analysis.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately reflects the Supreme Court's discussion in *Barr v. American Ass'n of Political Consultants, Inc.*, 591 U.S. 610, particularly Justice Kagan's plurality opinion stating, \"The presumption of severability is a strong one,\" although the citation includes an erroneous second reporter (278 U.S. 515).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SKIDMORE DEFERENCE",
+    "quote": "[The] rulings, interpretations and opinions of the Administrator under this Act, while not controlling upon the courts by reason of their authority, do constitute a body of experience and informed judgment to which courts and litigants may properly resort for guidance.",
+    "all_cites": [
+      "323 U.S. 134",
+      "603 U.S. 369"
+    ],
+    "primary_cite_pair": [
+      "Skidmore v. Swift & Co.",
+      "323 U.S. 134"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/8415186/",
+    "cl_cluster": 8415186,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains two incompatible page numbers (323 U.S. 134 is the correct original citation, but 603 U.S. 369 is implausibly high for a 1947 decision and appears fabricated), and while the quote accurately reflects the language from Skidmore v. Swift & Co., the malformed dual citation indicates the source information is unreliable.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is accurate and directly from *Skidmore v. Swift & Co.*, 323 U.S. 134, though the provided citation erroneously includes a non-existent reporter cite (603 U.S. 369).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SLANDER",
+    "quote": "base and defamatory words, which tend to prejudice [another] in his reputation, office, trade, business, or means of livelihood.",
+    "all_cites": [
+      "91 U.S. 225"
+    ],
+    "primary_cite_pair": [
+      "Pollard v. Lyon",
+      "91 U.S. 225"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/10161063/",
+    "cl_cluster": 10161063,
+    "claude_verdict": "unsure",
+    "claude_reason": "While the citation Pollard v. Lyon, 91 U.S. 225 is a real Supreme Court case from 1875 dealing with defamation, I cannot verify the exact wording of this quote without access to the full opinion text, though the language is consistent with 19th-century defamation doctrine and the citation appears plausible for such content.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is not found verbatim in *Pollard v. Lyon*, nor does it accurately paraphrase the court's detailed discussion of what constitutes actionable slander.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SOLICITATION",
+    "quote": "Criminal solicitation is the intentional encouragement of an unlawful act.",
+    "all_cites": [
+      "599 U.S. 762",
+      "8 U.S."
+    ],
+    "primary_cite_pair": [
+      "United States v. Hansen",
+      "599 U.S. 762"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/9409092/",
+    "cl_cluster": 9409092,
+    "claude_verdict": "unsure",
+    "claude_reason": "While the citation format appears plausible and the definition is consistent with general criminal law principles regarding solicitation, I cannot verify the exact language or confirm this precise quote appears in United States v. Hansen, 599 U.S. 762 without access to the full case text.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is not found in *United States v. Hansen*, 599 U.S. 762; while the case discusses \"encourages or induces\" in the context of a federal immigration statute and mentions \"solicitation\" as a distinct legal concept, it does not offer this specific general definition of criminal solicitation.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SPECIAL MASTER",
+    "quote": "Courts have (at least in the absence of legislation to the contrary) inherent power to provide themselves with appropriate instruments required for the performance of their duties. This power includes authority to appoint persons unconnected with the court to aid judges in the performance of specific judicial duties, as they may arise in the progress of a cause.",
+    "all_cites": [
+      "253 U.S. 300",
+      "253 U.S. "
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "https://www.courtlistener.com/opinion/9428245/",
+    "cl_cluster": 9428245,
+    "claude_verdict": "unsure",
+    "claude_reason": "The citation to 253 U.S. 300 appears plausible for a Supreme Court case discussing judicial inherent powers and special masters, but the quote appears truncated mid-word (\"specifi\"), making it impossible to verify the complete language or confirm accurate representation of the source material.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quoted text is an accurate, direct quote from *In re Peterson*, 253 U.S. 300, 312, although it is truncated mid-word at the end.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SPEEDY TRIAL",
+    "quote": "The right of a speedy trial is necessarily relative. It is consistent with delays and depends upon circumstances.",
+    "all_cites": [
+      "407 U.S. 514",
+      "198 U.S. 77",
+      "414 U.S. 25",
+      "407 U.S. ",
+      "404 U.S. 307"
+    ],
+    "primary_cite_pair": [
+      "Barker v. Wingo",
+      "407 U.S. 514"
+    ],
+    "cl_url": "",
+    "cl_cluster": null,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is internally contradictory and implausible (mixing different U.S. Reports volumes and page numbers for what appears to be a single case), and while the quote's substance aligns with Barker v. Wingo's actual holding about speedy trial being \"relative,\" the exact language cannot be verified from the provided malformed citation.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is an accurate, verbatim statement from *Barker v. Wingo*, 407 U.S. 514, although the provided citation incorrectly includes `198 U.S. 77` and `414 U.S. 25` which refer to unrelated cases.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SPENDING CLAUSE",
+    "quote": "attach conditions on the receipt of federal funds",
+    "all_cites": [
+      "483 U.S. 203",
+      "448 U.S. 448",
+      "301 U.S. 548",
+      "567 U.S. 519"
+    ],
+    "primary_cite_pair": [
+      "South Dakota v. Dole",
+      "483 U.S. 203"
+    ],
+    "cl_url": "",
+    "cl_cluster": null,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple red flags: South Dakota v. Dole is correctly cited as 483 U.S. 203, but the additional citations (448 U.S. 448 and 301 U.S. 548) appear to be fabricated page numbers that don't correspond to the actual case, and while the phrase \"attach conditions on the receipt of federal funds\" does reflect the Spending Clause doctrine from Dole, the malformed citation indicates potential fabrication rather than direct verification.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is a direct phrase from *South Dakota v. Dole*, 483 U.S. 203, which accurately describes Congress's power under the Spending Clause, though the provided citation includes extraneous and incorrect case citations alongside the correct one.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SPOUSAL PRIVILEGE",
+    "quote": "the witness-spouse alone has a privilege to refuse to testify adversely; the witness may be neither compelled to testify nor foreclosed from testifying.",
+    "all_cites": [
+      "445 U.S. 40",
+      "340 U.S. 332",
+      "291 U.S. 7",
+      "445 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Trammel v. United States",
+      "445 U.S. 40"
+    ],
+    "cl_url": "/opinion/9458098/kayll-v-us-department-of-homeland-security/",
+    "cl_cluster": 9458098,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a fabricated middle citation (340 U.S. 332 and 291 U.S. 7 are unrelated cases) and the quote, while substantively accurate to Trammel v. United States, 445 U.S. 40 (1980), appears selectively pieced together rather than directly quoted, making the citation format itself unreliable and suggesting potential misrepresentation.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match to language found in *Trammel v. United States*, 445 U.S. 40, 53, a landmark case cited in the provided source, although the citation also includes irrelevant case citations.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "STATE SOVEREIGN IMMUNITY",
+    "quote": "The powers delegated to Congress under Article I of the United States Constitution do not include the power to subject nonconsenting States to private suits for damages in state courts.",
+    "all_cites": [
+      "527 U.S. 706",
+      "427 U.S. 445"
+    ],
+    "primary_cite_pair": [
+      "Alden v. Maine",
+      "527 U.S. 706"
+    ],
+    "cl_url": "/opinion/7333292/pa-dept-of-human-servs-v-us-dept-of-health-human-servs/",
+    "cl_cluster": 7333292,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a clear error\u2014Alden v. Maine is 527 U.S. 706 (1992), not 427 U.S. 445 (which is a different case entirely), and while the quoted language accurately reflects Alden's holding on state sovereign immunity, the dual citation format with conflicting page numbers indicates a fabricated or corrupted source reference.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact reproduction of a key holding from the Court's opinion in Alden v. Maine, 527 U.S. 706, 712.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "STATUTE OF FRAUDS",
+    "quote": "must be specified in the note or memorandum, and stated with reasonable certainty, so that they can be understood from the writing itself, without having recourse to parol proof.",
+    "all_cites": [
+      "55 U.S. ",
+      "149 U.S. 481",
+      "181 U.S. 77"
+    ],
+    "primary_cite_pair": [
+      "Bibb v. Allen",
+      "149 U.S. 481"
+    ],
+    "cl_url": "/opinion/4397124/golubski-v-us-plastic-equip/",
+    "cl_cluster": 4397124,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is malformed and implausible (mixing three different case citations with inconsistent formatting and U.S. Reports volumes that don't align chronologically), and while the quoted language reflects genuine statute of frauds doctrine about memoranda requirements, it cannot be verified as coming from any single coherent case decision at the citations provided.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately appears in *Bibb v. Allen*, 149 U.S. 481, 496, although the provided citation incorrectly includes \"55 U.S.\" and \"181 U.S. 77.\"",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "STIPULATION",
+    "quote": "An express agreement of parties, or their attorneys, in a pending action is a stipulation; and, when entered in the records of the court, or made in writing, signed by the parties or their counsel, is in general conclusive.",
+    "all_cites": [
+      "103 U.S. 261"
+    ],
+    "primary_cite_pair": [
+      "Oscanyan v. Arms Co.",
+      "103 U.S. 261"
+    ],
+    "cl_url": "/opinion/10365518/eddington-v-us-department-of-state/",
+    "cl_cluster": 10365518,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately represents language from Oscanyan v. Arms Co., 103 U.S. 261 (1880), which is a foundational case on the definition and effect of stipulations in civil procedure, and the citation is both plausible and correct for this definition.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote does not appear in Oscanyan v. Arms Co., 103 U.S. 261; the case primarily discusses contract enforceability and agent authority, not a general definition of stipulation.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "STOP AND FRISK",
+    "quote": "The police can stop and briefly detain a person for investigative purposes if the officer has a reasonable suspicion supported by articulable facts that criminal activity 'may be afoot,' even if the officer lacks probable cause.",
+    "all_cites": [
+      "490 U.S. 1",
+      "392 U.S. 1",
+      "392 U.S. ",
+      "392 U.S. 1",
+      "508 U.S. 366"
+    ],
+    "primary_cite_pair": [
+      "United States v. Sokolow",
+      "490 U.S. 1"
+    ],
+    "cl_url": "/opinion/7327691/standing-rock-sioux-tribe-v-us-army-corps-of-engrs/",
+    "cl_cluster": 7327691,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is malformed with conflicting page numbers (490 U.S. 1 and 392 U.S. 1), and while the quote's substance aligns with stop-and-frisk doctrine from Terry v. Ohio, 392 U.S. 1 (1968), United States v. Sokolow, 490 U.S. 1 (1989) addresses drug courier profiles rather than the foundational stop-and-frisk standard, making this attribution inaccurate.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately summarizes the holding of *Terry v. Ohio* and is found nearly verbatim in *United States v. Sokolow*, which reaffirms and applies the *Terry* standard.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "STREAM OF COMMERCE",
+    "quote": "The placement of a product into the stream of commerce, without more, is not an act of the defendant purposefully directed toward the forum State.",
+    "all_cites": [
+      "480 U.S. 102",
+      "564 U.S. 873",
+      "480 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Asahi Metal Industry Co. v. Superior Court",
+      "480 U.S. 102"
+    ],
+    "cl_url": "/opinion/10144998/us-sportsmens-all-found-v-smith/",
+    "cl_cluster": 10144998,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains a critical error\u2014it lists both \"480 U.S. 102\" and \"564 U.S. 873\" for the same case, when Asahi Metal Industry Co. v. Superior Court is correctly cited as 480 U.S. 102 (1987), and the quote itself, while accurately reflecting the holding from Asahi regarding stream of commerce doctrine, is undermined by the implausible dual citation that suggests fabrication or severe citation corruption.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is an exact match for language found in Justice O'Connor's plurality opinion in *Asahi Metal Industry Co. v. Superior Court*, 480 U.S. 102, 112 (1987), though the provided citation also includes an incorrect and unrelated reporter volume (564 U.S. 873).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "STRICKLAND TEST",
+    "quote": " Strickland v. Washington, 466 U.S. 668, 687 (1984).\n\n",
+    "all_cites": [
+      "466 U.S. 668",
+      "566 U.S. 156",
+      "466 U.S. ",
+      "466 U.S. 648"
+    ],
+    "primary_cite_pair": [
+      "Strickland v. Washington",
+      "466 U.S. 668"
+    ],
+    "cl_url": "/opinion/7336832/dauven-v-us-bancorp/",
+    "cl_cluster": 7336832,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains internal inconsistencies (listing both 466 U.S. 668 and 566 U.S. 156 for the same case, and repeating 466 U.S.), the claimed quote is empty/blank, and the citation format is malformed, making verification impossible and suggesting fabrication.",
+    "gemini_verdict": "unsure",
+    "gemini_reason": "The input provided as the \"claimed quote\" is a citation rather than textual content, preventing verification of any specific language against the cited case.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SUBPOENA DUCES TECUM",
+    "quote": "a subpoena may also command the person to whom it is directed to produce the books, papers, documents or other objects designated therein.",
+    "all_cites": [
+      "418 U.S. 683",
+      "13 F."
+    ],
+    "primary_cite_pair": [
+      "United States v. Nixon",
+      "418 U.S. 683"
+    ],
+    "cl_url": "/opinion/9997639/heritage-foundation-v-us-department-of-justice/",
+    "cl_cluster": 9997639,
+    "claude_verdict": "yes",
+    "claude_reason": "This language accurately reflects the definition of subpoena duces tecum found in United States v. Nixon, 418 U.S. 683 (1974), which discusses the power of courts to compel production of documents and tangible evidence through subpoena.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is a general definition of a subpoena duces tecum that closely resembles language from a rule of procedure (e.g., Fed. R. Civ. P. 45 or Fed. R. Crim. P. 17), not a passage found in *United States v. Nixon*, and the \"13 F.\" portion of the citation is incorrect for a Supreme Court case.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SUBPOENA FOR VICTIM INFORMATION",
+    "quote": "[a]fter a complaint, indictment, or information is filed, a subpoena requiring the production of personal or confidential information about a victim may be served on a third party only by court order.",
+    "all_cites": [
+      "18 U.S."
+    ],
+    "primary_cite_pair": null,
+    "cl_url": "/opinion/10296582/us-bank-na-v-18-wilkshire-circle-llc/",
+    "cl_cluster": 10296582,
+    "claude_verdict": "no",
+    "claude_reason": "This language does not appear in 18 U.S.C. \u00a7 3481 or other relevant federal victim-related statutes; the claimed citation is incomplete and implausibly vague, and the specific restrictive language about \"court order\" requirements for victim information subpoenas does not match standard federal procedural rules governing subpoena issuance.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact match for 18 U.S.C. \u00a7 3771(b)(2), and the provided citation \"18 U.S.\" correctly identifies the title of the United States Code where this statute is located.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SUPERIORITY",
+    "quote": "class resolution [is] 'superior to other available methods for the fair and efficient adjudication of the controversy.'",
+    "all_cites": [
+      "521 U.S. 591",
+      "28 U.S."
+    ],
+    "primary_cite_pair": [
+      "Amchem Products, Inc. v. Windsor",
+      "521 U.S. 591"
+    ],
+    "cl_url": "/opinion/9451103/us-bank-national-assoc-v-hill/",
+    "cl_cluster": 9451103,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects the language from Amchem Products, Inc. v. Windsor, 521 U.S. 591 (1997), which discusses the Rule 23(b)(3) requirement that class treatment be \"superior to other available methods for the fair and efficient adjudication of the controversy.\"",
+    "gemini_verdict": "no",
+    "gemini_reason": "While the quote accurately reflects language from Rule 23(b)(3) that *Amchem* discusses and quotes, the provided citation \"521 U.S. 591, 28 U.S.\" contains a fundamentally incorrect and incomplete page reference \"28 U.S.\" after the starting page \"591,\" making it impossible to precisely verify the quote's location within the cited reporter.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SUPERVISED RELEASE",
+    "quote": "a form of postconfinement monitoring overseen by the sentencing court, rather than the Parole Commission.",
+    "all_cites": [
+      "529 U.S. 694",
+      "18 U.S.",
+      "529 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Johnson v. United States",
+      "529 U.S. 694"
+    ],
+    "cl_url": "/opinion/4853537/wood-v-us-bank-national-association/",
+    "cl_cluster": 4853537,
+    "claude_verdict": "no",
+    "claude_reason": "Johnson v. United States, 529 U.S. 694 (2000) concerns the Armed Career Criminal Act and mandatory minimum sentences, not the definition or characteristics of supervised release, making this attribution implausible.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote accurately synthesizes language and concepts from the cited case, which explains that supervised release is a form of postconfinement monitoring and replaced parole, thereby shifting oversight from the Parole Commission to the sentencing court.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SUPPLEMENTAL JURISDICTION (DECLINATION)",
+    "quote": "the claim raises a novel or complex issue of State law,",
+    "all_cites": [
+      "28 U.S.",
+      "28 U.S.",
+      "522 U.S. 156",
+      "383 U.S. 715"
+    ],
+    "primary_cite_pair": [
+      "City of Chicago v. International Coll. of Surgeons",
+      "522 U.S. 156"
+    ],
+    "cl_url": "/opinion/10676751/us-bank-v-webb/",
+    "cl_cluster": 10676751,
+    "claude_verdict": "no",
+    "claude_reason": "The citation format is malformed (duplicates \"28 U.S.\"), and while the case *City of Chicago v. International College of Surgeons*, 522 U.S. 156 (1997) is real, it addresses federal question jurisdiction and diversity jurisdiction issues rather than supplemental jurisdiction declination grounds, making this quote's attribution implausible for that case's actual holdings.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote is an exact excerpt from 28 U.S.C. \u00a7 1367(c)(1), which the Supreme Court directly quotes in City of Chicago v. International Coll. of Surgeons, 522 U.S. 156, 172-73, when discussing the factors for declining supplemental jurisdiction.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "SUPREMACY CLAUSE",
+    "quote": "When the national government by treaty or statute has established rules and regulations touching the rights, privileges, obligations or burdens of aliens as such, the treaty or statute is the supreme law of the land.",
+    "all_cites": [
+      "312 U.S. 52",
+      "312 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Hines v. Davidowitz",
+      "312 U.S. 52"
+    ],
+    "cl_url": "/opinion/7333292/pa-dept-of-human-servs-v-us-dept-of-health-human-servs/",
+    "cl_cluster": 7333292,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects the holding in Hines v. Davidowitz, 312 U.S. 52 (1941), which addresses federal preemption of state alien registration laws under the Supremacy Clause and confirms that federal treaties and statutes governing aliens constitute supreme law.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The claimed quote is a significant paraphrase and rephrasing of the actual language found in Hines v. Davidowitz, particularly in its introductory and concluding phrases, and is not a verbatim quote.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SURETY",
+    "quote": "The liability of a surety is not to be extended, by implication, beyond the terms of his contract. To the extent, and in the manner, and under the circumstances, pointed out in his obligation, he is bound, and no further.",
+    "all_cites": [
+      "164 U.S. 227",
+      "22 U.S. "
+    ],
+    "primary_cite_pair": [
+      "Prairie State Bank v. United States",
+      "164 U.S. 227"
+    ],
+    "cl_url": "/opinion/10645361/us-bank-na-v-craft/",
+    "cl_cluster": 10645361,
+    "claude_verdict": "yes",
+    "claude_reason": "This quote accurately reflects the established common law principle regarding surety liability found in Prairie State Bank v. United States, 164 U.S. 227 (1897), which articulates the fundamental rule that a surety's obligations are strictly construed and limited to the express terms of the contract.",
+    "gemini_verdict": "no",
+    "gemini_reason": "The quote is accurately stated but is misattributed; it does not appear in Prairie State Bank v. United States, 164 U.S. 227, but rather in Miller v. Stewart, 22 U.S. (9 Wheat.) 680, 702 (1824).",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "gemini_stricter"
+  },
+  {
+    "term": "SUSPECT CLASS",
+    "quote": "race, alienage, or national origin",
+    "all_cites": [
+      "473 U.S. 432",
+      "429 U.S. 190",
+      "473 U.S. "
+    ],
+    "primary_cite_pair": [
+      "City of Cleburne v. Cleburne Living Center, Inc.",
+      "473 U.S. 432"
+    ],
+    "cl_url": null,
+    "cl_cluster": null,
+    "claude_verdict": "no",
+    "claude_reason": "The citation contains multiple errors (conflicting page numbers: 429 U.S. 190 does not belong to City of Cleburne; 473 U.S. 432 is correct), and while City of Cleburne discusses suspect classifications, the exact phrase \"race, alienage, or national origin\" as a direct quote more accurately appears in cases like *Frontiero v. Richardson*, 411 U.S. 677 (1973), not Cleburne.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The claimed quote accurately lists the traditional suspect classes as stated by the Supreme Court in *City of Cleburne v. Cleburne Living Center, Inc.*, 473 U.S. 432, 440 (1985), despite the citation containing extraneous and incorrect information.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  },
+  {
+    "term": "TAXPAYER STANDING",
+    "quote": "establish a logical link between [his] status and the type of legislative enactment attacked",
+    "all_cites": [
+      "392 U.S. 83",
+      "551 U.S. 587",
+      "454 U.S. 464"
+    ],
+    "primary_cite_pair": [
+      "Flast v. Cohen",
+      "392 U.S. 83"
+    ],
+    "cl_url": "https://www.courtlistener.com/opinion/8170924/tuccio-v-us-sec-assocs-inc/",
+    "cl_cluster": 8170924,
+    "claude_verdict": "no",
+    "claude_reason": "The citation is implausible as written\u2014it lists three different U.S. Reports volumes (392, 551, and 454) for a single case, which is impossible; the accurate citation is Flast v. Cohen, 392 U.S. 83 (1968), and while the quoted language does appear in that decision regarding taxpayer standing doctrine, the malformed citation with multiple contradictory volume numbers indicates either serious citation error or fabrication of the source reference.",
+    "gemini_verdict": "yes",
+    "gemini_reason": "The quote is a direct and accurate excerpt from Flast v. Cohen, 392 U.S. 83, specifically detailing the first prong of the taxpayer standing test, although the citation includes extraneous and incorrect references.",
+    "human_verdict": null,
+    "notes": "",
+    "disagreement_type": "claude_stricter"
+  }
+]

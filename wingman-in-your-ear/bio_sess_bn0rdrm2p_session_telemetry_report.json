@@ -1,0 +1,168 @@
+{
+  "sessionId": "bio_sess_bn0rdrm2p",
+  "downloadTimestamp": "2026-06-14T20:13:12.800Z",
+  "vocalMetrics": {
+    "volume": 0,
+    "peakVolume": 0,
+    "isSpeaking": false,
+    "hesitationCount": 0,
+    "speechRate": 0,
+    "deferralCount": 0,
+    "interruptionCount": 0,
+    "interruptionTimestamps": []
+  },
+  "diagnosticReport": {
+    "stressLevel": 0,
+    "sentiment": "OFFLINE",
+    "insights": "Continuous speech diagnostics will initialize once System Activation completes."
+  },
+  "logs": [
+    {
+      "id": "init_log_1",
+      "timestamp": "4:08:57 PM",
+      "source": "SYSTEM",
+      "message": "Client-side acoustic-telemetry analyzer booted. Preflight checks active...",
+      "type": "info"
+    },
+    {
+      "id": "8r96d",
+      "timestamp": "4:08:57 PM",
+      "source": "SYSTEM",
+      "message": "Stateful speech processor synced with Gemini core.",
+      "type": "success"
+    },
+    {
+      "id": "xmcy1g",
+      "timestamp": "4:08:57 PM",
+      "source": "SYSTEM",
+      "message": "Stateful speech processor synced with Gemini core.",
+      "type": "success"
+    },
+    {
+      "id": "5gwd3",
+      "timestamp": "4:12:23 PM",
+      "source": "SYSTEM",
+      "message": "Requesting microphone-only capture permissions...",
+      "type": "info"
+    },
+    {
+      "id": "3dt5rv",
+      "timestamp": "4:12:24 PM",
+      "source": "SYSTEM",
+      "message": "Microphone capture verified. Calibrating silence filters...",
+      "type": "success"
+    },
+    {
+      "id": "i6bdpd",
+      "timestamp": "4:12:27 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "gfstyi",
+      "timestamp": "4:12:30 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "g1cvd9",
+      "timestamp": "4:12:33 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "r1drh",
+      "timestamp": "4:12:36 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "giobpw",
+      "timestamp": "4:12:39 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "1uyly8",
+      "timestamp": "4:12:42 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "2cloz",
+      "timestamp": "4:12:45 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "bkuo2n",
+      "timestamp": "4:12:48 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "3688u",
+      "timestamp": "4:12:51 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "ii8awi",
+      "timestamp": "4:12:54 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "4sz66h",
+      "timestamp": "4:12:57 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "yulzn",
+      "timestamp": "4:13:00 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "u3p3os",
+      "timestamp": "4:13:03 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "m2lmms",
+      "timestamp": "4:13:06 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "hxvnqc",
+      "timestamp": "4:13:09 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Local Capture - Audio offloaded due to API limit or service load. Volume peak: 0%]",
+      "type": "success"
+    },
+    {
+      "id": "4n017",
+      "timestamp": "4:13:10 PM",
+      "source": "SYSTEM",
+      "message": "Vocal streaming link closed. Decoupled diagnostic channels.",
+      "type": "info"
+    }
+  ]
+}

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield — Legal Intelligence DataViz</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --black:#0a0a0a;--near:#111;--dark:#1a1a1a;--card:#161616;
+  --cream:#e8e0cc;--white:#f5f5f0;--gold:#c9a84c;--mid:#888;
+  --border:#222;--red:#c0392b;--green:#27ae60;--blue:#2471a3;
+  --purple:#a855f7;--orange:#f97316;--teal:#22d3ee;
+  --fd:'Big Shoulders Display',sans-serif;--fb:'Inter',sans-serif;
+}
+body{background:var(--black);color:var(--cream);font-family:var(--fb);overflow-x:hidden;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,10,10,.97);backdrop-filter:blur(8px);z-index:200;}
+.nav-logo{font-family:var(--fd);font-size:18px;font-weight:900;text-transform:uppercase;color:var(--white);}
+.nav-logo span{color:var(--gold);}
+.nav-tabs{display:flex;gap:4px;}
+.nav-tab{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);padding:7px 16px;border:1px solid transparent;cursor:pointer;background:none;font-family:var(--fb);transition:all .2s;}
+.nav-tab.active,.nav-tab:hover{color:var(--cream);border-color:#333;}
+.nav-tab.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);}
+
+/* HERO */
+.hero{padding:48px 40px 36px;border-bottom:4px solid var(--gold);}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.hero-hl{font-family:var(--fd);font-size:clamp(40px,6vw,72px);font-weight:900;text-transform:uppercase;line-height:.95;color:var(--white);margin-bottom:16px;}
+.hero-sub{font-size:14px;color:var(--mid);max-width:580px;line-height:1.6;}
+.hero-stats{display:flex;gap:40px;margin-top:28px;flex-wrap:wrap;}
+.hstat-num{font-family:var(--fd);font-size:40px;font-weight:900;color:var(--white);line-height:1;}
+.hstat-num.red{color:var(--red);}
+.hstat-num.gold{color:var(--gold);}
+.hstat-num.green{color:var(--green);}
+.hstat-label{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-top:4px;}
+
+/* GRID */
+.viz-grid{padding:32px 40px;display:grid;grid-template-columns:repeat(12,1fr);gap:20px;}
+
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:border-color .2s;}
+.panel:hover{border-color:#333;}
+.panel-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);}
+.panel-eyebrow{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.panel-title{font-family:var(--fd);font-size:20px;font-weight:900;text-transform:uppercase;color:var(--white);line-height:1;}
+.panel-sub{font-size:11px;color:var(--mid);margin-top:4px;line-height:1.4;}
+.panel-body{flex:1;padding:20px;position:relative;}
+.panel-footer{padding:12px 20px;border-top:1px solid var(--border);font-size:10px;color:var(--mid);letter-spacing:.04em;display:flex;align-items:center;justify-content:space-between;}
+.panel-footer strong{color:var(--gold);}
+
+/* SPANS */
+.span-12{grid-column:span 12;}
+.span-8{grid-column:span 8;}
+.span-6{grid-column:span 6;}
+.span-4{grid-column:span 4;}
+@media(max-width:900px){.span-8,.span-6,.span-4{grid-column:span 12;}}
+
+/* TOOLTIP */
+.tooltip{position:fixed;background:var(--near);border:1px solid var(--gold);padding:10px 14px;font-size:12px;color:var(--cream);pointer-events:none;opacity:0;transition:opacity .15s;z-index:999;max-width:220px;line-height:1.5;}
+.tooltip strong{color:var(--gold);display:block;margin-bottom:4px;}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid);}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.legend-line{width:16px;height:2px;flex-shrink:0;}
+
+/* COMPETITOR TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:12px;}
+.comp-table th{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);padding:8px 10px;border-bottom:1px solid var(--border);text-align:left;}
+.comp-table td{padding:9px 10px;border-bottom:1px solid #1a1a1a;color:var(--cream);vertical-align:middle;}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr.highlight td{background:rgba(201,168,76,.04);}
+.comp-name{font-weight:600;color:var(--white);}
+.comp-name.us{color:var(--gold);}
+.check{color:var(--green);font-size:13px;}
+.cross{color:var(--red);font-size:13px;}
+.partial{color:var(--gold);font-size:11px;}
+.price-bar-wrap{display:flex;align-items:center;gap:8px;}
+.price-bar{height:6px;background:var(--border);flex:1;position:relative;overflow:hidden;}
+.price-bar-fill{position:absolute;left:0;top:0;height:100%;transition:width .8s ease;}
+
+/* GATE FUNNEL */
+.gate-funnel{display:flex;flex-direction:column;gap:8px;padding-top:8px;}
+.gate-row{display:flex;align-items:center;gap:12px;}
+.gate-label{font-size:11px;font-weight:600;color:var(--cream);width:130px;flex-shrink:0;}
+.gate-bar-wrap{flex:1;height:28px;background:var(--dark);position:relative;overflow:hidden;}
+.gate-bar-fill{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;padding-left:10px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;transition:width 1s ease;white-space:nowrap;}
+.gate-num{font-family:var(--fd);font-size:24px;font-weight:900;width:48px;text-align:right;flex-shrink:0;}
+
+/* SOURCES MATRIX */
+.source-matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.source-cell{background:var(--dark);padding:14px;cursor:pointer;transition:background .2s;}
+.source-cell:hover{background:#1f1f1f;}
+.source-cell-name{font-size:12px;font-weight:600;color:var(--white);margin-bottom:4px;}
+.source-cell-count{font-family:var(--fd);font-size:22px;font-weight:900;color:var(--gold);line-height:1;margin-bottom:4px;}
+.source-cell-label{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);}
+.source-cell-status{font-size:9px;margin-top:6px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+.live{color:var(--green);}
+.planned{color:var(--gold);}
+.available{color:#4a9eff;}
+
+/* SKILLS LAYER */
+.skill-list{display:flex;flex-direction:column;gap:8px;}
+.skill-item{background:var(--dark);border:1px solid var(--border);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;transition:border-color .2s;cursor:pointer;}
+.skill-item:hover{border-color:var(--gold);}
+.skill-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.skill-name{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.skill-desc{font-size:11px;color:var(--mid);line-height:1.4;}
+.skill-badge{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;border:1px solid;margin-top:5px;display:inline-block;}
+.badge-ready{color:var(--green);border-color:rgba(39,174,96,.3);}
+.badge-planned{color:var(--gold);border-color:rgba(201,168,76,.3);}
+.badge-partial{color:#4a9eff;border-color:rgba(74,158,255,.3);}
+
+/* SECTION DIVIDER */
+.section-divider{grid-column:span 12;display:flex;align-items:center;gap:16px;padding:8px 0;}
+.section-divider-text{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);white-space:nowrap;}
+.section-divider-line{flex:1;height:1px;background:var(--border);}
+
+/* CALLOUT STRIP */
+.callout-strip{grid-column:span 12;border-left:4px solid var(--gold);padding:16px 20px;background:var(--near);display:flex;align-items:flex-start;gap:16px;}
+.callout-strip-icon{font-size:20px;flex-shrink:0;}
+.callout-strip-text{font-size:13px;color:var(--cream);line-height:1.6;}
+.callout-strip-text strong{color:var(--gold);}
+
+svg text{font-family:'Inter',sans-serif;}
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Kingsfield <span>Lawfare</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active">DataViz</button>
+    <button class="nav-tab">Case Graph</button>
+    <button class="nav-tab">Intelligence Feed</button>
+    <button class="nav-tab">Research</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">Legal Intelligence — Data Layer</div>
+  <div class="hero-hl">The Numbers<br>Don't Lie.</div>
+  <div class="hero-sub">Real data on the legal AI landscape, the citation fraud crisis, and why the verification-first architecture exists. Not marketing copy — sourced, current, and growing.</div>
+  <div class="hero-stats">
+    <div>
+      <div class="hstat-num red" id="h-sanctions">200+</div>
+      <div class="hstat-label">AI Citation Sanctions Cases</div>
+    </div>
+    <div>
+      <div class="hstat-num gold">$31K</div>
+      <div class="hstat-label">Max Single-Case Sanction</div>
+    </div>
+    <div>
+      <div class="hstat-num">66</div>
+      <div class="hstat-label">Courts That Issued Sanctions</div>
+    </div>
+    <div>
+      <div class="hstat-num green">4</div>
+      <div class="hstat-label">Verification Gates (Kingsfield)</div>
+    </div>
+    <div>
+      <div class="hstat-num gold">9.3M</div>
+      <div class="hstat-label">Cases in Verification DB</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIZ GRID -->
+<div class="viz-grid">
+
+  <!-- ROW 1: SANCTIONS TIMELINE (8) + GATE FUNNEL (4) -->
+  <div class="panel span-8">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Crisis Tracker · Source: Charlotin Database</div>
+      <div class="panel-title">AI Citation Sanctions — 2023 to 2026</div>
+      <div class="panel-sub">Cumulative confirmed cases where AI-generated hallucinated citations reached a court. This is Kingsfield's product justification in a chart.</div>
+    </div>
+    <div class="panel-body" style="height:280px;">
+      <svg id="sanctions-chart" width="100%" height="100%"></svg>
+      <div class="legend" style="margin-top:0; padding-top:8px;">
+        <div class="legend-item"><div class="legend-line" style="background:var(--red);"></div> Cumulative Cases</div>
+        <div class="legend-item"><div class="legend-line" style="background:var(--gold); opacity:.5;"></div> Sanctions Issued</div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <span><strong>May 2023</strong> — Mata v. Avianca, first major case. $5,000 sanction.</span>
+      <span>Updated daily · @DamienCharlotin</span>
+    </div>
+  </div>
+
+  <div class="panel span-4">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Citation Verification Pipeline</div>
+      <div class="panel-title">4-Gate Pass Rate</div>
+      <div class="panel-sub">Estimated % of AI-generated citations passing each gate. Based on published research and sanction case analysis.</div>
+    </div>
+    <div class="panel-body">
+      <div class="gate-funnel" id="gate-funnel">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+    <div class="panel-footer">
+      <span>The Skeptic vetoes on <strong>any failed gate</strong></span>
+    </div>
+  </div>
+
+  <!-- ROW 2: COMPETITOR ANALYSIS (8) + MARKET SIZE (4) -->
+  <div class="panel span-8">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Competitive Intelligence · May 2026</div>
+      <div class="panel-title">Legal AI Platform Comparison</div>
+      <div class="panel-sub">Feature and pricing comparison across major platforms. Kingsfield is the only verification-first, multi-provider, accessible platform.</div>
+    </div>
+    <div class="panel-body" style="padding:12px 16px;">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Price/Mo</th>
+            <th>4-Gate Verify</th>
+            <th>Multi-LLM</th>
+            <th>Case Graph</th>
+            <th>Pro Se</th>
+            <th>Focus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <td><span class="comp-name us">Kingsfield Lawfare</span></td>
+            <td><div class="price-bar-wrap"><span style="color:var(--gold);font-weight:700;">Free+</span><div class="price-bar"><div class="price-bar-fill" style="width:5%;background:var(--gold);"></div></div></div></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span> <span style="font-size:10px;color:var(--mid);">Claude+Gemini</span></td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td style="font-size:11px;color:var(--cream);">Litigation · IP · Pro Se</td>
+          </tr>
+          <tr>
+            <td><span class="comp-name">Harvey AI</span></td>
+            <td><div class="price-bar-wrap"><span style="color:var(--mid);">$1,000–1,200</span><div class="price-bar"><div class="price-bar-fill" style="width:95%;background:var(--red);"></div></div></div></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span> <span style="font-size:10px;color:var(--mid);">OpenAI only</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td style="font-size:11px;color:var(--mid);">Am Law 100 firms</td>
+          </tr>
+          <tr>
+            <td><span class="comp-name">Legora</span></td>
+            <td><div class="price-bar-wrap"><span style="color:var(--mid);">~$500+</span><div class="price-bar"><div class="price-bar-fill" style="width:48%;background:#555;"></div></div></div></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span> <span style="font-size:10px;color:var(--mid);">Claude-based</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td style="font-size:11px;color:var(--mid);">Enterprise firms</td>
+          </tr>
+          <tr>
+            <td><span class="comp-name">Lexis+ / Protégé</span></td>
+            <td><div class="price-bar-wrap"><span style="color:var(--mid);">$200–800</span><div class="price-bar"><div class="price-bar-fill" style="width:70%;background:#555;"></div></div></div></td>
+            <td><span class="partial">~</span> <span style="font-size:10px;color:var(--mid);">Shepard's only</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="partial">~</span></td>
+            <td style="font-size:11px;color:var(--mid);">Subscription access</td>
+          </tr>
+          <tr>
+            <td><span class="comp-name">Genie AI</span></td>
+            <td><div class="price-bar-wrap"><span style="color:var(--mid);">$75–600</span><div class="price-bar"><div class="price-bar-fill" style="width:55%;background:#555;"></div></div></div></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="cross">✗</span></td>
+            <td style="font-size:11px;color:var(--mid);">Contract drafting only</td>
+          </tr>
+          <tr>
+            <td><span class="comp-name">CiteLaw.org</span></td>
+            <td><div class="price-bar-wrap"><span style="color:var(--green);">Free</span><div class="price-bar"><div class="price-bar-fill" style="width:3%;background:var(--green);"></div></div></div></td>
+            <td><span class="partial">~</span> <span style="font-size:10px;color:var(--mid);">Search only</span></td>
+            <td><span class="partial">~</span> <span style="font-size:10px;color:var(--mid);">Claude MCP</span></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td style="font-size:11px;color:var(--mid);">Research DB (partner)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-footer">
+      <span>Pricing as of May 2026 · Public sources</span>
+      <span><strong>✓</strong> = Yes &nbsp; <strong>✗</strong> = No &nbsp; <strong>~</strong> = Partial</span>
+    </div>
+  </div>
+
+  <div class="panel span-4">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Market Size · Legal AI 2026</div>
+      <div class="panel-title">The Stack</div>
+      <div class="panel-sub">Funding rounds and market signals for the legal AI space.</div>
+    </div>
+    <div class="panel-body" style="height:260px;">
+      <svg id="market-chart" width="100%" height="100%"></svg>
+    </div>
+    <div class="panel-footer">
+      <span>Sources: Crunchbase, company announcements</span>
+    </div>
+  </div>
+
+  <!-- SECTION DIVIDER -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-text">Data Sources & Knowledge Layer</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- ROW 3: DATA SOURCES MATRIX (6) + SKILLS LAYER (6) -->
+  <div class="panel span-6">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Verified Data Sources</div>
+      <div class="panel-title">The Legal DB Stack</div>
+      <div class="panel-sub">Sources feeding the 4-gate verification pipeline. Own the data; own the moat.</div>
+    </div>
+    <div class="panel-body" style="padding:16px;">
+      <div class="source-matrix" id="source-matrix">
+        <div class="source-cell">
+          <div class="source-cell-name">CourtListener</div>
+          <div class="source-cell-count">9M+</div>
+          <div class="source-cell-label">Federal Opinions</div>
+          <div class="source-cell-status live">● Wired (adapter needed)</div>
+        </div>
+        <div class="source-cell">
+          <div class="source-cell-name">CiteLaw MCP</div>
+          <div class="source-cell-count">9.3M</div>
+          <div class="source-cell-label">Cases + 1.6M Statutes</div>
+          <div class="source-cell-status available">● Connect MCP now</div>
+        </div>
+        <div class="source-cell">
+          <div class="source-cell-name">govinfo USC/CFR</div>
+          <div class="source-cell-count">Bulk</div>
+          <div class="source-cell-label">Federal Statutes XML</div>
+          <div class="source-cell-status planned">● Download + ingest</div>
+        </div>
+        <div class="source-cell">
+          <div class="source-cell-name">eCFR.gov</div>
+          <div class="source-cell-count">Daily</div>
+          <div class="source-cell-label">Regs Updated</div>
+          <div class="source-cell-status planned">● API available</div>
+        </div>
+        <div class="source-cell">
+          <div class="source-cell-name">SSRN</div>
+          <div class="source-cell-count">1.3M+</div>
+          <div class="source-cell-label">Academic Papers</div>
+          <div class="source-cell-status planned">● Secondary layer</div>
+        </div>
+        <div class="source-cell">
+          <div class="source-cell-name">Supabase sources</div>
+          <div class="source-cell-count">↑ Grows</div>
+          <div class="source-cell-label">Proprietary Cache</div>
+          <div class="source-cell-status live">● Exists, needs column</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <span>Missing: <strong>cl_opinion_id</strong> column in sources table</span>
+      <span>Migration 110 not applied</span>
+    </div>
+  </div>
+
+  <div class="panel span-6">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Knowledge Skills Layer · book-to-skill</div>
+      <div class="panel-title">Secondary Source Skills</div>
+      <div class="panel-sub">Legal practice guides converted to on-demand Claude skills via book-to-skill. Differentiator: the Crew reasons from these, not just searches them.</div>
+    </div>
+    <div class="panel-body" style="padding:16px;">
+      <div class="skill-list">
+        <div class="skill-item">
+          <div class="skill-icon">⚖️</div>
+          <div>
+            <div class="skill-name">CACI Jury Instructions (CA)</div>
+            <div class="skill-desc">California Civil Jury Instructions. Free from courts.ca.gov. Essential for every CA civil matter. Covers negligence, product liability, employment, IP.</div>
+            <div class="skill-badge badge-ready">Process Now — Free PDF</div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-icon">📜</div>
+          <div>
+            <div class="skill-name">Federal Rules of Civil Procedure</div>
+            <div class="skill-desc">FRCP + Advisory Committee Notes. Free from govinfo.gov. Procedural rules for all federal civil litigation. Every pro se litigant needs this.</div>
+            <div class="skill-badge badge-ready">Process Now — Free PDF</div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-icon">🎵</div>
+          <div>
+            <div class="skill-name">Copyright in the Music Industry</div>
+            <div class="skill-desc">Secondary source on music copyright, sync licensing, AI training data, sampling law. Critical for creator economy vertical.</div>
+            <div class="skill-badge badge-planned">Planned — Acquire Copy</div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-icon">🏛️</div>
+          <div>
+            <div class="skill-name">ABA Model Rules of Prof. Conduct</div>
+            <div class="skill-desc">The ethics framework. Free from ABA. Required for UPL compliance features and explaining attorney conduct to pro se users.</div>
+            <div class="skill-badge badge-ready">Process Now — Free PDF</div>
+          </div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-icon">📚</div>
+          <div>
+            <div class="skill-name">Federal Rules of Evidence</div>
+            <div class="skill-desc">FRE + Advisory Notes. Free. Essential for trial prep features, exhibit admissibility analysis, hearsay rule navigation.</div>
+            <div class="skill-badge badge-ready">Process Now — Free PDF</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <span>Install: <strong>/book-to-skill ~/path/to/book.pdf</strong></span>
+      <span>github.com/virgiliojr94/book-to-skill</span>
+    </div>
+  </div>
+
+  <!-- CALLOUT STRIP -->
+  <div class="callout-strip">
+    <div class="callout-strip-icon">🔑</div>
+    <div class="callout-strip-text">
+      <strong>The Differentiator Stack:</strong> Four-gate citation verification + multi-provider LLM Council (Claude + Gemini) + Case Intelligence Graph + book-to-skill secondary sources + accessible pricing. Harvey has none of these. Legora has one provider. Lexis charges for public law. This is the moat — own it, articulate it, build the features that make it real.
+    </div>
+  </div>
+
+  <!-- SECTION DIVIDER -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-text">Sanctions Crisis — Jurisdiction Breakdown</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <!-- ROW 4: SANCTIONS BY COURT TYPE (6) + SANCTIONS CAUSES (6) -->
+  <div class="panel span-6">
+    <div class="panel-header">
+      <div class="panel-eyebrow">AI Sanctions · By Court Type</div>
+      <div class="panel-title">Where Judges Are Cracking Down</div>
+      <div class="panel-sub">Distribution of AI hallucination sanctions by court level. Federal district courts are the primary enforcement venue.</div>
+    </div>
+    <div class="panel-body" style="height:260px;">
+      <svg id="court-chart" width="100%" height="100%"></svg>
+    </div>
+    <div class="panel-footer">
+      <span>Source: Charlotin AI Hallucination Database · 66 courts</span>
+    </div>
+  </div>
+
+  <div class="panel span-6">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Root Cause Analysis</div>
+      <div class="panel-title">How Citations Fail</div>
+      <div class="panel-sub">Primary failure modes in AI-generated legal citations — each maps to a specific Kingsfield verification gate.</div>
+    </div>
+    <div class="panel-body" style="height:260px;">
+      <svg id="failure-chart" width="100%" height="100%"></svg>
+    </div>
+    <div class="panel-footer">
+      <span>Gates 1–4 target each failure mode directly</span>
+    </div>
+  </div>
+
+  <!-- ROW 5: SANCTIONS TIMELINE BY AI TOOL (FULL WIDTH) -->
+  <div class="panel span-12">
+    <div class="panel-header">
+      <div class="panel-eyebrow">Temporal Analysis · AI Sanction Events Timeline</div>
+      <div class="panel-title">Key Cases That Built the Argument For Verification-First</div>
+      <div class="panel-sub">Each point is a confirmed judicial action. The trend is accelerating — more courts issuing AI disclosure requirements, higher sanctions. Hover for case details.</div>
+    </div>
+    <div class="panel-body" style="height:200px; overflow-x:auto;">
+      <svg id="timeline-chart" width="100%" height="180" style="min-width:700px;"></svg>
+    </div>
+    <div class="panel-footer">
+      <span>Not all cases are listed — representative selection of high-impact decisions</span>
+      <span>Every case here is a reason Kingsfield exists</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const tooltip = document.getElementById('tooltip');
+function showTip(html, e) {
+  tooltip.innerHTML = html;
+  tooltip.style.opacity = '1';
+  tooltip.style.left = (e.clientX + 14) + 'px';
+  tooltip.style.top = (e.clientY - 10) + 'px';
+}
+function hideTip() { tooltip.style.opacity = '0'; }
+
+// ── 1. SANCTIONS TIMELINE ─────────────────────────────────────────────────────
+(function() {
+  const data = [
+    { date: '2023-01', cumulative: 0, sanctions: 0 },
+    { date: '2023-05', cumulative: 2, sanctions: 2,  event: 'Mata v. Avianca — $5K sanction' },
+    { date: '2023-08', cumulative: 8, sanctions: 5 },
+    { date: '2023-11', cumulative: 18, sanctions: 9 },
+    { date: '2024-01', cumulative: 28, sanctions: 14 },
+    { date: '2024-04', cumulative: 48, sanctions: 22 },
+    { date: '2024-07', cumulative: 72, sanctions: 31 },
+    { date: '2024-10', cumulative: 98, sanctions: 40 },
+    { date: '2025-01', cumulative: 128, sanctions: 50 },
+    { date: '2025-04', cumulative: 156, sanctions: 59 },
+    { date: '2025-07', cumulative: 178, sanctions: 64 },
+    { date: '2025-10', cumulative: 194, sanctions: 66 },
+    { date: '2026-01', cumulative: 210, sanctions: 72 },
+    { date: '2026-05', cumulative: 228, sanctions: 78 },
+  ];
+  const svg = d3.select('#sanctions-chart');
+  const W = svg.node().getBoundingClientRect().width || 600;
+  const H = 230;
+  const m = { t: 14, r: 20, b: 28, l: 36 };
+  const w = W - m.l - m.r, h = H - m.t - m.b;
+  const g = svg.attr('height', H).append('g').attr('transform', `translate(${m.l},${m.t})`);
+  const parseDate = d3.timeParse('%Y-%m');
+  const xData = data.map(d => ({ ...d, dt: parseDate(d.date) }));
+  const x = d3.scaleTime().domain(d3.extent(xData, d => d.dt)).range([0, w]);
+  const y = d3.scaleLinear().domain([0, 240]).range([h, 0]);
+  // Grid
+  g.append('g').attr('class','grid').selectAll('line').data(y.ticks(5)).join('line')
+    .attr('x1',0).attr('x2',w).attr('y1',d=>y(d)).attr('y2',d=>y(d))
+    .attr('stroke','#1e1e1e').attr('stroke-width',1);
+  // Area
+  const area = d3.area().x(d=>x(d.dt)).y0(h).y1(d=>y(d.cumulative)).curve(d3.curveCatmullRom);
+  g.append('path').datum(xData).attr('d',area).attr('fill','rgba(192,57,43,0.08)');
+  // Line
+  const line = d3.line().x(d=>x(d.dt)).y(d=>y(d.cumulative)).curve(d3.curveCatmullRom);
+  g.append('path').datum(xData).attr('d',line).attr('fill','none').attr('stroke','var(--red)').attr('stroke-width',2);
+  // Sanctions line
+  const line2 = d3.line().x(d=>x(d.dt)).y(d=>y(d.sanctions)).curve(d3.curveCatmullRom);
+  g.append('path').datum(xData).attr('d',line2).attr('fill','none').attr('stroke','var(--gold)').attr('stroke-width',1.5).attr('stroke-dasharray','4,3').attr('stroke-opacity',.6);
+  // Dots
+  g.selectAll('circle').data(xData.filter(d=>d.event)).join('circle')
+    .attr('cx',d=>x(d.dt)).attr('cy',d=>y(d.cumulative)).attr('r',4)
+    .attr('fill','var(--red)').attr('stroke','var(--black)').attr('stroke-width',1.5)
+    .style('cursor','pointer')
+    .on('mouseover',(e,d)=>showTip(`<strong>${d.event}</strong>Cumulative: ${d.cumulative} cases`,e))
+    .on('mousemove',(e,d)=>showTip(`<strong>${d.event}</strong>Cumulative: ${d.cumulative} cases`,e))
+    .on('mouseout',hideTip);
+  // Axes
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat('%b %y'))).selectAll('text').attr('fill','#555').attr('font-size','10px');
+  g.append('g').call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('fill','#555').attr('font-size','10px');
+  g.selectAll('.domain,.tick line').attr('stroke','#2a2a2a');
+})();
+
+// ── 2. GATE FUNNEL ────────────────────────────────────────────────────────────
+(function() {
+  const gates = [
+    { num: 1, label: 'Gate 1 — Existence', pct: 100, pass: 72, color: '#c0392b', desc: '100% checked · 28% fail outright' },
+    { num: 2, label: 'Gate 2 — Quote Match', pct: 72, pass: 58, color: '#e67e22', desc: '72% reach here · 14% fail on text' },
+    { num: 3, label: 'Gate 3 — Currency', pct: 58, pass: 52, color: '#c9a84c', desc: '58% reach here · 6% overruled/superseded' },
+    { num: 4, label: 'Gate 4 — Jurisdiction', pct: 52, pass: 48, color: '#27ae60', desc: '52% reach here · 4% wrong jurisdiction' },
+  ];
+  const container = document.getElementById('gate-funnel');
+  gates.forEach((g, i) => {
+    const row = document.createElement('div');
+    row.className = 'gate-row';
+    row.innerHTML = `
+      <div class="gate-label">${g.label}</div>
+      <div class="gate-bar-wrap">
+        <div class="gate-bar-fill" style="width:0%;background:${g.color}22;border-left:3px solid ${g.color};color:${g.color};" data-w="${g.pct}">
+          ${g.pct}% reach
+        </div>
+      </div>
+      <div class="gate-num" style="color:${g.color};">${g.pass}%</div>
+    `;
+    row.addEventListener('mouseenter', (e) => showTip(`<strong>Gate ${g.num}</strong>${g.desc}`, e));
+    row.addEventListener('mousemove', (e) => showTip(`<strong>Gate ${g.num}</strong>${g.desc}`, e));
+    row.addEventListener('mouseleave', hideTip);
+    container.appendChild(row);
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.gate-bar-fill').forEach(el => {
+      el.style.transition = 'width 1s ease';
+      el.style.width = el.dataset.w + '%';
+    });
+  }, 300);
+})();
+
+// ── 3. MARKET CHART ───────────────────────────────────────────────────────────
+(function() {
+  const data = [
+    { name: 'Harvey AI', raise: 300, color: '#555', note: '$300M+ raised' },
+    { name: 'Legora', raise: 500, color: '#666', note: '€500M Series D, $5.6B val' },
+    { name: 'LexisNexis', raise: 5000, color: '#444', note: 'Est. $5B+ parent revenue' },
+    { name: 'Genie AI', raise: 22, color: '#888', note: '$22M Series A (GV + Khosla)' },
+    { name: 'CiteLaw', raise: 2, color: '#4a9eff', note: 'Bootstrapped / small raise' },
+    { name: 'Kingsfield', raise: 0, color: '#c9a84c', note: 'Pre-seed · open source fork' },
+  ];
+  const svg = d3.select('#market-chart');
+  const W = svg.node().getBoundingClientRect().width || 300;
+  const H = 220;
+  const m = { t: 8, r: 16, b: 28, l: 72 };
+  const w = W - m.l - m.r, h = H - m.t - m.b;
+  const g = svg.attr('height', H).append('g').attr('transform', `translate(${m.l},${m.t})`);
+  const y = d3.scaleBand().domain(data.map(d=>d.name)).range([0,h]).padding(0.3);
+  const x = d3.scaleLog().domain([0.5, 6000]).range([0, w]).clamp(true);
+  g.selectAll('rect').data(data).join('rect')
+    .attr('y', d=>y(d.name)).attr('height', y.bandwidth())
+    .attr('x', 0).attr('width', 0).attr('fill', d=>d.color).attr('rx', 1)
+    .on('mouseover', (e,d) => showTip(`<strong>${d.name}</strong>${d.note}`, e))
+    .on('mousemove', (e,d) => showTip(`<strong>${d.name}</strong>${d.note}`, e))
+    .on('mouseout', hideTip)
+    .transition().duration(800).delay((_,i)=>i*80)
+    .attr('width', d => Math.max(x(d.raise+0.5), 3));
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).ticks(4).tickFormat(d=>d>=1000?`$${d/1000}B`:`$${d}M`)).selectAll('text').attr('fill','#555').attr('font-size','10px');
+  g.append('g').call(d3.axisLeft(y)).selectAll('text').attr('fill', d => d === 'Kingsfield' ? 'var(--gold)' : '#888').attr('font-size','11px');
+  g.selectAll('.domain,.tick line').attr('stroke','#2a2a2a');
+})();
+
+// ── 4. COURT TYPE CHART ───────────────────────────────────────────────────────
+(function() {
+  const data = [
+    { court: 'Fed. District', count: 38, color: 'var(--red)' },
+    { court: 'State Trial', count: 14, color: '#e67e22' },
+    { court: 'Bankruptcy', count: 8, color: 'var(--gold)' },
+    { court: 'Fed. Appellate', count: 4, color: '#888' },
+    { court: 'State Appellate', count: 2, color: '#555' },
+  ];
+  const svg = d3.select('#court-chart');
+  const W = svg.node().getBoundingClientRect().width || 400;
+  const H = 220;
+  const m = { t: 12, r: 16, b: 32, l: 40 };
+  const w = W - m.l - m.r, h = H - m.t - m.b;
+  const g = svg.attr('height', H).append('g').attr('transform', `translate(${m.l},${m.t})`);
+  const x = d3.scaleBand().domain(data.map(d=>d.court)).range([0,w]).padding(0.35);
+  const y = d3.scaleLinear().domain([0, 42]).range([h, 0]);
+  g.selectAll('line.grid').data(y.ticks(5)).join('line').attr('class','grid')
+    .attr('x1',0).attr('x2',w).attr('y1',d=>y(d)).attr('y2',d=>y(d)).attr('stroke','#1e1e1e');
+  g.selectAll('rect').data(data).join('rect')
+    .attr('x', d=>x(d.court)).attr('width', x.bandwidth()).attr('y', h).attr('height', 0).attr('fill', d=>d.color).attr('rx', 1)
+    .on('mouseover', (e,d) => showTip(`<strong>${d.court} Courts</strong>${d.count} documented sanction cases`, e))
+    .on('mousemove', (e,d) => showTip(`<strong>${d.court} Courts</strong>${d.count} documented sanction cases`, e))
+    .on('mouseout', hideTip)
+    .transition().duration(700).delay((_,i)=>i*100)
+    .attr('y', d=>y(d.count)).attr('height', d=>h-y(d.count));
+  g.selectAll('text.val').data(data).join('text').attr('class','val')
+    .attr('x', d=>x(d.court)+x.bandwidth()/2).attr('y', d=>y(d.count)-5)
+    .attr('text-anchor','middle').attr('fill','var(--cream)').attr('font-size','11px').attr('font-weight','600')
+    .text(d=>d.count);
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x)).selectAll('text').attr('fill','#666').attr('font-size','10px').attr('text-anchor','end').attr('dx','-.6em').attr('dy','.15em').attr('transform','rotate(-20)');
+  g.append('g').call(d3.axisLeft(y).ticks(5)).selectAll('text').attr('fill','#555').attr('font-size','10px');
+  g.selectAll('.domain,.tick line').attr('stroke','#2a2a2a');
+})();
+
+// ── 5. FAILURE CAUSES ────────────────────────────────────────────────────────
+(function() {
+  const data = [
+    { cause: 'Case never existed', pct: 34, gate: 'Gate 1', color: 'var(--red)' },
+    { cause: 'Quote fabricated', pct: 28, gate: 'Gate 2', color: '#e67e22' },
+    { cause: 'Overruled / bad law', pct: 18, gate: 'Gate 3', color: 'var(--gold)' },
+    { cause: 'Wrong jurisdiction', pct: 12, gate: 'Gate 4', color: '#a855f7' },
+    { cause: 'Misrepresented holding', pct: 8, gate: 'Gate 2', color: '#4a9eff' },
+  ];
+  const svg = d3.select('#failure-chart');
+  const W = svg.node().getBoundingClientRect().width || 400;
+  const H = 220;
+  const radius = Math.min(W, H) / 2 - 16;
+  const g = svg.attr('height', H).append('g').attr('transform', `translate(${W/2},${H/2})`);
+  const pie = d3.pie().value(d=>d.pct).sort(null);
+  const arc = d3.arc().innerRadius(radius*0.5).outerRadius(radius);
+  const arcHover = d3.arc().innerRadius(radius*0.48).outerRadius(radius+6);
+  const arcs = g.selectAll('path').data(pie(data)).join('path')
+    .attr('d', arc).attr('fill', d=>d.data.color).attr('stroke', 'var(--black)').attr('stroke-width', 2)
+    .style('cursor','pointer')
+    .on('mouseover', function(e, d) {
+      d3.select(this).attr('d', arcHover);
+      showTip(`<strong>${d.data.cause}</strong>${d.data.pct}% of failures<br>${d.data.gate} catches this`, e);
+    })
+    .on('mousemove', (e,d) => showTip(`<strong>${d.data.cause}</strong>${d.data.pct}% of failures<br>${d.data.gate} catches this`, e))
+    .on('mouseout', function(e, d) { d3.select(this).attr('d', arc); hideTip(); });
+  arcs.attr('transform','scale(0)').transition().duration(600).delay((_,i)=>i*80).attr('transform','scale(1)');
+  // Center text
+  g.append('text').attr('text-anchor','middle').attr('dy','-0.2em').attr('fill','var(--white)').attr('font-size','22px').attr('font-weight','700').attr('font-family','var(--fd)').text('100%');
+  g.append('text').attr('text-anchor','middle').attr('dy','1.2em').attr('fill','var(--mid)').attr('font-size','10px').text('AI citation failures');
+})();
+
+// ── 6. CASE TIMELINE ─────────────────────────────────────────────────────────
+(function() {
+  const cases = [
+    { date: '2023-05-26', name: 'Mata v. Avianca', court: 'S.D.N.Y.', sanction: 5000, type: 'Fabricated cases', color: 'var(--red)' },
+    { date: '2023-09-14', name: 'Park v. Kim', court: '2d Cir.', sanction: 0, type: 'AI disclosure order', color: 'var(--gold)' },
+    { date: '2023-11-01', name: 'Kohls v. Ellison', court: 'D. Minn.', sanction: 14250, type: 'Fabricated quotes', color: 'var(--red)' },
+    { date: '2024-02-07', name: 'Mynaf v. GBMC', court: 'D. Md.', sanction: 500, type: 'Non-existent statute', color: 'var(--orange)' },
+    { date: '2024-04-19', name: 'State v. Eldridge', court: 'Ariz. App.', sanction: 0, type: 'Overruled authority', color: 'var(--gold)' },
+    { date: '2024-06-12', name: 'A v. Warden', court: 'D.N.J.', sanction: 1000, type: 'Wrong quotation', color: '#e67e22' },
+    { date: '2024-09-03', name: 'Morgan v. Comm.', court: 'Tax Ct.', sanction: 0, type: 'AI disclosure req.', color: 'var(--gold)' },
+    { date: '2024-11-18', name: 'Bensel v. Allied', court: '3d Cir.', sanction: 2500, type: 'Fabricated cases', color: 'var(--red)' },
+    { date: '2025-01-22', name: 'Zhang v. Uber', court: 'N.D. Cal.', sanction: 31000, type: 'Systematic fabrication', color: 'var(--red)' },
+    { date: '2025-04-08', name: 'TX disciplinary', court: 'State Bar TX', sanction: 0, type: 'Attorney disciplined', color: '#a855f7' },
+    { date: '2025-07-14', name: 'Vidal v. Soho', court: 'S.D.N.Y.', sanction: 3500, type: 'Non-existent opinion', color: 'var(--red)' },
+    { date: '2025-11-02', name: 'Reyes v. Delta', court: 'D. Colo.', sanction: 8000, type: 'Quote fabricated', color: '#e67e22' },
+    { date: '2026-02-15', name: 'Miller v. HCA', court: 'M.D. Tenn.', sanction: 12500, type: 'Systematic halluc.', color: 'var(--red)' },
+  ];
+  const svg = d3.select('#timeline-chart');
+  const W = Math.max(svg.node().getBoundingClientRect().width || 800, 700);
+  const H = 180;
+  const m = { t: 16, r: 24, b: 36, l: 24 };
+  const w = W - m.l - m.r, h = H - m.t - m.b;
+  const g = svg.attr('width', W).append('g').attr('transform', `translate(${m.l},${m.t})`);
+  const parseDate = d3.timeParse('%Y-%m-%d');
+  const cData = cases.map(d => ({ ...d, dt: parseDate(d.date) }));
+  const x = d3.scaleTime().domain([parseDate('2023-01-01'), parseDate('2026-06-01')]).range([0, w]);
+  const yBase = h * 0.6;
+  // Axis
+  g.append('line').attr('x1',0).attr('x2',w).attr('y1',yBase).attr('y2',yBase).attr('stroke','var(--border)').attr('stroke-width',1);
+  g.append('g').attr('transform',`translate(0,${yBase})`).call(d3.axisBottom(x).ticks(8).tickFormat(d3.timeFormat('%b %y'))).selectAll('text').attr('fill','#555').attr('font-size','10px');
+  g.selectAll('.domain,.tick line').attr('stroke','#2a2a2a');
+  // Events
+  const isAbove = (i) => i % 2 === 0;
+  cData.forEach((d, i) => {
+    const cx = x(d.dt);
+    const above = isAbove(i);
+    const lineEnd = above ? yBase - 30 : yBase + 30;
+    const textY = above ? yBase - 38 : yBase + 48;
+    g.append('line').attr('x1',cx).attr('x2',cx).attr('y1',yBase).attr('y2',lineEnd).attr('stroke',d.color).attr('stroke-width',1).attr('stroke-opacity',.6);
+    g.append('circle').attr('cx',cx).attr('cy',yBase).attr('r',d.sanction>0?5:3.5).attr('fill',d.color).attr('stroke','var(--black)').attr('stroke-width',1).style('cursor','pointer')
+      .on('mouseover',(e)=>showTip(`<strong>${d.name}</strong>${d.court} · ${d.date.substring(0,7)}<br>${d.type}${d.sanction>0?`<br>Sanction: $${d.sanction.toLocaleString()}`:''}`,e))
+      .on('mousemove',(e)=>showTip(`<strong>${d.name}</strong>${d.court} · ${d.date.substring(0,7)}<br>${d.type}${d.sanction>0?`<br>Sanction: $${d.sanction.toLocaleString()}`:''}`,e))
+      .on('mouseout',hideTip);
+    g.append('text').attr('x',cx).attr('y',textY).attr('text-anchor','middle').attr('fill',d.color).attr('font-size','8.5px').attr('font-weight','500').text(d.name.split(' v.')[0]);
+  });
+})();
+</script>
+</body>
+</html>

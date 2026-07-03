@@ -1,0 +1,11 @@
+name,neuro_event_type,other_event_types,n_subjects,n_timelines,n_hours,n_sentence_events,n_unique_sentence_events,n_word_events,n_unique_word_events,n_phoneme_events,n_unique_phoneme_events,n_sound_events,n_unique_sound_events,n_text_events,n_unique_text_events,n_image_events,n_unique_image_events,n_stimulus_events,n_unique_stimulus_events,n_button_events,n_unique_button_events
+Schoffelen2019,Meg,"['Sentence', 'Word']",195,195,218.14830555555557,46800.0,,535275.0,,,,,,,,,,,,,
+SchoffelenRead2019,Meg,"['Sentence', 'Word']",99,99,110.75221666666667,23760.0,,271755.0,,,,,,,,,,,,,
+SchoffelenListen2019,Meg,"['Sound', 'Sentence', 'Word', 'Phoneme']",96,96,65.52784444444444,21120.0,,242496.0,,1036896.0,,21120.0,,,,,,,,,
+Armeni2022,Meg,"['Text', 'Sound', 'Sentence', 'Word', 'Phoneme']",3,29,39.67521550925925,17980.0,,250038.0,,854340.0,,203.0,,203.0,,,,,,,
+Contier2022,Meg,['Image'],4,480,46.39988888888889,,,,,,,,,,,98880.0,,,,,
+Gwilliams2022,Meg,"['Sentence', 'Text', 'Word', 'Phoneme', 'Sound']",27,196,21.559945555555558,10192.0,,130928.0,,482552.0,,784.0,,784.0,,,,,,,
+TestMeg2023,Meg,"['Word', 'Image']",3,3,0.083325,,,12.0,,,,,,,,12.0,,,,,
+MneSample2013,Meg,['Stimulus'],1,1,0.07714130179158903,,,,,,,,,,,,,288.0,,,
+Pinet2024Meg,Meg,"['Word', 'Button', 'Sentence']",29,94,19.29645534939236,9118.0,,42676.0,,,,,,,,,,,,122012.0,
+Singer2023Meg,Meg,[],30,270,36.224999999999994,,,,,,,,,,,,,,,,

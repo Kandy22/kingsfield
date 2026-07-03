@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield — Case Intelligence Graph</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<style>
+  :root {
+    --black: #0a0a0a;
+    --near-black: #111111;
+    --card-bg: #161616;
+    --border: #2a2a2a;
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.15);
+    --cream: #e8e0cc;
+    --white: #f5f5f0;
+    --mid: #888;
+    --dim: #555;
+
+    --party:   #4a9eff;
+    --exhibit: #f97316;
+    --authority: #a855f7;
+    --statute:   #22d3ee;
+    --pleading:  #c9a84c;
+    --issue:     #ef4444;
+    --hub:       #f5f5f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--near-black);
+    flex-shrink: 0;
+    z-index: 20;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  .nav-brand span { color: var(--gold); }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a {
+    color: var(--mid);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+  .matter-badge {
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 28px;
+    border-bottom: 1px solid var(--border);
+    background: #0e0e0e;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .toolbar-label {
+    font-size: 11px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+  .filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--mid);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .filter-btn .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .filter-btn.active {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.18);
+    color: var(--white);
+  }
+  .filter-btn:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+
+  .toolbar-sep { width: 1px; height: 22px; background: var(--border); margin: 0 6px; }
+
+  .action-btn {
+    margin-left: auto;
+    padding: 5px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .action-btn:hover { background: var(--gold-dim); }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #graph {
+    flex: 1;
+    cursor: grab;
+  }
+  #graph:active { cursor: grabbing; }
+
+  /* ── SIDE PANEL ── */
+  .side-panel {
+    width: 0;
+    overflow: hidden;
+    background: var(--near-black);
+    border-left: 1px solid var(--border);
+    transition: width 0.25s ease;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .side-panel.open { width: 300px; }
+  .panel-inner { padding: 20px; min-width: 300px; }
+  .panel-type {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .panel-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .panel-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 14px 0;
+  }
+  .panel-meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .panel-meta-key { color: var(--dim); }
+  .panel-meta-val { color: var(--cream); font-weight: 500; }
+  .panel-desc {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  .panel-connections {
+    margin-top: 16px;
+  }
+  .panel-conn-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+  .conn-chip {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    margin: 3px 3px 3px 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--mid);
+    cursor: pointer;
+  }
+  .conn-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .panel-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--dim);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .panel-close:hover { color: var(--white); }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 7px 28px;
+    border-top: 1px solid var(--border);
+    background: var(--near-black);
+    font-size: 11px;
+    color: var(--dim);
+    flex-shrink: 0;
+  }
+  .status-item strong { color: var(--mid); font-weight: 600; }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  /* SVG styles injected via JS */
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Kingsfield <span>Lawfare</span></div>
+  <div class="nav-links">
+    <a href="#">Assistant</a>
+    <a href="#">Projects</a>
+    <a href="#">Case Law</a>
+    <a href="#">Intelligence</a>
+    <a href="#" class="active">Case Graph</a>
+  </div>
+  <div class="matter-badge">Chen v. Brooks — Active</div>
+</nav>
+
+<div class="toolbar">
+  <span class="toolbar-label">Filter</span>
+  <button class="filter-btn active" data-type="all" onclick="setFilter('all',this)">
+    <span class="dot" style="background:#f5f5f0"></span> All
+  </button>
+  <button class="filter-btn" data-type="party" onclick="setFilter('party',this)">
+    <span class="dot" style="background:var(--party)"></span> Parties
+  </button>
+  <button class="filter-btn" data-type="exhibit" onclick="setFilter('exhibit',this)">
+    <span class="dot" style="background:var(--exhibit)"></span> Exhibits
+  </button>
+  <button class="filter-btn" data-type="authority" onclick="setFilter('authority',this)">
+    <span class="dot" style="background:var(--authority)"></span> Authorities
+  </button>
+  <button class="filter-btn" data-type="statute" onclick="setFilter('statute',this)">
+    <span class="dot" style="background:var(--statute)"></span> Statutes
+  </button>
+  <button class="filter-btn" data-type="pleading" onclick="setFilter('pleading',this)">
+    <span class="dot" style="background:var(--pleading)"></span> Pleadings
+  </button>
+  <button class="filter-btn" data-type="issue" onclick="setFilter('issue',this)">
+    <span class="dot" style="background:var(--issue)"></span> Issues
+  </button>
+
+  <div class="toolbar-sep"></div>
+  <button class="action-btn" onclick="resetZoom()">Reset View</button>
+  <button class="action-btn" onclick="exportSVG()">Export PNG</button>
+</div>
+
+<div class="main">
+  <svg id="graph"></svg>
+
+  <div class="side-panel" id="sidePanel">
+    <div class="panel-inner" id="panelContent" style="position:relative;">
+      <button class="panel-close" onclick="closePanel()">×</button>
+      <div class="panel-type" id="panelType"></div>
+      <div class="panel-name" id="panelName"></div>
+      <div class="panel-divider"></div>
+      <div id="panelMeta"></div>
+      <div class="panel-desc" id="panelDesc"></div>
+      <div class="panel-connections" id="panelConnections"></div>
+    </div>
+  </div>
+</div>
+
+<div class="status-bar">
+  <span><span class="status-dot"></span>Graph live</span>
+  <span><strong id="statNodes">0</strong> nodes</span>
+  <span><strong id="statEdges">0</strong> connections</span>
+  <span><strong id="statFiltered">0</strong> visible</span>
+  <span style="margin-left:auto">CourtListener ✓ &nbsp;|&nbsp; 4-Gate Verification Active</span>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const nodes = [
+  // Hub / Docs
+  { id: 'case', label: 'Chen v. Brooks', type: 'hub', size: 22,
+    desc: 'Personal injury matter. Plaintiff alleges negligent driving causing TBI. Filed CA Superior Court, Los Angeles.',
+    meta: { Court: 'LA Superior', Filed: '2025-11-14', Status: 'Active — Pre-trial' } },
+  { id: 'fac', label: 'FAC v2', type: 'pleading', size: 16,
+    desc: 'First Amended Complaint — operative pleading. Four causes of action: negligence, negligence per se (VC 23123.5), negligent entrustment (BlueLine Logistics), loss of consortium.',
+    meta: { Filed: '2026-01-10', Pages: '24', Status: 'Operative' } },
+  { id: 'strat', label: 'Strategy Memo v1', type: 'pleading', size: 16,
+    desc: 'Internal strategy memo outlining theory of liability, anticipated MSJ, deposition priorities.',
+    meta: { Drafted: '2026-03-15', Author: 'Counsel', Status: 'Working draft' } },
+  { id: 'playbook', label: 'PLAYBOOK', type: 'pleading', size: 14,
+    desc: 'Trial playbook. Witness order, exhibit sequence, opening/closing themes.',
+    meta: { Version: '1.0', Updated: '2026-04-01' } },
+  { id: 'complaint', label: 'Original Complaint', type: 'pleading', size: 12,
+    desc: 'POS-010 — original complaint served Nov 2025. Superseded by FAC.',
+    meta: { Filed: '2025-11-14', Status: 'Superseded' } },
+  { id: 'msj-skel', label: 'MSJ Opposition', type: 'pleading', size: 12,
+    desc: 'Skeleton opposition to anticipated MSJ on comparative negligence grounds.',
+    meta: { Status: 'Draft skeleton' } },
+  { id: 'demand', label: 'Demand Letter Draft', type: 'pleading', size: 11,
+    desc: 'Pre-litigation demand — included in case file for negotiation context.',
+    meta: { Status: 'Draft' } },
+
+  // Parties
+  { id: 'chen', label: 'Sarah Chen', type: 'party', size: 14,
+    desc: 'Plaintiff. 34F. Software engineer. TBI from rear-end collision. Ongoing treatment with Dr. Patel and Dr. Vetter.',
+    meta: { Role: 'Plaintiff', DOB: '1991-08-20', Deposed: 'TBD' } },
+  { id: 'brooks-tom', label: 'Tom Brooks', type: 'party', size: 14,
+    desc: 'Defendant driver. Employee of BlueLine Logistics at time of collision. Was on cell phone (VC 23123.5 violation).',
+    meta: { Role: 'Defendant', Employer: 'BlueLine Logistics', Deposed: 'TBD' } },
+  { id: 'brooks-daniel', label: 'Daniel Brooks', type: 'party', size: 12,
+    desc: 'Co-defendant. Vehicle registered to Daniel Brooks — negligent entrustment theory.',
+    meta: { Role: 'Co-Defendant', Relation: 'Father of Tom Brooks' } },
+  { id: 'janet', label: 'Janet Walsh', type: 'party', size: 12,
+    desc: 'Percipient witness. Observed collision. Has given statement consistent with plaintiff account.',
+    meta: { Role: 'Witness', Statement: 'On file' } },
+  { id: 'blueline', label: 'BlueLine Logistics', type: 'party', size: 13,
+    desc: 'Employer of Tom Brooks. Deep-pocket defendant on respondeat superior theory. Subpoena served for employment records and telematics data.',
+    meta: { Role: 'Defendant', Theory: 'Respondeat superior / negligent hiring' } },
+  { id: 'marcus', label: 'Marcus Webb', type: 'party', size: 11,
+    desc: 'Defense witness. Disputed eyewitness — account inconsistent with physical evidence.',
+    meta: { Role: 'Defense Witness', Note: 'Credibility issue' } },
+  { id: 'officer', label: 'Officer Lisa Tran', type: 'party', size: 11,
+    desc: 'Responding officer. Filed traffic report. Will testify to scene conditions and citations issued.',
+    meta: { Role: 'Percipient Witness', Badge: 'LAPD #4471' } },
+
+  // Experts
+  { id: 'patel', label: 'Dr. Raj Patel', type: 'party', size: 13,
+    desc: 'Treating neurologist. TBI diagnosis. Will testify to causal nexus between collision and plaintiff injuries.',
+    meta: { Role: 'Treating Expert', Specialty: 'Neurology' } },
+  { id: 'vetter', label: 'Dr. Frank Vetter', type: 'party', size: 12,
+    desc: 'Retained expert. Biomechanical engineer. Force of impact → injury causation.',
+    meta: { Role: 'Retained Expert', Specialty: 'Biomechanics' } },
+  { id: 'park', label: 'Dr. Elena Park', type: 'party', size: 12,
+    desc: 'Defense expert neuropsychologist. Expected to challenge severity of TBI.',
+    meta: { Role: 'Defense Expert', Specialty: 'Neuropsychology' } },
+
+  // Exhibits
+  { id: 'ex-a', label: 'Exhibit A', type: 'exhibit', size: 10,
+    desc: 'Collision scene photographs. Taken day of incident by plaintiff.',
+    meta: { Date: '2025-09-03', Type: 'Photographs', Bates: 'P-0001–0047' } },
+  { id: 'ex-b', label: 'Exhibit B', type: 'exhibit', size: 10,
+    desc: 'Medical records — emergency department visit, Sept 2025.',
+    meta: { Provider: 'Cedars-Sinai ED', Bates: 'P-0048–0112' } },
+  { id: 'ex-c', label: 'Exhibit C', type: 'exhibit', size: 10,
+    desc: 'Dr. Patel treatment records, Oct 2025–present.',
+    meta: { Provider: 'UCLA Neurology', Bates: 'P-0113–0198' } },
+  { id: 'ex-d', label: 'Exhibit D', type: 'exhibit', size: 10,
+    desc: 'BlueLine Logistics employee records for Tom Brooks — hire date, job duties, cell phone policy.',
+    meta: { Source: 'BlueLine (subpoena)', Bates: 'D-BLL-0001–0042' } },
+  { id: 'ex-e', label: 'Exhibit E', type: 'exhibit', size: 10,
+    desc: 'Cell phone records. AT&T records subpoenaed. Active call at time of collision.',
+    meta: { Source: 'AT&T (subpoena)', Bates: 'D-ATT-0001–0018' } },
+  { id: 'ex-f', label: 'Exhibit F', type: 'exhibit', size: 10,
+    desc: 'Vehicle telematics data from BlueLine fleet GPS system.',
+    meta: { Source: 'BlueLine (subpoena)', Bates: 'D-BLL-0043–0071' } },
+  { id: 'ex-g', label: 'Exhibit G', type: 'exhibit', size: 10,
+    desc: 'Dr. Vetter biomechanical expert report.',
+    meta: { Date: '2026-02-28', Type: 'Expert Report', Bates: 'P-0199–0241' } },
+  { id: 'ex-h', label: 'Exhibit H', type: 'exhibit', size: 10,
+    desc: 'Police traffic report (Officer Tran). Notes cell phone observed.',
+    meta: { Date: '2025-09-03', CHP_Form: 'CHP 555', Bates: 'P-0242–0261' } },
+  { id: 'ex-j', label: 'Exhibit J', type: 'exhibit', size: 10,
+    desc: 'BlueLine negligent hiring documentation — prior citations for Tom Brooks not disclosed.',
+    meta: { Source: 'BlueLine (subpoena)', Bates: 'D-BLL-0072–0094' } },
+  { id: 'ex-k', label: 'Exhibit K', type: 'exhibit', size: 10,
+    desc: 'Special interrogatories response from Tom Brooks.',
+    meta: { Served: '2026-01-20', Type: 'Discovery' } },
+
+  // Authorities
+  { id: 'diaz', label: 'Diaz v. Carcamo (2011)', type: 'authority', size: 12,
+    desc: 'CA Supreme Court. Establishes employer vicarious liability for employee tortious acts — cornerstone of respondeat superior argument against BlueLine.',
+    meta: { Court: 'Cal. Supreme', Year: '2011', Status: '✅ Verified — Good law' } },
+  { id: 'rideau', label: 'Rideau v. LATL (1954)', type: 'authority', size: 11,
+    desc: 'CA appellate. Key comparative negligence precedent on going-and-coming rule exception.',
+    meta: { Court: 'Cal. App. 2d', Year: '1954', Status: '⚠️ Conditional — Check currency' } },
+  { id: 'lindstrom', label: 'Lindstrom v. Hertz (2000)', type: 'authority', size: 11,
+    desc: 'Negligent entrustment elements. Applied to establish liability of Daniel Brooks for entrusting vehicle to Tom.',
+    meta: { Court: 'Cal. App. 4th', Year: '2000', Status: '✅ Verified — Good law' } },
+  { id: 'hinman', label: 'Hinman v. Westinghouse (1970)', type: 'authority', size: 11,
+    desc: 'Going-and-coming rule and respondeat superior scope-of-employment analysis.',
+    meta: { Court: 'Cal. Supreme', Year: '1970', Status: '✅ Verified — Good law' } },
+  { id: 'hamilton', label: 'Hamilton v. Meris (2011)', type: 'authority', size: 11,
+    desc: 'Negligent hiring — employer duty to investigate driver history before deployment.',
+    meta: { Court: 'Cal. App. 2d', Year: '2011', Status: '✅ Verified — Good law' } },
+  { id: 'mary', label: 'Mary M. v. LA (1991)', type: 'authority', size: 11,
+    desc: 'Respondeat superior scope — employee on a "frolic" vs. within scope of employment.',
+    meta: { Court: 'Cal. Supreme', Year: '1991', Status: '✅ Verified — Good law' } },
+
+  // Statutes
+  { id: 'ccp335', label: 'CCP § 335.1', type: 'statute', size: 12,
+    desc: 'Two-year statute of limitations for personal injury. Complaint timely filed September 2025 for September 2023 collision.',
+    meta: { Code: 'CCP', Section: '335.1', Verified: 'eCFR ✓' } },
+  { id: 'ccp395', label: 'CCP § 395 — Venue', type: 'statute', size: 11,
+    desc: 'Venue proper in LA County — defendant resides and cause of action arose in county.',
+    meta: { Code: 'CCP', Section: '395', Verified: 'eCFR ✓' } },
+  { id: 'vc23123', label: 'VC § 23123.5', type: 'statute', size: 12,
+    desc: 'Handheld wireless device prohibition while driving. Negligence per se — AT&T records confirm active call at time of collision.',
+    meta: { Code: 'Veh. Code', Section: '23123.5', Verified: 'eCFR ✓' } },
+  { id: 'caci400', label: 'CACI 400 — Negligence', type: 'statute', size: 11,
+    desc: 'Standard negligence jury instruction. Applies to direct negligence claim against Tom Brooks.',
+    meta: { Code: 'CACI', Section: '400', Type: 'Jury Instruction' } },
+  { id: 'caci418', label: 'CACI 418 — Negligence Per Se', type: 'statute', size: 11,
+    desc: 'Negligence per se instruction — tied to VC 23123.5 violation.',
+    meta: { Code: 'CACI', Section: '418', Type: 'Jury Instruction' } },
+  { id: 'caci724', label: 'CACI 724 — Negligent Hiring', type: 'statute', size: 11,
+    desc: 'Negligent hiring jury instruction — tied to BlueLine hiring documentation.',
+    meta: { Code: 'CACI', Section: '724', Type: 'Jury Instruction' } },
+
+  // Issues
+  { id: 'issue-negl', label: 'Issue: Negligence', type: 'issue', size: 13,
+    desc: 'Primary liability theory. Tom Brooks was negligent in operation of vehicle.',
+    meta: { Strength: 'Strong', Gate: '✅ 4/4 Verified' } },
+  { id: 'issue-perSe', label: 'Issue: Negligence Per Se', type: 'issue', size: 12,
+    desc: 'VC 23123.5 violation — automatic negligence standard if violation established.',
+    meta: { Strength: 'Strong', Gate: '✅ 4/4 Verified' } },
+  { id: 'issue-vicarious', label: 'Issue: Vicarious Liability', type: 'issue', size: 12,
+    desc: 'Was Tom Brooks within scope of employment at time of collision?',
+    meta: { Strength: 'Medium', Gate: '⚠️ Disputed facts' } },
+  { id: 'issue-entrustment', label: 'Issue: Negligent Entrustment', type: 'issue', size: 12,
+    desc: 'Daniel Brooks knew or should have known of Tom Brooks’ driving history.',
+    meta: { Strength: 'Medium', Gate: '⚠️ Discovery ongoing' } },
+  { id: 'issue-causation', label: 'Issue: Causation', type: 'issue', size: 13,
+    desc: 'Contested by defense expert Dr. Park. Vetter biomechanical report directly rebuts.',
+    meta: { Strength: 'Contested', Gate: '⚠️ Expert dispute' } },
+  { id: 'issue-damages', label: 'Issue: Damages', type: 'issue', size: 12,
+    desc: 'TBI severity, wage loss, future care costs. Key battleground.',
+    meta: { Strength: 'TBD', Gate: 'In progress' } },
+
+  // Subpoenas / discovery
+  { id: 'sub-att', label: 'Subpoena — AT&T', type: 'pleading', size: 10,
+    desc: 'Subpoena to AT&T for Tom Brooks cell phone records on date of incident.',
+    meta: { Served: '2026-01-25', Status: 'Records received' } },
+  { id: 'sub-walgreens', label: 'Subpoena — Walgreens', type: 'pleading', size: 9,
+    desc: 'Subpoena to Walgreens pharmacy records for pre-existing condition investigation.',
+    meta: { Served: '2026-02-10', Status: 'Pending' } },
+  { id: 'rfa', label: 'RFA Set 1', type: 'pleading', size: 9,
+    desc: 'Requests for Admission, Set 1 — served on Tom Brooks.',
+    meta: { Served: '2026-01-20', Status: 'Responses received' } },
+  { id: 'rfa-blueline', label: 'RFP Set 1', type: 'pleading', size: 9,
+    desc: 'Requests for Production, Set 1 — served on BlueLine Logistics.',
+    meta: { Served: '2026-01-20', Status: 'Responses received' } },
+];
+
+const links = [
+  // Hub connections
+  { source: 'case', target: 'fac', weight: 3 },
+  { source: 'case', target: 'strat', weight: 3 },
+  { source: 'case', target: 'playbook', weight: 3 },
+  { source: 'case', target: 'complaint', weight: 2 },
+  { source: 'case', target: 'chen', weight: 3 },
+  { source: 'case', target: 'brooks-tom', weight: 3 },
+  { source: 'case', target: 'blueline', weight: 3 },
+  // Parties ↔ pleadings
+  { source: 'fac', target: 'chen', weight: 2 },
+  { source: 'fac', target: 'brooks-tom', weight: 2 },
+  { source: 'fac', target: 'brooks-daniel', weight: 2 },
+  { source: 'fac', target: 'blueline', weight: 2 },
+  { source: 'fac', target: 'issue-negl', weight: 2 },
+  { source: 'fac', target: 'issue-perSe', weight: 2 },
+  { source: 'fac', target: 'issue-vicarious', weight: 2 },
+  { source: 'fac', target: 'issue-entrustment', weight: 2 },
+  // Issues ↔ authorities
+  { source: 'issue-negl', target: 'caci400', weight: 2 },
+  { source: 'issue-negl', target: 'diaz', weight: 2 },
+  { source: 'issue-perSe', target: 'vc23123', weight: 3 },
+  { source: 'issue-perSe', target: 'caci418', weight: 2 },
+  { source: 'issue-perSe', target: 'ex-e', weight: 3 },
+  { source: 'issue-vicarious', target: 'hinman', weight: 2 },
+  { source: 'issue-vicarious', target: 'mary', weight: 2 },
+  { source: 'issue-vicarious', target: 'rideau', weight: 2 },
+  { source: 'issue-vicarious', target: 'diaz', weight: 2 },
+  { source: 'issue-entrustment', target: 'lindstrom', weight: 2 },
+  { source: 'issue-entrustment', target: 'hamilton', weight: 2 },
+  { source: 'issue-entrustment', target: 'caci724', weight: 2 },
+  { source: 'issue-entrustment', target: 'brooks-daniel', weight: 2 },
+  { source: 'issue-causation', target: 'vetter', weight: 3 },
+  { source: 'issue-causation', target: 'park', weight: 2 },
+  { source: 'issue-causation', target: 'patel', weight: 3 },
+  { source: 'issue-damages', target: 'patel', weight: 2 },
+  { source: 'issue-damages', target: 'vetter', weight: 2 },
+  // Exhibits ↔ parties
+  { source: 'brooks-tom', target: 'ex-e', weight: 3 },
+  { source: 'brooks-tom', target: 'ex-h', weight: 2 },
+  { source: 'brooks-tom', target: 'ex-k', weight: 2 },
+  { source: 'brooks-tom', target: 'ex-d', weight: 2 },
+  { source: 'brooks-tom', target: 'sub-att', weight: 2 },
+  { source: 'chen', target: 'ex-a', weight: 2 },
+  { source: 'chen', target: 'ex-b', weight: 2 },
+  { source: 'chen', target: 'ex-c', weight: 2 },
+  { source: 'blueline', target: 'ex-d', weight: 2 },
+  { source: 'blueline', target: 'ex-f', weight: 2 },
+  { source: 'blueline', target: 'ex-j', weight: 2 },
+  { source: 'blueline', target: 'rfa-blueline', weight: 2 },
+  { source: 'brooks-daniel', target: 'issue-entrustment', weight: 2 },
+  // Experts
+  { source: 'patel', target: 'ex-c', weight: 2 },
+  { source: 'vetter', target: 'ex-g', weight: 3 },
+  { source: 'park', target: 'issue-causation', weight: 2 },
+  // Statutes
+  { source: 'fac', target: 'ccp335', weight: 2 },
+  { source: 'fac', target: 'ccp395', weight: 2 },
+  { source: 'vc23123', target: 'ex-e', weight: 2 },
+  { source: 'officer', target: 'ex-h', weight: 2 },
+  { source: 'officer', target: 'brooks-tom', weight: 2 },
+  { source: 'janet', target: 'case', weight: 2 },
+  { source: 'marcus', target: 'case', weight: 1 },
+  { source: 'msj-skel', target: 'strat', weight: 2 },
+  { source: 'msj-skel', target: 'issue-vicarious', weight: 2 },
+  { source: 'demand', target: 'case', weight: 1 },
+  { source: 'sub-att', target: 'ex-e', weight: 2 },
+  { source: 'sub-walgreens', target: 'chen', weight: 1 },
+  { source: 'rfa', target: 'brooks-tom', weight: 2 },
+  { source: 'strat', target: 'issue-negl', weight: 2 },
+  { source: 'strat', target: 'issue-vicarious', weight: 2 },
+  { source: 'strat', target: 'issue-causation', weight: 2 },
+  { source: 'playbook', target: 'strat', weight: 2 },
+  { source: 'playbook', target: 'chen', weight: 1 },
+  { source: 'playbook', target: 'patel', weight: 1 },
+  { source: 'playbook', target: 'vetter', weight: 1 },
+];
+
+// ── COLORS ─────────────────────────────────────────────────────────────────────
+const typeColors = {
+  hub:       '#f5f5f0',
+  party:     '#4a9eff',
+  exhibit:   '#f97316',
+  authority: '#a855f7',
+  statute:   '#22d3ee',
+  pleading:  '#c9a84c',
+  issue:     '#ef4444',
+};
+const typeLabels = {
+  hub: 'Matter Hub', party: 'Party / Person', exhibit: 'Exhibit',
+  authority: 'Case Authority', statute: 'Statute / CACI', pleading: 'Pleading / Discovery',
+  issue: 'Legal Issue',
+};
+
+let currentFilter = 'all';
+let simulation;
+let svgEl, linkGroup, nodeGroup, zoomBehavior;
+let selectedNode = null;
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+function init() {
+  const svg = d3.select('#graph');
+  const container = document.getElementById('graph');
+  const W = container.clientWidth, H = container.clientHeight;
+
+  svgEl = svg;
+  svg.attr('width', W).attr('height', H);
+
+  // Glow filter
+  const defs = svg.append('defs');
+  ['party','exhibit','authority','statute','pleading','issue','hub'].forEach(t => {
+    const f = defs.append('filter').attr('id', `glow-${t}`).attr('x','-40%').attr('y','-40%').attr('width','180%').attr('height','180%');
+    f.append('feGaussianBlur').attr('stdDeviation', '3').attr('result','coloredBlur');
+    const fm = f.append('feMerge');
+    fm.append('feMergeNode').attr('in','coloredBlur');
+    fm.append('feMergeNode').attr('in','SourceGraphic');
+  });
+
+  const g = svg.append('g').attr('id','mainGroup');
+
+  zoomBehavior = d3.zoom().scaleExtent([0.2, 4]).on('zoom', (e) => {
+    g.attr('transform', e.transform);
+  });
+  svg.call(zoomBehavior);
+
+  linkGroup = g.append('g').attr('id','links');
+  nodeGroup = g.append('g').attr('id','nodes');
+
+  buildGraph(W, H);
+  updateStats();
+}
+
+function buildGraph(W, H) {
+  const visibleNodes = currentFilter === 'all'
+    ? nodes
+    : nodes.filter(n => n.type === currentFilter || n.type === 'hub');
+  const visibleIds = new Set(visibleNodes.map(n => n.id));
+  const visibleLinks = links.filter(l => visibleIds.has(l.source.id || l.source) && visibleIds.has(l.target.id || l.target));
+
+  simulation = d3.forceSimulation(visibleNodes)
+    .force('link', d3.forceLink(visibleLinks).id(d => d.id).distance(d => 90 / (d.weight || 1) + 60))
+    .force('charge', d3.forceManyBody().strength(-260))
+    .force('center', d3.forceCenter(W / 2, H / 2))
+    .force('collision', d3.forceCollide().radius(d => d.size + 14));
+
+  // Links
+  const link = linkGroup.selectAll('line').data(visibleLinks)
+    .join('line')
+    .attr('stroke', '#2a2a2a')
+    .attr('stroke-width', d => Math.sqrt(d.weight || 1))
+    .attr('stroke-opacity', 0.7);
+
+  // Nodes
+  const node = nodeGroup.selectAll('g.node').data(visibleNodes, d => d.id)
+    .join(
+      enter => {
+        const g = enter.append('g').attr('class','node').style('cursor','pointer');
+        g.append('circle');
+        g.append('text');
+        return g;
+      }
+    );
+
+  node.select('circle')
+    .attr('r', d => d.size)
+    .attr('fill', d => typeColors[d.type] + (d.type === 'hub' ? '' : '22'))
+    .attr('stroke', d => typeColors[d.type])
+    .attr('stroke-width', d => d.type === 'hub' ? 2.5 : 1.5)
+    .style('filter', d => `url(#glow-${d.type})`);
+
+  node.select('text')
+    .text(d => d.label)
+    .attr('text-anchor', 'middle')
+    .attr('dy', d => d.size + 13)
+    .attr('fill', d => d.type === 'hub' ? '#f5f5f0' : typeColors[d.type] + 'cc')
+    .attr('font-size', d => d.type === 'hub' ? '11px' : '10px')
+    .attr('font-family', 'Inter, -apple-system, sans-serif')
+    .attr('font-weight', d => d.type === 'hub' ? '600' : '400');
+
+  node.on('click', (event, d) => {
+    event.stopPropagation();
+    openPanel(d);
+    // Highlight
+    node.select('circle')
+      .attr('stroke-width', n => n.id === d.id ? 3 : (n.type === 'hub' ? 2.5 : 1.5))
+      .attr('fill', n => n.id === d.id ? typeColors[n.type] + '55' : typeColors[n.type] + '22');
+  });
+
+  node.call(d3.drag()
+    .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on('end', (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+  );
+
+  simulation.on('tick', () => {
+    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  document.getElementById('statFiltered').textContent = visibleNodes.length;
+}
+
+// ── PANEL ──────────────────────────────────────────────────────────────────────
+function openPanel(d) {
+  selectedNode = d;
+  document.getElementById('panelType').textContent = typeLabels[d.type] || d.type;
+  document.getElementById('panelType').style.color = typeColors[d.type];
+  document.getElementById('panelName').textContent = d.label;
+  document.getElementById('panelDesc').textContent = d.desc || '';
+
+  // Meta
+  const metaEl = document.getElementById('panelMeta');
+  metaEl.innerHTML = '';
+  if (d.meta) {
+    Object.entries(d.meta).forEach(([k, v]) => {
+      metaEl.innerHTML += `<div class="panel-meta-row"><span class="panel-meta-key">${k}</span><span class="panel-meta-val">${v}</span></div>`;
+    });
+  }
+
+  // Connected nodes
+  const connectedIds = new Set();
+  links.forEach(l => {
+    const s = l.source.id || l.source, t = l.target.id || l.target;
+    if (s === d.id) connectedIds.add(t);
+    if (t === d.id) connectedIds.add(s);
+  });
+  const connected = nodes.filter(n => connectedIds.has(n.id));
+  const connEl = document.getElementById('panelConnections');
+  if (connected.length) {
+    connEl.innerHTML = `<div class="panel-conn-label">Connected (${connected.length})</div>`;
+    connected.forEach(c => {
+      const chip = document.createElement('span');
+      chip.className = 'conn-chip';
+      chip.textContent = c.label;
+      chip.style.borderColor = typeColors[c.type] + '55';
+      chip.style.color = typeColors[c.type];
+      chip.onclick = () => openPanel(c);
+      connEl.appendChild(chip);
+    });
+  } else {
+    connEl.innerHTML = '';
+  }
+
+  document.getElementById('sidePanel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  selectedNode = null;
+  nodeGroup.selectAll('circle')
+    .attr('stroke-width', d => d.type === 'hub' ? 2.5 : 1.5)
+    .attr('fill', d => typeColors[d.type] + (d.type === 'hub' ? '' : '22'));
+}
+
+// ── FILTER ─────────────────────────────────────────────────────────────────────
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  linkGroup.selectAll('*').remove();
+  nodeGroup.selectAll('*').remove();
+  if (simulation) simulation.stop();
+  const container = document.getElementById('graph');
+  buildGraph(container.clientWidth, container.clientHeight);
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('statNodes').textContent = nodes.length;
+  document.getElementById('statEdges').textContent = links.length;
+}
+
+function resetZoom() {
+  svgEl.transition().duration(500).call(zoomBehavior.transform, d3.zoomIdentity.translate(0,0).scale(1));
+}
+
+function exportSVG() {
+  const svgNode = document.getElementById('graph');
+  const serializer = new XMLSerializer();
+  const svgStr = serializer.serializeToString(svgNode);
+  const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'case-intelligence-graph.svg';
+  a.click();
+}
+
+window.addEventListener('load', init);
+window.addEventListener('resize', () => {
+  const container = document.getElementById('graph');
+  svgEl.attr('width', container.clientWidth).attr('height', container.clientHeight);
+});
+document.getElementById('graph').addEventListener('click', closePanel);
+</script>
+
+<!-- ── KINGSFIELD AUDIO PLAYER ─────────────────────────────────────────────── -->
+<script>
+  window.KINGSFIELD_PLAYER_CONFIG = {
+    apiBase: 'http://localhost:3001',
+    startCollapsed: true,
+    defaultVolume: 0.35,
+    // Play the "There's a Storm Brewing" voice clip when the graph loads:
+    // autoplayEvent: 'storm-brewing'
+  };
+</script>
+<script src="/assets/js/kingsfield-player.js"></script>
+</body>
+</html>

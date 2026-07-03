@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield Lawfare — Brand Guide v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & BASE ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* ── PRIMARY PALETTE ── */
+  --black:       #0a0a0a;
+  --near-black:  #111111;
+  --dark:        #1a1a1a;
+  --card-bg:     #161616;
+  --cream:       #e8e0cc;
+  --white:       #f5f5f0;
+  --gold:        #c9a84c;
+  --gold-light:  #e0c06a;
+  --gold-dark:   #a07830;
+  --mid:         #888888;
+  --border:      #222222;
+
+  /* ── STATUS / SEMANTIC ── */
+  --red:         #c0392b;
+  --green:       #27ae60;
+  --blue:        #2471a3;
+
+  /* ── TYPOGRAPHY ── */
+  --font-display: 'Big Shoulders Display', 'Impact', sans-serif;
+  --font-serif:   'Playfair Display', 'Georgia', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── LAYOUT ───────────────────────────────────────────────────────────────── */
+.guide-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 40px 120px;
+}
+
+/* ── HEADER ───────────────────────────────────────────────────────────────── */
+.guide-header {
+  padding: 80px 0 60px;
+  border-bottom: 4px solid var(--gold);
+  margin-bottom: 80px;
+}
+.guide-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.guide-wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 10vw, 120px);
+  font-weight: 900;
+  line-height: 0.9;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin-bottom: 32px;
+}
+.guide-wordmark span { color: var(--gold); }
+.guide-header-meta {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.guide-meta-item .label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 4px;
+}
+.guide-meta-item .value {
+  font-size: 14px;
+  color: var(--cream);
+}
+
+/* ── SECTION ──────────────────────────────────────────────────────────────── */
+.section {
+  margin-bottom: 96px;
+}
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 40px;
+}
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 40px;
+}
+.section-note {
+  font-size: 13px;
+  color: var(--mid);
+  line-height: 1.7;
+  max-width: 640px;
+  margin-bottom: 40px;
+}
+
+/* ── COLOR SYSTEM ─────────────────────────────────────────────────────────── */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+.color-swatch {
+  border: 1px solid #222;
+}
+.swatch-block {
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  padding: 8px;
+}
+.swatch-copy-btn {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  padding: 0;
+  transition: color 0.2s;
+}
+.swatch-copy-btn:hover { color: rgba(255,255,255,0.9); }
+.swatch-info {
+  padding: 12px;
+  background: var(--card-bg);
+}
+.swatch-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 2px;
+}
+.swatch-hex {
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  color: var(--mid);
+}
+.swatch-role {
+  font-size: 10px;
+  color: var(--mid);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────────────────────── */
+.type-specimen {
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+}
+.type-specimen:last-child { border-bottom: none; }
+.type-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.type-name {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.type-info {
+  font-size: 11px;
+  color: var(--mid);
+  font-family: 'Courier New', monospace;
+}
+.type-sample-display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 0.95;
+}
+.type-sample-serif {
+  font-family: var(--font-serif);
+  color: var(--white);
+}
+.type-sample-body {
+  font-family: var(--font-body);
+  color: var(--cream);
+}
+.type-usage {
+  font-size: 12px;
+  color: var(--mid);
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--near-black);
+  border-left: 2px solid var(--gold);
+}
+
+/* ── TYPE SCALE ───────────────────────────────────────────────────────────── */
+.type-scale-row {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  padding: 12px 0;
+  border-bottom: 1px solid #1a1a1a;
+}
+.type-scale-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--mid);
+  width: 100px;
+  flex-shrink: 0;
+  font-family: 'Courier New', monospace;
+}
+.type-scale-sample {
+  color: var(--cream);
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ── LOGO ─────────────────────────────────────────────────────────────────── */
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-bottom: 40px;
+}
+.logo-cell {
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+}
+.logo-cell.bg-black { background: var(--black); }
+.logo-cell.bg-cream { background: var(--cream); }
+.logo-cell.bg-near  { background: var(--near-black); }
+
+.logo-wordmark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.92;
+}
+.logo-wordmark.lg { font-size: 36px; }
+.logo-wordmark.md { font-size: 24px; }
+.logo-caption {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+.logo-cell.bg-cream .logo-caption { color: #888; }
+.logo-cell.bg-cream .logo-wordmark { color: #0a0a0a; }
+
+/* ── VOICE ────────────────────────────────────────────────────────────────── */
+.voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  margin-bottom: 32px;
+}
+.voice-col {
+  padding: 32px;
+}
+.voice-col.do { background: #0a0f0a; }
+.voice-col.dont { background: #0f0a0a; }
+.voice-head {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.voice-head.green { color: var(--green); }
+.voice-head.red { color: var(--red); }
+.voice-item {
+  font-size: 14px;
+  color: var(--cream);
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  line-height: 1.5;
+}
+.voice-item::before {
+  font-weight: 700;
+  margin-right: 10px;
+  font-size: 12px;
+}
+.voice-col.do .voice-item::before { content: '✓'; color: var(--green); }
+.voice-col.dont .voice-item::before { content: '✗'; color: var(--red); }
+.voice-col.dont .voice-item { color: var(--mid); text-decoration: line-through; text-decoration-color: rgba(192,57,43,0.4); }
+
+/* ── COMPONENTS ───────────────────────────────────────────────────────────── */
+.component-group {
+  margin-bottom: 48px;
+}
+.component-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  padding: 11px 28px;
+  border: none;
+}
+.btn-primary {
+  background: var(--cream);
+  color: var(--black);
+  border: 1px solid var(--cream);
+}
+.btn-primary:hover { background: var(--gold); border-color: var(--gold); }
+.btn-outline {
+  background: transparent;
+  color: var(--cream);
+  border: 1px solid #333;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-gold {
+  background: var(--gold);
+  color: var(--black);
+  border: 1px solid var(--gold);
+}
+.btn-gold:hover { background: var(--gold-light); border-color: var(--gold-light); }
+.btn-ghost {
+  background: transparent;
+  color: var(--mid);
+  border: 1px solid var(--border);
+  font-size: 11px;
+}
+.btn-ghost:hover { color: var(--cream); border-color: #444; }
+
+/* Tags */
+.tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid;
+  display: inline-block;
+}
+.tag-gold { color: var(--gold); border-color: var(--gold); background: rgba(201,168,76,0.08); }
+.tag-red   { color: var(--red); border-color: var(--red); background: rgba(192,57,43,0.08); }
+.tag-green { color: var(--green); border-color: var(--green); background: rgba(39,174,96,0.08); }
+.tag-cream { color: var(--cream); border-color: #444; background: transparent; }
+
+/* Cards */
+.card-demo {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  max-width: 360px;
+}
+.card-demo-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #0d0d0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.05);
+  text-transform: uppercase;
+  overflow: hidden;
+}
+.card-demo-body { padding: 20px; }
+.card-demo-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.card-demo-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+.card-demo-desc {
+  font-size: 13px;
+  color: var(--mid);
+  line-height: 1.6;
+}
+.card-demo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: #555;
+}
+.card-demo-arrow { color: #333; font-size: 16px; }
+
+/* Callout / Quote */
+.callout-demo {
+  border-left: 4px solid var(--gold);
+  padding: 20px 24px;
+  background: var(--near-black);
+  margin-bottom: 16px;
+}
+.callout-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.callout-text {
+  font-size: 15px;
+  color: var(--cream);
+  line-height: 1.6;
+}
+
+.quote-demo {
+  border-top: 4px solid var(--gold);
+  border-bottom: 4px solid var(--gold);
+  padding: 40px;
+  background: var(--near-black);
+  text-align: center;
+}
+.quote-demo-text {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.quote-demo-attr {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Status indicators */
+.status-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 2px;
+}
+.status-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.status-verified { background: rgba(39,174,96,0.12); color: var(--green); border: 1px solid rgba(39,174,96,0.25); }
+.status-verified .dot { background: var(--green); }
+.status-vetoed   { background: rgba(192,57,43,0.12); color: var(--red); border: 1px solid rgba(192,57,43,0.25); }
+.status-vetoed .dot { background: var(--red); }
+.status-pending  { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); }
+.status-pending .dot { background: var(--gold); animation: pulse 1.5s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Verification gates */
+.gate-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.gate {
+  background: var(--card-bg);
+  padding: 16px;
+}
+.gate-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.gate-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.gate-desc {
+  font-size: 11px;
+  color: var(--mid);
+  line-height: 1.4;
+}
+.gate.passed .gate-num { color: var(--green); }
+.gate.failed .gate-num { color: var(--red); }
+
+/* Nav component */
+.nav-demo {
+  background: rgba(10,10,10,0.96);
+  border: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.nav-demo-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+}
+.nav-demo-logo span { color: var(--gold); }
+.nav-demo-links {
+  display: flex;
+  gap: 28px;
+}
+.nav-demo-link {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+.nav-demo-link.active { color: var(--cream); }
+.nav-demo-actions { display: flex; gap: 10px; }
+
+/* Ticker */
+.ticker-demo {
+  background: var(--near-black);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+.ticker-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 2s ease infinite;
+}
+.ticker-text {
+  font-size: 11px;
+  color: var(--mid);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.ticker-text strong { color: var(--gold); font-weight: 600; }
+
+/* ── SIZING ───────────────────────────────────────────────────────────────── */
+.spacing-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.spacing-block {
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spacing-label {
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  color: var(--gold);
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* ── CHAT UI SPEC ─────────────────────────────────────────────────────────── */
+.chat-preview {
+  background: var(--near-black);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  overflow: hidden;
+}
+.chat-topbar {
+  background: var(--dark);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.chat-topbar-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.chat-topbar-title span { color: var(--gold); }
+.chat-topbar-status {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chat-body { padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
+.chat-msg {
+  max-width: 80%;
+  padding: 12px 16px;
+  line-height: 1.6;
+  font-size: 13px;
+}
+.chat-msg.user {
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.2);
+  margin-left: auto;
+  color: var(--cream);
+}
+.chat-msg.assistant {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--cream);
+}
+.chat-msg.skeptic-veto {
+  background: rgba(192,57,43,0.08);
+  border: 1px solid rgba(192,57,43,0.3);
+  color: var(--red);
+  max-width: 100%;
+}
+.chat-msg-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.chat-msg.user .chat-msg-label { color: var(--gold); }
+.chat-msg.assistant .chat-msg-label { color: var(--mid); }
+.chat-msg.skeptic-veto .chat-msg-label { color: var(--red); }
+.chat-input-area {
+  border-top: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.chat-input-field {
+  flex: 1;
+  background: var(--dark);
+  border: 1px solid #2a2a2a;
+  padding: 10px 14px;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  resize: none;
+}
+.chat-input-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px 10px;
+}
+.chat-input-tab {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--mid);
+  padding: 4px 12px;
+  border: 1px solid #2a2a2a;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.chat-input-tab:hover { border-color: var(--gold); color: var(--cream); }
+
+/* ── IMAGERY DIRECTION ────────────────────────────────────────────────────── */
+.imagery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.imagery-cell {
+  aspect-ratio: 1;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.imagery-icon { font-size: 32px; }
+.imagery-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.05em;
+}
+.imagery-sub { font-size: 10px; color: var(--mid); line-height: 1.4; }
+
+/* ── FOOTER ───────────────────────────────────────────────────────────────── */
+.guide-footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.guide-footer-logo {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.guide-footer-logo span { color: var(--gold); }
+.guide-footer-note {
+  font-size: 11px;
+  color: var(--mid);
+}
+
+/* ── UTILITY ──────────────────────────────────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+@media(max-width:680px) { .two-col, .three-col, .logo-grid, .gate-row, .imagery-grid { grid-template-columns: 1fr; } }
+.monospace { font-family: 'Courier New', monospace; font-size: 12px; color: var(--gold); }
+.gold { color: var(--gold); }
+.cream { color: var(--cream); }
+.mid { color: var(--mid); }
+hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+/* ── TOC NAV ──────────────────────────────────────────────────────────────── */
+.toc {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 8px;
+  z-index: 100;
+}
+.toc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  padding: 0;
+}
+.toc-dot:hover, .toc-dot.active { background: var(--gold); transform: scale(1.4); }
+@media(max-width:1200px) { .toc { display: none; } }
+
+</style>
+</head>
+<body>
+
+<!-- TOC DOTS -->
+<nav class="toc" aria-label="Sections">
+  <button class="toc-dot active" onclick="scrollTo('#brand-identity')" title="Identity"></button>
+  <button class="toc-dot" onclick="scrollTo('#colors')" title="Colors"></button>
+  <button class="toc-dot" onclick="scrollTo('#typography')" title="Typography"></button>
+  <button class="toc-dot" onclick="scrollTo('#logo')" title="Logo"></button>
+  <button class="toc-dot" onclick="scrollTo('#voice')" title="Voice"></button>
+  <button class="toc-dot" onclick="scrollTo('#components')" title="Components"></button>
+  <button class="toc-dot" onclick="scrollTo('#chat-ui')" title="Chat UI"></button>
+  <button class="toc-dot" onclick="scrollTo('#imagery')" title="Imagery"></button>
+</nav>
+
+<div class="guide-wrap">
+
+  <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+  <header class="guide-header" id="brand-identity">
+    <div class="guide-eyebrow">Kingsfield Lawfare · Brand System · v1.0</div>
+    <div class="guide-wordmark">Kings<span>field</span><br>Lawfare</div>
+    <div class="guide-header-meta">
+      <div class="guide-meta-item">
+        <div class="label">Version</div>
+        <div class="value">1.0 — May 2026</div>
+      </div>
+      <div class="guide-meta-item">
+        <div class="label">Primary Tagline</div>
+        <div class="value">Smart. Not Stupid.</div>
+      </div>
+      <div class="guide-meta-item">
+        <div class="label">Secondary</div>
+        <div class="value">Real help. Zero bullshit.</div>
+      </div>
+      <div class="guide-meta-item">
+        <div class="label">Positioning</div>
+        <div class="value">Capability Equalizer</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── BRAND POSITION ─────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="section-label">Brand Position</div>
+    <div class="section-title">The Only Honest<br>Legal Platform.</div>
+    <div class="section-divider"></div>
+
+    <div class="two-col">
+      <div>
+        <div style="font-family: var(--font-display); font-size: 28px; font-weight:900; text-transform:uppercase; color:var(--white); line-height:1; margin-bottom:24px;">What We Are</div>
+        <p class="section-note">A capability equalizer. The same research, verification, and strategic analysis BigLaw charges $800/hour for — delivered without a retainer, without gatekeeping, without the theater.</p>
+        <p class="section-note">The law is public, written, and belongs to everyone. Kingsfield is the bypass on the toll road the Bar built around it.</p>
+      </div>
+      <div>
+        <div style="font-family: var(--font-display); font-size: 28px; font-weight:900; text-transform:uppercase; color:var(--white); line-height:1; margin-bottom:24px;">What We Are Not</div>
+        <p class="section-note">Not a lawyer replacement. Not a legal advice service. Not apologetic about our existence. Not Westlaw with a chatbot bolted on.</p>
+        <p class="section-note" style="color:var(--red);">This is not a tool. This is a weapon. The skull is not decorative.</p>
+      </div>
+    </div>
+
+    <div class="callout-demo" style="margin-top:32px;">
+      <div class="callout-label">The Central Promise</div>
+      <div class="callout-text" style="font-family:var(--font-serif); font-size:20px; font-style:italic; color:var(--white);">"Every citation verified. Primary sources only. Not legal advice — legal knowledge."</div>
+    </div>
+  </section>
+
+  <!-- ── COLORS ─────────────────────────────────────────────────────────── -->
+  <section class="section" id="colors">
+    <div class="section-label">Color System</div>
+    <div class="section-title">The Palette.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">Black-first. The darkness is intentional — it signals that the system doesn't need to charm you. Gold is reserved for moments that matter: citations, verification status, key callouts. Cream never competes with white; it is warmer, older, like the physical law it references.</p>
+
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#0a0a0a;">
+          <button class="swatch-copy-btn" onclick="copyColor('#0a0a0a')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Black</div>
+          <div class="swatch-hex">#0a0a0a</div>
+          <div class="swatch-role">Primary background. Pages, modals, app chrome.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#111111;">
+          <button class="swatch-copy-btn" onclick="copyColor('#111111')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Near Black</div>
+          <div class="swatch-hex">#111111</div>
+          <div class="swatch-role">Hover states, secondary sections, quote strips.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#1a1a1a;">
+          <button class="swatch-copy-btn" onclick="copyColor('#1a1a1a')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Dark</div>
+          <div class="swatch-hex">#1a1a1a</div>
+          <div class="swatch-role">Card backgrounds, nav bars, grid dividers.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#161616;">
+          <button class="swatch-copy-btn" onclick="copyColor('#161616')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Card BG</div>
+          <div class="swatch-hex">#161616</div>
+          <div class="swatch-role">Content cards, panel surfaces.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#c9a84c;">
+          <button class="swatch-copy-btn" onclick="copyColor('#c9a84c')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Gold</div>
+          <div class="swatch-hex">#c9a84c</div>
+          <div class="swatch-role">PRIMARY ACCENT. Eyebrows, verified status, callouts, active states, the skull's ornamental elements.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#e0c06a;">
+          <button class="swatch-copy-btn" onclick="copyColor('#e0c06a')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Gold Light</div>
+          <div class="swatch-hex">#e0c06a</div>
+          <div class="swatch-role">Gold hover states only. Never use as primary.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#e8e0cc;">
+          <button class="swatch-copy-btn" onclick="copyColor('#e8e0cc')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Cream</div>
+          <div class="swatch-hex">#e8e0cc</div>
+          <div class="swatch-role">Primary text on dark backgrounds. Body copy, subheads.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#f5f5f0;">
+          <button class="swatch-copy-btn" onclick="copyColor('#f5f5f0')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">White</div>
+          <div class="swatch-hex">#f5f5f0</div>
+          <div class="swatch-role">Display headlines, hero text. Never use pure #fff.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#888888;">
+          <button class="swatch-copy-btn" onclick="copyColor('#888888')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Mid</div>
+          <div class="swatch-hex">#888888</div>
+          <div class="swatch-role">Secondary text, nav links, metadata, descriptions.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#c0392b;">
+          <button class="swatch-copy-btn" onclick="copyColor('#c0392b')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Red / Veto</div>
+          <div class="swatch-hex">#c0392b</div>
+          <div class="swatch-role">The Skeptic veto. Danger states. Never decorative.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#27ae60;">
+          <button class="swatch-copy-btn" onclick="copyColor('#27ae60')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Green / Verified</div>
+          <div class="swatch-hex">#27ae60</div>
+          <div class="swatch-role">4-gate verification pass. Citation confirmed. Never decorative.</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#222222; border:1px solid #333;">
+          <button class="swatch-copy-btn" onclick="copyColor('#222222')">Copy hex</button>
+        </div>
+        <div class="swatch-info">
+          <div class="swatch-name">Border</div>
+          <div class="swatch-hex">#222222</div>
+          <div class="swatch-role">All dividers, card borders, input borders.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px; padding:24px; background:var(--near-black); border:1px solid var(--border);">
+      <div class="component-label" style="margin-bottom:16px;">Light Mode Note</div>
+      <p style="font-size:13px; color:var(--mid); line-height:1.6;">Kingsfield is <strong style="color:var(--cream);">dark-first</strong>. A light mode may be offered as a toggle but should never be the default — the black communicates authority, not a missing feature. If a light treatment is needed (print, certain embeds), invert: <span class="monospace">#0a0a0a</span> text on <span class="monospace">#f5f5f0</span> background, gold stays gold.</p>
+    </div>
+  </section>
+
+  <!-- ── TYPOGRAPHY ─────────────────────────────────────────────────────── -->
+  <section class="section" id="typography">
+    <div class="section-label">Typography</div>
+    <div class="section-title">The Type System.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">Three typefaces. One job each. No substitutions.</p>
+
+    <!-- Display -->
+    <div class="type-specimen">
+      <div class="type-meta">
+        <div class="type-name">Display — Big Shoulders Display Black</div>
+        <div class="type-info">Google Fonts · Free · Weight 900 primary, 700 secondary</div>
+      </div>
+      <div class="type-sample-display" style="font-size:clamp(48px,8vw,96px);">Kill All<br>The Lawyers.</div>
+      <div class="type-usage">
+        <strong style="color:var(--cream);">Use for:</strong> Hero headlines, section titles, pull quotes, all-caps UI labels over 24px, the wordmark. Always uppercase. Tracking: -0.01em to -0.02em tight. Never set in sentence case — the personality lives in the caps.
+        <br><br>
+        <strong style="color:var(--cream);">Also works:</strong> Oswald ExtraBold, Barlow Condensed Black (fallbacks if Big Shoulders is unavailable)
+        <br>
+        <strong style="color:var(--red);">Never use:</strong> Impact, Arial Black, system fallbacks. These read as amateur. If Google Fonts is unavailable, load from a local asset.
+      </div>
+    </div>
+
+    <!-- Serif -->
+    <div class="type-specimen">
+      <div class="type-meta">
+        <div class="type-name">Serif — Playfair Display Bold/Italic</div>
+        <div class="type-info">Google Fonts · Free · Weight 700, 900; regular + italic</div>
+      </div>
+      <div class="type-sample-serif" style="font-size:clamp(28px,4vw,52px); font-weight:700; line-height:1.2;">"First, kill all the lawyers."<br><span style="font-style:italic; font-size:0.6em; color:var(--gold);">— Shakespeare</span></div>
+      <div class="type-usage">
+        <strong style="color:var(--cream);">Use for:</strong> Card titles, article headlines, large quotes and pull quotes, the "Smart. Not Stupid." tagline in brand moments. This is the human voice — the contrast to the mechanical display font.
+        <br><br>
+        <strong style="color:var(--cream);">Sizes:</strong> 18–52px for editorial; 14–18px for card titles.
+        <br>
+        <strong style="color:var(--red);">Never use:</strong> In all-caps. The beauty is in the letterform. Caps destroys it.
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="type-specimen">
+      <div class="type-meta">
+        <div class="type-name">Body — Inter</div>
+        <div class="type-info">Google Fonts · Free · Weights 300, 400, 500, 600</div>
+      </div>
+      <div class="type-sample-body" style="font-size:16px; max-width:560px;">The system still runs on confusion, intimidation, and billing by the hour. That's the business model. We're not part of it. We don't pretend to be lawyers. We don't hide behind credentials. And we don't sell jargon to justify four-figure invoices.</div>
+      <div class="type-usage">
+        <strong style="color:var(--cream);">Use for:</strong> All body copy, UI text, navigation labels, form fields, metadata. This is the workhorse — never stylized.
+        <br><br>
+        <strong style="color:var(--cream);">Sizes:</strong> 13px (micro), 14px (card/sidebar), 15–16px (body), 18px (lead/intro).
+        <strong style="color:var(--cream);"> Weight:</strong> 400 body, 500–600 for labels/nav, 300 for deemphasized.
+        <br>
+        <strong style="color:var(--red);">Never:</strong> Use Inter for display headlines. Never set Inter below 11px.
+      </div>
+    </div>
+
+    <!-- Type Scale -->
+    <hr>
+    <div class="component-label" style="margin-bottom:0;">Type Scale — Display Font</div>
+    <div style="margin-top:16px;">
+      <div class="type-scale-row">
+        <div class="type-scale-label">Display XL</div>
+        <div class="type-scale-sample type-sample-display" style="font-size:clamp(64px,10vw,120px);">Kingsfield</div>
+      </div>
+      <div class="type-scale-row">
+        <div class="type-scale-label">Display LG</div>
+        <div class="type-scale-sample type-sample-display" style="font-size:64px;">Section Title</div>
+      </div>
+      <div class="type-scale-row">
+        <div class="type-scale-label">Display MD</div>
+        <div class="type-scale-sample type-sample-display" style="font-size:48px;">Know the Rules.</div>
+      </div>
+      <div class="type-scale-row">
+        <div class="type-scale-label">Display SM</div>
+        <div class="type-scale-sample type-sample-display" style="font-size:32px;">Use Them.</div>
+      </div>
+      <div class="type-scale-row">
+        <div class="type-scale-label">Display XS</div>
+        <div class="type-scale-sample type-sample-display" style="font-size:22px;">Wordmark / Nav Logo</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <div class="component-label" style="margin-bottom:0;">Label / UI Text Scale — Inter</div>
+      <div style="margin-top:16px;">
+        <div class="type-scale-row"><div class="type-scale-label">Body Lead</div><div class="type-scale-sample" style="font-size:18px;">The rules are public. The cases are public.</div></div>
+        <div class="type-scale-row"><div class="type-scale-label">Body</div><div class="type-scale-sample" style="font-size:15px;">Primary sources only. No summarized secondhand garbage.</div></div>
+        <div class="type-scale-row"><div class="type-scale-label">Body SM</div><div class="type-scale-sample" style="font-size:13px;">Four-gate verification. Existence, Quote Accuracy, Currency, Jurisdiction Fit.</div></div>
+        <div class="type-scale-row"><div class="type-scale-label">UI Label</div><div class="type-scale-sample" style="font-size:11px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold);">Verified Citation</div></div>
+        <div class="type-scale-row"><div class="type-scale-label">Micro</div><div class="type-scale-sample" style="font-size:10px; font-weight:600; letter-spacing:0.25em; text-transform:uppercase; color:var(--mid);">Date · Source · Status</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LOGO ───────────────────────────────────────────────────────────── -->
+  <section class="section" id="logo">
+    <div class="section-label">Logo & Mark</div>
+    <div class="section-title">The Wordmark.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">The wordmark is Big Shoulders Display Black, uppercase, tracking -0.01em. "Kingsfield" is the surname; the entire product name is "Kingsfield Lawfare." Do not abbreviate to "KL" or "K." The skull is the brand mark — it is always used at full fidelity or not at all.</p>
+
+    <div class="logo-grid" style="margin-bottom:32px;">
+      <div class="logo-cell bg-black">
+        <div class="logo-wordmark lg" style="color:var(--white);">Kings<span style="color:var(--gold);">field</span><br>Lawfare</div>
+        <div class="logo-caption">On Black — Primary</div>
+      </div>
+      <div class="logo-cell bg-near">
+        <div class="logo-wordmark md" style="color:var(--white);">Kingsfield <span style="color:var(--gold);">Lawfare</span></div>
+        <div class="logo-caption">Inline / Nav variant</div>
+      </div>
+      <div class="logo-cell bg-cream">
+        <div class="logo-wordmark md">Kingsfield Lawfare</div>
+        <div class="logo-caption" style="color:#666;">On Light — Gold unavailable</div>
+      </div>
+    </div>
+
+    <div class="callout-demo">
+      <div class="callout-label">Skull Mark Usage Rules</div>
+      <div class="callout-text">The baroque skull is the visual identity anchor. Use it at hero scale (full bleed or large viewport percentage) — never as a small icon or favicon. At small sizes, use the wordmark alone. The skull always faces right (as in the hero image). The ornamental overlay (baroque floral/laurel) is inseparable from the skull — never use a plain skull. When placing on any background other than black, ensure the skull image has sufficient contrast.</div>
+    </div>
+
+    <div style="margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="color:var(--green); margin-bottom:12px;">✓ Logo Do's</div>
+        <ul style="list-style:none; font-size:13px; color:var(--cream); display:flex; flex-direction:column; gap:8px; line-height:1.5;">
+          <li>Use the full wordmark + skull in hero contexts</li>
+          <li>Use wordmark alone in nav and small contexts</li>
+          <li>Allow negative space around the mark</li>
+          <li>Gold accent can be on either "Kings" or "field" or "Lawfare"</li>
+          <li>The dividing line in the nav: Kingsfield [space] Lawfare</li>
+        </ul>
+      </div>
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="color:var(--red); margin-bottom:12px;">✗ Logo Don'ts</div>
+        <ul style="list-style:none; font-size:13px; color:var(--mid); display:flex; flex-direction:column; gap:8px; line-height:1.5;">
+          <li style="text-decoration:line-through; text-decoration-color:rgba(192,57,43,0.5);">Abbreviate to "KL" or just "K"</li>
+          <li style="text-decoration:line-through; text-decoration-color:rgba(192,57,43,0.5);">Use any skull other than the baroque version</li>
+          <li style="text-decoration:line-through; text-decoration-color:rgba(192,57,43,0.5);">Place the skull as a small favicon or 32px icon</li>
+          <li style="text-decoration:line-through; text-decoration-color:rgba(192,57,43,0.5);">Use the wordmark in sentence case (kingsfield)</li>
+          <li style="text-decoration:line-through; text-decoration-color:rgba(192,57,43,0.5);">Apply gradients, drop shadows, or color fills to the skull</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; padding:20px 24px; background:var(--near-black); border:1px solid var(--border);">
+      <div class="component-label" style="margin-bottom:8px;">Image Files You Need in <span class="monospace">kingsfield/assets/brand/</span></div>
+      <div style="font-size:13px; color:var(--cream); display:flex; flex-direction:column; gap:4px;">
+        <div><span class="monospace">logo.png</span> <span style="color:var(--mid);">— Wordmark only, white, on transparent. Min 800px wide.</span></div>
+        <div><span class="monospace">skull.png</span> <span style="color:var(--mid);">— Baroque skull, on transparent. Min 1200px wide.</span></div>
+        <div><span class="monospace">skull-hero.png</span> <span style="color:var(--mid);">— Full hero composition (skull + wordmark). 1920×1080 min.</span></div>
+        <div><span class="monospace">favicon.png</span> <span style="color:var(--mid);">— Gold "K" on black square. 512×512. NOT the skull.</span></div>
+        <div><span class="monospace">og-image.png</span> <span style="color:var(--mid);">— Open Graph share card. 1200×630. Skull + wordmark + tagline.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VOICE ──────────────────────────────────────────────────────────── -->
+  <section class="section" id="voice">
+    <div class="section-label">Voice & Copy Standards</div>
+    <div class="section-title">How We Talk.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">The product voice is direct, adult, and zero-apology. It treats users as people with legitimate problems and the right to information — not as laypersons to be managed. Every word is chosen; nothing is filler.</p>
+
+    <div class="voice-grid">
+      <div class="voice-col do">
+        <div class="voice-head green">We Say</div>
+        <div class="voice-item">"Real help. Zero bullshit."</div>
+        <div class="voice-item">"Know the rules. Use them."</div>
+        <div class="voice-item">"Show me the source. Or it doesn't exist."</div>
+        <div class="voice-item">"Smart. Not Stupid."</div>
+        <div class="voice-item">"Every citation verified or nothing."</div>
+        <div class="voice-item">"The Skeptic has hard veto power for a reason."</div>
+        <div class="voice-item">"Primary sources only."</div>
+        <div class="voice-item">"The rules are public. So are the cases."</div>
+      </div>
+      <div class="voice-col dont">
+        <div class="voice-head red">We Never Say</div>
+        <div class="voice-item">AI-powered legal assistant</div>
+        <div class="voice-item">Revolutionary / Disrupting</div>
+        <div class="voice-item">Empowering users</div>
+        <div class="voice-item">Please note that AI may make errors</div>
+        <div class="voice-item">Cutting-edge / Next-generation</div>
+        <div class="voice-item">Just or simply (when describing legal work)</div>
+        <div class="voice-item">Don't worry / Trust us</div>
+        <div class="voice-item">Innovative legal tech solution</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:24px;">
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="margin-bottom:12px;">Tone Principles</div>
+        <ul style="list-style:none; font-size:13px; color:var(--cream); display:flex; flex-direction:column; gap:8px; line-height:1.5;">
+          <li>Direct. Not soft.</li>
+          <li>Plain English. Always.</li>
+          <li>Show your work. Always.</li>
+          <li>Treat the reader like an adult.</li>
+        </ul>
+      </div>
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="margin-bottom:12px;">Formatting Rules</div>
+        <ul style="list-style:none; font-size:13px; color:var(--cream); display:flex; flex-direction:column; gap:8px; line-height:1.5;">
+          <li>No emojis in body copy</li>
+          <li>No exclamation marks</li>
+          <li>Oxford comma always</li>
+          <li>Citations in plaintext, not brackets</li>
+        </ul>
+      </div>
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="margin-bottom:12px;">The Disclaimer (exact)</div>
+        <div style="font-size:12px; color:var(--mid); line-height:1.6; font-style:italic;">"We are not lawyers. This is not legal advice. You represent yourself."</div>
+        <div style="font-size:11px; color:var(--mid); margin-top:8px;">This exact string, in this exact form. Every page, every time.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── UI COMPONENTS ─────────────────────────────────────────────────── -->
+  <section class="section" id="components">
+    <div class="section-label">UI Components</div>
+    <div class="section-title">The Building Blocks.</div>
+    <div class="section-divider"></div>
+
+    <!-- Nav -->
+    <div class="component-group">
+      <div class="component-label">Navigation</div>
+      <div class="nav-demo">
+        <div class="nav-demo-logo">Kingsfield <span>Lawfare</span></div>
+        <div class="nav-demo-links">
+          <span class="nav-demo-link">Assistant</span>
+          <span class="nav-demo-link">Projects</span>
+          <span class="nav-demo-link">Case Law</span>
+          <span class="nav-demo-link active">Intelligence</span>
+          <span class="nav-demo-link">Integrations</span>
+        </div>
+        <div class="nav-demo-actions">
+          <button class="btn btn-ghost" style="padding:6px 16px;">Log In</button>
+          <button class="btn btn-primary" style="padding:6px 16px;">Sign Up</button>
+        </div>
+      </div>
+      <div class="ticker-demo">
+        <div class="ticker-dot"></div>
+        <div class="ticker-text"><strong>Every citation verified</strong> · Primary sources only · Not legal advice — legal knowledge. · CourtListener · USC/CFR · Official state sources only.</div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="component-group">
+      <div class="component-label">Buttons</div>
+      <div class="btn-row">
+        <button class="btn btn-primary">Sign Up Free</button>
+        <button class="btn btn-outline">Learn More</button>
+        <button class="btn btn-gold">Start Research</button>
+        <button class="btn btn-ghost">Cancel</button>
+      </div>
+      <div style="margin-top:12px; font-size:12px; color:var(--mid);">Primary (cream) for main CTAs · Outline for secondary actions · Gold for verification/research actions · Ghost for dismissal/cancel</div>
+    </div>
+
+    <!-- Tags -->
+    <div class="component-group">
+      <div class="component-label">Tags & Badges</div>
+      <div class="tag-row">
+        <span class="tag tag-gold">Verified ✓</span>
+        <span class="tag tag-green">Good Law</span>
+        <span class="tag tag-red">Skeptic Veto</span>
+        <span class="tag tag-cream">Entertainment & IP</span>
+        <span class="tag tag-cream">Pro Se</span>
+        <span class="tag tag-cream">Case Law</span>
+      </div>
+    </div>
+
+    <!-- Status pills -->
+    <div class="component-group">
+      <div class="component-label">Verification Status Indicators</div>
+      <div class="status-row">
+        <span class="status-pill status-verified"><span class="dot"></span>4/4 Gates Passed</span>
+        <span class="status-pill status-vetoed"><span class="dot"></span>Skeptic Veto</span>
+        <span class="status-pill status-pending"><span class="dot"></span>Verifying...</span>
+      </div>
+    </div>
+
+    <!-- Gates -->
+    <div class="component-group">
+      <div class="component-label">Four-Gate Citation Verification Display</div>
+      <div class="gate-row">
+        <div class="gate passed">
+          <div class="gate-num">1</div>
+          <div class="gate-name">Existence</div>
+          <div class="gate-desc">CourtListener citation lookup confirmed</div>
+        </div>
+        <div class="gate passed">
+          <div class="gate-num">2</div>
+          <div class="gate-name">Quote Accuracy</div>
+          <div class="gate-desc">Text-match against opinion body</div>
+        </div>
+        <div class="gate passed">
+          <div class="gate-num">3</div>
+          <div class="gate-name">Currency</div>
+          <div class="gate-desc">No negative treatment / overruled flag</div>
+        </div>
+        <div class="gate passed">
+          <div class="gate-num">4</div>
+          <div class="gate-name">Jurisdiction</div>
+          <div class="gate-desc">Court / matter jurisdiction confirmed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Callout & Quote -->
+    <div class="component-group">
+      <div class="component-label">Callout Boxes</div>
+      <div class="callout-demo">
+        <div class="callout-label">The Skeptic</div>
+        <div class="callout-text">Diaz v. Carcamo (2011) failed Gate 2. The quote attributed to the court does not appear in the opinion text. This citation has been removed from the output. Provide a correctly attributed quotation or remove the reference.</div>
+      </div>
+      <div class="quote-demo">
+        <div class="quote-demo-text">"First, kill all the lawyers."</div>
+        <div class="quote-demo-attr">— Shakespeare · Henry VI, Part 2</div>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="component-group">
+      <div class="component-label">Content Card</div>
+      <div class="card-demo">
+        <div class="card-image-wrap" style="overflow:hidden;">
+          <div class="card-demo-image">The Courts</div>
+        </div>
+        <div class="card-demo-body">
+          <div class="card-demo-tag">Case Law — Featured</div>
+          <div class="card-demo-title">The Salad Days Are Over: AI-Generated Evidence and the Courts</div>
+          <div class="card-demo-desc">200+ fabricated citations reached federal judges in a single year. 66 courts issued sanctions. The Verification Council exists because this is what happens without it.</div>
+        </div>
+        <div class="card-demo-footer">
+          <span>May 16, 2026</span>
+          <span class="card-demo-arrow">↗</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── CHAT UI SPEC ────────────────────────────────────────────────────── -->
+  <section class="section" id="chat-ui">
+    <div class="section-label">App Interface</div>
+    <div class="section-title">The Chat Screen.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">Harvey's UI has three things right: clean left sidebar, prominent chat input, right panel for suggestions/workflows. Kingsfield matches this structure but injects brand throughout. The key differentiator Harvey can't copy: the Four-Gate display, the Skeptic veto card, and the LLM Council running visible to the user.</p>
+
+    <div class="chat-preview" style="margin-bottom:32px;">
+      <div class="chat-topbar">
+        <div class="chat-topbar-title">Kingsfield <span>Lawfare</span></div>
+        <div class="chat-topbar-status"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>The Council is active</div>
+      </div>
+      <div class="chat-body">
+        <div class="chat-msg user">
+          <div class="chat-msg-label">You</div>
+          Is there a negligence per se argument in my case given the cell phone violation?
+        </div>
+        <div class="chat-msg assistant">
+          <div class="chat-msg-label">Researcher → Analyst → Strategist</div>
+          Yes. VC § 23123.5 prohibits handheld wireless device use while driving. Your AT&T records (Exhibit E) confirm an active call at the time of collision — this establishes the statutory violation. Under CACI 418, violation of a safety statute constitutes negligence per se if the plaintiff belongs to the class the statute was designed to protect and the harm resulted from the violation. <em style="color:var(--gold);">All four verification gates passed.</em>
+        </div>
+        <div class="chat-msg skeptic-veto" style="max-width:100%;">
+          <div class="chat-msg-label">⚑ The Skeptic — Hard Veto</div>
+          The Lindstrom v. Hertz cite in the previous draft contained a fabricated quotation. That sentence has been removed. The case itself is valid and the holding supports your negligent entrustment argument, but the specific quote attributed to the court does not appear in the opinion. Corrected version provided above.
+        </div>
+      </div>
+      <div class="chat-input-tabs">
+        <button class="chat-input-tab">+ Documents</button>
+        <button class="chat-input-tab">⊞ Projects</button>
+        <button class="chat-input-tab">◈ Workflows</button>
+        <button class="chat-input-tab" style="margin-left:auto; color:var(--mid); border-color:transparent;">Claude Sonnet 4 ▾</button>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input-field" rows="2" placeholder="Ask about your matter. The Council is listening."></textarea>
+        <button class="btn btn-gold" style="padding:10px 20px; height:fit-content;">→</button>
+      </div>
+      <div class="ticker-demo" style="border-top:1px solid var(--border); border-bottom:none; border-left:none; border-right:none;">
+        <div class="ticker-dot"></div>
+        <div class="ticker-text"><strong>Every citation verified</strong> · Primary sources only · Not legal advice — legal knowledge.</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:24px;">
+        <div class="component-label" style="margin-bottom:16px;">Kingsfield Beats Harvey On</div>
+        <div style="font-size:13px; color:var(--cream); display:flex; flex-direction:column; gap:10px; line-height:1.5;">
+          <div><strong style="color:var(--gold);">4-Gate Verification</strong> — visible, auditable, non-bypassable. Harvey shows no such system.</div>
+          <div><strong style="color:var(--gold);">The Skeptic Veto</strong> — hard stop on bad citations. No equivalent in Harvey.</div>
+          <div><strong style="color:var(--gold);">Multi-provider Council</strong> — Claude + Gemini, no single-model bias. Harvey is OpenAI-only.</div>
+          <div><strong style="color:var(--gold);">Case Intelligence Graph</strong> — D3.js entity web from uploaded docs. Harvey doesn't have this.</div>
+          <div><strong style="color:var(--gold);">Accessibility</strong> — no $1,000+/seat retainer. Pro se and independent artists can actually use this.</div>
+        </div>
+      </div>
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:24px;">
+        <div class="component-label" style="margin-bottom:16px;">Features to Match / Build</div>
+        <div style="font-size:13px; color:var(--mid); display:flex; flex-direction:column; gap:10px; line-height:1.5;">
+          <div><strong style="color:var(--cream);">Vault</strong> — persistent document store per project. Harvey has this. Build it.</div>
+          <div><strong style="color:var(--cream);">Workflows</strong> — multi-step agentic tasks with a visual plan. Harvey's "Review Agent Plan" modal is clean. Build equivalent.</div>
+          <div><strong style="color:var(--cream);">Suggested queries</strong> — context-sensitive prompt starters. Low effort, high UX value.</div>
+          <div><strong style="color:var(--cream);">Model selector</strong> — user-visible. Harvey shows this. Kingsfield shows Claude/Gemini routing.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── IMAGERY ─────────────────────────────────────────────────────────── -->
+  <section class="section" id="imagery">
+    <div class="section-label">Imagery Direction</div>
+    <div class="section-title">What We Show.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">Imagery should feel like evidence. Nothing stock. Nothing aspirational-lifestyle. The visual world is: institutional weight, material reality, the system's machinery. The skull and ornament are the only decorative elements — everything else earns its place by being real.</p>
+
+    <div class="imagery-grid">
+      <div class="imagery-cell">
+        <div class="imagery-icon">🏛️</div>
+        <div class="imagery-label">Institutions</div>
+        <div class="imagery-sub">Courthouses, law libraries, government buildings — the system's physical form</div>
+      </div>
+      <div class="imagery-cell">
+        <div class="imagery-icon">💵</div>
+        <div class="imagery-label">Money & Power</div>
+        <div class="imagery-sub">Currency, scales, gavels — the mechanisms of access and denial</div>
+      </div>
+      <div class="imagery-cell">
+        <div class="imagery-icon">👁️</div>
+        <div class="imagery-label">Surveillance / Attention</div>
+        <div class="imagery-sub">The red eye (already in your assets) — seeing through the system</div>
+      </div>
+      <div class="imagery-cell">
+        <div class="imagery-icon">⚙️</div>
+        <div class="imagery-label">Machinery</div>
+        <div class="imagery-sub">Mechanisms, gears, industrial weight — the law as a machine that can be operated</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="color:var(--green); margin-bottom:12px;">✓ Image Do's</div>
+        <ul style="list-style:none; font-size:13px; color:var(--cream); display:flex; flex-direction:column; gap:7px; line-height:1.5;">
+          <li>High contrast, dark or desaturated photos</li>
+          <li>Red/monochrome color grading for editorial intensity</li>
+          <li>Images that feel like evidence or documentation</li>
+          <li>Textures: paper, stone, metal, concrete</li>
+          <li>The skull+ornament at hero scale only</li>
+        </ul>
+      </div>
+      <div style="background:var(--card-bg); border:1px solid var(--border); padding:20px;">
+        <div class="component-label" style="color:var(--red); margin-bottom:12px;">✗ Image Don'ts</div>
+        <ul style="list-style:none; font-size:13px; color:var(--mid); display:flex; flex-direction:column; gap:7px; line-height:1.5; text-decoration:line-through; text-decoration-color:rgba(192,57,43,0.4);">
+          <li>Handshakes, conference rooms, laptops</li>
+          <li>Smiling professionals in suits</li>
+          <li>Generic "scales of justice" clip art</li>
+          <li>Bright, saturated lifestyle photography</li>
+          <li>AI-generated people or faces</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout-demo" style="margin-top:24px;">
+      <div class="callout-label">Assets Already In Your Folder — Use These</div>
+      <div class="callout-text" style="font-size:13px;">
+        The red owl eye, the dollar bill macro, "The Cathedral's Last Breath" smoke image, the "No Vaseline" jar — all four of these in your mockups are exactly right. They feel like content, not decoration. Continue in this direction. Every blog card image should feel like it was selected from a case file.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPACING ─────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="section-label">Spacing System</div>
+    <div class="section-title">The Grid.</div>
+    <div class="section-divider"></div>
+
+    <p class="section-note">Base unit: <strong style="color:var(--cream);">8px</strong>. All spacing is a multiple of 8. The grid is generous — white (black) space is not wasted; it is pressure. Content that needs room to breathe gets room to breathe.</p>
+
+    <div class="spacing-row">
+      <div>
+        <div class="spacing-block" style="width:8px; height:8px;"></div>
+        <div class="spacing-label">4px<br>micro</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:16px; height:16px;"></div>
+        <div class="spacing-label">8px<br>xs</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:32px; height:32px;"></div>
+        <div class="spacing-label">16px<br>sm</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:48px; height:48px;"></div>
+        <div class="spacing-label">24px<br>md</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:64px; height:64px;"></div>
+        <div class="spacing-label">32px<br>lg</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:80px; height:80px;"></div>
+        <div class="spacing-label">40px<br>xl</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:96px; height:96px;"></div>
+        <div class="spacing-label">48px<br>2xl</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:128px; height:128px;"></div>
+        <div class="spacing-label">64px<br>3xl</div>
+      </div>
+      <div>
+        <div class="spacing-block" style="width:160px; height:160px;"></div>
+        <div class="spacing-label">80px<br>4xl</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+  <footer class="guide-footer">
+    <div class="guide-footer-logo">Kings<span>field</span> Lawfare</div>
+    <div class="guide-footer-note">Brand Guide v1.0 · May 2026 · For internal use only — do not distribute externally before launch</div>
+    <div style="font-size:11px; color:var(--mid); font-style:italic;">We are not lawyers. This is not legal advice. You represent yourself.</div>
+  </footer>
+
+</div>
+
+<script>
+// Copy color to clipboard
+function copyColor(hex) {
+  navigator.clipboard.writeText(hex).then(() => {
+    // Brief visual feedback
+    const btn = event.target;
+    btn.textContent = 'Copied!';
+    btn.style.color = '#c9a84c';
+    setTimeout(() => {
+      btn.textContent = 'Copy hex';
+      btn.style.color = '';
+    }, 1200);
+  });
+}
+
+// TOC scroll
+function scrollTo(id) {
+  document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// TOC active state
+const sections = document.querySelectorAll('.section[id], header[id]');
+const dots = document.querySelectorAll('.toc-dot');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      const ids = ['brand-identity','colors','typography','logo','voice','components','chat-ui','imagery'];
+      const idx = ids.indexOf(id);
+      dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

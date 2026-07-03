@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Model Pricing · Kingsfield Cheatsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --canvas:       #000000;
+    --base:         #010101;
+    --card:         #191919;
+    --interactive:  #282828;
+    --slate:        #3f3f3f;
+    --ash:          #7f7f7f;
+    --white:        #ffffff;
+    --sea-glass:    #062f34;
+    --aqua:         #19d0e8;
+    --sky:          #44ccff;
+    --green:        #22c55e;
+    --amber:        #f59e0b;
+    --red:          #ef4444;
+    --mono:         'DM Mono', monospace;
+    --serif:        'Instrument Serif', serif;
+  }
+
+  body {
+    background: var(--canvas);
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 32px 24px 64px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--slate);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  header h1 {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    line-height: 1;
+  }
+  header p {
+    color: var(--ash);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .aqua { color: var(--aqua); }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--aqua);
+    margin-bottom: 10px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--slate);
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--slate);
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: var(--interactive);
+  }
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ash);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  thead th:not(:first-child) { text-align: right; }
+
+  tbody tr {
+    border-top: 1px solid var(--slate);
+    transition: background 0.1s;
+  }
+  tbody tr:hover { background: var(--interactive); }
+
+  tbody td {
+    padding: 9px 14px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  tbody td:not(:first-child) { text-align: right; }
+
+  .model-name {
+    color: var(--white);
+    font-size: 12px;
+  }
+  .model-tag {
+    font-size: 10px;
+    color: var(--ash);
+    margin-top: 1px;
+  }
+
+  .price-in  { color: var(--sky); }
+  .price-out { color: var(--aqua); }
+  .price-na  { color: var(--slate); }
+
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-green  { background: rgba(34,197,94,.15);  color: var(--green); }
+  .badge-amber  { background: rgba(245,158,11,.15); color: var(--amber); }
+  .badge-red    { background: rgba(239,68,68,.15);  color: var(--red);   }
+  .badge-aqua   { background: rgba(25,208,232,.12); color: var(--aqua);  }
+  .badge-slate  { background: var(--slate);         color: var(--ash);   }
+
+  .ctx { color: var(--ash); font-size: 11px; }
+
+  /* ── DISCOUNT BOX ── */
+  .discount-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .discount-card {
+    background: var(--sea-glass);
+    border: 1px solid rgba(25,208,232,.25);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .discount-card h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--aqua);
+    margin-bottom: 4px;
+  }
+  .discount-card p {
+    font-size: 12px;
+    color: var(--white);
+  }
+  .discount-card small {
+    font-size: 10px;
+    color: var(--ash);
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* ── NOTES ── */
+  .note {
+    font-size: 10px;
+    color: var(--ash);
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+  .note strong { color: var(--white); }
+
+  /* ── ROUTING GUIDE ── */
+  .routing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .routing-card {
+    background: var(--card);
+    border: 1px solid var(--slate);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .routing-card .tier-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+  }
+  .routing-card h4 {
+    font-size: 14px;
+    color: var(--white);
+    margin-bottom: 6px;
+    font-family: var(--mono);
+  }
+  .routing-card ul {
+    list-style: none;
+    font-size: 11px;
+    color: var(--ash);
+  }
+  .routing-card ul li::before { content: '— '; color: var(--slate); }
+
+  /* ── TOOL TABLE ── */
+  .tool-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 140px;
+    gap: 0;
+    border-top: 1px solid var(--slate);
+    padding: 9px 14px;
+    align-items: start;
+  }
+  .tool-row:hover { background: var(--interactive); }
+  .tool-row:first-child { border-top: none; }
+  .tool-name { color: var(--white); font-size: 12px; }
+  .tool-desc { color: var(--ash); font-size: 11px; }
+  .tool-use  { color: var(--aqua); font-size: 11px; text-align: right; }
+
+  /* ── ANTIGRAVITY FIX ── */
+  .fix-block {
+    background: var(--sea-glass);
+    border: 1px solid rgba(25,208,232,.25);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .fix-block h4 {
+    color: var(--aqua);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .fix-step {
+    font-size: 12px;
+    padding: 5px 0;
+    color: var(--white);
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    display: flex;
+    gap: 12px;
+  }
+  .fix-step:last-child { border-bottom: none; }
+  .step-num {
+    color: var(--aqua);
+    min-width: 18px;
+    font-size: 11px;
+  }
+  code {
+    background: rgba(25,208,232,.1);
+    color: var(--sky);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 11px;
+    font-family: var(--mono);
+  }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--slate);
+    font-size: 10px;
+    color: var(--slate);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI Model Pricing <span class="aqua">·</span> Kingsfield</h1>
+  <p>Cheatsheet · June 2026 · All prices USD per 1M tokens · Verify before billing</p>
+</header>
+
+<!-- ════════ ANTHROPIC ════════ -->
+<div class="section-label">Anthropic · Claude</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>In /1M</th>
+        <th>Out /1M</th>
+        <th>Cache Hit</th>
+        <th>Batch</th>
+        <th>Context</th>
+        <th>Use for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="model-name">Opus 4.8</div><div class="model-tag">claude-opus-4-8</div></td>
+        <td class="price-in">$5.00</td>
+        <td class="price-out">$25.00</td>
+        <td class="price-in">$0.50</td>
+        <td class="price-in">$2.50 / $12.50</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-red">Heavy</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">Opus 4.7</div><div class="model-tag">claude-opus-4-7</div></td>
+        <td class="price-in">$5.00</td>
+        <td class="price-out">$25.00</td>
+        <td class="price-in">$0.50</td>
+        <td class="price-in">$2.50 / $12.50</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-amber">⚠ +35% tokens</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">Sonnet 4.6</div><div class="model-tag">claude-sonnet-4-6</div></td>
+        <td class="price-in">$3.00</td>
+        <td class="price-out">$15.00</td>
+        <td class="price-in">$0.30</td>
+        <td class="price-in">$1.50 / $7.50</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-aqua">Default · Legal</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">Haiku 4.5</div><div class="model-tag">claude-haiku-4-5</div></td>
+        <td class="price-in">$1.00</td>
+        <td class="price-out">$5.00</td>
+        <td class="price-in">$0.10</td>
+        <td class="price-in">$0.50 / $2.50</td>
+        <td class="ctx">200K</td>
+        <td><span class="badge badge-green">Routing · Class.</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p class="note"><strong>⚠ Opus 4.7 warning:</strong> new tokenizer uses up to 35% more tokens than 4.6 for same text. Explains your 3x quota burns. Stick to 4.8 or Sonnet. Batch = 50% off. Cache hit = 10% of input price.</p>
+
+<!-- ════════ GEMINI ════════ -->
+<div class="section-label">Google · Gemini API</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>In /1M</th>
+        <th>Out /1M</th>
+        <th>Audio In</th>
+        <th>Batch</th>
+        <th>Context</th>
+        <th>Use for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="model-name">3.5 Flash</div><div class="model-tag">gemini-3.5-flash</div></td>
+        <td class="price-in">$1.50</td>
+        <td class="price-out">$9.00</td>
+        <td class="price-na">—</td>
+        <td class="price-in">$0.75 / $4.50</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-aqua">Agents · Code</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">3.1 Pro</div><div class="model-tag">gemini-3.1-pro</div></td>
+        <td class="price-in">$2.00</td>
+        <td class="price-out">$12.00</td>
+        <td class="price-na">—</td>
+        <td class="price-in">$1.00 / $6.00</td>
+        <td class="ctx">2M</td>
+        <td><span class="badge badge-red">Long context</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">3.1 Flash</div><div class="model-tag">gemini-3.1-flash</div></td>
+        <td class="price-in">$0.50</td>
+        <td class="price-out">$3.00</td>
+        <td class="price-in">~$1.00</td>
+        <td class="price-in">$0.25 / $1.50</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-green">Transcription</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">3.1 Flash Live ★</div><div class="model-tag">gemini-3.1-flash-live-preview</div></td>
+        <td class="price-in">~$0.015/min</td>
+        <td class="price-out">managed</td>
+        <td class="price-na">S2S</td>
+        <td class="price-na">—</td>
+        <td class="ctx">—</td>
+        <td><span class="badge badge-aqua">★ WINGMAN</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">3.5 Live Translate</div><div class="model-tag">gemini-3.5-live-translate</div></td>
+        <td class="price-in">see docs</td>
+        <td class="price-out">see docs</td>
+        <td class="price-na">S2S</td>
+        <td class="price-na">—</td>
+        <td class="ctx">128K</td>
+        <td><span class="badge badge-amber">Multilingual</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">3.1 Flash-Lite</div><div class="model-tag">gemini-3.1-flash-lite</div></td>
+        <td class="price-in">$0.25</td>
+        <td class="price-out">$1.50</td>
+        <td class="price-in">~$0.50</td>
+        <td class="price-in">$0.125 / $0.75</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-green">Classification</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">2.5 Flash-Lite</div><div class="model-tag">gemini-2.5-flash-lite</div></td>
+        <td class="price-in">$0.10</td>
+        <td class="price-out">$0.40</td>
+        <td class="price-na">—</td>
+        <td class="price-in">$0.05 / $0.20</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-green">Cheapest Gemini</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p class="note">AI Studio = free with daily limits. No credit card needed. Add $10–20 for paid tier testing — solves your billing issue as a clean separate project. Cache reads = 10% of input. Context caching storage: $1/1M tokens/hr (Flash), $4.50 (Pro).</p>
+
+<!-- ════════ OPENAI ════════ -->
+<div class="section-label">OpenAI · GPT</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>In /1M</th>
+        <th>Out /1M</th>
+        <th>Cached In</th>
+        <th>Batch</th>
+        <th>Context</th>
+        <th>Use for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="model-name">GPT-5.5</div><div class="model-tag">gpt-5.5</div></td>
+        <td class="price-in">$5.00</td>
+        <td class="price-out">$30.00</td>
+        <td class="price-in">$0.50</td>
+        <td class="price-in">$2.50 / $15</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-red">Flagship</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">GPT-5.4</div><div class="model-tag">gpt-5.4</div></td>
+        <td class="price-in">$2.50</td>
+        <td class="price-out">$15.00</td>
+        <td class="price-in">$0.25</td>
+        <td class="price-in">$1.25 / $7.50</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-amber">Production default</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">o3</div><div class="model-tag">o3</div></td>
+        <td class="price-in">$2.00</td>
+        <td class="price-out">$8.00</td>
+        <td class="price-in">$0.20</td>
+        <td class="price-na">—</td>
+        <td class="ctx">200K</td>
+        <td><span class="badge badge-amber">Reasoning</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">o4-mini</div><div class="model-tag">o4-mini</div></td>
+        <td class="price-in">$0.55</td>
+        <td class="price-out">$2.20</td>
+        <td class="price-in">$0.055</td>
+        <td class="price-na">—</td>
+        <td class="ctx">200K</td>
+        <td><span class="badge badge-green">Budget reasoning</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">GPT-4.1 Nano</div><div class="model-tag">gpt-4.1-nano</div></td>
+        <td class="price-in">$0.10</td>
+        <td class="price-out">$0.40</td>
+        <td class="price-in">$0.01</td>
+        <td class="price-in">$0.05 / $0.20</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-green">Cheapest capable</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════ BUDGET / OPEN ════════ -->
+<div class="section-label">Budget &amp; Open Weight · via OpenRouter</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>In /1M</th>
+        <th>Out /1M</th>
+        <th>Cache Hit</th>
+        <th>Context</th>
+        <th>USA access</th>
+        <th>Use for</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="model-name">DeepSeek V4 Flash</div><div class="model-tag">deepseek-v4-flash</div></td>
+        <td class="price-in">$0.14</td>
+        <td class="price-out">$0.28</td>
+        <td class="price-in">$0.0028</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-green">✓ via OpenRouter</span></td>
+        <td><span class="badge badge-green">Bulk media grind</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">DeepSeek V4 Pro</div><div class="model-tag">deepseek-v4-pro</div></td>
+        <td class="price-in">$0.435</td>
+        <td class="price-out">$0.87</td>
+        <td class="price-in">low</td>
+        <td class="ctx">1M</td>
+        <td><span class="badge badge-green">✓ via OpenRouter</span></td>
+        <td><span class="badge badge-amber">Complex tasks</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">MiniMax M3</div><div class="model-tag">minimax-m3</div></td>
+        <td class="price-in">$0.30</td>
+        <td class="price-out">$1.20</td>
+        <td class="price-na">—</td>
+        <td class="ctx">large</td>
+        <td><span class="badge badge-green">✓ via OpenRouter</span></td>
+        <td><span class="badge badge-green">Media classification</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">DeepSeek V3.2</div><div class="model-tag">deepseek-v3.2</div></td>
+        <td class="price-in">$0.23</td>
+        <td class="price-out">$0.34</td>
+        <td class="price-in">$0.003</td>
+        <td class="ctx">131K</td>
+        <td><span class="badge badge-green">✓ via OpenRouter</span></td>
+        <td><span class="badge badge-green">Transcription cleaning</span></td>
+      </tr>
+      <tr>
+        <td><div class="model-name">GLM-4.7-Flash (Z.AI)</div><div class="model-tag">glm-4.7-flash</div></td>
+        <td class="price-in">FREE</td>
+        <td class="price-out">FREE</td>
+        <td class="price-na">—</td>
+        <td class="ctx">large</td>
+        <td><span class="badge badge-aqua">✓ Free tier</span></td>
+        <td><span class="badge badge-aqua">Prototyping</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p class="note"><strong>USA access:</strong> DeepSeek's own site was blocked but OpenRouter routes around it fine. MiniMax also available via OpenRouter. All use OpenAI-compatible format — just change base URL + key. <strong>Your MoE/OpenRouter instinct is correct</strong> — route classification/bulk to DeepSeek V4 Flash ($0.14), escalate hard legal tasks to Sonnet ($3.00). 20x cost spread for equivalent volume.</p>
+
+<!-- ════════ DISCOUNTS ════════ -->
+<div class="section-label">Universal Discounts</div>
+<div class="discount-grid">
+  <div class="discount-card">
+    <h4>Batch API</h4>
+    <p>50% off input + output</p>
+    <small>All major providers · 24hr turnaround · Use for judicial analytics corpus</small>
+  </div>
+  <div class="discount-card">
+    <h4>Cache Hit</h4>
+    <p>90% off cached input</p>
+    <small>Stacks with batch · Park large docs once · Re-read at 10% cost</small>
+  </div>
+  <div class="discount-card">
+    <h4>Context Caching Storage</h4>
+    <p>$1–4.50 / 1M tokens / hr</p>
+    <small>Flash = $1 · Pro = $4.50 · Only cache what gets re-read 10+ times</small>
+  </div>
+  <div class="discount-card">
+    <h4>DeepSeek Off-Peak</h4>
+    <p>Extra discount 16:30–00:30 UTC</p>
+    <small>Additional reduction on already-cheap V4 Flash · Good for overnight batch runs</small>
+  </div>
+</div>
+
+<!-- ════════ KINGSFIELD ROUTING ════════ -->
+<div class="section-label">Kingsfield Model Routing Guide</div>
+<div class="routing-grid">
+  <div class="routing-card">
+    <div class="tier-label" style="color:var(--green)">Tier 1 · Bulk / Free</div>
+    <h4>DeepSeek V4 Flash<br>MiniMax M3</h4>
+    <ul>
+      <li>Media transcription cleaning</li>
+      <li>Classification + tagging</li>
+      <li>Bulk hearing corpus pass</li>
+      <li>$0.14–0.30/1M in</li>
+    </ul>
+  </div>
+  <div class="routing-card">
+    <div class="tier-label" style="color:var(--sky)">Tier 2 · Standard</div>
+    <h4>Haiku 4.5<br>Gemini 3.1 Flash</h4>
+    <ul>
+      <li>Citation lookup</li>
+      <li>Statute search</li>
+      <li>Routing decisions</li>
+      <li>$0.50–1.00/1M in</li>
+    </ul>
+  </div>
+  <div class="routing-card">
+    <div class="tier-label" style="color:var(--aqua)">Tier 3 · Production</div>
+    <h4>Sonnet 4.6<br>Gemini 3.5 Flash</h4>
+    <ul>
+      <li>Judge profiling</li>
+      <li>Pattern analysis</li>
+      <li>Kingsfield agent default</li>
+      <li>$1.50–3.00/1M in</li>
+    </ul>
+  </div>
+  <div class="routing-card">
+    <div class="tier-label" style="color:var(--amber)">Tier 4 · Heavy</div>
+    <h4>Opus 4.8<br>Gemini 3.1 Pro</h4>
+    <ul>
+      <li>Strategy synthesis</li>
+      <li>Brief-level work</li>
+      <li>LLM Council only</li>
+      <li>$2.00–5.00/1M in</li>
+    </ul>
+  </div>
+  <div class="routing-card">
+    <div class="tier-label" style="color:var(--ash)">Tier 0 · Air-gapped</div>
+    <h4>Local DeepSeek<br>(self-hosted)</h4>
+    <ul>
+      <li>Private client docs</li>
+      <li>Confidential matter data</li>
+      <li>No API cost</li>
+      <li>CO personal case docs</li>
+    </ul>
+  </div>
+  <div class="routing-card">
+    <div class="tier-label" style="color:var(--aqua)">Real-Time</div>
+    <h4>Gemini 3.1 Flash Live</h4>
+    <ul>
+      <li>Wingman earpiece</li>
+      <li>~$0.015–0.02/min</li>
+      <li>16kHz in → 24kHz out</li>
+      <li>Cheapest S2S option</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════ TOOLS ════════ -->
+<div class="section-label">Build Tools · When to Use What</div>
+<div class="table-wrap">
+  <div class="tool-row" style="background:var(--interactive); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ash);">
+    <span>Tool</span><span>What it does</span><span style="text-align:right">Use for</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">Claude.ai (this)</span>
+    <span class="tool-desc">Architecture, code review, complex multi-file logic, documentation, reference files</span>
+    <span class="tool-use">Plan · Design · Docs</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">Claude Code</span>
+    <span class="tool-desc">Terminal access, runs code live, iterates, debugs in real environment. Best for actually building wingman.py</span>
+    <span class="tool-use">★ Build Wingman</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">AI Studio vibe code</span>
+    <span class="tool-desc">Front-end sandbox UI, quick demos, remixing gallery examples. Free within daily limits</span>
+    <span class="tool-use">UI prototypes</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">Antigravity IDE</span>
+    <span class="tool-desc">Google's agentic IDE, similar to Cursor. Agent-first, parallel tasks. See fix below.</span>
+    <span class="tool-use">Google stack builds</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">Antigravity CLI</span>
+    <span class="tool-desc">Terminal-only version. Lighter than IDE. Available via Homebrew.</span>
+    <span class="tool-use">Scripts · agents</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">Cowork</span>
+    <span class="tool-desc">Sits between Claude chat and Claude Code. Desktop file/task automation. Token-heavy for complex tasks.</span>
+    <span class="tool-use">File automation only</span>
+  </div>
+  <div class="tool-row">
+    <span class="tool-name">OpenRouter</span>
+    <span class="tool-desc">Single API key for 315+ models. USA-accessible DeepSeek, MiniMax, free tiers. Drop-in OpenAI format.</span>
+    <span class="tool-use">Bulk/cheap routing</span>
+  </div>
+</div>
+
+<!-- ════════ ANTIGRAVITY FIX ════════ -->
+<div class="section-label">Antigravity Mac Fix</div>
+<div class="fix-block">
+  <h4>Why it failed + how to fix it</h4>
+  <div class="fix-step"><span class="step-num">WHY</span><span>Most failures are: (a) macOS Gatekeeper blocking unsigned app, (b) old version cached, (c) signing into a Google account with billing issues. The app requires macOS Monterey 12+ and Chrome installed.</span></div>
+  <div class="fix-step"><span class="step-num">OPT A</span><span>Download fresh from <code>antigravity.google/download</code> → click <strong>Download for Apple Silicon</strong> (.dmg, ~182MB). Open .dmg, drag to Applications. On first launch: right-click → Open (bypasses Gatekeeper). Sign in with a clean Google account, NOT the one with billing issues.</span></div>
+  <div class="fix-step"><span class="step-num">OPT B</span><span>Homebrew CLI version is lighter and more reliable: <code>brew install --cask antigravity-cli</code>. Requires macOS 12+. Terminal-only but no Gatekeeper issues. Run with <code>antigravity</code>.</span></div>
+  <div class="fix-step"><span class="step-num">OPT C</span><span>Skip Antigravity entirely for Wingman. Claude Code does the same job for Python/audio builds and you already have it. Antigravity is more useful for Google-native deploys (Cloud Run, Firebase) later.</span></div>
+  <div class="fix-step"><span class="step-num">BILLING</span><span>Your Google billing issue (Play/One/AI Cloud mix): add a $10 credit to a <em>new</em> separate Google Cloud project via <code>console.cloud.google.com</code>. Use project-scoped billing to isolate it from the old mess. AI Studio API calls bill to this project, not the legacy account.</span></div>
+</div>
+
+<!-- ════════ JUDICIAL CORPUS COST ════════ -->
+<div class="section-label">Judicial Analytics · Estimated Costs</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Model</th>
+        <th>Cost / hr audio</th>
+        <th>10K hrs total</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Transcription</td>
+        <td class="ctx">Gemini 3.1 Flash</td>
+        <td class="price-in">~$0.13</td>
+        <td class="price-in">~$1,300</td>
+        <td class="ctx">1hr audio ≈ 1.8M tokens</td>
+      </tr>
+      <tr>
+        <td>Transcript cleaning</td>
+        <td class="ctx">DeepSeek V4 Flash</td>
+        <td class="price-in">~$0.05</td>
+        <td class="price-in">~$500</td>
+        <td class="ctx">Fixes 30% error rate cheaply</td>
+      </tr>
+      <tr>
+        <td>Behavioral analysis</td>
+        <td class="ctx">Sonnet 4.6 (batch)</td>
+        <td class="price-in">~$0.50</td>
+        <td class="price-in">~$5,000</td>
+        <td class="ctx">One-time enrichment pass</td>
+      </tr>
+      <tr>
+        <td>Audio storage (S3)</td>
+        <td class="ctx">AWS S3</td>
+        <td class="price-in">$0.023/GB/mo</td>
+        <td class="price-in">~$23/mo / TB</td>
+        <td class="ctx">~1TB for 10K hrs audio-only</td>
+      </tr>
+      <tr>
+        <td>Classification pass</td>
+        <td class="ctx">MiniMax M3 (batch)</td>
+        <td class="price-in">~$0.02</td>
+        <td class="price-in">~$200</td>
+        <td class="ctx">Speaker ID, topic, outcome tags</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p class="note">Total one-time corpus build cost: ~<strong>$7,000–10,000</strong> for 10K hours, fully enriched. Run in nightly batches at 50% off. This is a pitchable asset — frame as proprietary behavioral data lake, no comp has it.</p>
+
+<footer>
+  Kingsfield · AI Pricing Cheatsheet · June 15, 2026 · Prices change — always verify at ai.google.dev/pricing · anthropic.com/pricing · platform.openai.com/pricing
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "dataset_name": "florida_appellate_oral_arguments",
+  "version": "0.1",
+  "priority_channels": [
+    {
+      "id": "fl_2dca",
+      "name": "Florida 2nd District Court of Appeal",
+      "url": "https://www.youtube.com/@seconddistrictcourtofappea8708",
+      "priority": 1,
+      "notes": "1,700+ videos — start here"
+    },
+    {
+      "id": "fl_supreme",
+      "name": "Florida Supreme Court (YouTube)",
+      "url": "https://www.youtube.com/@FloridaSupremeCourtTallahassee",
+      "priority": 2
+    },
+    {
+      "id": "fl_1dca",
+      "name": "Florida 1st DCA",
+      "url": "https://www.youtube.com/@firstdistrictcourtofappeal493",
+      "priority": 3
+    },
+    {
+      "id": "fl_5dca",
+      "name": "Florida 5th DCA",
+      "url": "https://www.youtube.com/@floridafifthdistrictcourto214",
+      "priority": 4
+    }
+  ],
+  "transcription": {
+    "temperature": 0.0,
+    "response_format": "srt",
+    "chunk_minutes": 15,
+    "max_upload_mb": 25
+  },
+  "verification": {
+    "caption_match_threshold": 75,
+    "min_caption_overlap_chars": 200
+  }
+}

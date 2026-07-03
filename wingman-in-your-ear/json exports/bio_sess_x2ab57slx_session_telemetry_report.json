@@ -1,0 +1,98 @@
+{
+  "sessionId": "bio_sess_x2ab57slx",
+  "downloadTimestamp": "2026-06-15T22:15:38.910Z",
+  "vocalMetrics": {
+    "volume": 0,
+    "peakVolume": 0,
+    "isSpeaking": false,
+    "hesitationCount": 0,
+    "speechRate": 0,
+    "deferralCount": 0,
+    "interruptionCount": 0,
+    "interruptionTimestamps": []
+  },
+  "diagnosticReport": {
+    "stressLevel": 0,
+    "sentiment": "OFFLINE",
+    "insights": "Continuous speech diagnostics will initialize once System Activation completes."
+  },
+  "logs": [
+    {
+      "id": "init_log_1",
+      "timestamp": "6:14:41 PM",
+      "source": "SYSTEM",
+      "message": "Client-side acoustic-telemetry analyzer booted. Preflight checks active...",
+      "type": "info"
+    },
+    {
+      "id": "5vqxav",
+      "timestamp": "6:14:41 PM",
+      "source": "SYSTEM",
+      "message": "Stateful speech processor synced with Gemini core.",
+      "type": "success"
+    },
+    {
+      "id": "5ldto",
+      "timestamp": "6:14:41 PM",
+      "source": "SYSTEM",
+      "message": "Stateful speech processor synced with Gemini core.",
+      "type": "success"
+    },
+    {
+      "id": "r4l7y6",
+      "timestamp": "6:14:59 PM",
+      "source": "SYSTEM",
+      "message": "Requesting microphone-only capture permissions...",
+      "type": "info"
+    },
+    {
+      "id": "xmuns",
+      "timestamp": "6:15:00 PM",
+      "source": "SYSTEM",
+      "message": "Microphone capture verified. Calibrating physical filters...",
+      "type": "success"
+    },
+    {
+      "id": "hop4y",
+      "timestamp": "6:15:00 PM",
+      "source": "SYSTEM",
+      "message": "Initiating live bi-directional transcription socket...",
+      "type": "info"
+    },
+    {
+      "id": "bgxhr9",
+      "timestamp": "6:15:00 PM",
+      "source": "SYSTEM",
+      "message": "Live transcription socket synchronized successfully.",
+      "type": "success"
+    },
+    {
+      "id": "wjq82",
+      "timestamp": "6:15:30 PM",
+      "source": "TRANSCRIPTION",
+      "message": "So for starters, your honor, we're going to be talking about the objections of the day. The objections starting with what the ultimate goal is, which was uh CRS 14-128. And it's affecting the legal landscape and those that are running from it before. But at different times and the case has gotten very overwhelming and and at a certain point I just want to you know, bring it down a notch and and see if we can get to there, okay? Uh at now, and I'm not even talking about waiting. All right? Yeah.",
+      "type": "success"
+    },
+    {
+      "id": "r6rb78",
+      "timestamp": "6:15:30 PM",
+      "source": "ACOUSTICS",
+      "message": "Matched filler pattern: 3 occurrences",
+      "type": "info"
+    },
+    {
+      "id": "fpyg3i",
+      "timestamp": "6:15:30 PM",
+      "source": "SYSTEM",
+      "message": "Vocal streaming link closed. Decoupled diagnostic channels.",
+      "type": "info"
+    },
+    {
+      "id": "9lbp0q",
+      "timestamp": "6:15:30 PM",
+      "source": "SYSTEM",
+      "message": "Speech transcription channel closed.",
+      "type": "warn"
+    }
+  ]
+}

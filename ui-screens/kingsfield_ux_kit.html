@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield Lawfare — UX / UI Kit</title>
+
+<!-- ── FONTS ── -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Big+Shoulders+Display:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   KINGSFIELD DESIGN TOKENS  (embedded — matches kingsfield-tokens.css)
+══════════════════════════════════════════════════════════════════ */
+:root {
+  --kf-prim-black-950: #080705;
+  --kf-prim-black-900: #0E0C09;
+  --kf-prim-black-850: #141109;
+  --kf-prim-black-800: #1C190F;
+  --kf-prim-black-700: #272318;
+  --kf-prim-black-600: #332E21;
+  --kf-prim-black-500: #433D2F;
+  --kf-prim-black-400: #58513F;
+  --kf-prim-warm-300: #7A7060;
+  --kf-prim-warm-200: #A09485;
+  --kf-prim-warm-100: #C4BAB0;
+  --kf-prim-warm-50:  #E8E3DC;
+  --kf-prim-white-100: #F5F1EA;
+  --kf-prim-white-50:  #FAF8F4;
+  --kf-prim-amber-900: #6B3F00;
+  --kf-prim-amber-700: #A86500;
+  --kf-prim-amber-500: #D4861A;
+  --kf-prim-amber-400: #E09B30;
+  --kf-prim-amber-300: #EDBA60;
+  --kf-prim-amber-200: #F5D48A;
+  --kf-prim-amber-100: #FAE9BF;
+  --kf-prim-red-700:   #991B1B;
+  --kf-prim-red-500:   #DC2626;
+  --kf-prim-red-200:   #FECACA;
+  --kf-prim-yellow-500: #EAB308;
+  --kf-prim-yellow-200: #FEF08A;
+  --kf-prim-green-700:  #15803D;
+  --kf-prim-green-500:  #16A34A;
+  --kf-prim-green-200:  #BBF7D0;
+
+  --kf-font-display: 'Syne', 'Big Shoulders Display', system-ui, sans-serif;
+  --kf-font-body:    'Inter', system-ui, sans-serif;
+  --kf-font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+  --kf-text-xs:   0.75rem;
+  --kf-text-sm:   0.875rem;
+  --kf-text-base: 1rem;
+  --kf-text-lg:   1.125rem;
+  --kf-text-xl:   1.25rem;
+  --kf-text-2xl:  1.5rem;
+  --kf-text-3xl:  1.875rem;
+  --kf-text-4xl:  2.25rem;
+  --kf-text-5xl:  3rem;
+  --kf-text-6xl:  3.75rem;
+
+  --kf-leading-tight:   1.2;
+  --kf-leading-snug:    1.375;
+  --kf-leading-normal:  1.5;
+  --kf-leading-relaxed: 1.65;
+  --kf-tracking-tight:  -0.025em;
+  --kf-tracking-normal:  0em;
+  --kf-tracking-wide:    0.05em;
+  --kf-tracking-widest:  0.15em;
+
+  --kf-space-1:  0.25rem;
+  --kf-space-2:  0.5rem;
+  --kf-space-3:  0.75rem;
+  --kf-space-4:  1rem;
+  --kf-space-6:  1.5rem;
+  --kf-space-8:  2rem;
+  --kf-space-12: 3rem;
+  --kf-space-16: 4rem;
+  --kf-space-24: 6rem;
+
+  --kf-radius-sm:   4px;
+  --kf-radius-md:   8px;
+  --kf-radius-lg:   12px;
+  --kf-radius-xl:   16px;
+  --kf-radius-full: 9999px;
+
+  --kf-shadow-sm:     0 1px 2px rgba(0,0,0,0.4);
+  --kf-shadow-md:     0 4px 12px rgba(0,0,0,0.5);
+  --kf-shadow-lg:     0 8px 32px rgba(0,0,0,0.6);
+  --kf-shadow-accent: 0 0 24px rgba(212,134,26,0.25);
+  --kf-transition: 150ms ease;
+}
+
+:root, [data-theme="dark"] {
+  --kf-bg-base:     var(--kf-prim-black-900);
+  --kf-bg-subtle:   var(--kf-prim-black-850);
+  --kf-bg-elevated: var(--kf-prim-black-800);
+  --kf-bg-overlay:  var(--kf-prim-black-700);
+  --kf-bg-hover:    var(--kf-prim-black-600);
+  --kf-bg-active:   var(--kf-prim-black-500);
+  --kf-border-subtle: var(--kf-prim-black-600);
+  --kf-border-base:   var(--kf-prim-black-500);
+  --kf-border-strong: var(--kf-prim-black-400);
+  --kf-fg-base:    var(--kf-prim-white-100);
+  --kf-fg-subtle:  var(--kf-prim-warm-200);
+  --kf-fg-muted:   var(--kf-prim-warm-300);
+  --kf-fg-inverse: var(--kf-prim-black-900);
+  --kf-accent:         var(--kf-prim-amber-400);
+  --kf-accent-hover:   var(--kf-prim-amber-300);
+  --kf-accent-subtle:  var(--kf-prim-amber-900);
+  --kf-accent-fg:      var(--kf-prim-black-900);
+  --kf-signal-success:    var(--kf-prim-green-500);
+  --kf-signal-success-bg: rgba(22,163,74,0.12);
+  --kf-signal-warning:    var(--kf-prim-yellow-500);
+  --kf-signal-warning-bg: rgba(234,179,8,0.12);
+  --kf-signal-danger:     var(--kf-prim-red-500);
+  --kf-signal-danger-bg:  rgba(220,38,38,0.12);
+  --kf-gate-verified:    var(--kf-prim-green-500);
+  --kf-gate-conditional: var(--kf-prim-yellow-500);
+  --kf-gate-vetoed:      var(--kf-prim-red-500);
+  --kf-gate-pending:     var(--kf-prim-warm-300);
+}
+
+[data-theme="light"] {
+  --kf-bg-base:     var(--kf-prim-white-50);
+  --kf-bg-subtle:   var(--kf-prim-white-100);
+  --kf-bg-elevated: #FFFFFF;
+  --kf-bg-overlay:  var(--kf-prim-warm-50);
+  --kf-bg-hover:    var(--kf-prim-warm-100);
+  --kf-bg-active:   var(--kf-prim-warm-200);
+  --kf-border-subtle: var(--kf-prim-warm-50);
+  --kf-border-base:   var(--kf-prim-warm-100);
+  --kf-border-strong: var(--kf-prim-warm-200);
+  --kf-fg-base:    var(--kf-prim-black-900);
+  --kf-fg-subtle:  var(--kf-prim-black-500);
+  --kf-fg-muted:   var(--kf-prim-warm-300);
+  --kf-fg-inverse: var(--kf-prim-white-100);
+  --kf-accent:         var(--kf-prim-amber-500);
+  --kf-accent-hover:   var(--kf-prim-amber-700);
+  --kf-accent-subtle:  var(--kf-prim-amber-100);
+  --kf-accent-fg:      #FFFFFF;
+  --kf-signal-success:    var(--kf-prim-green-700);
+  --kf-signal-success-bg: rgba(21,128,61,0.08);
+  --kf-signal-warning:    var(--kf-prim-yellow-500);
+  --kf-signal-warning-bg: rgba(234,179,8,0.10);
+  --kf-signal-danger:     var(--kf-prim-red-700);
+  --kf-signal-danger-bg:  rgba(153,27,27,0.08);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body {
+  font-family: var(--kf-font-body);
+  font-size: var(--kf-text-base);
+  line-height: var(--kf-leading-relaxed);
+  color: var(--kf-fg-base);
+  background: var(--kf-bg-base);
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--kf-font-display);
+  font-weight: 700;
+  line-height: var(--kf-leading-tight);
+  letter-spacing: var(--kf-tracking-tight);
+  color: var(--kf-fg-base);
+}
+h1 { font-size: var(--kf-text-5xl); font-weight: 800; }
+h2 { font-size: var(--kf-text-3xl); }
+h3 { font-size: var(--kf-text-2xl); }
+h4 { font-size: var(--kf-text-xl); font-weight: 600; }
+p  { color: var(--kf-fg-subtle); line-height: var(--kf-leading-relaxed); }
+a  { color: var(--kf-accent); text-decoration: none; }
+code, .mono { font-family: var(--kf-font-mono); font-size: 0.9em; }
+img { max-width: 100%; display: block; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--kf-bg-base); }
+::-webkit-scrollbar-thumb { background: var(--kf-border-strong); border-radius: 3px; }
+::selection { background: var(--kf-accent); color: var(--kf-accent-fg); }
+
+/* ══════════════════════════════════════════════════════════════════
+   COMPONENT LIBRARY
+══════════════════════════════════════════════════════════════════ */
+.kf-btn {
+  display: inline-flex; align-items: center; gap: var(--kf-space-2);
+  padding: var(--kf-space-3) var(--kf-space-6);
+  font-family: var(--kf-font-body); font-size: var(--kf-text-sm); font-weight: 500;
+  border-radius: var(--kf-radius-md); border: 1px solid transparent;
+  cursor: pointer; transition: all var(--kf-transition); white-space: nowrap;
+  text-decoration: none; line-height: 1;
+}
+.kf-btn-primary  { background: var(--kf-accent); color: var(--kf-accent-fg); border-color: var(--kf-accent); }
+.kf-btn-primary:hover { background: var(--kf-accent-hover); border-color: var(--kf-accent-hover); box-shadow: var(--kf-shadow-accent); color: var(--kf-accent-fg); }
+.kf-btn-secondary { background: transparent; color: var(--kf-fg-base); border-color: var(--kf-border-strong); }
+.kf-btn-secondary:hover { background: var(--kf-bg-hover); border-color: var(--kf-fg-muted); }
+.kf-btn-ghost { background: transparent; color: var(--kf-fg-subtle); border-color: transparent; }
+.kf-btn-ghost:hover { background: var(--kf-bg-hover); color: var(--kf-fg-base); }
+.kf-btn-danger { background: var(--kf-signal-danger-bg); color: var(--kf-signal-danger); border-color: var(--kf-signal-danger); }
+.kf-btn-sm { padding: var(--kf-space-2) var(--kf-space-4); font-size: var(--kf-text-xs); }
+.kf-btn-lg { padding: var(--kf-space-4) var(--kf-space-8); font-size: var(--kf-text-base); }
+
+.kf-badge {
+  display: inline-flex; align-items: center; gap: var(--kf-space-1);
+  padding: 2px var(--kf-space-2); font-size: var(--kf-text-xs); font-weight: 500;
+  border-radius: var(--kf-radius-full); letter-spacing: var(--kf-tracking-wide); text-transform: uppercase;
+}
+.kf-badge-verified    { background: var(--kf-signal-success-bg); color: var(--kf-signal-success); }
+.kf-badge-conditional { background: var(--kf-signal-warning-bg); color: var(--kf-signal-warning); }
+.kf-badge-vetoed      { background: var(--kf-signal-danger-bg);  color: var(--kf-signal-danger); }
+.kf-badge-pending     { background: var(--kf-bg-hover);          color: var(--kf-fg-muted); }
+.kf-badge-accent      { background: var(--kf-accent-subtle);     color: var(--kf-accent); }
+
+.kf-card {
+  background: var(--kf-bg-elevated); border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-lg); padding: var(--kf-space-6);
+}
+.kf-card-hover { transition: border-color var(--kf-transition), box-shadow var(--kf-transition); }
+.kf-card-hover:hover { border-color: var(--kf-border-strong); box-shadow: var(--kf-shadow-md); }
+
+.kf-input {
+  width: 100%; padding: var(--kf-space-3) var(--kf-space-4);
+  font-family: var(--kf-font-body); font-size: var(--kf-text-base);
+  color: var(--kf-fg-base); background: var(--kf-bg-elevated);
+  border: 1px solid var(--kf-border-base); border-radius: var(--kf-radius-md);
+  outline: none; transition: border-color var(--kf-transition), box-shadow var(--kf-transition);
+}
+.kf-input::placeholder { color: var(--kf-fg-muted); }
+.kf-input:focus { border-color: var(--kf-accent); box-shadow: 0 0 0 3px rgba(212,134,26,0.15); }
+.kf-input-mono { font-family: var(--kf-font-mono); font-size: var(--kf-text-sm); }
+
+.kf-divider { border: none; border-top: 1px solid var(--kf-border-subtle); margin: var(--kf-space-6) 0; }
+
+.kf-citation {
+  display: flex; align-items: flex-start; gap: var(--kf-space-3);
+  padding: var(--kf-space-4); background: var(--kf-bg-subtle);
+  border: 1px solid var(--kf-border-subtle); border-left: 3px solid var(--kf-gate-pending);
+  border-radius: var(--kf-radius-md); font-size: var(--kf-text-sm);
+}
+.kf-citation[data-verdict="verified"]    { border-left-color: var(--kf-gate-verified); }
+.kf-citation[data-verdict="conditional"] { border-left-color: var(--kf-gate-conditional); }
+.kf-citation[data-verdict="vetoed"]      { border-left-color: var(--kf-gate-vetoed); }
+.kf-citation-text { font-family: var(--kf-font-mono); font-size: var(--kf-text-xs); color: var(--kf-fg-subtle); }
+
+.kf-nav {
+  display: flex; align-items: center; gap: var(--kf-space-1);
+  padding: var(--kf-space-3) var(--kf-space-6);
+  background: var(--kf-bg-subtle); border-bottom: 1px solid var(--kf-border-subtle);
+}
+.kf-nav-brand {
+  font-family: var(--kf-font-display); font-size: var(--kf-text-xl); font-weight: 800;
+  letter-spacing: var(--kf-tracking-tight); color: var(--kf-fg-base); text-decoration: none;
+}
+.kf-nav-brand span { color: var(--kf-accent); }
+.kf-nav-links { display: flex; align-items: center; gap: var(--kf-space-1); margin-left: auto; }
+.kf-nav-link {
+  padding: var(--kf-space-2) var(--kf-space-3); font-size: var(--kf-text-sm);
+  color: var(--kf-fg-subtle); border-radius: var(--kf-radius-sm);
+  transition: all var(--kf-transition); text-decoration: none;
+}
+.kf-nav-link:hover, .kf-nav-link.active { color: var(--kf-fg-base); background: var(--kf-bg-hover); }
+
+.kf-chat-user {
+  align-self: flex-end; max-width: 70%;
+  padding: var(--kf-space-3) var(--kf-space-4);
+  background: var(--kf-accent); color: var(--kf-accent-fg);
+  border-radius: var(--kf-radius-lg) var(--kf-radius-lg) var(--kf-space-1) var(--kf-radius-lg);
+  font-size: var(--kf-text-sm);
+}
+.kf-chat-ai {
+  align-self: flex-start; max-width: 85%;
+  padding: var(--kf-space-4); background: var(--kf-bg-elevated);
+  border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-lg) var(--kf-radius-lg) var(--kf-radius-lg) var(--kf-space-1);
+  font-size: var(--kf-text-sm); color: var(--kf-fg-subtle);
+}
+
+.kf-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--kf-space-6); }
+.kf-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--kf-space-6); }
+.kf-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--kf-space-4); }
+
+/* ══════════════════════════════════════════════════════════════════
+   UX KIT CHROME
+══════════════════════════════════════════════════════════════════ */
+.kit-sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 230px;
+  background: var(--kf-prim-black-950);
+  border-right: 1px solid var(--kf-border-subtle);
+  padding: var(--kf-space-6) var(--kf-space-4);
+  overflow-y: auto; z-index: 50;
+}
+.kit-sidebar-logo {
+  font-family: var(--kf-font-display); font-size: var(--kf-text-lg); font-weight: 800;
+  letter-spacing: -0.03em; color: var(--kf-fg-base); margin-bottom: var(--kf-space-2);
+  display: flex; align-items: center; gap: var(--kf-space-2);
+}
+.kit-sidebar-logo span { color: var(--kf-accent); }
+.kit-sidebar-sub {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--kf-fg-muted); margin-bottom: var(--kf-space-8);
+  font-family: var(--kf-font-mono);
+}
+.kit-nav-section { margin-bottom: var(--kf-space-6); }
+.kit-nav-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--kf-prim-warm-300); margin-bottom: var(--kf-space-2); padding: 0 var(--kf-space-2);
+}
+.kit-nav-item {
+  display: block; padding: var(--kf-space-2) var(--kf-space-2);
+  font-size: var(--kf-text-sm); color: var(--kf-fg-subtle);
+  border-radius: var(--kf-radius-sm); cursor: pointer;
+  transition: all var(--kf-transition); text-decoration: none;
+}
+.kit-nav-item:hover, .kit-nav-item.active { color: var(--kf-fg-base); background: var(--kf-bg-hover); }
+.kit-nav-item.active { color: var(--kf-accent); }
+
+.kit-main {
+  margin-left: 230px;
+  padding: var(--kf-space-12);
+  max-width: 1100px;
+}
+
+/* Section styling */
+.kit-section {
+  margin-bottom: var(--kf-space-24);
+  scroll-margin-top: var(--kf-space-8);
+}
+.kit-section-header {
+  display: flex; align-items: baseline; gap: var(--kf-space-4);
+  margin-bottom: var(--kf-space-2); padding-bottom: var(--kf-space-4);
+  border-bottom: 1px solid var(--kf-border-subtle);
+}
+.kit-section-number {
+  font-family: var(--kf-font-mono); font-size: var(--kf-text-xs);
+  color: var(--kf-accent); min-width: 24px;
+}
+.kit-section-title {
+  font-family: var(--kf-font-display); font-size: var(--kf-text-2xl);
+  font-weight: 800; color: var(--kf-fg-base);
+}
+.kit-section-desc {
+  font-size: var(--kf-text-sm); color: var(--kf-fg-muted);
+  margin-bottom: var(--kf-space-8); margin-top: var(--kf-space-2);
+}
+
+/* Demo frames */
+.kit-demo {
+  background: var(--kf-bg-elevated); border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-lg); padding: var(--kf-space-8);
+  margin-bottom: var(--kf-space-4);
+}
+.kit-demo-label {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--kf-fg-muted); font-family: var(--kf-font-mono); margin-bottom: var(--kf-space-4);
+}
+.kit-row {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--kf-space-3); margin-bottom: var(--kf-space-4);
+}
+
+/* Color swatches */
+.kit-swatches { display: flex; flex-wrap: wrap; gap: var(--kf-space-3); }
+.kit-swatch { width: 90px; cursor: pointer; transition: transform var(--kf-transition); }
+.kit-swatch:hover { transform: scale(1.05); }
+.kit-swatch-color {
+  height: 64px; border-radius: var(--kf-radius-md);
+  border: 1px solid rgba(255,255,255,0.06); margin-bottom: var(--kf-space-2);
+}
+.kit-swatch-name { font-size: 10px; color: var(--kf-fg-muted); font-family: var(--kf-font-mono); text-align: center; }
+.kit-swatch-hex  { font-size: 9px;  color: var(--kf-prim-warm-300); font-family: var(--kf-font-mono); text-align: center; }
+
+/* Mockup gallery */
+.kit-mockup-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--kf-space-6);
+}
+.kit-mockup-card {
+  background: var(--kf-bg-elevated); border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-lg); overflow: hidden;
+  transition: box-shadow var(--kf-transition), border-color var(--kf-transition);
+}
+.kit-mockup-card:hover { border-color: var(--kf-accent); box-shadow: var(--kf-shadow-accent); }
+.kit-mockup-card img {
+  width: 100%; height: auto; display: block;
+  border-bottom: 1px solid var(--kf-border-subtle);
+}
+.kit-mockup-label {
+  padding: var(--kf-space-3) var(--kf-space-4);
+  font-size: var(--kf-text-xs); color: var(--kf-fg-muted);
+  font-family: var(--kf-font-mono);
+}
+.kit-mockup-full { grid-column: 1 / -1; }
+
+/* Logo grid */
+.kit-logo-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--kf-space-4);
+}
+.kit-logo-card {
+  border: 1px solid var(--kf-border-subtle); border-radius: var(--kf-radius-lg);
+  overflow: hidden; background: var(--kf-bg-elevated);
+}
+.kit-logo-card.on-black { background: #000; }
+.kit-logo-card.on-white { background: #fff; }
+.kit-logo-img-wrap {
+  padding: var(--kf-space-8); display: flex; align-items: center; justify-content: center;
+  min-height: 160px;
+}
+.kit-logo-img-wrap img { max-height: 120px; width: auto; margin: 0 auto; }
+.kit-logo-meta {
+  padding: var(--kf-space-3) var(--kf-space-4);
+  border-top: 1px solid var(--kf-border-subtle);
+  font-size: var(--kf-text-xs); color: var(--kf-fg-muted);
+  font-family: var(--kf-font-mono);
+}
+
+/* Typography specimens */
+.kit-type-row {
+  display: flex; align-items: baseline; gap: var(--kf-space-6);
+  padding: var(--kf-space-5) 0; border-bottom: 1px solid var(--kf-border-subtle);
+}
+.kit-type-meta { width: 140px; flex-shrink: 0; font-size: 10px; font-family: var(--kf-font-mono); color: var(--kf-fg-muted); line-height: 1.6; }
+.kit-type-sample { flex: 1; }
+
+/* Token table */
+.kit-token-table { width: 100%; border-collapse: collapse; font-size: var(--kf-text-sm); }
+.kit-token-table th, .kit-token-table td { text-align: left; padding: var(--kf-space-3); border-bottom: 1px solid var(--kf-border-subtle); }
+.kit-token-table th { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kf-fg-muted); font-weight: 600; }
+.kit-token-table td:first-child { font-family: var(--kf-font-mono); color: var(--kf-accent); font-size: var(--kf-text-xs); }
+.color-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: var(--kf-space-2); border: 1px solid rgba(255,255,255,0.1); }
+
+/* Gate items */
+.gate-list { display: flex; flex-direction: column; gap: var(--kf-space-2); }
+.gate-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--kf-space-3) var(--kf-space-4);
+  background: var(--kf-bg-subtle); border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-md); font-size: var(--kf-text-sm);
+}
+.gate-item-label { color: var(--kf-fg-subtle); }
+.gate-pass  { color: var(--kf-signal-success); font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+.gate-warn  { color: var(--kf-signal-warning); font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+.gate-fail  { color: var(--kf-signal-danger);  font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+.gate-skip  { color: var(--kf-fg-muted);       font-weight: 600; font-size: var(--kf-text-xs); letter-spacing: 0.08em; }
+
+/* Hero preview */
+.kit-hero-preview {
+  padding: var(--kf-space-16) var(--kf-space-12); text-align: center;
+  background: linear-gradient(160deg, var(--kf-bg-subtle) 0%, var(--kf-bg-base) 100%);
+  border-radius: var(--kf-radius-xl); border: 1px solid var(--kf-border-subtle);
+  position: relative; overflow: hidden;
+}
+.kit-hero-preview::before {
+  content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(212,134,26,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.kit-hero-eyebrow {
+  font-size: var(--kf-text-xs); font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--kf-accent); margin-bottom: var(--kf-space-4);
+}
+.kit-hero-title {
+  font-family: var(--kf-font-display); font-size: var(--kf-text-5xl); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.05; margin-bottom: var(--kf-space-4);
+}
+.kit-hero-title em { color: var(--kf-accent); font-style: normal; }
+.kit-hero-sub {
+  font-size: var(--kf-text-lg); color: var(--kf-fg-subtle); max-width: 520px;
+  margin: 0 auto var(--kf-space-8); line-height: var(--kf-leading-relaxed);
+}
+
+/* Stat cards */
+.kit-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--kf-space-4); }
+.kit-stat-card {
+  background: var(--kf-bg-subtle); border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-lg); padding: var(--kf-space-6);
+}
+.kit-stat-label { font-size: var(--kf-text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--kf-fg-muted); margin-bottom: var(--kf-space-2); }
+.kit-stat-value { font-family: var(--kf-font-display); font-size: var(--kf-text-3xl); font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: var(--kf-space-1); }
+.kit-stat-sub { font-size: var(--kf-text-xs); color: var(--kf-fg-muted); }
+
+/* Input group */
+.input-group { position: relative; }
+.input-group .kf-input { padding-right: 100px; }
+.input-group-btn { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); }
+
+/* Toast */
+.kit-toast {
+  position: fixed; bottom: var(--kf-space-6); right: var(--kf-space-6);
+  background: var(--kf-accent); color: var(--kf-accent-fg);
+  padding: var(--kf-space-2) var(--kf-space-4); border-radius: var(--kf-radius-md);
+  font-size: var(--kf-text-sm); font-weight: 500; opacity: 0;
+  transform: translateY(8px); transition: all 200ms ease;
+  pointer-events: none; z-index: 999;
+}
+.kit-toast.show { opacity: 1; transform: translateY(0); }
+
+/* Theme toggle */
+.kit-theme-toggle {
+  position: fixed; top: var(--kf-space-4); right: var(--kf-space-4); z-index: 100;
+  display: flex; align-items: center; gap: var(--kf-space-2);
+  padding: var(--kf-space-2) var(--kf-space-3);
+  background: var(--kf-bg-elevated); border: 1px solid var(--kf-border-base);
+  border-radius: var(--kf-radius-full); cursor: pointer;
+  font-size: var(--kf-text-xs); color: var(--kf-fg-subtle);
+  transition: all var(--kf-transition); font-family: var(--kf-font-body);
+}
+.kit-theme-toggle:hover { border-color: var(--kf-accent); color: var(--kf-accent); }
+
+/* SVG diagram wrapper */
+.kit-diagram-wrap {
+  background: var(--kf-bg-elevated); border: 1px solid var(--kf-border-subtle);
+  border-radius: var(--kf-radius-lg); padding: var(--kf-space-6); overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .kit-sidebar { display: none; }
+  .kit-main { margin-left: 0; padding: var(--kf-space-8) var(--kf-space-4); }
+  .kit-mockup-grid { grid-template-columns: 1fr; }
+  .kit-logo-grid { grid-template-columns: 1fr; }
+  .kit-stat-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="kit-toast" id="toast">Copied!</div>
+
+<button class="kit-theme-toggle" onclick="toggleTheme()">
+  <span id="theme-icon">☀</span>
+  <span id="theme-label">Light</span>
+</button>
+
+<!-- ── SIDEBAR ── -->
+<nav class="kit-sidebar">
+  <div class="kit-sidebar-logo">Kings<span>field</span></div>
+  <div class="kit-sidebar-sub">UX / UI Kit v1</div>
+
+  <div class="kit-nav-section">
+    <div class="kit-nav-label">Brand</div>
+    <a class="kit-nav-item active" href="#brand-identity" onclick="setActive(this)">Brand Identity</a>
+    <a class="kit-nav-item" href="#logos" onclick="setActive(this)">Logos</a>
+    <a class="kit-nav-item" href="#colors" onclick="setActive(this)">Colors</a>
+    <a class="kit-nav-item" href="#typography" onclick="setActive(this)">Typography</a>
+    <a class="kit-nav-item" href="#tokens" onclick="setActive(this)">Tokens</a>
+  </div>
+
+  <div class="kit-nav-section">
+    <div class="kit-nav-label">Components</div>
+    <a class="kit-nav-item" href="#buttons" onclick="setActive(this)">Buttons</a>
+    <a class="kit-nav-item" href="#badges" onclick="setActive(this)">Badges</a>
+    <a class="kit-nav-item" href="#cards" onclick="setActive(this)">Cards</a>
+    <a class="kit-nav-item" href="#inputs" onclick="setActive(this)">Inputs</a>
+    <a class="kit-nav-item" href="#navigation" onclick="setActive(this)">Navigation</a>
+    <a class="kit-nav-item" href="#chat" onclick="setActive(this)">Chat UI</a>
+    <a class="kit-nav-item" href="#citations" onclick="setActive(this)">Citations</a>
+    <a class="kit-nav-item" href="#four-gates" onclick="setActive(this)">4-Gate Verdict</a>
+    <a class="kit-nav-item" href="#stats" onclick="setActive(this)">Stats</a>
+  </div>
+
+  <div class="kit-nav-section">
+    <div class="kit-nav-label">Patterns</div>
+    <a class="kit-nav-item" href="#hero" onclick="setActive(this)">Hero</a>
+    <a class="kit-nav-item" href="#architecture" onclick="setActive(this)">Architecture</a>
+  </div>
+
+  <div class="kit-nav-section">
+    <div class="kit-nav-label">Mockups</div>
+    <a class="kit-nav-item" href="#mockups-landing" onclick="setActive(this)">Landing</a>
+    <a class="kit-nav-item" href="#mockups-app" onclick="setActive(this)">App UI</a>
+    <a class="kit-nav-item" href="#mockups-blog" onclick="setActive(this)">Blog / Content</a>
+    <a class="kit-nav-item" href="#mockups-slides" onclick="setActive(this)">Slides / Decks</a>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="kit-main">
+
+<!-- ══════════════════════════════════════════════════════════════
+     1 · BRAND IDENTITY
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="brand-identity">
+  <div class="kit-section-header">
+    <span class="kit-section-number">01</span>
+    <span class="kit-section-title">Brand Identity</span>
+  </div>
+  <p class="kit-section-desc">Kingsfield Lawfare. The law is public. The rules are written. The scales are supposed to be blind. This brand is the bypass.</p>
+
+  <div class="kit-demo" style="text-align:center; padding: var(--kf-space-16);">
+    <div style="position:relative; display:inline-block;">
+      <img src="../brand-assets/Kingsfield 3D Skull Header.jpg" alt="Kingsfield Header" style="max-height:260px; width:auto; border-radius: var(--kf-radius-lg); margin: 0 auto;">
+    </div>
+    <div style="margin-top: var(--kf-space-8);">
+      <img src="../brand-assets/Kingsfiel-Lawfare-Text-Logo-Black.png" alt="Kingsfield Text Logo"
+           style="max-height:60px; width:auto; margin:0 auto; filter: invert(1);">
+    </div>
+    <div style="margin-top: var(--kf-space-6); max-width: 560px; margin-left:auto; margin-right:auto;">
+      <p style="font-family: var(--kf-font-display); font-size: var(--kf-text-xl); font-weight:700; color: var(--kf-fg-base); line-height:1.4;">
+        "Know the rules. Use them.<br>
+        <em style="color:var(--kf-accent); font-style:normal;">The law belongs to everyone.</em>"
+      </p>
+    </div>
+    <div style="margin-top:var(--kf-space-8); display:flex; gap:var(--kf-space-3); justify-content:center; flex-wrap:wrap;">
+      <span class="kf-badge kf-badge-accent">Legal Intelligence</span>
+      <span class="kf-badge kf-badge-accent">Zero Billable Hours</span>
+      <span class="kf-badge kf-badge-accent">Verified Citations</span>
+      <span class="kf-badge kf-badge-accent">Anti-Capture</span>
+      <span class="kf-badge kf-badge-accent">AGPL-3.0</span>
+    </div>
+  </div>
+
+  <div class="kit-demo">
+    <div class="kit-demo-label">Taglines & Voice</div>
+    <div style="display:flex; flex-direction:column; gap:var(--kf-space-4);">
+      <div style="padding:var(--kf-space-4) var(--kf-space-6); background:var(--kf-bg-subtle); border-left: 3px solid var(--kf-accent); border-radius:0 var(--kf-radius-md) var(--kf-radius-md) 0;">
+        <div style="font-family:var(--kf-font-display); font-size:var(--kf-text-2xl); font-weight:800;">Know the Rules. Use Them.</div>
+        <div style="font-size:var(--kf-text-xs); color:var(--kf-fg-muted); margin-top:4px; font-family:var(--kf-font-mono);">PRIMARY TAGLINE</div>
+      </div>
+      <div style="padding:var(--kf-space-4) var(--kf-space-6); background:var(--kf-bg-subtle); border-left: 3px solid var(--kf-border-strong); border-radius:0 var(--kf-radius-md) var(--kf-radius-md) 0;">
+        <div style="font-family:var(--kf-font-display); font-size:var(--kf-text-xl); font-weight:700;">Clarity. Leverage. Results.</div>
+        <div style="font-size:var(--kf-text-xs); color:var(--kf-fg-muted); margin-top:4px; font-family:var(--kf-font-mono);">SECONDARY TAGLINE</div>
+      </div>
+      <div style="padding:var(--kf-space-4) var(--kf-space-6); background:var(--kf-bg-subtle); border-left: 3px solid var(--kf-border-strong); border-radius:0 var(--kf-radius-md) var(--kf-radius-md) 0;">
+        <div style="font-family:var(--kf-font-display); font-size:var(--kf-text-xl); font-weight:700;">First, Kill All the Lawyers.</div>
+        <div style="font-size:var(--kf-text-xs); color:var(--kf-fg-muted); margin-top:4px; font-family:var(--kf-font-mono);">BLOG / CAMPAIGN — Shakespeare via Kingsfield</div>
+      </div>
+      <div style="padding:var(--kf-space-4) var(--kf-space-6); background:var(--kf-bg-subtle); border-left: 3px solid var(--kf-border-strong); border-radius:0 var(--kf-radius-md) var(--kf-radius-md) 0;">
+        <div style="font-family:var(--kf-font-display); font-size:var(--kf-text-xl); font-weight:700;">Power to the People.</div>
+        <div style="font-size:var(--kf-text-xs); color:var(--kf-fg-muted); margin-top:4px; font-family:var(--kf-font-mono);">FOUNDING PRINCIPLE</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     2 · LOGOS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="logos">
+  <div class="kit-section-header">
+    <span class="kit-section-number">02</span>
+    <span class="kit-section-title">Logos</span>
+  </div>
+  <p class="kit-section-desc">All logo variants. Use the skull on dark, the text mark on both, the combo mark for hero and header contexts.</p>
+
+  <div style="margin-bottom: var(--kf-space-4); font-size: var(--kf-text-xs); letter-spacing:.12em; text-transform:uppercase; color:var(--kf-fg-muted); font-family:var(--kf-font-mono); font-weight:600;">3D Skull Logos</div>
+  <div class="kit-logo-grid" style="margin-bottom: var(--kf-space-8);">
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/kingsfield-3Dskull1.png" alt="Kingsfield 3D Skull 1">
+      </div>
+      <div class="kit-logo-meta">kingsfield-3Dskull1.png · On Black</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/Kingsfield 3D Skull 3.png" alt="Kingsfield 3D Skull 3">
+      </div>
+      <div class="kit-logo-meta">Kingsfield 3D Skull 3.png · On Black</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/kingsfield-3Dskull-black-bg.png" alt="Kingsfield 3D Skull Black BG">
+      </div>
+      <div class="kit-logo-meta">kingsfield-3Dskull-black-bg.png</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/Kingsfield Skull 3D 1 copy.png" alt="Kingsfield Skull 3D alt">
+      </div>
+      <div class="kit-logo-meta">Kingsfield Skull 3D 1 copy.png</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/Kingsfield 3D Skull plus Text 2 copy.png" alt="Skull + Text Combo">
+      </div>
+      <div class="kit-logo-meta">Skull + Text Combo Mark</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/grok-image-2089178d-420b-48ff-8dbc-b4171a164c69-removebg-preview.png" alt="Skull No BG">
+      </div>
+      <div class="kit-logo-meta">Skull · No Background</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: var(--kf-space-4); font-size: var(--kf-text-xs); letter-spacing:.12em; text-transform:uppercase; color:var(--kf-fg-muted); font-family:var(--kf-font-mono); font-weight:600;">Text Logos</div>
+  <div class="kit-logo-grid" style="margin-bottom: var(--kf-space-8);">
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare Text Logos/Kingsfield Lawfare Logo Block White Text on Black BG.png" alt="White on Black Block Text">
+      </div>
+      <div class="kit-logo-meta">Block Text · White on Black</div>
+    </div>
+    <div class="kit-logo-card on-white">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare Text Logos/Kingsfield Lawfare Logo - B on W Block Text.png" alt="Black on White Block Text">
+      </div>
+      <div class="kit-logo-meta">Block Text · Black on White</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare Text Logos/Kingsfield Lawfare Logo - W on B Text Alice.png" alt="Alice Font White on Black">
+      </div>
+      <div class="kit-logo-meta">Alice Serif · White on Black</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: var(--kf-space-4); font-size: var(--kf-text-xs); letter-spacing:.12em; text-transform:uppercase; color:var(--kf-fg-muted); font-family:var(--kf-font-mono); font-weight:600;">Logo w/ Block Text Splits</div>
+  <div class="kit-logo-grid">
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/Kingsfield Lawfare Logo w Block Text Split.png" alt="Logo Block Text Split">
+      </div>
+      <div class="kit-logo-meta">Logo · Block Text Split</div>
+    </div>
+    <div class="kit-logo-card on-black">
+      <div class="kit-logo-img-wrap">
+        <img src="../Kingsfield Lawfare 3D Skull Logos/Kingsfield Lawfare Logo w Text Alice.png" alt="Logo w Alice Text">
+      </div>
+      <div class="kit-logo-meta">Logo · Alice Serif</div>
+    </div>
+    <div class="kit-logo-card">
+      <div class="kit-logo-img-wrap">
+        <img src="../brand-assets/Kingsfield Lawfare Footer Text Logo .png" alt="Footer Logo">
+      </div>
+      <div class="kit-logo-meta">Footer Text Logo</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     3 · COLORS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="colors">
+  <div class="kit-section-header">
+    <span class="kit-section-number">03</span>
+    <span class="kit-section-title">Colors</span>
+  </div>
+  <p class="kit-section-desc">Warm blacks. Off-white cream. Amber gold — not yellow, not orange. Click any swatch to copy the token.</p>
+
+  <div class="kit-demo">
+    <div class="kit-demo-label">Backgrounds — Warm Dark Scale</div>
+    <div class="kit-swatches">
+      <div class="kit-swatch" onclick="copy('var(--kf-bg-base)')">
+        <div class="kit-swatch-color" style="background:var(--kf-bg-base)"></div>
+        <div class="kit-swatch-name">bg-base</div>
+        <div class="kit-swatch-hex">#0E0C09</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-bg-subtle)')">
+        <div class="kit-swatch-color" style="background:var(--kf-bg-subtle)"></div>
+        <div class="kit-swatch-name">bg-subtle</div>
+        <div class="kit-swatch-hex">#141109</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-bg-elevated)')">
+        <div class="kit-swatch-color" style="background:var(--kf-bg-elevated)"></div>
+        <div class="kit-swatch-name">bg-elevated</div>
+        <div class="kit-swatch-hex">#1C190F</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-bg-overlay)')">
+        <div class="kit-swatch-color" style="background:var(--kf-bg-overlay)"></div>
+        <div class="kit-swatch-name">bg-overlay</div>
+        <div class="kit-swatch-hex">#272318</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-bg-hover)')">
+        <div class="kit-swatch-color" style="background:var(--kf-bg-hover)"></div>
+        <div class="kit-swatch-name">bg-hover</div>
+        <div class="kit-swatch-hex">#332E21</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-demo">
+    <div class="kit-demo-label">Accent — Amber Gold</div>
+    <div class="kit-swatches">
+      <div class="kit-swatch" onclick="copy('var(--kf-accent-subtle)')">
+        <div class="kit-swatch-color" style="background:var(--kf-accent-subtle)"></div>
+        <div class="kit-swatch-name">accent-subtle</div>
+        <div class="kit-swatch-hex">#6B3F00</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('#D4861A')">
+        <div class="kit-swatch-color" style="background:#D4861A"></div>
+        <div class="kit-swatch-name">amber-500</div>
+        <div class="kit-swatch-hex">#D4861A</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-accent)')">
+        <div class="kit-swatch-color" style="background:var(--kf-accent)"></div>
+        <div class="kit-swatch-name">accent ★</div>
+        <div class="kit-swatch-hex">#E09B30</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-accent-hover)')">
+        <div class="kit-swatch-color" style="background:var(--kf-accent-hover)"></div>
+        <div class="kit-swatch-name">accent-hover</div>
+        <div class="kit-swatch-hex">#EDBA60</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('#F5D48A')">
+        <div class="kit-swatch-color" style="background:#F5D48A"></div>
+        <div class="kit-swatch-name">amber-200</div>
+        <div class="kit-swatch-hex">#F5D48A</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-demo">
+    <div class="kit-demo-label">Foreground / Text</div>
+    <div class="kit-swatches">
+      <div class="kit-swatch" onclick="copy('var(--kf-fg-base)')">
+        <div class="kit-swatch-color" style="background:var(--kf-fg-base); border:1px solid var(--kf-border-base)"></div>
+        <div class="kit-swatch-name">fg-base</div>
+        <div class="kit-swatch-hex">#F5F1EA</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-fg-subtle)')">
+        <div class="kit-swatch-color" style="background:var(--kf-fg-subtle)"></div>
+        <div class="kit-swatch-name">fg-subtle</div>
+        <div class="kit-swatch-hex">#A09485</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-fg-muted)')">
+        <div class="kit-swatch-color" style="background:var(--kf-fg-muted)"></div>
+        <div class="kit-swatch-name">fg-muted</div>
+        <div class="kit-swatch-hex">#7A7060</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-demo">
+    <div class="kit-demo-label">Signals</div>
+    <div class="kit-swatches">
+      <div class="kit-swatch" onclick="copy('var(--kf-signal-success)')">
+        <div class="kit-swatch-color" style="background:var(--kf-signal-success)"></div>
+        <div class="kit-swatch-name">success</div>
+        <div class="kit-swatch-hex">#16A34A</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-signal-warning)')">
+        <div class="kit-swatch-color" style="background:var(--kf-signal-warning)"></div>
+        <div class="kit-swatch-name">warning</div>
+        <div class="kit-swatch-hex">#EAB308</div>
+      </div>
+      <div class="kit-swatch" onclick="copy('var(--kf-signal-danger)')">
+        <div class="kit-swatch-color" style="background:var(--kf-signal-danger)"></div>
+        <div class="kit-swatch-name">danger</div>
+        <div class="kit-swatch-hex">#DC2626</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     4 · TYPOGRAPHY
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="typography">
+  <div class="kit-section-header">
+    <span class="kit-section-number">04</span>
+    <span class="kit-section-title">Typography</span>
+  </div>
+  <p class="kit-section-desc">Syne 800 for display. Inter 400/600 for body. JetBrains Mono for citations, dockets, code. Two weights only: 400 and 700/800. No exceptions.</p>
+
+  <div class="kit-demo">
+    <div class="kit-type-row">
+      <div class="kit-type-meta">Display / H1<br>Syne 800<br>48px · −0.03em<br>leading 1.2</div>
+      <div class="kit-type-sample">
+        <h1>Know the Rules.<br><em style="color:var(--kf-accent);font-style:normal">Use Them.</em></h1>
+      </div>
+    </div>
+    <div class="kit-type-row">
+      <div class="kit-type-meta">H2<br>Syne 700<br>30px · −0.03em</div>
+      <div class="kit-type-sample"><h2>Four Gates. Zero Apology.</h2></div>
+    </div>
+    <div class="kit-type-row">
+      <div class="kit-type-meta">H3<br>Syne 700<br>24px</div>
+      <div class="kit-type-sample"><h3>Citation Verification Pipeline</h3></div>
+    </div>
+    <div class="kit-type-row">
+      <div class="kit-type-meta">H4<br>Syne 600<br>20px</div>
+      <div class="kit-type-sample"><h4>The Skeptic Has Veto Power</h4></div>
+    </div>
+    <div class="kit-type-row">
+      <div class="kit-type-meta">Body<br>Inter 400<br>16px · 1.65</div>
+      <div class="kit-type-sample"><p style="color:var(--kf-fg-subtle)">The Skeptic has hard veto power. No citation clears the pipeline unless it passes all four gates. We would rather return no answer than a wrong one dressed up as right.</p></div>
+    </div>
+    <div class="kit-type-row">
+      <div class="kit-type-meta">Body SM<br>Inter 400<br>14px</div>
+      <div class="kit-type-sample"><p style="font-size:var(--kf-text-sm)">Every claim that can be sourced must be sourced. Every source must survive the four gates.</p></div>
+    </div>
+    <div class="kit-type-row" style="border-bottom:none">
+      <div class="kit-type-meta">Citation<br>JetBrains Mono<br>12px · fg-subtle</div>
+      <div class="kit-type-sample">
+        <code style="color:var(--kf-fg-subtle); font-size:var(--kf-text-xs)">Mata v. Avianca, Inc., No. 22-cv-1461 (S.D.N.Y. Jun. 22, 2023)</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     5 · TOKENS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="tokens">
+  <div class="kit-section-header">
+    <span class="kit-section-number">05</span>
+    <span class="kit-section-title">Semantic Tokens</span>
+  </div>
+  <p class="kit-section-desc">Always use these variable names in components. Source of truth: <code>kingsfield-tokens.css</code>. Change one token, every page updates.</p>
+
+  <div class="kit-demo" style="padding: 0; overflow: hidden;">
+    <table class="kit-token-table">
+      <tr><th>Token</th><th>Role</th><th>Dark Value</th></tr>
+      <tr><td>--kf-bg-base</td><td><span class="color-dot" style="background:#0E0C09"></span>Page background</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#0E0C09</td></tr>
+      <tr><td>--kf-bg-elevated</td><td><span class="color-dot" style="background:#1C190F"></span>Card / panel surface</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#1C190F</td></tr>
+      <tr><td>--kf-fg-base</td><td><span class="color-dot" style="background:#F5F1EA;border-color:rgba(0,0,0,0.2)"></span>Primary text</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#F5F1EA</td></tr>
+      <tr><td>--kf-fg-subtle</td><td><span class="color-dot" style="background:#A09485"></span>Secondary text</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#A09485</td></tr>
+      <tr><td>--kf-accent</td><td><span class="color-dot" style="background:#E09B30"></span>Amber — primary action</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#E09B30</td></tr>
+      <tr><td>--kf-signal-success</td><td><span class="color-dot" style="background:#16A34A"></span>Gate passed / verified</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#16A34A</td></tr>
+      <tr><td>--kf-signal-warning</td><td><span class="color-dot" style="background:#EAB308"></span>Conditional / caution</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#EAB308</td></tr>
+      <tr><td>--kf-signal-danger</td><td><span class="color-dot" style="background:#DC2626"></span>Vetoed / bad law</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">#DC2626</td></tr>
+      <tr><td>--kf-font-display</td><td>Syne — headlines, wordmark</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">'Syne', system-ui</td></tr>
+      <tr><td>--kf-font-body</td><td>Inter — all body copy</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">'Inter', system-ui</td></tr>
+      <tr><td>--kf-font-mono</td><td>JetBrains Mono — citations</td><td style="color:var(--kf-fg-muted);font-family:var(--kf-font-mono);font-size:var(--kf-text-xs)">'JetBrains Mono'</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     6 · BUTTONS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="buttons">
+  <div class="kit-section-header">
+    <span class="kit-section-number">06</span>
+    <span class="kit-section-title">Buttons</span>
+  </div>
+  <p class="kit-section-desc">Four variants. Three sizes. One primary action maximum per view.</p>
+  <div class="kit-demo">
+    <div class="kit-demo-label">Variants</div>
+    <div class="kit-row">
+      <button class="kf-btn kf-btn-primary">Run Verification</button>
+      <button class="kf-btn kf-btn-secondary">View Sources</button>
+      <button class="kf-btn kf-btn-ghost">Dismiss</button>
+      <button class="kf-btn kf-btn-danger">Veto Override</button>
+    </div>
+    <div class="kit-demo-label" style="margin-top:var(--kf-space-4)">Sizes</div>
+    <div class="kit-row" style="align-items:center">
+      <button class="kf-btn kf-btn-primary kf-btn-sm">Small</button>
+      <button class="kf-btn kf-btn-primary">Default</button>
+      <button class="kf-btn kf-btn-primary kf-btn-lg">Large</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     7 · BADGES
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="badges">
+  <div class="kit-section-header">
+    <span class="kit-section-number">07</span>
+    <span class="kit-section-title">Badges</span>
+  </div>
+  <p class="kit-section-desc">Citation verdicts, gate status, and labels. Always uppercase. Never decorative.</p>
+  <div class="kit-demo">
+    <div class="kit-row">
+      <span class="kf-badge kf-badge-verified">✓ Verified</span>
+      <span class="kf-badge kf-badge-conditional">⚠ Conditional</span>
+      <span class="kf-badge kf-badge-vetoed">✕ Vetoed</span>
+      <span class="kf-badge kf-badge-pending">· Pending</span>
+      <span class="kf-badge kf-badge-accent">Beta</span>
+      <span class="kf-badge kf-badge-accent">The Crew</span>
+      <span class="kf-badge kf-badge-accent">CourtListener</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     8 · CARDS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="cards">
+  <div class="kit-section-header">
+    <span class="kit-section-number">08</span>
+    <span class="kit-section-title">Cards</span>
+  </div>
+  <p class="kit-section-desc">Elevated surfaces for grouping related content. Add kf-card-hover for interactive cards.</p>
+  <div class="kit-demo">
+    <div class="kf-grid-2">
+      <div class="kf-card">
+        <span class="kf-badge kf-badge-accent" style="margin-bottom:var(--kf-space-3)">The Crew</span>
+        <h4 style="margin-bottom:var(--kf-space-2)">Researcher</h4>
+        <p style="font-size:var(--kf-text-sm)">Pulls primary sources from CourtListener, govinfo, eCFR. No summaries. No secondhand garbage.</p>
+      </div>
+      <div class="kf-card kf-card-hover" style="border-color:var(--kf-accent);cursor:pointer">
+        <span class="kf-badge kf-badge-verified" style="margin-bottom:var(--kf-space-3)">Active</span>
+        <h4 style="margin-bottom:var(--kf-space-2)">The Skeptic</h4>
+        <p style="font-size:var(--kf-text-sm)">Hard veto. Cannot be overridden. If a citation fails any gate, the output is held. Period.</p>
+      </div>
+      <div class="kf-card kf-card-hover" style="cursor:pointer">
+        <span class="kf-badge kf-badge-accent" style="margin-bottom:var(--kf-space-3)">LLM Council</span>
+        <h4 style="margin-bottom:var(--kf-space-2)">Contrarian</h4>
+        <p style="font-size:var(--kf-text-sm)">Finds the holes. If a strategy can't survive the Contrarian, it won't survive opposing counsel.</p>
+      </div>
+      <div class="kf-card kf-card-hover" style="cursor:pointer">
+        <span class="kf-badge kf-badge-accent" style="margin-bottom:var(--kf-space-3)">LLM Council</span>
+        <h4 style="margin-bottom:var(--kf-space-2)">First Principles</h4>
+        <p style="font-size:var(--kf-text-sm)">Gemini Pro. Strips away assumptions and rebuilds from the ground up. Provider diversity is intentional.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     9 · INPUTS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="inputs">
+  <div class="kit-section-header">
+    <span class="kit-section-number">09</span>
+    <span class="kit-section-title">Inputs</span>
+  </div>
+  <p class="kit-section-desc">Amber ring on focus. Mono variant for docket numbers and citation strings.</p>
+  <div class="kit-demo" style="display:flex;flex-direction:column;gap:var(--kf-space-4)">
+    <div class="input-group">
+      <input class="kf-input" type="text" placeholder="Ask a legal question...">
+      <div class="input-group-btn">
+        <button class="kf-btn kf-btn-primary kf-btn-sm">Analyze →</button>
+      </div>
+    </div>
+    <input class="kf-input kf-input-mono" type="text" placeholder="424 U.S. 319 · Enter citation or docket number...">
+    <input class="kf-input" type="text" placeholder="Search cases, statutes, regulations..." disabled style="opacity:0.4">
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     10 · NAVIGATION
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="navigation">
+  <div class="kit-section-header">
+    <span class="kit-section-number">10</span>
+    <span class="kit-section-title">Navigation</span>
+  </div>
+  <p class="kit-section-desc">Wordmark left. Links right. CTA rightmost. Sticky on scroll.</p>
+  <div class="kit-demo" style="padding:0; overflow:hidden; border-radius:var(--kf-radius-lg)">
+    <nav class="kf-nav">
+      <a class="kf-nav-brand" href="#">Kings<span>field</span></a>
+      <div class="kf-nav-links">
+        <a class="kf-nav-link active" href="#">Research</a>
+        <a class="kf-nav-link" href="#">Cases</a>
+        <a class="kf-nav-link" href="#">Council</a>
+        <a class="kf-nav-link" href="#">Blog</a>
+        <button class="kf-btn kf-btn-primary kf-btn-sm" style="margin-left:var(--kf-space-2)">Get Access</button>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     11 · CHAT UI
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="chat">
+  <div class="kit-section-header">
+    <span class="kit-section-number">11</span>
+    <span class="kit-section-title">Chat UI</span>
+  </div>
+  <p class="kit-section-desc">User: amber right. AI: elevated card left. Citations inline in mono. Never truncate a citation string.</p>
+  <div class="kit-demo">
+    <div style="display:flex;flex-direction:column;gap:var(--kf-space-3); max-height:400px; overflow-y:auto;">
+      <div class="kf-chat-user">What's the standard for dismissal under Rule 12(b)(6)?</div>
+      <div class="kf-chat-ai">
+        <div style="margin-bottom:var(--kf-space-3)">Under Rule 12(b)(6), a complaint survives if it states a claim plausible on its face — enough factual content to allow the court to draw the reasonable inference of liability.</div>
+        <div class="kf-citation" data-verdict="verified" style="margin-bottom:var(--kf-space-2)">
+          <div>
+            <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Ashcroft v. Iqbal</div>
+            <div class="kf-citation-text">556 U.S. 662, 678 (2009) · Gate 1 ✓ · Gate 2 ✓ · Gate 3 ✓ · Gate 4 ✓</div>
+          </div>
+          <span class="kf-badge kf-badge-verified" style="margin-left:auto;flex-shrink:0">Verified</span>
+        </div>
+        <div class="kf-citation" data-verdict="verified">
+          <div>
+            <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Bell Atlantic Corp. v. Twombly</div>
+            <div class="kf-citation-text">550 U.S. 544, 570 (2007) · Gate 1 ✓ · Gate 2 ✓ · Gate 3 ✓ · Gate 4 ✓</div>
+          </div>
+          <span class="kf-badge kf-badge-verified" style="margin-left:auto;flex-shrink:0">Verified</span>
+        </div>
+      </div>
+      <div class="kf-chat-user">Does this apply differently in the 9th Circuit?</div>
+      <div class="kf-chat-ai">
+        <div style="margin-bottom:var(--kf-space-3)">The 9th Circuit applies Iqbal/Twombly uniformly, with some elaboration on the plausibility standard in complex cases.</div>
+        <div class="kf-citation" data-verdict="conditional">
+          <div>
+            <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Eclectic Properties East v. Marcus &amp; Millichap</div>
+            <div class="kf-citation-text">751 F.3d 990, 995 (9th Cir. 2014) · Gate 3 ⚠ — cite with caution</div>
+          </div>
+          <span class="kf-badge kf-badge-conditional" style="margin-left:auto;flex-shrink:0">Conditional</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:var(--kf-space-4)">
+      <div class="input-group">
+        <input class="kf-input" type="text" placeholder="Ask a follow-up...">
+        <div class="input-group-btn">
+          <button class="kf-btn kf-btn-primary kf-btn-sm">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     12 · CITATIONS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="citations">
+  <div class="kit-section-header">
+    <span class="kit-section-number">12</span>
+    <span class="kit-section-title">Citations</span>
+  </div>
+  <p class="kit-section-desc">Left-border color signals verdict at a glance. Monospace text. Badge confirms status. Three states only.</p>
+  <div class="kit-demo" style="display:flex;flex-direction:column;gap:var(--kf-space-3)">
+    <div class="kf-citation" data-verdict="verified">
+      <div>
+        <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Mata v. Avianca, Inc.</div>
+        <div class="kf-citation-text">No. 22-cv-1461, 2023 WL 4114965 (S.D.N.Y. Jun. 22, 2023)</div>
+      </div>
+      <span class="kf-badge kf-badge-verified" style="margin-left:auto;flex-shrink:0">✓ Verified</span>
+    </div>
+    <div class="kf-citation" data-verdict="conditional">
+      <div>
+        <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Eclectic Properties East v. Marcus</div>
+        <div class="kf-citation-text">751 F.3d 990, 995 (9th Cir. 2014) · Gate 3 needs review</div>
+      </div>
+      <span class="kf-badge kf-badge-conditional" style="margin-left:auto;flex-shrink:0">⚠ Conditional</span>
+    </div>
+    <div class="kf-citation" data-verdict="vetoed">
+      <div>
+        <div style="font-weight:600;font-size:var(--kf-text-xs);margin-bottom:2px">Varghese v. China Southern Airlines</div>
+        <div class="kf-citation-text">No. 22-cv-1461 — as cited in brief · Not found in CourtListener</div>
+      </div>
+      <span class="kf-badge kf-badge-vetoed" style="margin-left:auto;flex-shrink:0">✕ Vetoed</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     13 · 4-GATE VERDICT
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="four-gates">
+  <div class="kit-section-header">
+    <span class="kit-section-number">13</span>
+    <span class="kit-section-title">4-Gate Verdict UI</span>
+  </div>
+  <p class="kit-section-desc">All four gates must pass for "Verified." Gate 1 failure skips gates 2–4. The Skeptic's call is final and cannot be overridden.</p>
+  <div class="kit-demo">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--kf-space-3)">
+      <div>
+        <div style="font-weight:600;margin-bottom:2px">Mata v. Avianca, Inc.</div>
+        <div style="font-size:var(--kf-text-xs);font-family:var(--kf-font-mono);color:var(--kf-fg-muted)">No. 22-cv-1461, 2023 WL 4114965 (S.D.N.Y. Jun. 22, 2023)</div>
+      </div>
+      <span class="kf-badge kf-badge-verified">✓ Verified</span>
+    </div>
+    <div class="gate-list" style="margin-bottom:var(--kf-space-8)">
+      <div class="gate-item"><span class="gate-item-label">Gate 1 — Existence</span><span class="gate-pass">PASS · Found in CourtListener</span></div>
+      <div class="gate-item"><span class="gate-item-label">Gate 2 — Quote Accuracy</span><span class="gate-pass">PASS · SHA256 match confirmed</span></div>
+      <div class="gate-item"><span class="gate-item-label">Gate 3 — Currency</span><span class="gate-pass">PASS · No negative treatment found</span></div>
+      <div class="gate-item"><span class="gate-item-label">Gate 4 — Jurisdiction Fit</span><span class="gate-pass">PASS · S.D.N.Y. — mandatory in jurisdiction</span></div>
+    </div>
+
+    <hr class="kf-divider">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--kf-space-3)">
+      <div>
+        <div style="font-weight:600;margin-bottom:2px">Varghese v. China Southern Airlines</div>
+        <div style="font-size:var(--kf-text-xs);font-family:var(--kf-font-mono);color:var(--kf-fg-muted)">No. 22-cv-1461 — cited in brief</div>
+      </div>
+      <span class="kf-badge kf-badge-vetoed">✕ Vetoed</span>
+    </div>
+    <div class="gate-list">
+      <div class="gate-item"><span class="gate-item-label">Gate 1 — Existence</span><span class="gate-fail">FAIL · Not found in CourtListener or any verified DB</span></div>
+      <div class="gate-item" style="opacity:0.4"><span class="gate-item-label">Gate 2 — Quote Accuracy</span><span class="gate-skip">SKIPPED</span></div>
+      <div class="gate-item" style="opacity:0.4"><span class="gate-item-label">Gate 3 — Currency</span><span class="gate-skip">SKIPPED</span></div>
+      <div class="gate-item" style="opacity:0.4"><span class="gate-item-label">Gate 4 — Jurisdiction Fit</span><span class="gate-skip">SKIPPED</span></div>
+    </div>
+    <div style="margin-top:var(--kf-space-3);padding:var(--kf-space-3) var(--kf-space-4);background:var(--kf-signal-danger-bg);border-radius:var(--kf-radius-md);font-size:var(--kf-text-xs);color:var(--kf-signal-danger)">
+      <strong>Skeptic veto:</strong> Case does not exist in any verified legal database. Possible AI hallucination. Output held — do not file.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     14 · STATS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="stats">
+  <div class="kit-section-header">
+    <span class="kit-section-number">14</span>
+    <span class="kit-section-title">Stats / Data Display</span>
+  </div>
+  <p class="kit-section-desc">Numbers in Syne 800. Labels in caps mono. Used on landing and dashboards.</p>
+  <div class="kit-demo">
+    <div class="kit-stat-grid">
+      <div class="kit-stat-card">
+        <div class="kit-stat-label">Cases Verified</div>
+        <div class="kit-stat-value">9.3<span style="font-size:var(--kf-text-xl);color:var(--kf-fg-muted)">M</span></div>
+        <div class="kit-stat-sub">In CourtListener DB</div>
+      </div>
+      <div class="kit-stat-card">
+        <div class="kit-stat-label">Gate Pass Rate</div>
+        <div class="kit-stat-value">48<span style="font-size:var(--kf-text-xl);color:var(--kf-fg-muted)">%</span></div>
+        <div class="kit-stat-sub">All four gates cleared</div>
+      </div>
+      <div class="kit-stat-card">
+        <div class="kit-stat-label">AI Sanctions 2023–26</div>
+        <div class="kit-stat-value">200<span style="font-size:var(--kf-text-xl);color:var(--kf-fg-muted)">+</span></div>
+        <div class="kit-stat-sub">Charlotin Sanctions DB</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     15 · HERO PATTERN
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="hero">
+  <div class="kit-section-header">
+    <span class="kit-section-number">15</span>
+    <span class="kit-section-title">Hero Pattern</span>
+  </div>
+  <p class="kit-section-desc">Radial amber glow. Skull optional on dark backgrounds. Never center body text longer than 2 lines.</p>
+  <div class="kit-hero-preview">
+    <div class="kit-hero-eyebrow">Legal Intelligence · Built Different</div>
+    <div class="kit-hero-title">The Rules Are Public.<br><em>So Is Our Work.</em></div>
+    <div class="kit-hero-sub">BigLaw analysis. No retainer. No billable-hour theater. Verified citations or nothing.</div>
+    <div style="display:flex;gap:var(--kf-space-3);justify-content:center;flex-wrap:wrap;">
+      <button class="kf-btn kf-btn-primary kf-btn-lg">Start Researching →</button>
+      <button class="kf-btn kf-btn-secondary kf-btn-lg">See How It Works</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     16 · ARCHITECTURE
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="architecture">
+  <div class="kit-section-header">
+    <span class="kit-section-number">16</span>
+    <span class="kit-section-title">Architecture Diagram</span>
+  </div>
+  <p class="kit-section-desc">Three agent layers. Distinct triggers, distinct purposes. Layer 1 during work. Layer 2 at the gate. Layer 3 on meta-decisions only.</p>
+  <div class="kit-diagram-wrap">
+    <img src="../brand/kingsfield_three_layers.svg" alt="Kingsfield Three-Layer Architecture">
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     17 · MOCKUPS — LANDING
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="mockups-landing">
+  <div class="kit-section-header">
+    <span class="kit-section-number">17</span>
+    <span class="kit-section-title">Mockups — Landing</span>
+  </div>
+  <p class="kit-section-desc">Full landing page mockups. Upper sections, hero, mid sections.</p>
+  <div class="kit-mockup-grid">
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Kingsfield Lawfare- working ux x 3.png" alt="Working UX x3">
+      <div class="kit-mockup-label">Kingsfield Lawfare — Working UX · 3 sections</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield UX- Upper Section w Skull.png" alt="Upper Section w Skull">
+      <div class="kit-mockup-label">Upper Section · Skull Hero</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield UX- Black Main w 3D Skull Imprint.png" alt="Black Main w 3D Skull">
+      <div class="kit-mockup-label">Black Main · 3D Skull Imprint</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield UX- Black Main w Eye Imprint.png" alt="Black Main w Eye">
+      <div class="kit-mockup-label">Black Main · Eye Imprint</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield UX- Middle Section 4x.png" alt="Middle Section 4x">
+      <div class="kit-mockup-label">Mid Section · 4-column</div>
+    </div>
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Kingsfield Lawfare- Mid section 4x posts or files tc.png" alt="Mid Section Posts">
+      <div class="kit-mockup-label">Mid Section · 4x Posts / Files</div>
+    </div>
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Kingsfield- Black Footer.png" alt="Black Footer">
+      <div class="kit-mockup-label">Black Footer</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     18 · MOCKUPS — APP UI
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="mockups-app">
+  <div class="kit-section-header">
+    <span class="kit-section-number">18</span>
+    <span class="kit-section-title">Mockups — App UI</span>
+  </div>
+  <p class="kit-section-desc">Chat window, Council page, Caselaw, Legislation, Litigation Vault.</p>
+  <div class="kit-mockup-grid">
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Kingsfield Chat Window Screen copy.png" alt="Chat Window">
+      <div class="kit-mockup-label">Chat Window Screen</div>
+    </div>
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Chat Screen Black copy.png" alt="Chat Screen Black">
+      <div class="kit-mockup-label">Chat Screen · Dark</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield Council.png" alt="Council Page">
+      <div class="kit-mockup-label">Council Page</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield Caselaw Page.png" alt="Caselaw Page">
+      <div class="kit-mockup-label">Caselaw Page</div>
+    </div>
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Kingsfiled Council Wide.png" alt="Council Wide">
+      <div class="kit-mockup-label">Council · Wide View</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield Legislation Page.png" alt="Legislation Page">
+      <div class="kit-mockup-label">Legislation Page</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Litigation Vault.png" alt="Litigation Vault">
+      <div class="kit-mockup-label">Litigation Vault</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield UX- ARTICLES.png" alt="Articles Page">
+      <div class="kit-mockup-label">Articles / Content Page</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     19 · MOCKUPS — BLOG / CONTENT
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="mockups-blog">
+  <div class="kit-section-header">
+    <span class="kit-section-number">19</span>
+    <span class="kit-section-title">Mockups — Blog / Content</span>
+  </div>
+  <p class="kit-section-desc">Blog sections, post covers, Dear Chief Judge, First Kill All The Lawyers.</p>
+  <div class="kit-mockup-grid">
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/Kingsfield Lawfare-  Blog sections ver 1.png" alt="Blog Sections">
+      <div class="kit-mockup-label">Blog Sections v1</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Ex Blog Post 1.png" alt="Example Blog Post">
+      <div class="kit-mockup-label">Example Blog Post</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield- Dear Chief Judge Cover.png" alt="Dear Chief Judge Cover">
+      <div class="kit-mockup-label">Dear Chief Judge · Cover</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield- First Kill All the Lawyers Cover 2.png" alt="First Kill Cover 2">
+      <div class="kit-mockup-label">First Kill All the Lawyers · Cover 2</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield- First Kill All the Lawyers cvr 1.png" alt="First Kill Cover 1">
+      <div class="kit-mockup-label">First Kill All the Lawyers · Cover 1</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     20 · MOCKUPS — SLIDES / DECKS
+══════════════════════════════════════════════════════════════ -->
+<section class="kit-section" id="mockups-slides">
+  <div class="kit-section-header">
+    <span class="kit-section-number">20</span>
+    <span class="kit-section-title">Mockups — Slides / Decks</span>
+  </div>
+  <p class="kit-section-desc">Ronin-style slide treatments. Bold. Editorial. No corporate gloss.</p>
+  <div class="kit-mockup-grid">
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield Roninstyle Slide 1.png" alt="Ronin Slide 1">
+      <div class="kit-mockup-label">Ronin Style · Slide 1</div>
+    </div>
+    <div class="kit-mockup-card">
+      <img src="../brand-assets/Kingsfield Roninstyle Slide 4.jpeg" alt="Ronin Slide 4">
+      <div class="kit-mockup-label">Ronin Style · Slide 4</div>
+    </div>
+    <div class="kit-mockup-card kit-mockup-full">
+      <img src="../brand-assets/2 Section template - ChatGPT.png" alt="2 Section Template">
+      <div class="kit-mockup-label">2-Section Template</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-icon').textContent = isDark ? '☾' : '☀';
+  document.getElementById('theme-label').textContent = isDark ? 'Dark' : 'Light';
+}
+
+function copy(val) {
+  navigator.clipboard.writeText(val).then(() => {
+    const t = document.getElementById('toast');
+    t.textContent = 'Copied: ' + val;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  });
+}
+
+function setActive(el) {
+  document.querySelectorAll('.kit-nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+const sections = document.querySelectorAll('.kit-section');
+const navItems = document.querySelectorAll('.kit-nav-item');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(i => i.classList.remove('active'));
+      const match = document.querySelector(`.kit-nav-item[href="#${e.target.id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

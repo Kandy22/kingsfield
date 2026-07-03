@@ -1,0 +1,8 @@
+"tablescraper-selected-row"
+""
+"Today, we’re taking our next step with the release of Gemini 3.5 Live Translate, our latest audio model for live speech-to-speech translation."
+"The model automatically detects 70+ languages and generates smooth, natural-sounding translated speech that preserves the speakers' intonation, pacing and pitch. Unlike turn by turn systems that wait for the speaker to finish speaking before responding, 3.5 Live Translate generates speech continuously, balancing the trade-off between waiting for context to improve quality and translating immediately to stay in sync with the speaker. It delivers fluid audio without awkward pauses and stays just a few seconds behind the speaker throughout the session."
+"Gemini 3.5 Live Translate is rolling out starting today across Google products:"
+"For developers in public preview via the  and"
+"Build with 3.5 Live Translate"
+"Gemini 3.5 Live Translate processes speech as it’s streamed, enabling a more seamless connection across languages. The model handles multilingual inputs without the need to manually configure settings. At the same time, its noise robustness ensures applications can handle loud, unpredictable environments. You can use its capabilities to help facilitate live interpretation for multilingual calls, meetings, lessons, broadcasts and more."

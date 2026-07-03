@@ -1,0 +1,5793 @@
+[
+ {
+  "cite": "339 U.S. 306",
+  "unlocks": 5,
+  "entry_idxs": [
+   20,
+   415,
+   1295,
+   1296,
+   1768
+  ]
+ },
+ {
+  "cite": "571 U.S. 49",
+  "unlocks": 4,
+  "entry_idxs": [
+   871,
+   1896,
+   1897,
+   1930
+  ]
+ },
+ {
+  "cite": "549 U.S. 384",
+  "unlocks": 3,
+  "entry_idxs": [
+   14,
+   812,
+   817
+  ]
+ },
+ {
+  "cite": "178 U.S. 1",
+  "unlocks": 3,
+  "entry_idxs": [
+   87,
+   88,
+   192
+  ]
+ },
+ {
+  "cite": "437 U.S. 463",
+  "unlocks": 3,
+  "entry_idxs": [
+   98,
+   511,
+   848
+  ]
+ },
+ {
+  "cite": "501 U.S. 32",
+  "unlocks": 3,
+  "entry_idxs": [
+   149,
+   150,
+   1003
+  ]
+ },
+ {
+  "cite": "292 U.S. 234",
+  "unlocks": 3,
+  "entry_idxs": [
+   156,
+   589,
+   590
+  ]
+ },
+ {
+  "cite": "441 U.S. 418",
+  "unlocks": 3,
+  "entry_idxs": [
+   204,
+   291,
+   1446
+  ]
+ },
+ {
+  "cite": "392 U.S. 83",
+  "unlocks": 3,
+  "entry_idxs": [
+   229,
+   1101,
+   1864
+  ]
+ },
+ {
+  "cite": "95 U.S. 242",
+  "unlocks": 3,
+  "entry_idxs": [
+   263,
+   891,
+   1121
+  ]
+ },
+ {
+  "cite": "517 U.S. 370",
+  "unlocks": 3,
+  "entry_idxs": [
+   280,
+   801,
+   1360
+  ]
+ },
+ {
+  "cite": "521 U.S. 591",
+  "unlocks": 3,
+  "entry_idxs": [
+   286,
+   1309,
+   1438
+  ]
+ },
+ {
+  "cite": "563 U.S. 754",
+  "unlocks": 3,
+  "entry_idxs": [
+   412,
+   998,
+   1958
+  ]
+ },
+ {
+  "cite": "488 U.S. 361",
+  "unlocks": 3,
+  "entry_idxs": [
+   541,
+   1758,
+   1761
+  ]
+ },
+ {
+  "cite": "485 U.S. 224",
+  "unlocks": 3,
+  "entry_idxs": [
+   593,
+   881,
+   1895
+  ]
+ },
+ {
+  "cite": "511 U.S. 531",
+  "unlocks": 3,
+  "entry_idxs": [
+   719,
+   858,
+   885
+  ]
+ },
+ {
+  "cite": "490 U.S. 386",
+  "unlocks": 3,
+  "entry_idxs": [
+   752,
+   1313,
+   1752
+  ]
+ },
+ {
+  "cite": "572 U.S. 118",
+  "unlocks": 3,
+  "entry_idxs": [
+   811,
+   1538,
+   1978
+  ]
+ },
+ {
+  "cite": "515 U.S. 506",
+  "unlocks": 3,
+  "entry_idxs": [
+   819,
+   907,
+   1791
+  ]
+ },
+ {
+  "cite": "477 U.S. 242",
+  "unlocks": 3,
+  "entry_idxs": [
+   910,
+   1245,
+   1841
+  ]
+ },
+ {
+  "cite": "485 U.S. 681",
+  "unlocks": 3,
+  "entry_idxs": [
+   1346,
+   1508,
+   1692
+  ]
+ },
+ {
+  "cite": "418 U.S. 323",
+  "unlocks": 3,
+  "entry_idxs": [
+   1455,
+   1542,
+   1543
+  ]
+ },
+ {
+  "cite": "519 U.S. 172",
+  "unlocks": 3,
+  "entry_idxs": [
+   1614,
+   1691,
+   1926
+  ]
+ },
+ {
+  "cite": "526 U.S. 434",
+  "unlocks": 2,
+  "entry_idxs": [
+   1,
+   472
+  ]
+ },
+ {
+  "cite": "424 U.S. 800",
+  "unlocks": 2,
+  "entry_idxs": [
+   2,
+   320
+  ]
+ },
+ {
+  "cite": "512 U.S. 477",
+  "unlocks": 2,
+  "entry_idxs": [
+   5,
+   940
+  ]
+ },
+ {
+  "cite": "119 U.S. 149",
+  "unlocks": 2,
+  "entry_idxs": [
+   6,
+   1325
+  ]
+ },
+ {
+  "cite": "534 U.S. 204",
+  "unlocks": 2,
+  "entry_idxs": [
+   12,
+   1656
+  ]
+ },
+ {
+  "cite": "376 U.S. 254",
+  "unlocks": 2,
+  "entry_idxs": [
+   18,
+   19
+  ]
+ },
+ {
+  "cite": "501 U.S. 722",
+  "unlocks": 2,
+  "entry_idxs": [
+   25,
+   1509
+  ]
+ },
+ {
+  "cite": "484 U.S. 365",
+  "unlocks": 2,
+  "entry_idxs": [
+   27,
+   143
+  ]
+ },
+ {
+  "cite": "557 U.S. 305",
+  "unlocks": 2,
+  "entry_idxs": [
+   44,
+   249
+  ]
+ },
+ {
+  "cite": "515 U.S. 200",
+  "unlocks": 2,
+  "entry_idxs": [
+   45,
+   47
+  ]
+ },
+ {
+  "cite": "572 U.S. 65",
+  "unlocks": 2,
+  "entry_idxs": [
+   53,
+   352
+  ]
+ },
+ {
+  "cite": "400 U.S. 25",
+  "unlocks": 2,
+  "entry_idxs": [
+   54,
+   1284
+  ]
+ },
+ {
+  "cite": "450 U.S. 248",
+  "unlocks": 2,
+  "entry_idxs": [
+   62,
+   1468
+  ]
+ },
+ {
+  "cite": "421 U.S. 240",
+  "unlocks": 2,
+  "entry_idxs": [
+   75,
+   458
+  ]
+ },
+ {
+  "cite": "303 U.S. 283",
+  "unlocks": 2,
+  "entry_idxs": [
+   77,
+   624
+  ]
+ },
+ {
+  "cite": "460 U.S. 1",
+  "unlocks": 2,
+  "entry_idxs": [
+   107,
+   824
+  ]
+ },
+ {
+  "cite": "563 U.S. 333",
+  "unlocks": 2,
+  "entry_idxs": [
+   109,
+   287
+  ]
+ },
+ {
+  "cite": "554 U.S. 269",
+  "unlocks": 2,
+  "entry_idxs": [
+   121,
+   269
+  ]
+ },
+ {
+  "cite": "407 U.S. 67",
+  "unlocks": 2,
+  "entry_idxs": [
+   127,
+   1633
+  ]
+ },
+ {
+  "cite": "92 U.S. 202",
+  "unlocks": 2,
+  "entry_idxs": [
+   129,
+   457
+  ]
+ },
+ {
+  "cite": "449 U.S. 383",
+  "unlocks": 2,
+  "entry_idxs": [
+   133,
+   379
+  ]
+ },
+ {
+  "cite": "483 U.S. 171",
+  "unlocks": 2,
+  "entry_idxs": [
+   142,
+   302
+  ]
+ },
+ {
+  "cite": "143 U.S. 359",
+  "unlocks": 2,
+  "entry_idxs": [
+   147,
+   1616
+  ]
+ },
+ {
+  "cite": "342 U.S. 1",
+  "unlocks": 2,
+  "entry_idxs": [
+   151,
+   750
+  ]
+ },
+ {
+  "cite": "371 U.S. 415",
+  "unlocks": 2,
+  "entry_idxs": [
+   162,
+   1162
+  ]
+ },
+ {
+  "cite": "476 U.S. 79",
+  "unlocks": 2,
+  "entry_idxs": [
+   164,
+   1095
+  ]
+ },
+ {
+  "cite": "397 U.S. 358",
+  "unlocks": 2,
+  "entry_idxs": [
+   172,
+   1585
+  ]
+ },
+ {
+  "cite": "403 U.S. 388",
+  "unlocks": 2,
+  "entry_idxs": [
+   179,
+   408
+  ]
+ },
+ {
+  "cite": "373 U.S. 83",
+  "unlocks": 2,
+  "entry_idxs": [
+   189,
+   190
+  ]
+ },
+ {
+  "cite": "512 U.S. 267",
+  "unlocks": 2,
+  "entry_idxs": [
+   202,
+   203
+  ]
+ },
+ {
+  "cite": "428 U.S. 153",
+  "unlocks": 2,
+  "entry_idxs": [
+   224,
+   572
+  ]
+ },
+ {
+  "cite": "260 U.S. 482",
+  "unlocks": 2,
+  "entry_idxs": [
+   245,
+   1970
+  ]
+ },
+ {
+  "cite": "504 U.S. 719",
+  "unlocks": 2,
+  "entry_idxs": [
+   250,
+   1945
+  ]
+ },
+ {
+  "cite": "549 U.S. 365",
+  "unlocks": 2,
+  "entry_idxs": [
+   256,
+   517
+  ]
+ },
+ {
+  "cite": "335 U.S. 469",
+  "unlocks": 2,
+  "entry_idxs": [
+   257,
+   258
+  ]
+ },
+ {
+  "cite": "449 U.S. 302",
+  "unlocks": 2,
+  "entry_idxs": [
+   268,
+   383
+  ]
+ },
+ {
+  "cite": "512 U.S. 821",
+  "unlocks": 2,
+  "entry_idxs": [
+   274,
+   477
+  ]
+ },
+ {
+  "cite": "324 U.S. 806",
+  "unlocks": 2,
+  "entry_idxs": [
+   290,
+   1921
+  ]
+ },
+ {
+  "cite": "470 U.S. 564",
+  "unlocks": 2,
+  "entry_idxs": [
+   292,
+   293
+  ]
+ },
+ {
+  "cite": "501 U.S. 452",
+  "unlocks": 2,
+  "entry_idxs": [
+   294,
+   832
+  ]
+ },
+ {
+  "cite": "333 U.S. 364",
+  "unlocks": 2,
+  "entry_idxs": [
+   295,
+   850
+  ]
+ },
+ {
+  "cite": "483 U.S. 635",
+  "unlocks": 2,
+  "entry_idxs": [
+   296,
+   1557
+  ]
+ },
+ {
+  "cite": "529 U.S. 362",
+  "unlocks": 2,
+  "entry_idxs": [
+   297,
+   1927
+  ]
+ },
+ {
+  "cite": "412 U.S. 218",
+  "unlocks": 2,
+  "entry_idxs": [
+   305,
+   393
+  ]
+ },
+ {
+  "cite": "405 U.S. 174",
+  "unlocks": 2,
+  "entry_idxs": [
+   307,
+   377
+  ]
+ },
+ {
+  "cite": "159 U.S. 113",
+  "unlocks": 2,
+  "entry_idxs": [
+   321,
+   322
+  ]
+ },
+ {
+  "cite": "421 U.S. 397",
+  "unlocks": 2,
+  "entry_idxs": [
+   341,
+   342
+  ]
+ },
+ {
+  "cite": "508 U.S. 520",
+  "unlocks": 2,
+  "entry_idxs": [
+   344,
+   1261
+  ]
+ },
+ {
+  "cite": "390 U.S. 102",
+  "unlocks": 2,
+  "entry_idxs": [
+   358,
+   995
+  ]
+ },
+ {
+  "cite": "348 U.S. 84",
+  "unlocks": 2,
+  "entry_idxs": [
+   376,
+   455
+  ]
+ },
+ {
+  "cite": "555 U.S. 160",
+  "unlocks": 2,
+  "entry_idxs": [
+   389,
+   390
+  ]
+ },
+ {
+  "cite": "497 U.S. 261",
+  "unlocks": 2,
+  "entry_idxs": [
+   396,
+   1002
+  ]
+ },
+ {
+  "cite": "491 U.S. 781",
+  "unlocks": 2,
+  "entry_idxs": [
+   424,
+   1885
+  ]
+ },
+ {
+  "cite": "342 U.S. 246",
+  "unlocks": 2,
+  "entry_idxs": [
+   440,
+   1109
+  ]
+ },
+ {
+  "cite": "499 U.S. 340",
+  "unlocks": 2,
+  "entry_idxs": [
+   445,
+   1345
+  ]
+ },
+ {
+  "cite": "346 U.S. 502",
+  "unlocks": 2,
+  "entry_idxs": [
+   448,
+   726
+  ]
+ },
+ {
+  "cite": "559 U.S. 77",
+  "unlocks": 2,
+  "entry_idxs": [
+   449,
+   1472
+  ]
+ },
+ {
+  "cite": "321 U.S. 321",
+  "unlocks": 2,
+  "entry_idxs": [
+   466,
+   718
+  ]
+ },
+ {
+  "cite": "491 U.S. 554",
+  "unlocks": 2,
+  "entry_idxs": [
+   475,
+   975
+  ]
+ },
+ {
+  "cite": "560 U.S. 48",
+  "unlocks": 2,
+  "entry_idxs": [
+   488,
+   1526
+  ]
+ },
+ {
+  "cite": "435 U.S. 247",
+  "unlocks": 2,
+  "entry_idxs": [
+   499,
+   1285
+  ]
+ },
+ {
+  "cite": "511 U.S. 825",
+  "unlocks": 2,
+  "entry_idxs": [
+   542,
+   1593
+  ]
+ },
+ {
+  "cite": "500 U.S. 90",
+  "unlocks": 2,
+  "entry_idxs": [
+   544,
+   563
+  ]
+ },
+ {
+  "cite": "486 U.S. 531",
+  "unlocks": 2,
+  "entry_idxs": [
+   602,
+   603
+  ]
+ },
+ {
+  "cite": "431 U.S. 324",
+  "unlocks": 2,
+  "entry_idxs": [
+   604,
+   611
+  ]
+ },
+ {
+  "cite": "556 U.S. 868",
+  "unlocks": 2,
+  "entry_idxs": [
+   615,
+   1598
+  ]
+ },
+ {
+  "cite": "554 U.S. 353",
+  "unlocks": 2,
+  "entry_idxs": [
+   630,
+   862
+  ]
+ },
+ {
+  "cite": "304 U.S. 458",
+  "unlocks": 2,
+  "entry_idxs": [
+   633,
+   1949
+  ]
+ },
+ {
+  "cite": "504 U.S. 689",
+  "unlocks": 2,
+  "entry_idxs": [
+   637,
+   821
+  ]
+ },
+ {
+  "cite": "572 U.S. 93",
+  "unlocks": 2,
+  "entry_idxs": [
+   664,
+   1666
+  ]
+ },
+ {
+  "cite": "476 U.S. 858",
+  "unlocks": 2,
+  "entry_idxs": [
+   667,
+   668
+  ]
+ },
+ {
+  "cite": "466 U.S. 668",
+  "unlocks": 2,
+  "entry_idxs": [
+   669,
+   999
+  ]
+ },
+ {
+  "cite": "465 U.S. 89",
+  "unlocks": 2,
+  "entry_idxs": [
+   679,
+   1374
+  ]
+ },
+ {
+  "cite": "473 U.S. 432",
+  "unlocks": 2,
+  "entry_idxs": [
+   710,
+   1857
+  ]
+ },
+ {
+  "cite": "467 U.S. 51",
+  "unlocks": 2,
+  "entry_idxs": [
+   713,
+   735
+  ]
+ },
+ {
+  "cite": "572 U.S. 1",
+  "unlocks": 2,
+  "entry_idxs": [
+   717,
+   1887
+  ]
+ },
+ {
+  "cite": "524 U.S. 321",
+  "unlocks": 2,
+  "entry_idxs": [
+   751,
+   861
+  ]
+ },
+ {
+  "cite": "418 U.S. 683",
+  "unlocks": 2,
+  "entry_idxs": [
+   765,
+   1827
+  ]
+ },
+ {
+  "cite": "395 U.S. 185",
+  "unlocks": 2,
+  "entry_idxs": [
+   771,
+   772
+  ]
+ },
+ {
+  "cite": "491 U.S. 397",
+  "unlocks": 2,
+  "entry_idxs": [
+   790,
+   852
+  ]
+ },
+ {
+  "cite": "481 U.S. 739",
+  "unlocks": 2,
+  "entry_idxs": [
+   800,
+   1463
+  ]
+ },
+ {
+  "cite": "481 U.S. 137",
+  "unlocks": 2,
+  "entry_idxs": [
+   837,
+   1257
+  ]
+ },
+ {
+  "cite": "324 U.S. 229",
+  "unlocks": 2,
+  "entry_idxs": [
+   845,
+   846
+  ]
+ },
+ {
+  "cite": "521 U.S. 702",
+  "unlocks": 2,
+  "entry_idxs": [
+   899,
+   1833
+  ]
+ },
+ {
+  "cite": "530 U.S. 255",
+  "unlocks": 2,
+  "entry_idxs": [
+   905,
+   1792
+  ]
+ },
+ {
+  "cite": "468 U.S. 897",
+  "unlocks": 2,
+  "entry_idxs": [
+   914,
+   916
+  ]
+ },
+ {
+  "cite": "395 U.S. 238",
+  "unlocks": 2,
+  "entry_idxs": [
+   926,
+   1411
+  ]
+ },
+ {
+  "cite": "554 U.S. 570",
+  "unlocks": 2,
+  "entry_idxs": [
+   928,
+   1729
+  ]
+ },
+ {
+  "cite": "434 U.S. 497",
+  "unlocks": 2,
+  "entry_idxs": [
+   957,
+   1226
+  ]
+ },
+ {
+  "cite": "437 U.S. 365",
+  "unlocks": 2,
+  "entry_idxs": [
+   969,
+   1876
+  ]
+ },
+ {
+  "cite": "261 U.S. 592",
+  "unlocks": 2,
+  "entry_idxs": [
+   970,
+   1559
+  ]
+ },
+ {
+  "cite": "518 U.S. 839",
+  "unlocks": 2,
+  "entry_idxs": [
+   972,
+   973
+  ]
+ },
+ {
+  "cite": "433 U.S. 186",
+  "unlocks": 2,
+  "entry_idxs": [
+   980,
+   1560
+  ]
+ },
+ {
+  "cite": "473 U.S. 159",
+  "unlocks": 2,
+  "entry_idxs": [
+   996,
+   1330
+  ]
+ },
+ {
+  "cite": "556 U.S. 418",
+  "unlocks": 2,
+  "entry_idxs": [
+   1006,
+   1814
+  ]
+ },
+ {
+  "cite": "530 U.S. 133",
+  "unlocks": 2,
+  "entry_idxs": [
+   1059,
+   1060
+  ]
+ },
+ {
+  "cite": "408 U.S. 564",
+  "unlocks": 2,
+  "entry_idxs": [
+   1139,
+   1515
+  ]
+ },
+ {
+  "cite": "505 U.S. 763",
+  "unlocks": 2,
+  "entry_idxs": [
+   1145,
+   1891
+  ]
+ },
+ {
+  "cite": "544 U.S. 336",
+  "unlocks": 2,
+  "entry_idxs": [
+   1156,
+   1749
+  ]
+ },
+ {
+  "cite": "426 U.S. 438",
+  "unlocks": 2,
+  "entry_idxs": [
+   1191,
+   1193
+  ]
+ },
+ {
+  "cite": "436 U.S. 658",
+  "unlocks": 2,
+  "entry_idxs": [
+   1230,
+   1256
+  ]
+ },
+ {
+  "cite": "384 U.S. 563",
+  "unlocks": 2,
+  "entry_idxs": [
+   1235,
+   1237
+  ]
+ },
+ {
+  "cite": "523 U.S. 26",
+  "unlocks": 2,
+  "entry_idxs": [
+   1255,
+   1899
+  ]
+ },
+ {
+  "cite": "144 U.S. 408",
+  "unlocks": 2,
+  "entry_idxs": [
+   1271,
+   1587
+  ]
+ },
+ {
+  "cite": "518 U.S. 415",
+  "unlocks": 2,
+  "entry_idxs": [
+   1280,
+   1694
+  ]
+ },
+ {
+  "cite": "272 U.S. 365",
+  "unlocks": 2,
+  "entry_idxs": [
+   1306,
+   1979
+  ]
+ },
+ {
+  "cite": "413 U.S. 15",
+  "unlocks": 2,
+  "entry_idxs": [
+   1315,
+   1316
+  ]
+ },
+ {
+  "cite": "442 U.S. 735",
+  "unlocks": 2,
+  "entry_idxs": [
+   1371,
+   1879
+  ]
+ },
+ {
+  "cite": "458 U.S. 419",
+  "unlocks": 2,
+  "entry_idxs": [
+   1378,
+   1400
+  ]
+ },
+ {
+  "cite": "496 U.S. 128",
+  "unlocks": 2,
+  "entry_idxs": [
+   1405,
+   1406
+  ]
+ },
+ {
+  "cite": "381 U.S. 479",
+  "unlocks": 2,
+  "entry_idxs": [
+   1485,
+   1486
+  ]
+ },
+ {
+  "cite": "570 U.S. 472",
+  "unlocks": 2,
+  "entry_idxs": [
+   1513,
+   1820
+  ]
+ },
+ {
+  "cite": "488 U.S. 153",
+  "unlocks": 2,
+  "entry_idxs": [
+   1550,
+   1698
+  ]
+ },
+ {
+  "cite": "471 U.S. 462",
+  "unlocks": 2,
+  "entry_idxs": [
+   1556,
+   1793
+  ]
+ },
+ {
+  "cite": "338 U.S. 366",
+  "unlocks": 2,
+  "entry_idxs": [
+   1581,
+   1582
+  ]
+ },
+ {
+  "cite": "522 U.S. 156",
+  "unlocks": 2,
+  "entry_idxs": [
+   1624,
+   1846
+  ]
+ },
+ {
+  "cite": "548 U.S. 53",
+  "unlocks": 2,
+  "entry_idxs": [
+   1660,
+   1661
+  ]
+ },
+ {
+  "cite": "514 U.S. 159",
+  "unlocks": 2,
+  "entry_idxs": [
+   1730,
+   1893
+  ]
+ },
+ {
+  "cite": "527 U.S. 706",
+  "unlocks": 2,
+  "entry_idxs": [
+   1786,
+   1805
+  ]
+ },
+ {
+  "cite": "501 U.S. 808",
+  "unlocks": 2,
+  "entry_idxs": [
+   1801,
+   1937
+  ]
+ },
+ {
+  "cite": "495 U.S. 604",
+  "unlocks": 2,
+  "entry_idxs": [
+   1858,
+   1900
+  ]
+ },
+ {
+  "cite": "282 U.S. 55",
+  "unlocks": 1,
+  "entry_idxs": [
+   3
+  ]
+ },
+ {
+  "cite": "487 U.S. 552",
+  "unlocks": 1,
+  "entry_idxs": [
+   4
+  ]
+ },
+ {
+  "cite": "212 U.S. 183",
+  "unlocks": 1,
+  "entry_idxs": [
+   8
+  ]
+ },
+ {
+  "cite": "336 U.S. 613",
+  "unlocks": 1,
+  "entry_idxs": [
+   9
+  ]
+ },
+ {
+  "cite": "141 U.S. 564",
+  "unlocks": 1,
+  "entry_idxs": [
+   10
+  ]
+ },
+ {
+  "cite": "313 U.S. 443",
+  "unlocks": 1,
+  "entry_idxs": [
+   11
+  ]
+ },
+ {
+  "cite": "430 U.S. 564",
+  "unlocks": 1,
+  "entry_idxs": [
+   15
+  ]
+ },
+ {
+  "cite": "376 U.S. 398",
+  "unlocks": 1,
+  "entry_idxs": [
+   16
+  ]
+ },
+ {
+  "cite": "513 U.S. 298",
+  "unlocks": 1,
+  "entry_idxs": [
+   17
+  ]
+ },
+ {
+  "cite": "445 U.S. 115",
+  "unlocks": 1,
+  "entry_idxs": [
+   21
+  ]
+ },
+ {
+  "cite": "463 U.S. 1032",
+  "unlocks": 1,
+  "entry_idxs": [
+   24
+  ]
+ },
+ {
+  "cite": "140 U.S. 106",
+  "unlocks": 1,
+  "entry_idxs": [
+   28
+  ]
+ },
+ {
+  "cite": "499 U.S. 585",
+  "unlocks": 1,
+  "entry_idxs": [
+   29
+  ]
+ },
+ {
+  "cite": "387 U.S. 523",
+  "unlocks": 1,
+  "entry_idxs": [
+   32
+  ]
+ },
+ {
+  "cite": "103 U.S. 261",
+  "unlocks": 1,
+  "entry_idxs": [
+   36
+  ]
+ },
+ {
+  "cite": "219 U.S. 346",
+  "unlocks": 1,
+  "entry_idxs": [
+   42
+  ]
+ },
+ {
+  "cite": "446 U.S. 635",
+  "unlocks": 1,
+  "entry_idxs": [
+   46
+  ]
+ },
+ {
+  "cite": "458 U.S. 375",
+  "unlocks": 1,
+  "entry_idxs": [
+   48
+  ]
+ },
+ {
+  "cite": "588 F.2d 626",
+  "unlocks": 1,
+  "entry_idxs": [
+   50
+  ]
+ },
+ {
+  "cite": "462 U.S. 862",
+  "unlocks": 1,
+  "entry_idxs": [
+   52
+  ]
+ },
+ {
+  "cite": "334 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   58
+  ]
+ },
+ {
+  "cite": "440 U.S. 268",
+  "unlocks": 1,
+  "entry_idxs": [
+   59
+  ]
+ },
+ {
+  "cite": "164 U.S. 492",
+  "unlocks": 1,
+  "entry_idxs": [
+   61
+  ]
+ },
+ {
+  "cite": "365 U.S. 301",
+  "unlocks": 1,
+  "entry_idxs": [
+   63
+  ]
+ },
+ {
+  "cite": "462 U.S. 611",
+  "unlocks": 1,
+  "entry_idxs": [
+   65
+  ]
+ },
+ {
+  "cite": "473 U.S. 614",
+  "unlocks": 1,
+  "entry_idxs": [
+   66
+  ]
+ },
+ {
+  "cite": "371 U.S. 178",
+  "unlocks": 1,
+  "entry_idxs": [
+   69
+  ]
+ },
+ {
+  "cite": "486 U.S. 429",
+  "unlocks": 1,
+  "entry_idxs": [
+   76
+  ]
+ },
+ {
+  "cite": "511 U.S. 375",
+  "unlocks": 1,
+  "entry_idxs": [
+   79
+  ]
+ },
+ {
+  "cite": "496 U.S. 325",
+  "unlocks": 1,
+  "entry_idxs": [
+   80
+  ]
+ },
+ {
+  "cite": "407 U.S. 225",
+  "unlocks": 1,
+  "entry_idxs": [
+   83
+  ]
+ },
+ {
+  "cite": "559 U.S. 393",
+  "unlocks": 1,
+  "entry_idxs": [
+   84
+  ]
+ },
+ {
+  "cite": "731 F.2d 909",
+  "unlocks": 1,
+  "entry_idxs": [
+   85
+  ]
+ },
+ {
+  "cite": "495 U.S. 328",
+  "unlocks": 1,
+  "entry_idxs": [
+   86
+  ]
+ },
+ {
+  "cite": "459 U.S. 519",
+  "unlocks": 1,
+  "entry_idxs": [
+   92
+  ]
+ },
+ {
+  "cite": "456 U.S. 556",
+  "unlocks": 1,
+  "entry_idxs": [
+   93
+  ]
+ },
+ {
+  "cite": "98 U.S. 476",
+  "unlocks": 1,
+  "entry_idxs": [
+   96
+  ]
+ },
+ {
+  "cite": "520 U.S. 651",
+  "unlocks": 1,
+  "entry_idxs": [
+   99
+  ]
+ },
+ {
+  "cite": "585 U.S. 237",
+  "unlocks": 1,
+  "entry_idxs": [
+   100
+  ]
+ },
+ {
+  "cite": "377 U.S. 533",
+  "unlocks": 1,
+  "entry_idxs": [
+   101
+  ]
+ },
+ {
+  "cite": "430 U.S. 462",
+  "unlocks": 1,
+  "entry_idxs": [
+   102
+  ]
+ },
+ {
+  "cite": "140 U.S. 304",
+  "unlocks": 1,
+  "entry_idxs": [
+   104
+  ]
+ },
+ {
+  "cite": "475 U.S. 643",
+  "unlocks": 1,
+  "entry_idxs": [
+   105
+  ]
+ },
+ {
+  "cite": "463 U.S. 29",
+  "unlocks": 1,
+  "entry_idxs": [
+   106
+  ]
+ },
+ {
+  "cite": "484 U.S. 29",
+  "unlocks": 1,
+  "entry_idxs": [
+   108
+  ]
+ },
+ {
+  "cite": "241 U.S. 257",
+  "unlocks": 1,
+  "entry_idxs": [
+   110
+  ]
+ },
+ {
+  "cite": "368 U.S. 52",
+  "unlocks": 1,
+  "entry_idxs": [
+   112
+  ]
+ },
+ {
+  "cite": "499 U.S. 621",
+  "unlocks": 1,
+  "entry_idxs": [
+   113
+  ]
+ },
+ {
+  "cite": "445 U.S. 573",
+  "unlocks": 1,
+  "entry_idxs": [
+   114
+  ]
+ },
+ {
+  "cite": "735 F.3d 983",
+  "unlocks": 1,
+  "entry_idxs": [
+   115
+  ]
+ },
+ {
+  "cite": "92 U.S. 542",
+  "unlocks": 1,
+  "entry_idxs": [
+   118
+  ]
+ },
+ {
+  "cite": "290 U.S. 111",
+  "unlocks": 1,
+  "entry_idxs": [
+   119
+  ]
+ },
+ {
+  "cite": "432 U.S. 333",
+  "unlocks": 1,
+  "entry_idxs": [
+   122
+  ]
+ },
+ {
+  "cite": "350 U.S. 532",
+  "unlocks": 1,
+  "entry_idxs": [
+   123
+  ]
+ },
+ {
+  "cite": "233 U.S. 492",
+  "unlocks": 1,
+  "entry_idxs": [
+   125
+  ]
+ },
+ {
+  "cite": "480 U.S. 421",
+  "unlocks": 1,
+  "entry_idxs": [
+   126
+  ]
+ },
+ {
+  "cite": "225 U.S. 347",
+  "unlocks": 1,
+  "entry_idxs": [
+   130
+  ]
+ },
+ {
+  "cite": "506 U.S. 447",
+  "unlocks": 1,
+  "entry_idxs": [
+   131
+  ]
+ },
+ {
+  "cite": "579 U.S. 232",
+  "unlocks": 1,
+  "entry_idxs": [
+   132
+  ]
+ },
+ {
+  "cite": "258 U.S. 268",
+  "unlocks": 1,
+  "entry_idxs": [
+   136
+  ]
+ },
+ {
+  "cite": "588 U.S. 558",
+  "unlocks": 1,
+  "entry_idxs": [
+   137
+  ]
+ },
+ {
+  "cite": "769 F.3d 125",
+  "unlocks": 1,
+  "entry_idxs": [
+   138
+  ]
+ },
+ {
+  "cite": "267 U.S. 132",
+  "unlocks": 1,
+  "entry_idxs": [
+   144
+  ]
+ },
+ {
+  "cite": "539 U.S. 558",
+  "unlocks": 1,
+  "entry_idxs": [
+   145
+  ]
+ },
+ {
+  "cite": "297 U.S. 288",
+  "unlocks": 1,
+  "entry_idxs": [
+   146
+  ]
+ },
+ {
+  "cite": "422 U.S. 405",
+  "unlocks": 1,
+  "entry_idxs": [
+   148
+  ]
+ },
+ {
+  "cite": "585 U.S. 296",
+  "unlocks": 1,
+  "entry_idxs": [
+   153
+  ]
+ },
+ {
+  "cite": "571 U.S. 415",
+  "unlocks": 1,
+  "entry_idxs": [
+   158
+  ]
+ },
+ {
+  "cite": "425 U.S. 800",
+  "unlocks": 1,
+  "entry_idxs": [
+   161
+  ]
+ },
+ {
+  "cite": "461 U.S. 300",
+  "unlocks": 1,
+  "entry_idxs": [
+   163
+  ]
+ },
+ {
+  "cite": "559 U.S. 133",
+  "unlocks": 1,
+  "entry_idxs": [
+   165
+  ]
+ },
+ {
+  "cite": "380 U.S. 24",
+  "unlocks": 1,
+  "entry_idxs": [
+   166
+  ]
+ },
+ {
+  "cite": "253 U.S. 12",
+  "unlocks": 1,
+  "entry_idxs": [
+   167
+  ]
+ },
+ {
+  "cite": "453 F.2d 709",
+  "unlocks": 1,
+  "entry_idxs": [
+   168
+  ]
+ },
+ {
+  "cite": "283 U.S. 494",
+  "unlocks": 1,
+  "entry_idxs": [
+   175
+  ]
+ },
+ {
+  "cite": "468 U.S. 841",
+  "unlocks": 1,
+  "entry_idxs": [
+   176
+  ]
+ },
+ {
+  "cite": "227 U.S. 427",
+  "unlocks": 1,
+  "entry_idxs": [
+   178
+  ]
+ },
+ {
+  "cite": "433 U.S. 321",
+  "unlocks": 1,
+  "entry_idxs": [
+   181
+  ]
+ },
+ {
+  "cite": "165 U.S. 463",
+  "unlocks": 1,
+  "entry_idxs": [
+   182
+  ]
+ },
+ {
+  "cite": "569 U.S. 435",
+  "unlocks": 1,
+  "entry_idxs": [
+   184
+  ]
+ },
+ {
+  "cite": "431 U.S. 606",
+  "unlocks": 1,
+  "entry_idxs": [
+   185
+  ]
+ },
+ {
+  "cite": "458 U.S. 886",
+  "unlocks": 1,
+  "entry_idxs": [
+   187
+  ]
+ },
+ {
+  "cite": "312 U.S. 457",
+  "unlocks": 1,
+  "entry_idxs": [
+   188
+  ]
+ },
+ {
+  "cite": "395 U.S. 444",
+  "unlocks": 1,
+  "entry_idxs": [
+   191
+  ]
+ },
+ {
+  "cite": "159 F.2d 169",
+  "unlocks": 1,
+  "entry_idxs": [
+   193
+  ]
+ },
+ {
+  "cite": "530 U.S. 211",
+  "unlocks": 1,
+  "entry_idxs": [
+   194
+  ]
+ },
+ {
+  "cite": "310 U.S. 296",
+  "unlocks": 1,
+  "entry_idxs": [
+   195
+  ]
+ },
+ {
+  "cite": "444 U.S. 37",
+  "unlocks": 1,
+  "entry_idxs": [
+   197
+  ]
+ },
+ {
+  "cite": "486 U.S. 675",
+  "unlocks": 1,
+  "entry_idxs": [
+   200
+  ]
+ },
+ {
+  "cite": "391 U.S. 123",
+  "unlocks": 1,
+  "entry_idxs": [
+   201
+  ]
+ },
+ {
+  "cite": "411 U.S. 792",
+  "unlocks": 1,
+  "entry_idxs": [
+   205
+  ]
+ },
+ {
+  "cite": "319 U.S. 315",
+  "unlocks": 1,
+  "entry_idxs": [
+   206
+  ]
+ },
+ {
+  "cite": "495 U.S. 575",
+  "unlocks": 1,
+  "entry_idxs": [
+   207
+  ]
+ },
+ {
+  "cite": "401 U.S. 424",
+  "unlocks": 1,
+  "entry_idxs": [
+   209
+  ]
+ },
+ {
+  "cite": "318 U.S. 109",
+  "unlocks": 1,
+  "entry_idxs": [
+   210
+  ]
+ },
+ {
+  "cite": "571 U.S. 204",
+  "unlocks": 1,
+  "entry_idxs": [
+   213
+  ]
+ },
+ {
+  "cite": "426 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   218
+  ]
+ },
+ {
+  "cite": "423 U.S. 147",
+  "unlocks": 1,
+  "entry_idxs": [
+   219
+  ]
+ },
+ {
+  "cite": "157 U.S. 195",
+  "unlocks": 1,
+  "entry_idxs": [
+   220
+  ]
+ },
+ {
+  "cite": "526 U.S. 344",
+  "unlocks": 1,
+  "entry_idxs": [
+   222
+  ]
+ },
+ {
+  "cite": "532 U.S. 598",
+  "unlocks": 1,
+  "entry_idxs": [
+   231
+  ]
+ },
+ {
+  "cite": "569 U.S. 184",
+  "unlocks": 1,
+  "entry_idxs": [
+   232
+  ]
+ },
+ {
+  "cite": "274 U.S. 316",
+  "unlocks": 1,
+  "entry_idxs": [
+   234
+  ]
+ },
+ {
+  "cite": "343 U.S. 470",
+  "unlocks": 1,
+  "entry_idxs": [
+   235
+  ]
+ },
+ {
+  "cite": "517 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   236
+  ]
+ },
+ {
+  "cite": "529 U.S. 473",
+  "unlocks": 1,
+  "entry_idxs": [
+   238
+  ]
+ },
+ {
+  "cite": "416 U.S. 386",
+  "unlocks": 1,
+  "entry_idxs": [
+   240
+  ]
+ },
+ {
+  "cite": "110 U.S. 710",
+  "unlocks": 1,
+  "entry_idxs": [
+   248
+  ]
+ },
+ {
+  "cite": "117 U.S. 582",
+  "unlocks": 1,
+  "entry_idxs": [
+   251
+  ]
+ },
+ {
+  "cite": "561 U.S. 358",
+  "unlocks": 1,
+  "entry_idxs": [
+   253
+  ]
+ },
+ {
+  "cite": "465 U.S. 513",
+  "unlocks": 1,
+  "entry_idxs": [
+   254
+  ]
+ },
+ {
+  "cite": "560 U.S. 505",
+  "unlocks": 1,
+  "entry_idxs": [
+   255
+  ]
+ },
+ {
+  "cite": "369 U.S. 749",
+  "unlocks": 1,
+  "entry_idxs": [
+   259
+  ]
+ },
+ {
+  "cite": "130 F.2d 810",
+  "unlocks": 1,
+  "entry_idxs": [
+   260
+  ]
+ },
+ {
+  "cite": "207 U.S. 161",
+  "unlocks": 1,
+  "entry_idxs": [
+   261
+  ]
+ },
+ {
+  "cite": "152 U.S. 178",
+  "unlocks": 1,
+  "entry_idxs": [
+   262
+  ]
+ },
+ {
+  "cite": "603 U.S. 369",
+  "unlocks": 1,
+  "entry_idxs": [
+   265
+  ]
+ },
+ {
+  "cite": "466 U.S. 429",
+  "unlocks": 1,
+  "entry_idxs": [
+   266
+  ]
+ },
+ {
+  "cite": "380 U.S. 479",
+  "unlocks": 1,
+  "entry_idxs": [
+   267
+  ]
+ },
+ {
+  "cite": "352 U.S. 500",
+  "unlocks": 1,
+  "entry_idxs": [
+   271
+  ]
+ },
+ {
+  "cite": "490 U.S. 826",
+  "unlocks": 1,
+  "entry_idxs": [
+   272
+  ]
+ },
+ {
+  "cite": "231 U.S. 9",
+  "unlocks": 1,
+  "entry_idxs": [
+   273
+  ]
+ },
+ {
+  "cite": "509 U.S. 602",
+  "unlocks": 1,
+  "entry_idxs": [
+   276
+  ]
+ },
+ {
+  "cite": "319 U.S. 624",
+  "unlocks": 1,
+  "entry_idxs": [
+   278
+  ]
+ },
+ {
+  "cite": "576 U.S. 644",
+  "unlocks": 1,
+  "entry_idxs": [
+   279
+  ]
+ },
+ {
+  "cite": "449 U.S. 90",
+  "unlocks": 1,
+  "entry_idxs": [
+   281
+  ]
+ },
+ {
+  "cite": "590 U.S. 405",
+  "unlocks": 1,
+  "entry_idxs": [
+   282
+  ]
+ },
+ {
+  "cite": "311 U.S. 32",
+  "unlocks": 1,
+  "entry_idxs": [
+   284
+  ]
+ },
+ {
+  "cite": "422 U.S. 853",
+  "unlocks": 1,
+  "entry_idxs": [
+   299
+  ]
+ },
+ {
+  "cite": "234 U.S. 369",
+  "unlocks": 1,
+  "entry_idxs": [
+   300
+  ]
+ },
+ {
+  "cite": "332 U.S. 539",
+  "unlocks": 1,
+  "entry_idxs": [
+   301
+  ]
+ },
+ {
+  "cite": "559 U.S. 260",
+  "unlocks": 1,
+  "entry_idxs": [
+   311
+  ]
+ },
+ {
+  "cite": "559 U.S. 356",
+  "unlocks": 1,
+  "entry_idxs": [
+   312
+  ]
+ },
+ {
+  "cite": "392 U.S. 40",
+  "unlocks": 1,
+  "entry_idxs": [
+   313
+  ]
+ },
+ {
+  "cite": "397 U.S. 436",
+  "unlocks": 1,
+  "entry_idxs": [
+   314
+  ]
+ },
+ {
+  "cite": "337 U.S. 541",
+  "unlocks": 1,
+  "entry_idxs": [
+   315
+  ]
+ },
+ {
+  "cite": "301 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   318
+  ]
+ },
+ {
+  "cite": "313 U.S. 299",
+  "unlocks": 1,
+  "entry_idxs": [
+   319
+  ]
+ },
+ {
+  "cite": "521 U.S. 898",
+  "unlocks": 1,
+  "entry_idxs": [
+   323
+  ]
+ },
+ {
+  "cite": "196 U.S. 375",
+  "unlocks": 1,
+  "entry_idxs": [
+   325
+  ]
+ },
+ {
+  "cite": "514 U.S. 549",
+  "unlocks": 1,
+  "entry_idxs": [
+   326
+  ]
+ },
+ {
+  "cite": "447 U.S. 557",
+  "unlocks": 1,
+  "entry_idxs": [
+   327
+  ]
+ },
+ {
+  "cite": "422 U.S. 563",
+  "unlocks": 1,
+  "entry_idxs": [
+   328
+  ]
+ },
+ {
+  "cite": "328 U.S. 293",
+  "unlocks": 1,
+  "entry_idxs": [
+   330
+  ]
+ },
+ {
+  "cite": "444 U.S. 472",
+  "unlocks": 1,
+  "entry_idxs": [
+   331
+  ]
+ },
+ {
+  "cite": "892 F.2d 237",
+  "unlocks": 1,
+  "entry_idxs": [
+   332
+  ]
+ },
+ {
+  "cite": "181 U.S. 92",
+  "unlocks": 1,
+  "entry_idxs": [
+   333
+  ]
+ },
+ {
+  "cite": "96 U.S. 76",
+  "unlocks": 1,
+  "entry_idxs": [
+   334
+  ]
+ },
+ {
+  "cite": "564 U.S. 338",
+  "unlocks": 1,
+  "entry_idxs": [
+   336
+  ]
+ },
+ {
+  "cite": "413 U.S. 433",
+  "unlocks": 1,
+  "entry_idxs": [
+   337
+  ]
+ },
+ {
+  "cite": "282 U.S. 101",
+  "unlocks": 1,
+  "entry_idxs": [
+   338
+  ]
+ },
+ {
+  "cite": "419 U.S. 256",
+  "unlocks": 1,
+  "entry_idxs": [
+   339
+  ]
+ },
+ {
+  "cite": "148 U.S. 503",
+  "unlocks": 1,
+  "entry_idxs": [
+   340
+  ]
+ },
+ {
+  "cite": "430 U.S. 705",
+  "unlocks": 1,
+  "entry_idxs": [
+   343
+  ]
+ },
+ {
+  "cite": "512 U.S. 532",
+  "unlocks": 1,
+  "entry_idxs": [
+   345
+  ]
+ },
+ {
+  "cite": "566 U.S. 284",
+  "unlocks": 1,
+  "entry_idxs": [
+   346
+  ]
+ },
+ {
+  "cite": "420 U.S. 162",
+  "unlocks": 1,
+  "entry_idxs": [
+   347
+  ]
+ },
+ {
+  "cite": "362 U.S. 402",
+  "unlocks": 1,
+  "entry_idxs": [
+   348
+  ]
+ },
+ {
+  "cite": "270 U.S. 593",
+  "unlocks": 1,
+  "entry_idxs": [
+   356
+  ]
+ },
+ {
+  "cite": "388 U.S. 14",
+  "unlocks": 1,
+  "entry_idxs": [
+   359
+  ]
+ },
+ {
+  "cite": "445 U.S. 222",
+  "unlocks": 1,
+  "entry_idxs": [
+   363
+  ]
+ },
+ {
+  "cite": "377 U.S. 408",
+  "unlocks": 1,
+  "entry_idxs": [
+   365
+  ]
+ },
+ {
+  "cite": "517 U.S. 292",
+  "unlocks": 1,
+  "entry_idxs": [
+   366
+  ]
+ },
+ {
+  "cite": "98 U.S. 403",
+  "unlocks": 1,
+  "entry_idxs": [
+   367
+  ]
+ },
+ {
+  "cite": "353 U.S. 53",
+  "unlocks": 1,
+  "entry_idxs": [
+   378
+  ]
+ },
+ {
+  "cite": "260 U.S. 393",
+  "unlocks": 1,
+  "entry_idxs": [
+   380
+  ]
+ },
+ {
+  "cite": "446 U.S. 335",
+  "unlocks": 1,
+  "entry_idxs": [
+   381
+  ]
+ },
+ {
+  "cite": "486 U.S. 153",
+  "unlocks": 1,
+  "entry_idxs": [
+   382
+  ]
+ },
+ {
+  "cite": "386 U.S. 568",
+  "unlocks": 1,
+  "entry_idxs": [
+   386
+  ]
+ },
+ {
+  "cite": "447 U.S. 102",
+  "unlocks": 1,
+  "entry_idxs": [
+   387
+  ]
+ },
+ {
+  "cite": "380 U.S. 163",
+  "unlocks": 1,
+  "entry_idxs": [
+   388
+  ]
+ },
+ {
+  "cite": "391 U.S. 543",
+  "unlocks": 1,
+  "entry_idxs": [
+   391
+  ]
+ },
+ {
+  "cite": "402 U.S. 673",
+  "unlocks": 1,
+  "entry_idxs": [
+   392
+  ]
+ },
+ {
+  "cite": "139 U.S. 199",
+  "unlocks": 1,
+  "entry_idxs": [
+   394
+  ]
+ },
+ {
+  "cite": "120 U.S. 183",
+  "unlocks": 1,
+  "entry_idxs": [
+   397
+  ]
+ },
+ {
+  "cite": "584 U.S. 59",
+  "unlocks": 1,
+  "entry_idxs": [
+   398
+  ]
+ },
+ {
+  "cite": "218 U.S. 601",
+  "unlocks": 1,
+  "entry_idxs": [
+   401
+  ]
+ },
+ {
+  "cite": "265 U.S. 182",
+  "unlocks": 1,
+  "entry_idxs": [
+   404
+  ]
+ },
+ {
+  "cite": "485 U.S. 568",
+  "unlocks": 1,
+  "entry_idxs": [
+   406
+  ]
+ },
+ {
+  "cite": "583 U.S. 281",
+  "unlocks": 1,
+  "entry_idxs": [
+   407
+  ]
+ },
+ {
+  "cite": "542 U.S. 129",
+  "unlocks": 1,
+  "entry_idxs": [
+   409
+  ]
+ },
+ {
+  "cite": "375 U.S. 180",
+  "unlocks": 1,
+  "entry_idxs": [
+   411
+  ]
+ },
+ {
+  "cite": "104 U.S. 428",
+  "unlocks": 1,
+  "entry_idxs": [
+   413
+  ]
+ },
+ {
+  "cite": "74 F.3d 1177",
+  "unlocks": 1,
+  "entry_idxs": [
+   414
+  ]
+ },
+ {
+  "cite": "130 U.S. 122",
+  "unlocks": 1,
+  "entry_idxs": [
+   416
+  ]
+ },
+ {
+  "cite": "221 U.S. 418",
+  "unlocks": 1,
+  "entry_idxs": [
+   421
+  ]
+ },
+ {
+  "cite": "576 U.S. 155",
+  "unlocks": 1,
+  "entry_idxs": [
+   423
+  ]
+ },
+ {
+  "cite": "495 U.S. 82",
+  "unlocks": 1,
+  "entry_idxs": [
+   427
+  ]
+ },
+ {
+  "cite": "376 U.S. 575",
+  "unlocks": 1,
+  "entry_idxs": [
+   430
+  ]
+ },
+ {
+  "cite": "536 U.S. 101",
+  "unlocks": 1,
+  "entry_idxs": [
+   431
+  ]
+ },
+ {
+  "cite": "514 U.S. 52",
+  "unlocks": 1,
+  "entry_idxs": [
+   432
+  ]
+ },
+ {
+  "cite": "380 U.S. 693",
+  "unlocks": 1,
+  "entry_idxs": [
+   433
+  ]
+ },
+ {
+  "cite": "459 U.S. 400",
+  "unlocks": 1,
+  "entry_idxs": [
+   434
+  ]
+ },
+ {
+  "cite": "451 U.S. 77",
+  "unlocks": 1,
+  "entry_idxs": [
+   435
+  ]
+ },
+ {
+  "cite": "346 U.S. 406",
+  "unlocks": 1,
+  "entry_idxs": [
+   437
+  ]
+ },
+ {
+  "cite": "545 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   438
+  ]
+ },
+ {
+  "cite": "508 U.S. 275",
+  "unlocks": 1,
+  "entry_idxs": [
+   443
+  ]
+ },
+ {
+  "cite": "452 U.S. 264",
+  "unlocks": 1,
+  "entry_idxs": [
+   444
+  ]
+ },
+ {
+  "cite": "558 U.S. 310",
+  "unlocks": 1,
+  "entry_idxs": [
+   451
+  ]
+ },
+ {
+  "cite": "306 U.S. 307",
+  "unlocks": 1,
+  "entry_idxs": [
+   452
+  ]
+ },
+ {
+  "cite": "417 U.S. 467",
+  "unlocks": 1,
+  "entry_idxs": [
+   460
+  ]
+ },
+ {
+  "cite": "437 U.S. 443",
+  "unlocks": 1,
+  "entry_idxs": [
+   462
+  ]
+ },
+ {
+  "cite": "483 U.S. 435",
+  "unlocks": 1,
+  "entry_idxs": [
+   465
+  ]
+ },
+ {
+  "cite": "520 U.S. 953",
+  "unlocks": 1,
+  "entry_idxs": [
+   473
+  ]
+ },
+ {
+  "cite": "588 U.S. 445",
+  "unlocks": 1,
+  "entry_idxs": [
+   476
+  ]
+ },
+ {
+  "cite": "516 U.S. 29",
+  "unlocks": 1,
+  "entry_idxs": [
+   480
+  ]
+ },
+ {
+  "cite": "405 U.S. 699",
+  "unlocks": 1,
+  "entry_idxs": [
+   484
+  ]
+ },
+ {
+  "cite": "505 F.3d 922",
+  "unlocks": 1,
+  "entry_idxs": [
+   489
+  ]
+ },
+ {
+  "cite": "276 U.S. 58",
+  "unlocks": 1,
+  "entry_idxs": [
+   492
+  ]
+ },
+ {
+  "cite": "480 U.S. 294",
+  "unlocks": 1,
+  "entry_idxs": [
+   493
+  ]
+ },
+ {
+  "cite": "189 U.S. 468",
+  "unlocks": 1,
+  "entry_idxs": [
+   496
+  ]
+ },
+ {
+  "cite": "586 U.S. 485",
+  "unlocks": 1,
+  "entry_idxs": [
+   497
+  ]
+ },
+ {
+  "cite": "748 F.3d 425",
+  "unlocks": 1,
+  "entry_idxs": [
+   498
+  ]
+ },
+ {
+  "cite": "249 U.S. 47",
+  "unlocks": 1,
+  "entry_idxs": [
+   500
+  ]
+ },
+ {
+  "cite": "515 U.S. 177",
+  "unlocks": 1,
+  "entry_idxs": [
+   504
+  ]
+ },
+ {
+  "cite": "426 U.S. 229",
+  "unlocks": 1,
+  "entry_idxs": [
+   505
+  ]
+ },
+ {
+  "cite": "505 U.S. 214",
+  "unlocks": 1,
+  "entry_idxs": [
+   506
+  ]
+ },
+ {
+  "cite": "447 U.S. 667",
+  "unlocks": 1,
+  "entry_idxs": [
+   507
+  ]
+ },
+ {
+  "cite": "401 U.S. 402",
+  "unlocks": 1,
+  "entry_idxs": [
+   508
+  ]
+ },
+ {
+  "cite": "471 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   510
+  ]
+ },
+ {
+  "cite": "543 U.S. 551",
+  "unlocks": 1,
+  "entry_idxs": [
+   512
+  ]
+ },
+ {
+  "cite": "350 U.S. 383",
+  "unlocks": 1,
+  "entry_idxs": [
+   513
+  ]
+ },
+ {
+  "cite": "501 U.S. 78",
+  "unlocks": 1,
+  "entry_idxs": [
+   514
+  ]
+ },
+ {
+  "cite": "344 U.S. 392",
+  "unlocks": 1,
+  "entry_idxs": [
+   519
+  ]
+ },
+ {
+  "cite": "512 U.S. 594",
+  "unlocks": 1,
+  "entry_idxs": [
+   522
+  ]
+ },
+ {
+  "cite": "172 F. 73",
+  "unlocks": 1,
+  "entry_idxs": [
+   529
+  ]
+ },
+ {
+  "cite": "569 U.S. 267",
+  "unlocks": 1,
+  "entry_idxs": [
+   532
+  ]
+ },
+ {
+  "cite": "497 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   533
+  ]
+ },
+ {
+  "cite": "10 F.3d 90",
+  "unlocks": 1,
+  "entry_idxs": [
+   534
+  ]
+ },
+ {
+  "cite": "122 U.S. 306",
+  "unlocks": 1,
+  "entry_idxs": [
+   535
+  ]
+ },
+ {
+  "cite": "276 U.S. 394",
+  "unlocks": 1,
+  "entry_idxs": [
+   536
+  ]
+ },
+ {
+  "cite": "818 F.3d 733",
+  "unlocks": 1,
+  "entry_idxs": [
+   539
+  ]
+ },
+ {
+  "cite": "592 U.S. 261",
+  "unlocks": 1,
+  "entry_idxs": [
+   543
+  ]
+ },
+ {
+  "cite": "730 F.3d 701",
+  "unlocks": 1,
+  "entry_idxs": [
+   545
+  ]
+ },
+ {
+  "cite": "380 U.S. 624",
+  "unlocks": 1,
+  "entry_idxs": [
+   548
+  ]
+ },
+ {
+  "cite": "149 U.S. 698",
+  "unlocks": 1,
+  "entry_idxs": [
+   549
+  ]
+ },
+ {
+  "cite": "364 U.S. 122",
+  "unlocks": 1,
+  "entry_idxs": [
+   559
+  ]
+ },
+ {
+  "cite": "330 U.S. 518",
+  "unlocks": 1,
+  "entry_idxs": [
+   561
+  ]
+ },
+ {
+  "cite": "441 U.S. 471",
+  "unlocks": 1,
+  "entry_idxs": [
+   562
+  ]
+ },
+ {
+  "cite": "430 U.S. 762",
+  "unlocks": 1,
+  "entry_idxs": [
+   564
+  ]
+ },
+ {
+  "cite": "498 U.S. 237",
+  "unlocks": 1,
+  "entry_idxs": [
+   565
+  ]
+ },
+ {
+  "cite": "580 U.S. 53",
+  "unlocks": 1,
+  "entry_idxs": [
+   567
+  ]
+ },
+ {
+  "cite": "473 U.S. 716",
+  "unlocks": 1,
+  "entry_idxs": [
+   568
+  ]
+ },
+ {
+  "cite": "460 U.S. 491",
+  "unlocks": 1,
+  "entry_idxs": [
+   569
+  ]
+ },
+ {
+  "cite": "333 U.S. 56",
+  "unlocks": 1,
+  "entry_idxs": [
+   573
+  ]
+ },
+ {
+  "cite": "151 U.S. 112",
+  "unlocks": 1,
+  "entry_idxs": [
+   575
+  ]
+ },
+ {
+  "cite": "537 U.S. 418",
+  "unlocks": 1,
+  "entry_idxs": [
+   577
+  ]
+ },
+ {
+  "cite": "548 U.S. 735",
+  "unlocks": 1,
+  "entry_idxs": [
+   578
+  ]
+ },
+ {
+  "cite": "428 U.S. 465",
+  "unlocks": 1,
+  "entry_idxs": [
+   580
+  ]
+ },
+ {
+  "cite": "497 F.3d 1108",
+  "unlocks": 1,
+  "entry_idxs": [
+   581
+  ]
+ },
+ {
+  "cite": "320 U.S. 476",
+  "unlocks": 1,
+  "entry_idxs": [
+   583
+  ]
+ },
+ {
+  "cite": "534 U.S. 184",
+  "unlocks": 1,
+  "entry_idxs": [
+   584
+  ]
+ },
+ {
+  "cite": "357 U.S. 197",
+  "unlocks": 1,
+  "entry_idxs": [
+   595
+  ]
+ },
+ {
+  "cite": "559 U.S. 633",
+  "unlocks": 1,
+  "entry_idxs": [
+   599
+  ]
+ },
+ {
+  "cite": "427 U.S. 639",
+  "unlocks": 1,
+  "entry_idxs": [
+   600
+  ]
+ },
+ {
+  "cite": "282 U.S. 531",
+  "unlocks": 1,
+  "entry_idxs": [
+   601
+  ]
+ },
+ {
+  "cite": "591 U.S. 71",
+  "unlocks": 1,
+  "entry_idxs": [
+   605
+  ]
+ },
+ {
+  "cite": "531 U.S. 497",
+  "unlocks": 1,
+  "entry_idxs": [
+   607
+  ]
+ },
+ {
+  "cite": "294 F.3d 1350",
+  "unlocks": 1,
+  "entry_idxs": [
+   608
+  ]
+ },
+ {
+  "cite": "466 U.S. 485",
+  "unlocks": 1,
+  "entry_idxs": [
+   609
+  ]
+ },
+ {
+  "cite": "557 U.S. 557",
+  "unlocks": 1,
+  "entry_idxs": [
+   610
+  ]
+ },
+ {
+  "cite": "549 U.S. 118",
+  "unlocks": 1,
+  "entry_idxs": [
+   614
+  ]
+ },
+ {
+  "cite": "129 U.S. 182",
+  "unlocks": 1,
+  "entry_idxs": [
+   616
+  ]
+ },
+ {
+  "cite": "632 F.2d 185",
+  "unlocks": 1,
+  "entry_idxs": [
+   621
+  ]
+ },
+ {
+  "cite": "546 U.S. 81",
+  "unlocks": 1,
+  "entry_idxs": [
+   622
+  ]
+ },
+ {
+  "cite": "366 U.S. 316",
+  "unlocks": 1,
+  "entry_idxs": [
+   625
+  ]
+ },
+ {
+  "cite": "252 U.S. 189",
+  "unlocks": 1,
+  "entry_idxs": [
+   626
+  ]
+ },
+ {
+  "cite": "317 U.S. 287",
+  "unlocks": 1,
+  "entry_idxs": [
+   628
+  ]
+ },
+ {
+  "cite": "520 U.S. 17",
+  "unlocks": 1,
+  "entry_idxs": [
+   629
+  ]
+ },
+ {
+  "cite": "572 U.S. 663",
+  "unlocks": 1,
+  "entry_idxs": [
+   631
+  ]
+ },
+ {
+  "cite": "490 U.S. 30",
+  "unlocks": 1,
+  "entry_idxs": [
+   639
+  ]
+ },
+ {
+  "cite": "311 U.S. 112",
+  "unlocks": 1,
+  "entry_idxs": [
+   641
+  ]
+ },
+ {
+  "cite": "575 U.S. 542",
+  "unlocks": 1,
+  "entry_idxs": [
+   642
+  ]
+ },
+ {
+  "cite": "395 U.S. 784",
+  "unlocks": 1,
+  "entry_idxs": [
+   643
+  ]
+ },
+ {
+  "cite": "420 U.S. 377",
+  "unlocks": 1,
+  "entry_idxs": [
+   644
+  ]
+ },
+ {
+  "cite": "587 U.S. 678",
+  "unlocks": 1,
+  "entry_idxs": [
+   648
+  ]
+ },
+ {
+  "cite": "470 U.S. 532",
+  "unlocks": 1,
+  "entry_idxs": [
+   650
+  ]
+ },
+ {
+  "cite": "308 U.S. 295",
+  "unlocks": 1,
+  "entry_idxs": [
+   657
+  ]
+ },
+ {
+  "cite": "35 F.2d 301",
+  "unlocks": 1,
+  "entry_idxs": [
+   658
+  ]
+ },
+ {
+  "cite": "146 U.S. 140",
+  "unlocks": 1,
+  "entry_idxs": [
+   661
+  ]
+ },
+ {
+  "cite": "388 U.S. 41",
+  "unlocks": 1,
+  "entry_idxs": [
+   665
+  ]
+ },
+ {
+  "cite": "356 U.S. 86",
+  "unlocks": 1,
+  "entry_idxs": [
+   670
+  ]
+ },
+ {
+  "cite": "416 U.S. 363",
+  "unlocks": 1,
+  "entry_idxs": [
+   671
+  ]
+ },
+ {
+  "cite": "532 U.S. 105",
+  "unlocks": 1,
+  "entry_idxs": [
+   672
+  ]
+ },
+ {
+  "cite": "260 U.S. 290",
+  "unlocks": 1,
+  "entry_idxs": [
+   673
+  ]
+ },
+ {
+  "cite": "533 U.S. 27",
+  "unlocks": 1,
+  "entry_idxs": [
+   674
+  ]
+ },
+ {
+  "cite": "530 U.S. 466",
+  "unlocks": 1,
+  "entry_idxs": [
+   677
+  ]
+ },
+ {
+  "cite": "134 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   678
+  ]
+ },
+ {
+  "cite": "484 U.S. 19",
+  "unlocks": 1,
+  "entry_idxs": [
+   682
+  ]
+ },
+ {
+  "cite": "467 U.S. 229",
+  "unlocks": 1,
+  "entry_idxs": [
+   685
+  ]
+ },
+ {
+  "cite": "226 U.S. 374",
+  "unlocks": 1,
+  "entry_idxs": [
+   686
+  ]
+ },
+ {
+  "cite": "490 U.S. 730",
+  "unlocks": 1,
+  "entry_idxs": [
+   690
+  ]
+ },
+ {
+  "cite": "546 U.S. 500",
+  "unlocks": 1,
+  "entry_idxs": [
+   692
+  ]
+ },
+ {
+  "cite": "239 U.S. 33",
+  "unlocks": 1,
+  "entry_idxs": [
+   693
+  ]
+ },
+ {
+  "cite": "345 U.S. 247",
+  "unlocks": 1,
+  "entry_idxs": [
+   695
+  ]
+ },
+ {
+  "cite": "437 U.S. 153",
+  "unlocks": 1,
+  "entry_idxs": [
+   697
+  ]
+ },
+ {
+  "cite": "287 U.S. 435",
+  "unlocks": 1,
+  "entry_idxs": [
+   706
+  ]
+ },
+ {
+  "cite": "536 U.S. 452",
+  "unlocks": 1,
+  "entry_idxs": [
+   707
+  ]
+ },
+ {
+  "cite": "454 U.S. 263",
+  "unlocks": 1,
+  "entry_idxs": [
+   708
+  ]
+ },
+ {
+  "cite": "165 U.S. 654",
+  "unlocks": 1,
+  "entry_idxs": [
+   714
+  ]
+ },
+ {
+  "cite": "517 U.S. 535",
+  "unlocks": 1,
+  "entry_idxs": [
+   715
+  ]
+ },
+ {
+  "cite": "314 U.S. 314",
+  "unlocks": 1,
+  "entry_idxs": [
+   716
+  ]
+ },
+ {
+  "cite": "304 U.S. 64",
+  "unlocks": 1,
+  "entry_idxs": [
+   720
+  ]
+ },
+ {
+  "cite": "481 U.S. 41",
+  "unlocks": 1,
+  "entry_idxs": [
+   722
+  ]
+ },
+ {
+  "cite": "520 U.S. 510",
+  "unlocks": 1,
+  "entry_idxs": [
+   723
+  ]
+ },
+ {
+  "cite": "112 F.3d 98",
+  "unlocks": 1,
+  "entry_idxs": [
+   724
+  ]
+ },
+ {
+  "cite": "481 U.S. 704",
+  "unlocks": 1,
+  "entry_idxs": [
+   729
+  ]
+ },
+ {
+  "cite": "93 U.S. 124",
+  "unlocks": 1,
+  "entry_idxs": [
+   730
+  ]
+ },
+ {
+  "cite": "708 F.2d 1081",
+  "unlocks": 1,
+  "entry_idxs": [
+   732
+  ]
+ },
+ {
+  "cite": "403 U.S. 602",
+  "unlocks": 1,
+  "entry_idxs": [
+   733
+  ]
+ },
+ {
+  "cite": "136 U.S. 68",
+  "unlocks": 1,
+  "entry_idxs": [
+   736
+  ]
+ },
+ {
+  "cite": "563 U.S. 170",
+  "unlocks": 1,
+  "entry_idxs": [
+   741
+  ]
+ },
+ {
+  "cite": "209 U.S. 123",
+  "unlocks": 1,
+  "entry_idxs": [
+   742
+  ]
+ },
+ {
+  "cite": "450 U.S. 24",
+  "unlocks": 1,
+  "entry_idxs": [
+   744
+  ]
+ },
+ {
+  "cite": "483 U.S. 825",
+  "unlocks": 1,
+  "entry_idxs": [
+   745
+  ]
+ },
+ {
+  "cite": "282 U.S. 687",
+  "unlocks": 1,
+  "entry_idxs": [
+   746
+  ]
+ },
+ {
+  "cite": "189 F.2d 14",
+  "unlocks": 1,
+  "entry_idxs": [
+   753
+  ]
+ },
+ {
+  "cite": "502 U.S. 346",
+  "unlocks": 1,
+  "entry_idxs": [
+   754
+  ]
+ },
+ {
+  "cite": "414 U.S. 338",
+  "unlocks": 1,
+  "entry_idxs": [
+   755
+  ]
+ },
+ {
+  "cite": "321 U.S. 503",
+  "unlocks": 1,
+  "entry_idxs": [
+   756
+  ]
+ },
+ {
+  "cite": "243 U.S. 188",
+  "unlocks": 1,
+  "entry_idxs": [
+   757
+  ]
+ },
+ {
+  "cite": "405 U.S. 150",
+  "unlocks": 1,
+  "entry_idxs": [
+   759
+  ]
+ },
+ {
+  "cite": "507 U.S. 380",
+  "unlocks": 1,
+  "entry_idxs": [
+   760
+  ]
+ },
+ {
+  "cite": "343 U.S. 579",
+  "unlocks": 1,
+  "entry_idxs": [
+   764
+  ]
+ },
+ {
+  "cite": "587 U.S. 370",
+  "unlocks": 1,
+  "entry_idxs": [
+   768
+  ]
+ },
+ {
+  "cite": "455 U.S. 509",
+  "unlocks": 1,
+  "entry_idxs": [
+   773
+  ]
+ },
+ {
+  "cite": "563 U.S. 452",
+  "unlocks": 1,
+  "entry_idxs": [
+   775
+  ]
+ },
+ {
+  "cite": "499 U.S. 83",
+  "unlocks": 1,
+  "entry_idxs": [
+   781
+  ]
+ },
+ {
+  "cite": "526 U.S. 137",
+  "unlocks": 1,
+  "entry_idxs": [
+   785
+  ]
+ },
+ {
+  "cite": "295 U.S. 602",
+  "unlocks": 1,
+  "entry_idxs": [
+   789
+  ]
+ },
+ {
+  "cite": "833 F.3d 192",
+  "unlocks": 1,
+  "entry_idxs": [
+   791
+  ]
+ },
+ {
+  "cite": "438 U.S. 586",
+  "unlocks": 1,
+  "entry_idxs": [
+   792
+  ]
+ },
+ {
+  "cite": "570 U.S. 729",
+  "unlocks": 1,
+  "entry_idxs": [
+   793
+  ]
+ },
+ {
+  "cite": "256 F.3d 1229",
+  "unlocks": 1,
+  "entry_idxs": [
+   794
+  ]
+ },
+ {
+  "cite": "439 U.S. 282",
+  "unlocks": 1,
+  "entry_idxs": [
+   795
+  ]
+ },
+ {
+  "cite": "561 U.S. 247",
+  "unlocks": 1,
+  "entry_idxs": [
+   796
+  ]
+ },
+ {
+  "cite": "98 U.S. 61",
+  "unlocks": 1,
+  "entry_idxs": [
+   798
+  ]
+ },
+ {
+  "cite": "625 F.3d 1309",
+  "unlocks": 1,
+  "entry_idxs": [
+   802
+  ]
+ },
+ {
+  "cite": "306 F.3d 99",
+  "unlocks": 1,
+  "entry_idxs": [
+   804
+  ]
+ },
+ {
+  "cite": "411 U.S. 546",
+  "unlocks": 1,
+  "entry_idxs": [
+   807
+  ]
+ },
+ {
+  "cite": "567 U.S. 239",
+  "unlocks": 1,
+  "entry_idxs": [
+   808
+  ]
+ },
+ {
+  "cite": "598 U.S. 739",
+  "unlocks": 1,
+  "entry_idxs": [
+   813
+  ]
+ },
+ {
+  "cite": "161 U.S. 306",
+  "unlocks": 1,
+  "entry_idxs": [
+   818
+  ]
+ },
+ {
+  "cite": "166 U.S. 521",
+  "unlocks": 1,
+  "entry_idxs": [
+   823
+  ]
+ },
+ {
+  "cite": "530 U.S. 363",
+  "unlocks": 1,
+  "entry_idxs": [
+   826
+  ]
+ },
+ {
+  "cite": "603 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   827
+  ]
+ },
+ {
+  "cite": "211 U.S. 149",
+  "unlocks": 1,
+  "entry_idxs": [
+   829
+  ]
+ },
+ {
+  "cite": "463 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   830
+  ]
+ },
+ {
+  "cite": "543 U.S. 220",
+  "unlocks": 1,
+  "entry_idxs": [
+   831
+  ]
+ },
+ {
+  "cite": "118 U.S. 250",
+  "unlocks": 1,
+  "entry_idxs": [
+   833
+  ]
+ },
+ {
+  "cite": "145 U.S. 56",
+  "unlocks": 1,
+  "entry_idxs": [
+   834
+  ]
+ },
+ {
+  "cite": "597 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   835
+  ]
+ },
+ {
+  "cite": "553 U.S. 124",
+  "unlocks": 1,
+  "entry_idxs": [
+   836
+  ]
+ },
+ {
+  "cite": "254 U.S. 590",
+  "unlocks": 1,
+  "entry_idxs": [
+   840
+  ]
+ },
+ {
+  "cite": "378 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   842
+  ]
+ },
+ {
+  "cite": "315 U.S. 568",
+  "unlocks": 1,
+  "entry_idxs": [
+   843
+  ]
+ },
+ {
+  "cite": "520 U.S. 154",
+  "unlocks": 1,
+  "entry_idxs": [
+   844
+  ]
+ },
+ {
+  "cite": "568 U.S. 519",
+  "unlocks": 1,
+  "entry_idxs": [
+   853
+  ]
+ },
+ {
+  "cite": "120 U.S. 707",
+  "unlocks": 1,
+  "entry_idxs": [
+   856
+  ]
+ },
+ {
+  "cite": "119 U.S. 608",
+  "unlocks": 1,
+  "entry_idxs": [
+   857
+  ]
+ },
+ {
+  "cite": "488 U.S. 428",
+  "unlocks": 1,
+  "entry_idxs": [
+   859
+  ]
+ },
+ {
+  "cite": "498 U.S. 103",
+  "unlocks": 1,
+  "entry_idxs": [
+   863
+  ]
+ },
+ {
+  "cite": "517 U.S. 654",
+  "unlocks": 1,
+  "entry_idxs": [
+   868
+  ]
+ },
+ {
+  "cite": "330 U.S. 501",
+  "unlocks": 1,
+  "entry_idxs": [
+   870
+  ]
+ },
+ {
+  "cite": "380 U.S. 460",
+  "unlocks": 1,
+  "entry_idxs": [
+   872
+  ]
+ },
+ {
+  "cite": "118 U.S. 356",
+  "unlocks": 1,
+  "entry_idxs": [
+   874
+  ]
+ },
+ {
+  "cite": "162 U.S. 91",
+  "unlocks": 1,
+  "entry_idxs": [
+   877
+  ]
+ },
+ {
+  "cite": "763 F.2d 1115",
+  "unlocks": 1,
+  "entry_idxs": [
+   880
+  ]
+ },
+ {
+  "cite": "578 U.S. 355",
+  "unlocks": 1,
+  "entry_idxs": [
+   883
+  ]
+ },
+ {
+  "cite": "494 U.S. 872",
+  "unlocks": 1,
+  "entry_idxs": [
+   886
+  ]
+ },
+ {
+  "cite": "274 U.S. 357",
+  "unlocks": 1,
+  "entry_idxs": [
+   887
+  ]
+ },
+ {
+  "cite": "357 U.S. 449",
+  "unlocks": 1,
+  "entry_idxs": [
+   888
+  ]
+ },
+ {
+  "cite": "451 U.S. 390",
+  "unlocks": 1,
+  "entry_idxs": [
+   892
+  ]
+ },
+ {
+  "cite": "490 U.S. 319",
+  "unlocks": 1,
+  "entry_idxs": [
+   893
+  ]
+ },
+ {
+  "cite": "371 U.S. 471",
+  "unlocks": 1,
+  "entry_idxs": [
+   894
+  ]
+ },
+ {
+  "cite": "507 U.S. 234",
+  "unlocks": 1,
+  "entry_idxs": [
+   897
+  ]
+ },
+ {
+  "cite": "157 U.S. 386",
+  "unlocks": 1,
+  "entry_idxs": [
+   904
+  ]
+ },
+ {
+  "cite": "571 U.S. 117",
+  "unlocks": 1,
+  "entry_idxs": [
+   906
+  ]
+ },
+ {
+  "cite": "588 U.S. 684",
+  "unlocks": 1,
+  "entry_idxs": [
+   911
+  ]
+ },
+ {
+  "cite": "394 U.S. 759",
+  "unlocks": 1,
+  "entry_idxs": [
+   913
+  ]
+ },
+ {
+  "cite": "572 U.S. 273",
+  "unlocks": 1,
+  "entry_idxs": [
+   915
+  ]
+ },
+ {
+  "cite": "555 U.S. 460",
+  "unlocks": 1,
+  "entry_idxs": [
+   918
+  ]
+ },
+ {
+  "cite": "350 U.S. 359",
+  "unlocks": 1,
+  "entry_idxs": [
+   919
+  ]
+ },
+ {
+  "cite": "103 U.S. 435",
+  "unlocks": 1,
+  "entry_idxs": [
+   925
+  ]
+ },
+ {
+  "cite": "411 U.S. 475",
+  "unlocks": 1,
+  "entry_idxs": [
+   929
+  ]
+ },
+ {
+  "cite": "538 U.S. 11",
+  "unlocks": 1,
+  "entry_idxs": [
+   932
+  ]
+ },
+ {
+  "cite": "386 U.S. 18",
+  "unlocks": 1,
+  "entry_idxs": [
+   933
+  ]
+ },
+ {
+  "cite": "497 U.S. 805",
+  "unlocks": 1,
+  "entry_idxs": [
+   938
+  ]
+ },
+ {
+  "cite": "507 U.S. 163",
+  "unlocks": 1,
+  "entry_idxs": [
+   941
+  ]
+ },
+ {
+  "cite": "296 U.S. 27",
+  "unlocks": 1,
+  "entry_idxs": [
+   946
+  ]
+ },
+ {
+  "cite": "461 U.S. 677",
+  "unlocks": 1,
+  "entry_idxs": [
+   950
+  ]
+ },
+ {
+  "cite": "483 U.S. 350",
+  "unlocks": 1,
+  "entry_idxs": [
+   953
+  ]
+ },
+ {
+  "cite": "510 U.S. 17",
+  "unlocks": 1,
+  "entry_idxs": [
+   955
+  ]
+ },
+ {
+  "cite": "427 U.S. 38",
+  "unlocks": 1,
+  "entry_idxs": [
+   956
+  ]
+ },
+ {
+  "cite": "111 U.S. 379",
+  "unlocks": 1,
+  "entry_idxs": [
+   958
+  ]
+ },
+ {
+  "cite": "509 U.S. 259",
+  "unlocks": 1,
+  "entry_idxs": [
+   963
+  ]
+ },
+ {
+  "cite": "484 U.S. 219",
+  "unlocks": 1,
+  "entry_idxs": [
+   964
+  ]
+ },
+ {
+  "cite": "415 U.S. 308",
+  "unlocks": 1,
+  "entry_idxs": [
+   966
+  ]
+ },
+ {
+  "cite": "555 U.S. 555",
+  "unlocks": 1,
+  "entry_idxs": [
+   971
+  ]
+ },
+ {
+  "cite": "486 U.S. 622",
+  "unlocks": 1,
+  "entry_idxs": [
+   977
+  ]
+ },
+ {
+  "cite": "409 U.S. 239",
+  "unlocks": 1,
+  "entry_idxs": [
+   978
+  ]
+ },
+ {
+  "cite": "95 U.S. 714",
+  "unlocks": 1,
+  "entry_idxs": [
+   979
+  ]
+ },
+ {
+  "cite": "172 U.S. 206",
+  "unlocks": 1,
+  "entry_idxs": [
+   983
+  ]
+ },
+ {
+  "cite": "561 U.S. 742",
+  "unlocks": 1,
+  "entry_idxs": [
+   984
+  ]
+ },
+ {
+  "cite": "350 U.S. 124",
+  "unlocks": 1,
+  "entry_idxs": [
+   986
+  ]
+ },
+ {
+  "cite": "151 U.S. 452",
+  "unlocks": 1,
+  "entry_idxs": [
+   987
+  ]
+ },
+ {
+  "cite": "503 U.S. 318",
+  "unlocks": 1,
+  "entry_idxs": [
+   989
+  ]
+ },
+ {
+  "cite": "379 U.S. 104",
+  "unlocks": 1,
+  "entry_idxs": [
+   991
+  ]
+ },
+ {
+  "cite": "487 U.S. 533",
+  "unlocks": 1,
+  "entry_idxs": [
+   992
+  ]
+ },
+ {
+  "cite": "418 U.S. 87",
+  "unlocks": 1,
+  "entry_idxs": [
+   993
+  ]
+ },
+ {
+  "cite": "467 U.S. 431",
+  "unlocks": 1,
+  "entry_idxs": [
+   1000
+  ]
+ },
+ {
+  "cite": "556 U.S. 303",
+  "unlocks": 1,
+  "entry_idxs": [
+   1004
+  ]
+ },
+ {
+  "cite": "429 U.S. 190",
+  "unlocks": 1,
+  "entry_idxs": [
+   1027
+  ]
+ },
+ {
+  "cite": "386 U.S. 523",
+  "unlocks": 1,
+  "entry_idxs": [
+   1028
+  ]
+ },
+ {
+  "cite": "446 U.S. 291",
+  "unlocks": 1,
+  "entry_idxs": [
+   1031
+  ]
+ },
+ {
+  "cite": "428 U.S. 364",
+  "unlocks": 1,
+  "entry_idxs": [
+   1039
+  ]
+ },
+ {
+  "cite": "415 U.S. 61",
+  "unlocks": 1,
+  "entry_idxs": [
+   1045
+  ]
+ },
+ {
+  "cite": "556 U.S. 599",
+  "unlocks": 1,
+  "entry_idxs": [
+   1053
+  ]
+ },
+ {
+  "cite": "328 U.S. 640",
+  "unlocks": 1,
+  "entry_idxs": [
+   1054
+  ]
+ },
+ {
+  "cite": "535 U.S. 274",
+  "unlocks": 1,
+  "entry_idxs": [
+   1055
+  ]
+ },
+ {
+  "cite": "101 U.S. 285",
+  "unlocks": 1,
+  "entry_idxs": [
+   1064
+  ]
+ },
+ {
+  "cite": "569 F.3d 40",
+  "unlocks": 1,
+  "entry_idxs": [
+   1069
+  ]
+ },
+ {
+  "cite": "532 U.S. 742",
+  "unlocks": 1,
+  "entry_idxs": [
+   1074
+  ]
+ },
+ {
+  "cite": "435 U.S. 349",
+  "unlocks": 1,
+  "entry_idxs": [
+   1075
+  ]
+ },
+ {
+  "cite": "523 U.S. 83",
+  "unlocks": 1,
+  "entry_idxs": [
+   1082
+  ]
+ },
+ {
+  "cite": "494 U.S. 370",
+  "unlocks": 1,
+  "entry_idxs": [
+   1090
+  ]
+ },
+ {
+  "cite": "317 U.S. 369",
+  "unlocks": 1,
+  "entry_idxs": [
+   1100
+  ]
+ },
+ {
+  "cite": "514 U.S. 927",
+  "unlocks": 1,
+  "entry_idxs": [
+   1104
+  ]
+ },
+ {
+  "cite": "514 U.S. 673",
+  "unlocks": 1,
+  "entry_idxs": [
+   1107
+  ]
+ },
+ {
+  "cite": "540 U.S. 20",
+  "unlocks": 1,
+  "entry_idxs": [
+   1110
+  ]
+ },
+ {
+  "cite": "275 U.S. 236",
+  "unlocks": 1,
+  "entry_idxs": [
+   1111
+  ]
+ },
+ {
+  "cite": "117 U.S. 210",
+  "unlocks": 1,
+  "entry_idxs": [
+   1112
+  ]
+ },
+ {
+  "cite": "460 U.S. 605",
+  "unlocks": 1,
+  "entry_idxs": [
+   1114
+  ]
+ },
+ {
+  "cite": "341 U.S. 367",
+  "unlocks": 1,
+  "entry_idxs": [
+   1125
+  ]
+ },
+ {
+  "cite": "441 U.S. 281",
+  "unlocks": 1,
+  "entry_idxs": [
+   1126
+  ]
+ },
+ {
+  "cite": "596 U.S. 36",
+  "unlocks": 1,
+  "entry_idxs": [
+   1166
+  ]
+ },
+ {
+  "cite": "100 U.S. 195",
+  "unlocks": 1,
+  "entry_idxs": [
+   1167
+  ]
+ },
+ {
+  "cite": "282 U.S. 63",
+  "unlocks": 1,
+  "entry_idxs": [
+   1168
+  ]
+ },
+ {
+  "cite": "408 F.2d 559",
+  "unlocks": 1,
+  "entry_idxs": [
+   1175
+  ]
+ },
+ {
+  "cite": "498 U.S. 46",
+  "unlocks": 1,
+  "entry_idxs": [
+   1178
+  ]
+ },
+ {
+  "cite": "351 U.S. 377",
+  "unlocks": 1,
+  "entry_idxs": [
+   1179
+  ]
+ },
+ {
+  "cite": "426 U.S. 794",
+  "unlocks": 1,
+  "entry_idxs": [
+   1180
+  ]
+ },
+ {
+  "cite": "173 U.S. 131",
+  "unlocks": 1,
+  "entry_idxs": [
+   1185
+  ]
+ },
+ {
+  "cite": "374 U.S. 321",
+  "unlocks": 1,
+  "entry_idxs": [
+   1206
+  ]
+ },
+ {
+  "cite": "248 U.S. 215",
+  "unlocks": 1,
+  "entry_idxs": [
+   1220
+  ]
+ },
+ {
+  "cite": "458 U.S. 219",
+  "unlocks": 1,
+  "entry_idxs": [
+   1227
+  ]
+ },
+ {
+  "cite": "490 U.S. 228",
+  "unlocks": 1,
+  "entry_idxs": [
+   1228
+  ]
+ },
+ {
+  "cite": "393 U.S. 199",
+  "unlocks": 1,
+  "entry_idxs": [
+   1238
+  ]
+ },
+ {
+  "cite": "356 U.S. 525",
+  "unlocks": 1,
+  "entry_idxs": [
+   1242
+  ]
+ },
+ {
+  "cite": "590 U.S. 504",
+  "unlocks": 1,
+  "entry_idxs": [
+   1244
+  ]
+ },
+ {
+  "cite": "469 U.S. 38",
+  "unlocks": 1,
+  "entry_idxs": [
+   1246
+  ]
+ },
+ {
+  "cite": "362 U.S. 257",
+  "unlocks": 1,
+  "entry_idxs": [
+   1251
+  ]
+ },
+ {
+  "cite": "439 U.S. 128",
+  "unlocks": 1,
+  "entry_idxs": [
+   1252
+  ]
+ },
+ {
+  "cite": "490 U.S. 332",
+  "unlocks": 1,
+  "entry_idxs": [
+   1262
+  ]
+ },
+ {
+  "cite": "553 U.S. 851",
+  "unlocks": 1,
+  "entry_idxs": [
+   1265
+  ]
+ },
+ {
+  "cite": "444 U.S. 394",
+  "unlocks": 1,
+  "entry_idxs": [
+   1266
+  ]
+ },
+ {
+  "cite": "338 U.S. 384",
+  "unlocks": 1,
+  "entry_idxs": [
+   1272
+  ]
+ },
+ {
+  "cite": "457 U.S. 31",
+  "unlocks": 1,
+  "entry_idxs": [
+   1278
+  ]
+ },
+ {
+  "cite": "495 U.S. 149",
+  "unlocks": 1,
+  "entry_idxs": [
+   1279
+  ]
+ },
+ {
+  "cite": "434 U.S. 22",
+  "unlocks": 1,
+  "entry_idxs": [
+   1283
+  ]
+ },
+ {
+  "cite": "500 U.S. 160",
+  "unlocks": 1,
+  "entry_idxs": [
+   1286
+  ]
+ },
+ {
+  "cite": "598 U.S. 471",
+  "unlocks": 1,
+  "entry_idxs": [
+   1290
+  ]
+ },
+ {
+  "cite": "228 U.S. 364",
+  "unlocks": 1,
+  "entry_idxs": [
+   1293
+  ]
+ },
+ {
+  "cite": "553 U.S. 285",
+  "unlocks": 1,
+  "entry_idxs": [
+   1294
+  ]
+ },
+ {
+  "cite": "355 U.S. 41",
+  "unlocks": 1,
+  "entry_idxs": [
+   1302
+  ]
+ },
+ {
+  "cite": "505 U.S. 1003",
+  "unlocks": 1,
+  "entry_idxs": [
+   1305
+  ]
+ },
+ {
+  "cite": "103 U.S. 62",
+  "unlocks": 1,
+  "entry_idxs": [
+   1310
+  ]
+ },
+ {
+  "cite": "544 U.S. 696",
+  "unlocks": 1,
+  "entry_idxs": [
+   1318
+  ]
+ },
+ {
+  "cite": "473 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1327
+  ]
+ },
+ {
+  "cite": "466 U.S. 170",
+  "unlocks": 1,
+  "entry_idxs": [
+   1336
+  ]
+ },
+ {
+  "cite": "424 U.S. 600",
+  "unlocks": 1,
+  "entry_idxs": [
+   1337
+  ]
+ },
+ {
+  "cite": "472 U.S. 797",
+  "unlocks": 1,
+  "entry_idxs": [
+   1341
+  ]
+ },
+ {
+  "cite": "337 U.S. 265",
+  "unlocks": 1,
+  "entry_idxs": [
+   1342
+  ]
+ },
+ {
+  "cite": "455 U.S. 363",
+  "unlocks": 1,
+  "entry_idxs": [
+   1343
+  ]
+ },
+ {
+  "cite": "539 U.S. 113",
+  "unlocks": 1,
+  "entry_idxs": [
+   1348
+  ]
+ },
+ {
+  "cite": "274 U.S. 480",
+  "unlocks": 1,
+  "entry_idxs": [
+   1350
+  ]
+ },
+ {
+  "cite": "458 U.S. 592",
+  "unlocks": 1,
+  "entry_idxs": [
+   1351
+  ]
+ },
+ {
+  "cite": "530 U.S. 57",
+  "unlocks": 1,
+  "entry_idxs": [
+   1352
+  ]
+ },
+ {
+  "cite": "183 U.S. 308",
+  "unlocks": 1,
+  "entry_idxs": [
+   1354
+  ]
+ },
+ {
+  "cite": "408 U.S. 471",
+  "unlocks": 1,
+  "entry_idxs": [
+   1355
+  ]
+ },
+ {
+  "cite": "145 U.S. 116",
+  "unlocks": 1,
+  "entry_idxs": [
+   1358
+  ]
+ },
+ {
+  "cite": "327 U.S. 280",
+  "unlocks": 1,
+  "entry_idxs": [
+   1359
+  ]
+ },
+ {
+  "cite": "573 U.S. 208",
+  "unlocks": 1,
+  "entry_idxs": [
+   1361
+  ]
+ },
+ {
+  "cite": "581 U.S. 360",
+  "unlocks": 1,
+  "entry_idxs": [
+   1362
+  ]
+ },
+ {
+  "cite": "314 U.S. 488",
+  "unlocks": 1,
+  "entry_idxs": [
+   1364
+  ]
+ },
+ {
+  "cite": "492 U.S. 229",
+  "unlocks": 1,
+  "entry_idxs": [
+   1366
+  ]
+ },
+ {
+  "cite": "227 U.S. 59",
+  "unlocks": 1,
+  "entry_idxs": [
+   1369
+  ]
+ },
+ {
+  "cite": "383 U.S. 715",
+  "unlocks": 1,
+  "entry_idxs": [
+   1373
+  ]
+ },
+ {
+  "cite": "197 U.S. 207",
+  "unlocks": 1,
+  "entry_idxs": [
+   1375
+  ]
+ },
+ {
+  "cite": "481 U.S. 400",
+  "unlocks": 1,
+  "entry_idxs": [
+   1376
+  ]
+ },
+ {
+  "cite": "457 U.S. 332",
+  "unlocks": 1,
+  "entry_idxs": [
+   1377
+  ]
+ },
+ {
+  "cite": "380 U.S. 202",
+  "unlocks": 1,
+  "entry_idxs": [
+   1379
+  ]
+ },
+ {
+  "cite": "507 U.S. 87",
+  "unlocks": 1,
+  "entry_idxs": [
+   1383
+  ]
+ },
+ {
+  "cite": "547 U.S. 388",
+  "unlocks": 1,
+  "entry_idxs": [
+   1385
+  ]
+ },
+ {
+  "cite": "351 U.S. 445",
+  "unlocks": 1,
+  "entry_idxs": [
+   1387
+  ]
+ },
+ {
+  "cite": "497 F.2d 1330",
+  "unlocks": 1,
+  "entry_idxs": [
+   1389
+  ]
+ },
+ {
+  "cite": "326 U.S. 310",
+  "unlocks": 1,
+  "entry_idxs": [
+   1394
+  ]
+ },
+ {
+  "cite": "524 U.S. 51",
+  "unlocks": 1,
+  "entry_idxs": [
+   1401
+  ]
+ },
+ {
+  "cite": "507 U.S. 725",
+  "unlocks": 1,
+  "entry_idxs": [
+   1402
+  ]
+ },
+ {
+  "cite": "508 U.S. 366",
+  "unlocks": 1,
+  "entry_idxs": [
+   1403
+  ]
+ },
+ {
+  "cite": "541 U.S. 176",
+  "unlocks": 1,
+  "entry_idxs": [
+   1404
+  ]
+ },
+ {
+  "cite": "404 U.S. 257",
+  "unlocks": 1,
+  "entry_idxs": [
+   1413
+  ]
+ },
+ {
+  "cite": "164 U.S. 271",
+  "unlocks": 1,
+  "entry_idxs": [
+   1416
+  ]
+ },
+ {
+  "cite": "361 U.S. 431",
+  "unlocks": 1,
+  "entry_idxs": [
+   1417
+  ]
+ },
+ {
+  "cite": "430 U.S. 787",
+  "unlocks": 1,
+  "entry_idxs": [
+   1423
+  ]
+ },
+ {
+  "cite": "237 U.S. 52",
+  "unlocks": 1,
+  "entry_idxs": [
+   1425
+  ]
+ },
+ {
+  "cite": "369 U.S. 186",
+  "unlocks": 1,
+  "entry_idxs": [
+   1427
+  ]
+ },
+ {
+  "cite": "285 U.S. 393",
+  "unlocks": 1,
+  "entry_idxs": [
+   1435
+  ]
+ },
+ {
+  "cite": "509 U.S. 209",
+  "unlocks": 1,
+  "entry_idxs": [
+   1436
+  ]
+ },
+ {
+  "cite": "430 U.S. 519",
+  "unlocks": 1,
+  "entry_idxs": [
+   1439
+  ]
+ },
+ {
+  "cite": "502 U.S. 151",
+  "unlocks": 1,
+  "entry_idxs": [
+   1440
+  ]
+ },
+ {
+  "cite": "420 U.S. 103",
+  "unlocks": 1,
+  "entry_idxs": [
+   1443
+  ]
+ },
+ {
+  "cite": "555 U.S. 7",
+  "unlocks": 1,
+  "entry_idxs": [
+   1444
+  ]
+ },
+ {
+  "cite": "462 U.S. 919",
+  "unlocks": 1,
+  "entry_idxs": [
+   1452
+  ]
+ },
+ {
+  "cite": "156 U.S. 432",
+  "unlocks": 1,
+  "entry_idxs": [
+   1459
+  ]
+ },
+ {
+  "cite": "517 U.S. 806",
+  "unlocks": 1,
+  "entry_idxs": [
+   1461
+  ]
+ },
+ {
+  "cite": "482 U.S. 755",
+  "unlocks": 1,
+  "entry_idxs": [
+   1466
+  ]
+ },
+ {
+  "cite": "273 U.S. 392",
+  "unlocks": 1,
+  "entry_idxs": [
+   1467
+  ]
+ },
+ {
+  "cite": "352 U.S. 59",
+  "unlocks": 1,
+  "entry_idxs": [
+   1469
+  ]
+ },
+ {
+  "cite": "513 U.S. 150",
+  "unlocks": 1,
+  "entry_idxs": [
+   1476
+  ]
+ },
+ {
+  "cite": "399 U.S. 149",
+  "unlocks": 1,
+  "entry_idxs": [
+   1478
+  ]
+ },
+ {
+  "cite": "427 U.S. 539",
+  "unlocks": 1,
+  "entry_idxs": [
+   1479
+  ]
+ },
+ {
+  "cite": "406 U.S. 441",
+  "unlocks": 1,
+  "entry_idxs": [
+   1496
+  ]
+ },
+ {
+  "cite": "334 U.S. 385",
+  "unlocks": 1,
+  "entry_idxs": [
+   1500
+  ]
+ },
+ {
+  "cite": "98 U.S. 123",
+  "unlocks": 1,
+  "entry_idxs": [
+   1502
+  ]
+ },
+ {
+  "cite": "404 U.S. 519",
+  "unlocks": 1,
+  "entry_idxs": [
+   1503
+  ]
+ },
+ {
+  "cite": "338 U.S. 160",
+  "unlocks": 1,
+  "entry_idxs": [
+   1504
+  ]
+ },
+ {
+  "cite": "238 U.S. 553",
+  "unlocks": 1,
+  "entry_idxs": [
+   1505
+  ]
+ },
+ {
+  "cite": "534 U.S. 112",
+  "unlocks": 1,
+  "entry_idxs": [
+   1506
+  ]
+ },
+ {
+  "cite": "552 U.S. 379",
+  "unlocks": 1,
+  "entry_idxs": [
+   1507
+  ]
+ },
+ {
+  "cite": "424 U.S. 319",
+  "unlocks": 1,
+  "entry_idxs": [
+   1510
+  ]
+ },
+ {
+  "cite": "501 U.S. 663",
+  "unlocks": 1,
+  "entry_idxs": [
+   1519
+  ]
+ },
+ {
+  "cite": "136 U.S. 268",
+  "unlocks": 1,
+  "entry_idxs": [
+   1520
+  ]
+ },
+ {
+  "cite": "530 U.S. 428",
+  "unlocks": 1,
+  "entry_idxs": [
+   1525
+  ]
+ },
+ {
+  "cite": "470 U.S. 598",
+  "unlocks": 1,
+  "entry_idxs": [
+   1528
+  ]
+ },
+ {
+  "cite": "424 U.S. 409",
+  "unlocks": 1,
+  "entry_idxs": [
+   1529
+  ]
+ },
+ {
+  "cite": "467 U.S. 20",
+  "unlocks": 1,
+  "entry_idxs": [
+   1530
+  ]
+ },
+ {
+  "cite": "494 U.S. 325",
+  "unlocks": 1,
+  "entry_idxs": [
+   1532
+  ]
+ },
+ {
+  "cite": "572 U.S. 434",
+  "unlocks": 1,
+  "entry_idxs": [
+   1536
+  ]
+ },
+ {
+  "cite": "460 U.S. 37",
+  "unlocks": 1,
+  "entry_idxs": [
+   1544
+  ]
+ },
+ {
+  "cite": "473 U.S. 788",
+  "unlocks": 1,
+  "entry_idxs": [
+   1545
+  ]
+ },
+ {
+  "cite": "146 U.S. 387",
+  "unlocks": 1,
+  "entry_idxs": [
+   1551
+  ]
+ },
+ {
+  "cite": "545 U.S. 469",
+  "unlocks": 1,
+  "entry_idxs": [
+   1552
+  ]
+ },
+ {
+  "cite": "312 U.S. 496",
+  "unlocks": 1,
+  "entry_idxs": [
+   1553
+  ]
+ },
+ {
+  "cite": "517 U.S. 559",
+  "unlocks": 1,
+  "entry_idxs": [
+   1554
+  ]
+ },
+ {
+  "cite": "110 U.S. 338",
+  "unlocks": 1,
+  "entry_idxs": [
+   1558
+  ]
+ },
+ {
+  "cite": "421 U.S. 35",
+  "unlocks": 1,
+  "entry_idxs": [
+   1561
+  ]
+ },
+ {
+  "cite": "529 U.S. 765",
+  "unlocks": 1,
+  "entry_idxs": [
+   1562
+  ]
+ },
+ {
+  "cite": "131 U.S. 191",
+  "unlocks": 1,
+  "entry_idxs": [
+   1564
+  ]
+ },
+ {
+  "cite": "121 U.S. 552",
+  "unlocks": 1,
+  "entry_idxs": [
+   1566
+  ]
+ },
+ {
+  "cite": "148 U.S. 21",
+  "unlocks": 1,
+  "entry_idxs": [
+   1567
+  ]
+ },
+ {
+  "cite": "238 U.S. 537",
+  "unlocks": 1,
+  "entry_idxs": [
+   1568
+  ]
+ },
+ {
+  "cite": "144 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1569
+  ]
+ },
+ {
+  "cite": "320 U.S. 591",
+  "unlocks": 1,
+  "entry_idxs": [
+   1576
+  ]
+ },
+ {
+  "cite": "182 U.S. 461",
+  "unlocks": 1,
+  "entry_idxs": [
+   1577
+  ]
+ },
+ {
+  "cite": "508 U.S. 307",
+  "unlocks": 1,
+  "entry_idxs": [
+   1578
+  ]
+ },
+ {
+  "cite": "535 U.S. 391",
+  "unlocks": 1,
+  "entry_idxs": [
+   1584
+  ]
+ },
+ {
+  "cite": "449 U.S. 411",
+  "unlocks": 1,
+  "entry_idxs": [
+   1588
+  ]
+ },
+ {
+  "cite": "261 U.S. 491",
+  "unlocks": 1,
+  "entry_idxs": [
+   1591
+  ]
+ },
+ {
+  "cite": "523 U.S. 224",
+  "unlocks": 1,
+  "entry_idxs": [
+   1592
+  ]
+ },
+ {
+  "cite": "295 U.S. 247",
+  "unlocks": 1,
+  "entry_idxs": [
+   1597
+  ]
+ },
+ {
+  "cite": "98 U.S. 85",
+  "unlocks": 1,
+  "entry_idxs": [
+   1603
+  ]
+ },
+ {
+  "cite": "544 U.S. 528",
+  "unlocks": 1,
+  "entry_idxs": [
+   1605
+  ]
+ },
+ {
+  "cite": "323 U.S. 574",
+  "unlocks": 1,
+  "entry_idxs": [
+   1607
+  ]
+ },
+ {
+  "cite": "560 U.S. 538",
+  "unlocks": 1,
+  "entry_idxs": [
+   1608
+  ]
+ },
+ {
+  "cite": "593 U.S. 230",
+  "unlocks": 1,
+  "entry_idxs": [
+   1621
+  ]
+ },
+ {
+  "cite": "228 U.S. 233",
+  "unlocks": 1,
+  "entry_idxs": [
+   1647
+  ]
+ },
+ {
+  "cite": "524 U.S. 775",
+  "unlocks": 1,
+  "entry_idxs": [
+   1654
+  ]
+ },
+ {
+  "cite": "435 U.S. 679",
+  "unlocks": 1,
+  "entry_idxs": [
+   1657
+  ]
+ },
+ {
+  "cite": "169 U.S. 398",
+  "unlocks": 1,
+  "entry_idxs": [
+   1659
+  ]
+ },
+ {
+  "cite": "511 U.S. 244",
+  "unlocks": 1,
+  "entry_idxs": [
+   1663
+  ]
+ },
+ {
+  "cite": "172 U.S. 171",
+  "unlocks": 1,
+  "entry_idxs": [
+   1673
+  ]
+ },
+ {
+  "cite": "466 U.S. 648",
+  "unlocks": 1,
+  "entry_idxs": [
+   1674
+  ]
+ },
+ {
+  "cite": "526 U.S. 489",
+  "unlocks": 1,
+  "entry_idxs": [
+   1676
+  ]
+ },
+ {
+  "cite": "339 U.S. 725",
+  "unlocks": 1,
+  "entry_idxs": [
+   1677
+  ]
+ },
+ {
+  "cite": "387 U.S. 136",
+  "unlocks": 1,
+  "entry_idxs": [
+   1678
+  ]
+ },
+ {
+  "cite": "586 U.S. 73",
+  "unlocks": 1,
+  "entry_idxs": [
+   1681
+  ]
+ },
+ {
+  "cite": "544 U.S. 280",
+  "unlocks": 1,
+  "entry_idxs": [
+   1683
+  ]
+ },
+ {
+  "cite": "580 U.S. 100",
+  "unlocks": 1,
+  "entry_idxs": [
+   1695
+  ]
+ },
+ {
+  "cite": "165 U.S. 342",
+  "unlocks": 1,
+  "entry_idxs": [
+   1696
+  ]
+ },
+ {
+  "cite": "553 U.S. 507",
+  "unlocks": 1,
+  "entry_idxs": [
+   1701
+  ]
+ },
+ {
+  "cite": "246 U.S. 231",
+  "unlocks": 1,
+  "entry_idxs": [
+   1702
+  ]
+ },
+ {
+  "cite": "101 U.S. 384",
+  "unlocks": 1,
+  "entry_idxs": [
+   1710
+  ]
+ },
+ {
+  "cite": "181 U.S. 68",
+  "unlocks": 1,
+  "entry_idxs": [
+   1718
+  ]
+ },
+ {
+  "cite": "395 U.S. 752",
+  "unlocks": 1,
+  "entry_idxs": [
+   1727
+  ]
+ },
+ {
+  "cite": "333 U.S. 10",
+  "unlocks": 1,
+  "entry_idxs": [
+   1728
+  ]
+ },
+ {
+  "cite": "487 U.S. 42",
+  "unlocks": 1,
+  "entry_idxs": [
+   1737
+  ]
+ },
+ {
+  "cite": "521 U.S. 507",
+  "unlocks": 1,
+  "entry_idxs": [
+   1745
+  ]
+ },
+ {
+  "cite": "517 U.S. 456",
+  "unlocks": 1,
+  "entry_idxs": [
+   1753
+  ]
+ },
+ {
+  "cite": "256 U.S. 335",
+  "unlocks": 1,
+  "entry_idxs": [
+   1755
+  ]
+ },
+ {
+  "cite": "378 U.S. 52",
+  "unlocks": 1,
+  "entry_idxs": [
+   1757
+  ]
+ },
+ {
+  "cite": "517 U.S. 748",
+  "unlocks": 1,
+  "entry_idxs": [
+   1765
+  ]
+ },
+ {
+  "cite": "416 U.S. 600",
+  "unlocks": 1,
+  "entry_idxs": [
+   1766
+  ]
+ },
+ {
+  "cite": "92 U.S. 362",
+  "unlocks": 1,
+  "entry_idxs": [
+   1769
+  ]
+ },
+ {
+  "cite": "591 U.S. 610",
+  "unlocks": 1,
+  "entry_idxs": [
+   1771
+  ]
+ },
+ {
+  "cite": "506 U.S. 534",
+  "unlocks": 1,
+  "entry_idxs": [
+   1773
+  ]
+ },
+ {
+  "cite": "396 U.S. 531",
+  "unlocks": 1,
+  "entry_idxs": [
+   1774
+  ]
+ },
+ {
+  "cite": "423 U.S. 232",
+  "unlocks": 1,
+  "entry_idxs": [
+   1777
+  ]
+ },
+ {
+  "cite": "338 U.S. 74",
+  "unlocks": 1,
+  "entry_idxs": [
+   1778
+  ]
+ },
+ {
+  "cite": "372 U.S. 335",
+  "unlocks": 1,
+  "entry_idxs": [
+   1781
+  ]
+ },
+ {
+  "cite": "323 U.S. 134",
+  "unlocks": 1,
+  "entry_idxs": [
+   1782
+  ]
+ },
+ {
+  "cite": "91 U.S. 225",
+  "unlocks": 1,
+  "entry_idxs": [
+   1783
+  ]
+ },
+ {
+  "cite": "599 U.S. 762",
+  "unlocks": 1,
+  "entry_idxs": [
+   1785
+  ]
+ },
+ {
+  "cite": "253 U.S. 300",
+  "unlocks": 1,
+  "entry_idxs": [
+   1788
+  ]
+ },
+ {
+  "cite": "469 U.S. 325",
+  "unlocks": 1,
+  "entry_idxs": [
+   1789
+  ]
+ },
+ {
+  "cite": "489 U.S. 189",
+  "unlocks": 1,
+  "entry_idxs": [
+   1790
+  ]
+ },
+ {
+  "cite": "119 U.S. 347",
+  "unlocks": 1,
+  "entry_idxs": [
+   1794
+  ]
+ },
+ {
+  "cite": "407 U.S. 514",
+  "unlocks": 1,
+  "entry_idxs": [
+   1795
+  ]
+ },
+ {
+  "cite": "483 U.S. 203",
+  "unlocks": 1,
+  "entry_idxs": [
+   1797
+  ]
+ },
+ {
+  "cite": "488 U.S. 51",
+  "unlocks": 1,
+  "entry_idxs": [
+   1798
+  ]
+ },
+ {
+  "cite": "457 U.S. 922",
+  "unlocks": 1,
+  "entry_idxs": [
+   1802
+  ]
+ },
+ {
+  "cite": "345 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1804
+  ]
+ },
+ {
+  "cite": "446 U.S. 478",
+  "unlocks": 1,
+  "entry_idxs": [
+   1809
+  ]
+ },
+ {
+  "cite": "573 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1810
+  ]
+ },
+ {
+  "cite": "490 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1817
+  ]
+ },
+ {
+  "cite": "543 U.S. 499",
+  "unlocks": 1,
+  "entry_idxs": [
+   1821
+  ]
+ },
+ {
+  "cite": "499 U.S. 279",
+  "unlocks": 1,
+  "entry_idxs": [
+   1823
+  ]
+ },
+ {
+  "cite": "271 U.S. 620",
+  "unlocks": 1,
+  "entry_idxs": [
+   1825
+  ]
+ },
+ {
+  "cite": "144 U.S. 202",
+  "unlocks": 1,
+  "entry_idxs": [
+   1830
+  ]
+ },
+ {
+  "cite": "305 U.S. 197",
+  "unlocks": 1,
+  "entry_idxs": [
+   1832
+  ]
+ },
+ {
+  "cite": "529 U.S. 694",
+  "unlocks": 1,
+  "entry_idxs": [
+   1844
+  ]
+ },
+ {
+  "cite": "312 U.S. 52",
+  "unlocks": 1,
+  "entry_idxs": [
+   1852
+  ]
+ },
+ {
+  "cite": "533 U.S. 167",
+  "unlocks": 1,
+  "entry_idxs": [
+   1855
+  ]
+ },
+ {
+  "cite": "436 U.S. 584",
+  "unlocks": 1,
+  "entry_idxs": [
+   1856
+  ]
+ },
+ {
+  "cite": "415 U.S. 423",
+  "unlocks": 1,
+  "entry_idxs": [
+   1865
+  ]
+ },
+ {
+  "cite": "428 U.S. 106",
+  "unlocks": 1,
+  "entry_idxs": [
+   1881
+  ]
+ },
+ {
+  "cite": "463 U.S. 646",
+  "unlocks": 1,
+  "entry_idxs": [
+   1886
+  ]
+ },
+ {
+  "cite": "151 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1888
+  ]
+ },
+ {
+  "cite": "462 U.S. 213",
+  "unlocks": 1,
+  "entry_idxs": [
+   1889
+  ]
+ },
+ {
+  "cite": "416 U.S. 470",
+  "unlocks": 1,
+  "entry_idxs": [
+   1892
+  ]
+ },
+ {
+  "cite": "325 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1902
+  ]
+ },
+ {
+  "cite": "252 U.S. 416",
+  "unlocks": 1,
+  "entry_idxs": [
+   1903
+  ]
+ },
+ {
+  "cite": "579 U.S. 93",
+  "unlocks": 1,
+  "entry_idxs": [
+   1904
+  ]
+ },
+ {
+  "cite": "116 U.S. 616",
+  "unlocks": 1,
+  "entry_idxs": [
+   1905
+  ]
+ },
+ {
+  "cite": "488 U.S. 235",
+  "unlocks": 1,
+  "entry_idxs": [
+   1906
+  ]
+ },
+ {
+  "cite": "170 U.S. 468",
+  "unlocks": 1,
+  "entry_idxs": [
+   1908
+  ]
+ },
+ {
+  "cite": "157 U.S. 160",
+  "unlocks": 1,
+  "entry_idxs": [
+   1909
+  ]
+ },
+ {
+  "cite": "538 U.S. 343",
+  "unlocks": 1,
+  "entry_idxs": [
+   1910
+  ]
+ },
+ {
+  "cite": "577 U.S. 378",
+  "unlocks": 1,
+  "entry_idxs": [
+   1911
+  ]
+ },
+ {
+  "cite": "356 U.S. 1",
+  "unlocks": 1,
+  "entry_idxs": [
+   1913
+  ]
+ },
+ {
+  "cite": "457 U.S. 147",
+  "unlocks": 1,
+  "entry_idxs": [
+   1915
+  ]
+ },
+ {
+  "cite": "513 U.S. 18",
+  "unlocks": 1,
+  "entry_idxs": [
+   1929
+  ]
+ },
+ {
+  "cite": "483 U.S. 107",
+  "unlocks": 1,
+  "entry_idxs": [
+   1933
+  ]
+ },
+ {
+  "cite": "537 U.S. 280",
+  "unlocks": 1,
+  "entry_idxs": [
+   1936
+  ]
+ },
+ {
+  "cite": "515 U.S. 819",
+  "unlocks": 1,
+  "entry_idxs": [
+   1938
+  ]
+ },
+ {
+  "cite": "395 U.S. 711",
+  "unlocks": 1,
+  "entry_idxs": [
+   1939
+  ]
+ },
+ {
+  "cite": "576 U.S. 591",
+  "unlocks": 1,
+  "entry_idxs": [
+   1943
+  ]
+ },
+ {
+  "cite": "410 U.S. 284",
+  "unlocks": 1,
+  "entry_idxs": [
+   1948
+  ]
+ },
+ {
+  "cite": "120 U.S. 630",
+  "unlocks": 1,
+  "entry_idxs": [
+   1953
+  ]
+ },
+ {
+  "cite": "131 U.S. 75",
+  "unlocks": 1,
+  "entry_idxs": [
+   1954
+  ]
+ },
+ {
+  "cite": "428 F.2d 1071",
+  "unlocks": 1,
+  "entry_idxs": [
+   1955
+  ]
+ },
+ {
+  "cite": "159 U.S. 491",
+  "unlocks": 1,
+  "entry_idxs": [
+   1956
+  ]
+ },
+ {
+  "cite": "583 U.S. 149",
+  "unlocks": 1,
+  "entry_idxs": [
+   1957
+  ]
+ },
+ {
+  "cite": "524 U.S. 184",
+  "unlocks": 1,
+  "entry_idxs": [
+   1959
+  ]
+ },
+ {
+  "cite": "151 U.S. 658",
+  "unlocks": 1,
+  "entry_idxs": [
+   1971
+  ]
+ },
+ {
+  "cite": "394 U.S. 286",
+  "unlocks": 1,
+  "entry_idxs": [
+   1973
+  ]
+ },
+ {
+  "cite": "466 U.S. 522",
+  "unlocks": 1,
+  "entry_idxs": [
+   1974
+  ]
+ },
+ {
+  "cite": "532 U.S. 451",
+  "unlocks": 1,
+  "entry_idxs": [
+   1976
+  ]
+ },
+ {
+  "cite": "401 U.S. 37",
+  "unlocks": 1,
+  "entry_idxs": [
+   1977
+  ]
+ }
+]

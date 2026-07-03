@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield — Intelligence Feed</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --near-black: #111111;
+    --cream: #e8e0cc;
+    --gold: #c9a84c;
+    --white: #f5f5f0;
+    --mid: #888;
+    --dark: #1a1a1a;
+    --card-bg: #161616;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid #222;
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: 0.02em;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    color: var(--mid);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--cream); }
+  .nav-right { display: flex; gap: 16px; align-items: center; }
+  .btn-outline {
+    border: 1px solid #333;
+    color: var(--cream);
+    background: none;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-solid {
+    background: var(--cream);
+    color: var(--black);
+    border: none;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+  .btn-solid:hover { background: var(--gold); }
+
+  /* ─── HERO STRIP ─── */
+  .hero-strip {
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 1.0;
+    color: var(--white);
+    max-width: 700px;
+    margin-bottom: 20px;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--mid);
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  /* ─── FILTER BAR ─── */
+  .filter-bar {
+    padding: 20px 40px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .filter-btn {
+    background: none;
+    border: 1px solid #2a2a2a;
+    color: var(--mid);
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--gold);
+    color: var(--cream);
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* ─── TWITTER LAW TICKER ─── */
+  .law-ticker {
+    background: var(--near-black);
+    border-bottom: 1px solid #222;
+    padding: 12px 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    overflow: hidden;
+  }
+  .ticker-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    border-right: 1px solid #333;
+    padding-right: 24px;
+  }
+  .ticker-accounts {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .ticker-accounts::-webkit-scrollbar { display: none; }
+  .ticker-account {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding: 4px 12px;
+    border: 1px solid #2a2a2a;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .ticker-account:hover { border-color: var(--gold); }
+  .ticker-account .handle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cream);
+  }
+  .ticker-account .desc {
+    font-size: 11px;
+    color: var(--mid);
+  }
+
+  /* ─── MAIN GRID ─── */
+  .main-grid {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: #1a1a1a;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--black);
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover { background: var(--near-black); }
+  .card-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.9);
+    transition: filter 0.3s, transform 0.4s;
+  }
+  .card:hover .card-image {
+    filter: brightness(1.05);
+    transform: scale(1.02);
+  }
+  .card-image-wrap { overflow: hidden; }
+
+  /* Image placeholder when no image */
+  .card-image-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.06);
+    background: #0f0f0f;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    overflow: hidden;
+  }
+
+  .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+  .card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: var(--mid);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-top: 1px solid #1e1e1e;
+  }
+  .card-date { font-size: 11px; color: #555; letter-spacing: 0.05em; }
+  .card-arrow {
+    font-size: 18px;
+    color: #333;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .card:hover .card-arrow { color: var(--gold); transform: translate(3px, -3px); }
+
+  /* Featured card — spans 2 columns */
+  .card-featured {
+    grid-column: span 2;
+  }
+  @media (max-width: 720px) { .card-featured { grid-column: span 1; } }
+  .card-featured .card-title { font-size: 32px; }
+  .card-featured .card-image { aspect-ratio: 21/9; }
+  .card-featured .card-image-placeholder {
+    aspect-ratio: 21/9;
+    font-size: 80px;
+  }
+
+  /* Twitter Law section */
+  .twitter-law {
+    padding: 60px 40px;
+    border-top: 1px solid #1e1e1e;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #222;
+  }
+  .tl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .tl-card {
+    background: var(--card-bg);
+    border: 1px solid #222;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .tl-card:hover { border-color: var(--gold); }
+  .tl-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cream);
+    flex-shrink: 0;
+    border: 1px solid #333;
+  }
+  .tl-info {}
+  .tl-handle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 2px;
+  }
+  .tl-name {
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .tl-bio {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+
+  /* Quote strip */
+  .quote-strip {
+    border-top: 4px solid var(--gold);
+    border-bottom: 4px solid var(--gold);
+    padding: 48px 40px;
+    background: var(--near-black);
+    text-align: center;
+  }
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 3vw, 40px);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .quote-attr {
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  footer {
+    padding: 40px;
+    border-top: 1px solid #1e1e1e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+  footer .copy {
+    font-size: 12px;
+    color: #444;
+  }
+  footer .tagline {
+    font-size: 13px;
+    color: var(--mid);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Kingsfield <span>Lawfare</span></div>
+  <div class="nav-links">
+    <a href="#">Assistant</a>
+    <a href="#">Projects</a>
+    <a href="#">Case Law</a>
+    <a href="#" class="active">Intelligence</a>
+    <a href="#">Integrations</a>
+  </div>
+  <div class="nav-right">
+    <a href="#" class="btn-outline">Log In</a>
+    <a href="#" class="btn-solid">Sign Up</a>
+  </div>
+</nav>
+
+<!-- TWITTER LAW TICKER -->
+<div class="law-ticker">
+  <div class="ticker-label">⚖ Twitter Law</div>
+  <div class="ticker-accounts">
+    <a class="ticker-account" href="https://x.com/Popehat" target="_blank">
+      <span class="handle">@Popehat</span>
+      <span class="desc">First Amendment · Criminal Defense</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/ElieNYC" target="_blank">
+      <span class="handle">@ElieNYC</span>
+      <span class="desc">The Nation · Above the Law</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/JoyceWhiteVance" target="_blank">
+      <span class="handle">@JoyceWhiteVance</span>
+      <span class="desc">Former U.S. Attorney</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/LawDork" target="_blank">
+      <span class="handle">@LawDork</span>
+      <span class="desc">SCOTUS · Appellate</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/Teri_Kanefield" target="_blank">
+      <span class="handle">@Teri_Kanefield</span>
+      <span class="desc">Law for Normal People</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/ScottGreenfield" target="_blank">
+      <span class="handle">@ScottGreenfield</span>
+      <span class="desc">Simple Justice · No BS</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/ericgoldman" target="_blank">
+      <span class="handle">@ericgoldman</span>
+      <span class="desc">IP · Tech Law · Entertainment</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/DamienCharlotin" target="_blank">
+      <span class="handle">@DamienCharlotin</span>
+      <span class="desc">AI Hallucination Tracker</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/RickHasen" target="_blank">
+      <span class="handle">@RickHasen</span>
+      <span class="desc">Election Law · Federal Courts</span>
+    </a>
+    <a class="ticker-account" href="https://x.com/jerryjliu0" target="_blank">
+      <span class="handle">@jerryjliu0</span>
+      <span class="desc">LlamaIndex · Document AI</span>
+    </a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero-strip">
+  <div class="hero-eyebrow">Intelligence Feed</div>
+  <div class="hero-headline">Know the Rules.<br>Use Them.</div>
+  <div class="hero-sub">Legal intelligence for everyone the system wasn't built for. Research, strategy, and pressure-tested arguments — with the receipts.</div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active">All</button>
+  <button class="filter-btn">Case Law</button>
+  <button class="filter-btn">Entertainment & IP</button>
+  <button class="filter-btn">AI & Legal Tech</button>
+  <button class="filter-btn">Pro Se</button>
+  <button class="filter-btn">Creator Economy</button>
+  <button class="filter-btn">Compliance</button>
+  <button class="filter-btn">Web3 & Digital Assets</button>
+</div>
+
+<!-- CARDS GRID -->
+<div class="main-grid">
+
+  <!-- FEATURED -->
+  <div class="card card-featured">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder">The Council</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">AI & Legal Tech — Featured</div>
+      <div class="card-title">You Need Access and Visibility. Here Is What That Actually Looks Like.</div>
+      <div class="card-desc">Six months of litigation, condensed into one searchable web. Witnesses connect to depositions. Depositions connect to exhibits. Exhibits connect to case law. Case law connects to jury instructions. Defense theories connect to the witnesses and exhibits needed to defeat them. The traditional case file is a stack of folders. This is a brain.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 20, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#0d1117;">Solo Practice?</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Pro Se</div>
+      <div class="card-title">Solo Practitioner God Mode</div>
+      <div class="card-desc">What Harvey charges $2,400/seat/month for, you now run from a terminal. The tools exist. The access is the question. Here is the stack.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 18, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#1a0505; color:rgba(192,57,43,0.15);">$$$</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Entertainment & IP</div>
+      <div class="card-title">A Path to Profitability: Rights Chain Reconstruction for Independent Artists</div>
+      <div class="card-desc">Your catalog is being used to train AI models. Your label deal has clauses that expired in 2019. Your publishing split was never registered. Here is how you find out — and what you do next.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 17, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#0a0a14;">Salad Days</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Case Law</div>
+      <div class="card-title">The Salad Days Are Over: AI-Generated Evidence and the Courts</div>
+      <div class="card-desc">200+ fabricated citations reached federal judges in a single year. 66 courts issued sanctions. Fines up to $31,000. The Verification Council exists because this is what happens without it.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 16, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#0d0a00; color:rgba(201,168,76,0.12);">No Vaseline</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Compliance</div>
+      <div class="card-title">Back Up Your Threats With Action: ABA Opinion 512 and What It Actually Requires</div>
+      <div class="card-desc">The ABA says you have a non-delegable duty to verify AI outputs. Most lawyers nodded and kept using ChatGPT. Here is what compliance actually looks like in a workflow.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 15, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#001a12;">Synth</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Web3 & Digital Assets</div>
+      <div class="card-title">Time to Synthesize: Smart Contract Governance and DAO Liability in 2026</div>
+      <div class="card-desc">The SEC has a theory. The IRS has a theory. Your DAO members have a theory. None of them agree. Here is the current state of the law and where it is heading.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 14, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#00081a;">Geography</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Pro Se</div>
+      <div class="card-title">When Geography Matters: State-by-State Court Access and What UPL Actually Means for You</div>
+      <div class="card-desc">Florida will sanction you. Texas has new AI rules. Arizona opened the door. The map of where you can represent yourself with AI assistance and where you cannot — updated for 2026.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 13, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#0f0005;">Prediction</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">AI & Legal Tech</div>
+      <div class="card-title">Prediction? Pain. What the GAN Adversarial Engine Actually Does to Your Argument</div>
+      <div class="card-desc">Opposing counsel has three theories for why you lose. The judge has two concerns about your standing. The jury has one question nobody asked. The GAN ran all of them. Here is the output.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 12, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-image-wrap">
+      <div class="card-image-placeholder" style="background:#0a0a0a; color:rgba(232,224,204,0.06);">Cathedral</div>
+    </div>
+    <div class="card-body">
+      <div class="card-tag">Creator Economy</div>
+      <div class="card-title">The Cathedral's Last Breath: What the EU AI Act Means for Digital Creators Worldwide</div>
+      <div class="card-desc">High-risk classification. 35 million euro fines. August 2026 full application. If you train on, generate with, or deploy AI in any creative commercial context, this is the compliance landscape you are now in.</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-date">May 10, 2026</span>
+      <span class="card-arrow">↗</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- QUOTE STRIP -->
+<div class="quote-strip">
+  <div class="quote-text">"First, kill all the lawyers."<br><span style="font-size:0.6em; color: var(--gold);">— Shakespeare</span></div>
+  <div class="quote-attr" style="margin-top:24px; color: var(--mid); font-size:14px; letter-spacing:0; text-transform:none; font-style:italic;">We are not lawyers. This is not legal advice. You represent yourself.</div>
+</div>
+
+<!-- TWITTER LAW SECTION -->
+<div class="twitter-law">
+  <div class="section-label">Twitter Law — Who to Follow</div>
+  <div class="tl-grid">
+
+    <a class="tl-card" href="https://x.com/Popehat" target="_blank">
+      <div class="tl-avatar">K</div>
+      <div class="tl-info">
+        <div class="tl-handle">@Popehat — Ken White</div>
+        <div class="tl-name">Criminal Defense · First Amendment</div>
+        <div class="tl-bio">The gold standard of legal Twitter. Scorchingly witty, deeply rigorous. If a case matters, he has the take.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/ElieNYC" target="_blank">
+      <div class="tl-avatar">E</div>
+      <div class="tl-info">
+        <div class="tl-handle">@ElieNYC — Elie Mystal</div>
+        <div class="tl-name">The Nation · Above the Law</div>
+        <div class="tl-bio">Accessible, direct, unapologetic. Crossover audience that overlaps exactly with Kingsfield's D2C market.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/JoyceWhiteVance" target="_blank">
+      <div class="tl-avatar">J</div>
+      <div class="tl-info">
+        <div class="tl-handle">@JoyceWhiteVance</div>
+        <div class="tl-name">Former U.S. Attorney · Criminal Law</div>
+        <div class="tl-bio">Daily analysis normal people actually understand. Former fed prosecutor. The credibility is real.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/LawDork" target="_blank">
+      <div class="tl-avatar">C</div>
+      <div class="tl-info">
+        <div class="tl-handle">@LawDork — Chris Geidner</div>
+        <div class="tl-name">SCOTUS · Appellate · Civil Rights</div>
+        <div class="tl-bio">First-call sourcing when big decisions drop. Primary source reporting, no punditry padding.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/Teri_Kanefield" target="_blank">
+      <div class="tl-avatar">T</div>
+      <div class="tl-info">
+        <div class="tl-handle">@Teri_Kanefield</div>
+        <div class="tl-name">Constitutional Law · Pro Se Audience</div>
+        <div class="tl-bio">Explains complex constitutional and procedural law to non-lawyers. Direct overlap with Kingsfield's target audience.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/ScottGreenfield" target="_blank">
+      <div class="tl-avatar">S</div>
+      <div class="tl-info">
+        <div class="tl-handle">@ScottGreenfield</div>
+        <div class="tl-name">Simple Justice · Criminal Defense</div>
+        <div class="tl-bio">No-BS legal takes and deep skeptic of legal tech hype. Watch him — if the product is sloppy, he will say so.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/ericgoldman" target="_blank">
+      <div class="tl-avatar">E</div>
+      <div class="tl-info">
+        <div class="tl-handle">@ericgoldman</div>
+        <div class="tl-name">IP · Internet Law · Entertainment</div>
+        <div class="tl-bio">Santa Clara Law professor. Platform liability, IP, tech law. Key voice for the entertainment and creator vertical.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/DamienCharlotin" target="_blank">
+      <div class="tl-avatar">D</div>
+      <div class="tl-info">
+        <div class="tl-handle">@DamienCharlotin</div>
+        <div class="tl-name">AI Hallucination Tracker</div>
+        <div class="tl-bio">Runs the global AI hallucination cases database — updated daily. The best evidence trail for why verification exists.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/RickHasen" target="_blank">
+      <div class="tl-avatar">R</div>
+      <div class="tl-info">
+        <div class="tl-handle">@RickHasen</div>
+        <div class="tl-name">Election Law · Federal Courts</div>
+        <div class="tl-bio">High signal on federal court procedure and constitutional challenges. Essential during any contested matter cycle.</div>
+      </div>
+    </a>
+
+    <a class="tl-card" href="https://x.com/jerryjliu0" target="_blank">
+      <div class="tl-avatar">J</div>
+      <div class="tl-info">
+        <div class="tl-handle">@jerryjliu0 — Jerry Liu</div>
+        <div class="tl-name">LlamaIndex · Document AI Infrastructure</div>
+        <div class="tl-bio">Building the document infrastructure Kingsfield runs on. Followed at Google I/O 2026. No legal use case yet — that's ours.</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <div class="copy">© 2026 Kingsfield Lawfare. All rights reserved.</div>
+  <div class="tagline">We are not lawyers. This is not legal advice. You represent yourself.</div>
+  <div style="display:flex; gap:16px;">
+    <a href="#" style="font-size:12px; color:#444; text-decoration:none;">LinkedIn</a>
+    <a href="#" style="font-size:12px; color:#444; text-decoration:none;">Twitter</a>
+    <a href="#" style="font-size:12px; color:#444; text-decoration:none;">Instagram</a>
+  </div>
+</footer>
+
+<script>
+  // Filter functionality
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+
+<!-- ── KINGSFIELD AUDIO PLAYER ─────────────────────────────────────────────── -->
+<script>
+  window.KINGSFIELD_PLAYER_CONFIG = {
+    apiBase: 'http://localhost:3001',
+    startCollapsed: true,
+    defaultVolume: 0.35,
+    // Trigger an event clip automatically on page-specific moments:
+    // autoplayEvent: 'welcome-goliath'
+  };
+</script>
+<script src="/assets/js/kingsfield-player.js"></script>
+</body>
+</html>

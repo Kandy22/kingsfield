@@ -1,0 +1,987 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+
+import pickle
+import time
+import typing as tp
+from pathlib import Path
+
+import mne
+import numpy as np
+import pandas as pd
+import pytest
+import requests
+import sklearn
+import sklearn.preprocessing
+import torch
+
+import neuralset as ns
+from neuralset import helpers
+from neuralset.features.neuro import _overlap
+from neuralset.infra import ConfDict
+
+
+@pytest.mark.parametrize("cls", (ns.features.Meg, ns.features.Fmri))
+def test_neuro_pkl(cls: tp.Type[ns.features.BaseFeature]) -> None:
+    inst = cls()
+    string = pickle.dumps(inst)
+    _ = pickle.loads(string)
+
+
+def make_meg_event(filepath, start=0.0):
+    timeline = "foo"
+    if start == 0:
+        timeline = "TestMeg2023_subject-0"
+        filepath = f"method:_load_raw?timeline={timeline}"
+    return dict(
+        start=start,
+        duration=99.99,
+        timeline=timeline,
+        filepath=filepath,
+        type="Meg",
+        subject="janedoe",
+    )
+
+
+def test_fmri(tmp_path: Path) -> None:
+    # load study to create nii.gz files
+    infra: tp.Any = {"folder": tmp_path / "cache"}
+    study = ns.data.StudyLoader(
+        name="TestFmri2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+        infra=infra,
+    ).build()
+
+    timeline = "TestFmri2023_subject-0"
+    event_manual = dict(
+        start=0,
+        duration=20.0,
+        timeline=timeline,
+        filepath=f"method:_load_raw?timeline={timeline}",
+        type="Fmri",
+        subject="janedoe",
+        frequency=0.5,
+    )
+    feature = ns.features.Fmri(detrend=True)
+
+    event_auto = study.query('type=="Fmri"').iloc[:1]
+    event: tp.Any
+    for event in (event_manual, event_auto):
+        data = feature(event, start=0.0, duration=2.0).numpy()
+        assert feature.frequency == "native", "Should be unmodified"
+        assert np.array_equal(data.shape, [20, 20, 20, 1])
+        assert data.max() > 0
+
+    # fsaverage
+    feature2 = ns.features.Fmri(mesh="fsaverage5", detrend=True, infra=infra)
+    data = feature2(event, start=0.0, duration=20).numpy()
+    assert np.array_equal(data.shape, [20484, 10])
+    # stds should be 0 (no data) or close to 1 (reduced):
+    stds = np.unique(np.std(data, axis=1))
+    np.testing.assert_array_almost_equal(stds, [0] + [0.948] * (len(stds) - 1), decimal=3)
+    # check that it's a memmap to avoid big memory issues:
+    val = next(iter((feature2.infra.cache_dict._ram_data.values())))
+    assert isinstance(val, np.memmap)
+    # padding
+    feature3 = feature2.infra.clone_obj(padding=20500)
+    t = feature3(event, start=0.0, duration=20)
+    assert np.array_equal(t.shape, [20500, 10])
+    feature3 = feature2.infra.clone_obj(padding="auto", allow_missing=True)
+    feature3.prepare(study)
+    t = feature3([], start=0.0, duration=20)
+    assert np.array_equal(t.shape, [20484, 10])
+
+    # atlas
+    try:
+        for name, dim in {"difumo": 256, "schaefer_2018": 100}.items():
+            feature3 = ns.features.Fmri(mesh=None, atlas=name, atlas_dim=dim, infra=infra)  # type: ignore
+            data = feature3(event, start=0.0, duration=20).numpy()
+            np.array_equal(data.shape, [dim, 10])
+    except requests.exceptions.HTTPError:  # unstable (got internal server errors)
+        pass
+
+    # test from file
+    nii = tmp_path / "data" / "sub-0.nii.gz"
+    assert nii.exists()
+    event["timeline"] = "foo"
+    event["filepath"] = nii
+    tdata = feature(event, start=0.0, duration=2.0)
+    assert tdata.shape == torch.Size([20, 20, 20, 1])
+    assert tdata.max() > 0
+
+
+def test_meg(tmp_path: Path) -> None:
+    cache_path = tmp_path / "cache"
+    # test from study
+    feature = ns.features.Meg(filter=(100, None))
+    v = feature.infra.version
+    assert v == "1"
+    uid = f"neuralset.features.neuro.Meg._get_data,{v}/filter=(100,None)-3dcc1299"
+    assert feature.infra.uid() == uid
+    assert feature.frequency == "native"
+    study = ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+
+    # check caching infra
+    for cache in (None, cache_path):
+        feature = ns.features.Meg(frequency=100, infra=dict(folder=cache))  # type: ignore
+        meg_event = study.query('type=="Meg"').iloc[:1]
+        out = feature(meg_event, start=0.0, duration=1.0)
+    assert out.shape == (20, 100)
+    # check missing
+    feature = ns.features.Meg(allow_missing=True, frequency=100, infra=dict(folder=cache_path))  # type: ignore
+    feature.prepare(study)
+    assert feature._missing_default is not None
+    assert feature._missing_default.shape == (20,)
+    empty = feature([], start=0.0, duration=1.0)
+    assert empty.shape == out.shape
+    feature = ns.features.Meg(infra=dict(folder=cache_path), frequency=50.0)  # type: ignore
+    feature.prepare(study)
+
+    # test from file (.fif generated by TestMeg2023)
+    fif = tmp_path / "data" / "sub-0-raw.fif"
+
+    feature = ns.features.Meg()
+    event = make_meg_event(fif, 0.0)
+    data = feature(event, start=0.0, duration=1.0)
+    assert feature._effective_frequency is not None
+    assert feature._effective_frequency == 100.0
+    assert feature.frequency == "native"
+    assert np.array_equal(data.shape, [20, 100])
+    assert data.max() > 0.0
+
+    # meg start > 0
+    data = feature(make_meg_event(fif, start=0.5), start=0.0, duration=1.0)
+    assert not any(data[:, 0])
+    assert data[:, -1].max() > 0
+
+    # meg start < 0
+    data = feature(events=make_meg_event(fif, start=-1.0), start=0.0, duration=1.0)
+    assert data.min() == 1
+
+    # meg start < segment start
+    data = feature(events=make_meg_event(fif, start=0.0), start=0.5, duration=1.0)
+    assert data.min() == 0.5
+    assert data.max() == 1.49
+
+    # meg ends before end of segment
+    event = make_meg_event(fif)
+    data = feature(events=event, start=event["duration"] - 0.5, duration=1.0)
+    assert not any(data[:, -1])
+    assert data[:, 0].max() > 0
+
+    # decim
+    feature = ns.features.Meg(frequency=50.0)  # raw dependent
+    data = feature(make_meg_event(fif, start=0.5), start=0.0, duration=1.0)
+    assert np.array_equal(data.shape, [20, 50])
+    assert not any(data[:, 0])
+    assert data[:, -1].max() > 0
+
+    # meg channels vary
+    feature = ns.features.Meg(frequency=100.0)
+    study = ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<2",
+    ).build()
+    feature.prepare(study)
+    images = study.query('type=="Image"')
+    # select the first image of 2 different recordings
+    sel = [d.index[0] for tl, d in images.groupby("timeline")]
+    dset = ns.segments.iter_segments(
+        study, idx=pd.Series(study.index.isin(sel)), start=0.0, duration=1.0
+    )
+    data_list = [feature(**seg._to_feature()) for seg in dset]
+    assert np.shape(data_list) == (2, len(feature._channels), 100)
+
+    # test from file (.fif generated by TestMeg2023)
+    assert fif.exists()
+    events = pd.DataFrame(
+        [
+            dict(
+                type="Meg",
+                start=0.0,
+                duration=100,
+                filepath=fif,
+                timeline="fo",
+                subject="someonelse",
+            ),
+        ]
+    )
+    feature = ns.features.neuro.Meg(frequency=100.0)
+    data = feature(events, start=10.0, duration=1.0)
+    assert data.shape == torch.Size([20, 100])
+    assert data.max() > 0
+
+
+@pytest.mark.parametrize(
+    "l_freq,h_freq",
+    [
+        (None, None),
+        (0.1, None),
+        (None, 20.0),
+        (0.1, 20.0),
+        (1.0, 101.0),
+    ],
+)
+def test_meg_filter(
+    caplog, tmp_path: Path, l_freq: float | None, h_freq: float | None
+) -> None:
+    ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+    fif = tmp_path / "data" / "sub-0-raw.fif"
+
+    event = ns.events.Meg.from_dict(make_meg_event(fif, 0.0))
+    frequency = 100.0
+    feature = ns.features.Meg(frequency=frequency, filter=(l_freq, h_freq))
+    with caplog.at_level("WARNING"):
+        raw = next(iter(feature._get_data([event])))
+
+    assert raw.info["highpass"] == (0.0 if l_freq is None else l_freq)
+    if h_freq is None:
+        assert raw.info["lowpass"] == frequency / 2
+    elif h_freq is not None and h_freq >= frequency / 2:
+        assert (
+            "Lowpass filter cutoff frequency is higher than Nyquist frequency."
+            in caplog.text
+        )
+        assert raw.info["lowpass"] == frequency / 2
+    else:
+        assert raw.info["lowpass"] == h_freq
+
+
+@pytest.mark.parametrize(
+    "notch_filter,expected",
+    [
+        [10.0, "[10.0, 20.0, 30.0, 40.0]"],
+        [40.0, "[40.0]"],
+        [[40.0, 45.0], "[40.0, 45.0]"],
+        [100.0, "Not applying notch filter as no valid frequencies were found."],
+        [None, None],
+    ],
+)
+def test_meg_notch_filter(
+    caplog,
+    tmp_path: Path,
+    notch_filter: float | list[float] | None,
+    expected: str | None,
+) -> None:
+    ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+    fif = tmp_path / "data" / "sub-0-raw.fif"
+
+    event = ns.events.Meg.from_dict(make_meg_event(fif, 0.0))
+    feature = ns.features.Meg(notch_filter=notch_filter)
+    with caplog.at_level("INFO"):
+        next(iter(feature._get_data([event])))
+
+    if expected is not None:
+        assert expected in caplog.text
+
+
+@pytest.mark.parametrize(
+    "start,tmin,tmax",
+    [
+        [1.0, -0.2, -0.1],
+        [2.0, 0.0, 0.3],
+        [3.0, -0.1, 0.1],
+        [4.0, -0.5, 2.0],
+        [5.0, 0.1, 3.0],
+        [6.0, 0.0, 4.0],
+    ],
+)
+def test_meg_baseline(start: float, tmin: float, tmax: float, tmp_path: Path) -> None:
+    ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+    fif = tmp_path / "data" / "sub-0-raw.fif"
+
+    sfreq = 100.0
+    event_start = 0.0
+    duration = 1.0
+    event = make_meg_event(fif, start=event_start)
+
+    # Extract window without baseline normalization
+    feature = ns.features.Meg(frequency=sfreq, baseline=None)
+    no_bl_data = feature(event, start=start, duration=duration)
+
+    # Extract baseline only
+    feature = ns.features.Meg(frequency=sfreq, baseline=None)
+    bl_data = feature(event, start=start + tmin, duration=tmax - tmin)
+
+    # Extract window with baseline normalization
+    feature = ns.features.Meg(frequency=sfreq, baseline=(tmin, tmax))
+    bl_norm_data = feature(event, start=start, duration=duration)
+
+    # Extract larger window without baseline normalization
+    feature = ns.features.Meg(frequency=sfreq, baseline=None)
+    no_bl_full_data = feature(
+        event, start=start + tmin, duration=max(duration, tmax) - tmin
+    )
+
+    # Ensure everything matches
+    assert no_bl_data.shape == bl_norm_data.shape
+    bl_len = int(sfreq * (tmax - tmin))
+    assert bl_data.shape[1] == bl_len
+    assert torch.allclose(bl_data, no_bl_full_data[:, :bl_len])
+    bl_norm_data2 = no_bl_data - bl_data.mean(dim=1, keepdim=True)
+    np.testing.assert_almost_equal(bl_norm_data.numpy(), bl_norm_data2.numpy(), decimal=6)
+
+
+@pytest.mark.parametrize(
+    "offset,minmax",
+    [
+        (0, (0.5, 1.49)),
+        (0.2, (0.7, 1.69)),
+    ],
+)
+def test_meg_offset(offset: float, minmax: tuple[float, float], tmp_path: Path) -> None:
+    ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+    fif = tmp_path / "data" / "sub-0-raw.fif"
+    event = make_meg_event(fif, start=0)
+    # Extract window without baseline normalization
+    feature = ns.features.Meg(frequency=100, baseline=None, offset=offset)
+    data = feature(event, start=0.5, duration=1.0).numpy()
+    drange = [float(f(data[:])) for f in [np.min, np.max]]
+    np.testing.assert_almost_equal(drange, minmax)
+
+
+def test_fnirs(tmp_path: Path) -> None:
+    ns.data.StudyLoader(
+        name="TestFnirs2024",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+
+    sfreq = 10.0
+    start = 0.0
+    duration = 5.0
+
+    timeline = "TestFnirs2024_subject-0"
+    filepath = f"method:_load_raw?timeline={timeline}"
+    event = dict(
+        start=start,
+        duration=99.99,
+        timeline=timeline,
+        filepath=filepath,
+        type="Fnirs",
+        subject="janedoe",
+    )
+
+    # Extract window without baseline normalization
+    feature = ns.features.Fnirs(frequency=sfreq, baseline=None)
+    data = feature(event, start=start, duration=duration)
+    assert data.shape == (32, sfreq * duration)
+
+    # Extract window with different preprocessing steps
+    # XXX Uncomment preprocessing steps that require montage information (would need to update the
+    # TestFnirs2024 class to also contain montage information)
+    tmin, tmax = 0.0, 1.0
+    feature = ns.features.Fnirs(
+        frequency=sfreq,
+        baseline=(tmin, tmax),
+        # distance_threshold=10,
+        # compute_optical_density=True,
+        # scalp_coupling_index_threshold=0.0,
+        # apply_tddr=True,
+        # compute_heamo_response=True,
+        # partial_pathlength_factor=0.1,
+        # enhance_negative_correlation=True,
+        filter=(0.01, 2.5),
+    )
+    preproc_data = feature(event, start=start, duration=duration)
+    assert preproc_data.shape == (32, sfreq * duration)
+
+
+def test_cache(tmp_path: Path) -> None:
+    # FIXME the CACHE logic will fails if there are multiple recordings
+    # (meg, fmri) within the same timeline.
+
+    fmri: tp.Dict[str, tp.Any] = dict(
+        device="Fmri",
+        study="TestFmri2023",
+        stim="Word",
+        feature=ns.features.Fmri,
+        duration=2.0,
+        shape=(20, 20, 20, 1),
+        file=tmp_path / "data" / "sub-0.nii.gz",
+        subject="someone",
+    )
+
+    meg: tp.Dict[str, tp.Any] = dict(
+        device="Meg",
+        study="TestMeg2023",
+        stim="Image",
+        feature=ns.features.Meg,
+        duration=0.5,
+        shape=(20, 50),
+        file=tmp_path / "data" / "sub-0-raw.fif",
+        subject="someone",
+    )
+
+    for cond in (meg, fmri):
+        study = str(cond["study"])
+        events = ns.data.StudyLoader(name=study, path=tmp_path / "data").build()
+        sel = events.type == cond["stim"]
+        dset = ns.segments.list_segments(
+            events, idx=sel, start=0.0, duration=cond["duration"]
+        )
+        segment = dset[0]
+
+        for cache in (None, tmp_path / "cache"):
+            for filtr in (None, (None, 20.0)):
+                kwargs: tp.Any = dict(cache=cache, filter=filtr)
+                # TODO, clean up when FMRI is dealt with
+                kwargs.pop("cache")  # for now, now cache in FMRI
+                if "Fmri" in study:
+                    kwargs.pop("filter")
+                if cond is meg:
+                    kwargs["infra"] = {"folder": cache}
+
+                feature = cond["feature"](**kwargs)
+                data = feature(segment.events, segment.start, segment.duration)
+                assert np.array_equal(data.shape, cond["shape"])
+                assert data.max() > 0
+
+        # no cache, no reader needed
+        file = cond["file"]
+        assert file.exists()
+        event = dict(
+            type=cond["device"],
+            start=0.0,
+            duration=cond["duration"],
+            filepath=file,
+            timeline="fo",
+            subject="someone",
+        )
+        if cond["device"] == "Fmri":
+            event.update(duration=20, frequency=0.5)
+        events = pd.DataFrame(
+            [
+                dict(type="Word", start=10.0, duration=0.5, text="Hello", timeline="fo"),
+                event,
+            ]
+        )
+        feature = ns.features.base.Pulse(aggregation="sum", event_types=cond["device"])
+        data = feature(events, start=10.0, duration=cond["duration"])
+        assert np.array_equal(data.shape, [1])
+
+        # no cache, but reader
+        for cache in (None, tmp_path / "cache"):
+            for filtr in (None, (None, 20.0)):
+                kwargs = dict(cache=cache, filter=filtr)
+                kwargs.pop("cache")  # TODO add fmri cache?
+                if "Fmri" in cond["study"]:
+                    kwargs.pop("filter")
+                if cond is meg:
+                    kwargs["infra"] = {"folder": cache}
+
+                feature = cond["feature"](**kwargs)
+                data = feature(events, start=0.0, duration=cond["duration"])
+                assert np.array_equal(data.shape, cond["shape"])
+                assert data.max() > 0
+
+
+def test_meg_feature_cache(tmp_path: Path) -> None:
+    events = ns.data.StudyLoader(name="TestMeg2023", path=tmp_path / "data").build()
+    cache = tmp_path / "cache"
+    feature = ns.features.Meg(
+        frequency=100.0, filter=(None, 20.0), infra={"folder": cache}  # type: ignore
+    )
+    dset = ns.segments.list_segments(
+        events, idx=events.type == "Image", start=0.0, duration=5
+    )
+    _ = feature(dset[0].events, start=dset[0].start, duration=dset[0].duration)
+    v = feature.infra.version
+    assert v == "1"
+    path = cache / f"neuralset.features.neuro.Meg._get_data,{v}"
+    path = path / "frequency=100,filter=(None,20)-2c04998d"
+    assert path.exists(), f"Path does not exist, got: {list(path.parent.iterdir())}"
+    content = [x.name for x in path.iterdir()]
+    assert (
+        len(content) == 5
+    ), f"1 data file, 1 jsonl file, and 3 yaml cfg files: {content}"
+    meg = next(feature.infra.cache_dict.values())  # type: ignore
+    assert isinstance(meg, mne.io.Raw)
+    assert meg.preload is False
+
+
+def test_eeg_feature_cache(tmp_path: Path) -> None:
+    events = ns.data.StudyLoader(name="TestEeg2024", path=tmp_path / "data").build()
+    cache = tmp_path / "cache"
+    feature = ns.features.Eeg(
+        frequency=100.0, filter=(None, 20.0), infra={"folder": cache}  # type: ignore
+    )
+    events_ = helpers.extract_events(events, types=feature.event_types)
+    eeg = next(iter(feature._get_data(events_)))  # type: ignore
+    assert isinstance(eeg, mne.io.Raw)
+    assert eeg.preload is False
+
+
+def test_eeg_brainvision_feature_cache(tmp_path: Path) -> None:
+    events = ns.data.StudyLoader(name="TestEeg2024", path=tmp_path / "data").build()
+    cache = tmp_path / "cache"
+    feature = ns.features.EegBrainVision(
+        frequency=100.0, filter=(None, 20.0), infra={"folder": cache}  # type: ignore
+    )
+    events_ = helpers.extract_events(events, types=feature.event_types)
+    eeg = next(iter(feature._get_data(events_)))  # type: ignore
+    assert isinstance(eeg, mne.io.brainvision.brainvision.RawBrainVision)
+    assert eeg.preload is False
+
+
+def test_base_meg(tmp_path: Path) -> None:
+    feature = ns.features.Meg(
+        frequency=100.0, filter=(None, 20.0), infra={"folder": tmp_path}  # type: ignore
+    )
+    assert isinstance(feature, ns.features.Meg)
+    # check uids
+    feature_keys = set(ConfDict.from_model(feature, uid=True).keys())
+    assert feature_keys == {
+        "name",
+        "allow_missing",
+        "filter",
+        "pick_types",
+        "baseline",
+        "frequency",
+        "apply_proj",
+        "offset",
+        "scaler",
+        "aggregation",
+        "clamp",
+        "apply_hilbert",
+        "notch_filter",
+        "event_types",
+        "infra",  # for version
+    }
+
+
+@pytest.mark.parametrize("apply_proj", (True, False))
+def test_epoch_correct(apply_proj: bool) -> None:
+    # download the first time
+    events = ns.data.StudyLoader(name="MneSample2013", path=ns.CACHE_FOLDER).build()
+    NUM = 12
+
+    # Define segments
+    segments = ns.segments.list_segments(
+        events, idx=events.type == "Stimulus", start=0.0, duration=1.0
+    )
+    segments = segments[:NUM]
+    dset = ns.SegmentDataset({"Meg": ns.features.Meg(apply_proj=apply_proj)}, segments)
+
+    start = time.time()
+    dloader = torch.utils.data.DataLoader(
+        dset,
+        collate_fn=dset.collate_fn,
+        batch_size=len(dset),
+    )
+    batch = next(iter(dloader))
+    timing = {"dataloader": time.time() - start}
+
+    # Fast Mne reader
+    start = time.time()
+    meg_event = events.loc[events.type == "Meg"].iloc[0]
+    stims = events.loc[events.type == "Stimulus"]
+    stims = stims.iloc[:NUM, :]
+    raw = ns.events.Meg.from_dict(meg_event).read()
+    mne_events = np.ones((len(stims), 3), dtype=int)
+    # print([s["start"] * raw.info["sfreq"] for s in segments])
+    mne_events[:, 0] = stims.start * raw.info["sfreq"]
+    raw = raw.pick(("meg",))
+    epochs = mne.Epochs(
+        raw, mne_events, tmin=0.0, tmax=1.0, baseline=None, proj=apply_proj
+    )
+    data = epochs.get_data()
+    timing["epochs"] = time.time() - start
+
+    # check for speed and correctness
+    assert (
+        timing["dataloader"] / timing["epochs"] < 15
+    ), f"dataloader is too slow {timing}"
+    meg = batch.data["Meg"].cpu().numpy()
+    # np.testing.assert_almost_equal(meg * 10**12, data[:, :, :-1] * 10**12, decimal=3)
+    np.testing.assert_almost_equal(meg / data[:, :, :-1], np.ones(meg.shape), decimal=3)
+
+
+@pytest.mark.parametrize("n_spatial_dims", [2, 3])
+@pytest.mark.parametrize("normalize", [True, False])
+@pytest.mark.parametrize(
+    "factor",
+    [
+        1.0,
+        10.0,
+    ],
+)
+def test_channel_positions_meg(
+    tmp_path: Path, n_spatial_dims, normalize: bool, factor: float
+) -> None:
+    # Create and prepare Meg features
+    meg = ns.features.Meg(offset=1)
+    events = ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+    meg.prepare(events)
+
+    # Define and prepare channel positions feature
+    invalid_value = ns.features.ChannelPositions.INVALID_VALUE
+    ch_pos = ns.features.ChannelPositions(
+        neuro=meg,
+        layout_or_montage_name=None,
+        n_spatial_dims=n_spatial_dims,
+        normalize=normalize,
+        factor=factor,
+    )
+    ch_pos.prepare(events)
+
+    event = ns.events.Event.from_dict(events[events.type == "Meg"].iloc[0])
+    assert isinstance(event, ns.events.Meg)
+    raw = next(meg._get_data([event]))
+    positions = ch_pos(event, start=0.0, duration=1.0)
+    assert positions.shape == (len(raw.ch_names), n_spatial_dims)
+    assert (positions[raw.ch_names.index("INVALID_CHANNEL")] == invalid_value).all()
+
+
+@pytest.mark.parametrize("n_spatial_dims", [2, 3])
+@pytest.mark.parametrize("normalize", [True, False])
+def test_channel_positions_eeg(tmp_path: Path, n_spatial_dims, normalize) -> None:
+    eeg = ns.features.Eeg()
+    events = ns.data.StudyLoader(
+        name="TestEeg2024",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+    eeg.prepare(events)
+
+    # Define and prepare channel positions feature
+    invalid_value = ns.features.ChannelPositions.INVALID_VALUE
+    ch_pos = ns.features.ChannelPositions(
+        neuro=eeg,
+        layout_or_montage_name="EEG1005" if n_spatial_dims == 2 else None,
+        n_spatial_dims=n_spatial_dims,
+        normalize=normalize,
+    )
+    ch_pos.prepare(events)
+
+    event = ns.events.Event.from_dict(events[events.type == "Eeg"].iloc[0])
+    assert isinstance(event, ns.events.Eeg)
+    raw = next(eeg._get_data([event]))
+    positions = ch_pos(event, start=0.0, duration=1.0)
+    assert positions.shape == (len(raw.ch_names), n_spatial_dims)
+    assert (positions[raw.ch_names.index("INVALID_CHANNEL")] == invalid_value).all()
+
+
+def test_channel_positions_build() -> None:
+    eeg = ns.features.Eeg()
+    original_ch_pos = ns.features.ChannelPositions(
+        neuro=eeg,
+        layout_or_montage_name="EEG1005",
+    )
+    ch_pos_config = ns.features.ChannelPositions(
+        layout_or_montage_name="EEG1005",
+    )
+    ch_pos = ch_pos_config.build(eeg)
+    assert ch_pos.model_dump() == original_ch_pos.model_dump()
+
+
+@pytest.fixture
+def fake_bipolar_eeg() -> mne.io.Raw:
+    ch_names = ["Fp1-Fp2", "Fp2-T8", "This is not a channel name", "Oz"]
+    ch_types = ["eeg"] * len(ch_names)
+    sfreq = 120.0
+    data = np.random.rand(len(ch_names), int(sfreq * 30))
+    info = mne.create_info(ch_names, sfreq=sfreq, ch_types=ch_types)
+    return mne.io.RawArray(data, info)
+
+
+def test_channel_positions_include_ref(fake_bipolar_eeg) -> None:
+    eeg = ns.features.Eeg()
+    ch_pos = ns.features.ChannelPositions(
+        neuro=eeg,
+        layout_or_montage_name="EEG1005",
+        include_ref_eeg=True,
+    )
+
+    positions = ch_pos._get_channel_positions_from_raw(fake_bipolar_eeg)
+    assert positions.shape == (len(fake_bipolar_eeg.ch_names), 4)
+    assert (
+        positions[-1, -2:] == ch_pos.INVALID_VALUE
+    ).all()  # No explicit anode for last channel
+
+
+def test_channel_positions_eeg_brainvision(fake_bipolar_eeg) -> None:
+    ch_pos = ns.features.ChannelPositions(
+        neuro=ns.features.EegBrainVision(),
+        layout_or_montage_name="EEG1005",
+    )
+    ch_pos._get_channel_positions_from_raw(fake_bipolar_eeg)
+
+
+def test_channel_positions_no_valid_layout(fake_bipolar_eeg) -> None:
+    eeg = ns.features.Eeg()
+    ch_pos = ns.features.ChannelPositions(
+        neuro=eeg,
+        layout_or_montage_name=None,
+        include_ref_eeg=True,
+    )
+    with pytest.raises(ValueError, match="No valid layout found."):
+        ch_pos._get_channel_positions_from_raw(fake_bipolar_eeg)
+
+
+@pytest.fixture
+def fake_invalid_eeg() -> mne.io.Raw:
+    ch_names = ["Cz-Fz", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    ch_types = ["eeg"] * len(ch_names)
+    sfreq = 120.0
+    data = np.random.rand(len(ch_names), int(sfreq * 30))
+    info = mne.create_info(ch_names, sfreq=sfreq, ch_types=ch_types)
+    return mne.io.RawArray(data, info)
+
+
+def test_channel_positions_too_many_invalid(fake_invalid_eeg, caplog) -> None:
+    eeg = ns.features.Eeg()
+    ch_pos = ns.features.ChannelPositions(
+        neuro=eeg,
+        layout_or_montage_name="EEG1005",
+        include_ref_eeg=False,
+    )
+    ch_pos._get_channel_positions_from_raw(fake_invalid_eeg)
+    assert "Fewer than 10% of the channels have valid positions" in caplog.text
+
+
+def test_channel_positions_require_eeg() -> None:
+    meg = ns.features.Meg()
+    with pytest.raises(ValueError):
+        ns.features.ChannelPositions(
+            neuro=meg,
+            layout_or_montage_name=None,
+            include_ref_eeg=True,
+        )
+
+
+@pytest.fixture
+def fake_eeg_on_a_line() -> mne.io.Raw:
+    ch_names = ["Fpz", "Cz", "Pz"]
+    ch_types = ["eeg"] * len(ch_names)
+    sfreq = 120.0
+    data = np.random.rand(len(ch_names), int(sfreq * 30))
+    info = mne.create_info(ch_names, sfreq=sfreq, ch_types=ch_types)
+
+    return mne.io.RawArray(data, info)
+
+
+def test_channel_positions_on_a_line(fake_eeg_on_a_line) -> None:
+    eeg = ns.features.Eeg()
+    ch_pos = ns.features.ChannelPositions(
+        neuro=eeg,
+        layout_or_montage_name="EEG1005",
+    )
+    pos = ch_pos._get_channel_positions_from_raw(fake_eeg_on_a_line)
+    assert (pos[:, 0] == 0.0).all()
+
+
+def test_meg_borders(tmp_path: Path) -> None:
+    cache_path = tmp_path / "cache"
+    # test from study
+    feature = ns.features.Meg(frequency=100, filter=(100, None))
+    loader = ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    )
+    events = loader.build()
+    feature = ns.features.Meg(infra=dict(folder=cache_path))  # type: ignore
+    meg_event = ns.events.Meg.from_dict(events.query('type=="Meg"').iloc[0])
+    out = feature(meg_event, start=meg_event.start - 0.5, duration=1.0)
+    # overlap with the beginning
+    assert out[0, 0] == 0.0
+    assert out[0, -1] != 0.0
+    # overlap with the end
+    out = feature(
+        meg_event, start=meg_event.start + meg_event.duration - 0.5, duration=1.0
+    )
+    assert out[0, 0] != 0.0
+    assert out[0, -1] == 0.0
+
+
+@pytest.mark.parametrize("scaler", ["RobustScaler", "StandardScaler"])
+@pytest.mark.parametrize("clamp", [None, 0.01, 0.1])
+def test_scaled_meg(
+    scaler: tp.Literal["RobustScaler", "StandardScaler"],
+    tmp_path: Path,
+    clamp: float | None,
+) -> None:
+    sfreq = 100.0
+    start = 0.0
+    duration = 1.0
+
+    loader = ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    )
+    events = loader.build()
+    event = ns.events.Meg.from_dict(events.query('type=="Meg"').iloc[0])
+
+    feature = ns.features.Meg(frequency=sfreq)
+    X = feature(event, start=start, duration=duration)
+
+    raw = next(feature._get_data([event]))
+    data = raw.load_data().get_data()
+
+    _scaler = getattr(sklearn.preprocessing, scaler)().fit(data.T)
+
+    scaled_feature = ns.features.Meg(
+        frequency=sfreq,
+        scaler=scaler,
+        clamp=clamp,
+    )
+    scaled_X1 = scaled_feature(event, start=start, duration=duration)
+
+    scaled_X2 = torch.Tensor(_scaler.transform(X.T).T)
+    if clamp is not None:
+        scaled_X2 = torch.clamp(scaled_X2, min=-clamp, max=clamp)
+
+    assert torch.allclose(scaled_X1, scaled_X2, atol=1e-12)
+
+
+def test_first_samp() -> None:
+    events = ns.data.StudyLoader(name="MneSample2013", path=ns.CACHE_FOLDER).build()
+    meg_event = ns.events.Event.from_dict(events.loc[events.type == "Meg"].iloc[0])
+    assert meg_event.start > 0
+    # first samp is ~6k at 150Hz, so start is at about 42s
+    feature = ns.features.Meg(frequency=150)
+    assert not feature(meg_event, 41, 1).norm()
+    assert feature(meg_event, 43, 1).norm()
+
+
+def test_fast_event() -> None:
+    events = ns.data.StudyLoader(name="MneSample2013", path=ns.CACHE_FOLDER).build()
+    meg_event = ns.events.Event.from_dict(events.loc[events.type == "Meg"].iloc[0])
+    assert meg_event.start > 0
+    feature = ns.features.Meg(frequency=150)
+    duration = 0.001
+    assert feature(meg_event, start=meg_event.start + 1, duration=duration).norm()
+
+
+def test_border_baseline(tmp_path: Path) -> None:
+    events = ns.data.StudyLoader(name="TestMeg2023", path=tmp_path).build()
+    meg_event = ns.events.Event.from_dict(events.loc[events.type == "Meg"].iloc[0])
+    feature = ns.features.Meg(frequency=150, baseline=(0, 0.6))
+    _ = feature(meg_event, meg_event.stop - 0.5, 1)  # baseline should not bug
+
+
+def test_meg_method_on_infra(tmp_path: Path) -> None:
+    events = ns.data.StudyLoader(
+        name="TestMeg2023",
+        path=tmp_path,
+        query="timeline_index<1",
+    ).build()
+    infra: tp.Any = {"cluster": "local", "folder": tmp_path}
+    feature = ns.features.Meg(frequency=150, baseline=(0, 0.6), infra=infra)
+    feature.prepare(events)
+
+
+class _PseudoNifti:  # hack used in nastase
+    def __init__(self, data: np.ndarray) -> None:
+        self.data = data
+        self.shape = self.data.shape
+
+    def get_fdata(self):
+        return self.data
+
+
+def test_fmri_mesh_from_2d() -> None:
+    n_voxels = 40962 * 2  # fsaverage6
+    n_times = 10
+    nii = _PseudoNifti(np.random.rand(n_voxels, n_times))
+    event = ns.events.Fmri(
+        start=0,
+        duration=n_times,
+        frequency=1,
+        timeline="foo",
+        subject="blublu",
+        filepath="blublu",
+    )
+    object.__setattr__(event, "read", lambda: nii)  # fake it
+    feat = ns.features.Fmri(mesh="fsaverage5")
+    out = feat(event, 0, 5)
+    assert out.shape == (10242 * 2, 5)  # fsaverage5 size
+
+
+def test_ieeg(tmp_path: Path) -> None:
+    ns.data.StudyLoader(
+        name="TestIeeg2024",
+        path=tmp_path / "data",
+        query="timeline_index<1",
+    ).build()
+
+    sfreq = 2048.0
+    start = 0.0
+    duration = 5.0
+
+    timeline = "TestIeeg2024_subject-0"
+    filepath = f"method:_load_raw?timeline={timeline}"
+
+    event = dict(
+        start=start,
+        duration=99.99,
+        timeline=timeline,
+        filepath=filepath,
+        type="Ieeg",
+        subject="janedoe",
+    )
+
+    # Extract window without baseline normalization
+    feature = ns.features.Ieeg(frequency=sfreq, baseline=None)
+    data = feature(event, start=start, duration=duration)
+    assert data.shape == (51, sfreq * duration)
+
+    # Extract window with different preprocessing steps
+    tmin, tmax = 0.0, 1.0
+    feature = ns.features.Ieeg(
+        frequency=sfreq,
+        baseline=(tmin, tmax),
+        filter=(0.05, 20.0),
+        reference="bipolar",
+        notch_filter=50.0,
+    )
+    preproc_data = feature(event, start=start, duration=duration)
+    # n_chans -1 due to bipolar filter:
+    assert preproc_data.shape == (50, sfreq * duration)
+
+
+def test_overlap() -> None:
+    event_start = 10.0
+    event_duration = 6.0
+    segment_start = 8.0
+    segment_duration = 7.0
+    # Test case: overlap exists
+    expected_overlap_start = 10.0
+    expected_overlap_duration = 5.0
+    assert _overlap(event_start, event_duration, segment_start, segment_duration) == (
+        expected_overlap_start,
+        expected_overlap_duration,
+    )
+    # Test case: no overlap
+    assert _overlap(event_start, event_duration, 20.0, 3.0) == (20.0, 0.0)

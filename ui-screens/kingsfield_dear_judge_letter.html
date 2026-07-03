@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dear Chief Judge — Kingsfield Lawfare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Special+Elite&family=Inter:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
+  background: #ffffff;
+  color: #000000;
+}
+
+/* ── NAV ─────────────────────────────────── */
+nav {
+  background: #f2efe6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-logo img {
+  height: 40px;
+  width: auto;
+}
+.nav-logo-text .top { font-size: 11px; font-weight: 700; }
+.nav-logo-text .bot { font-size: 9px; color: rgba(0,0,0,0.45); }
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 10px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #000;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
+}
+.nav-links a:hover {
+  background: #3c4cc7;
+  color: #fff;
+}
+
+/* ── HERO ─────────────────────────────────── */
+.hero {
+  display: grid;
+  grid-template-columns: 42% 58%;
+  min-height: calc(100vh - 46px);
+}
+.hero-left {
+  background: #000;
+  padding: 64px 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.h-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+}
+.h-center { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 0; }
+.dear-judge-wrap { position: relative; display: inline-block; margin-bottom: 24px; }
+.dear-judge {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 0.9;
+  color: #ffffff;
+  display: block;
+}
+.dear-judge-strike {
+  position: absolute;
+  left: -4px; right: -4px;
+  top: 50%;
+  height: 3px;
+  background: #c0392b;
+  transform: translateY(-50%) rotate(-0.8deg);
+}
+.h-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.65;
+  max-width: 230px;
+}
+.h-foot { font-size: 9px; color: rgba(255,255,255,0.18); letter-spacing: 0.05em; }
+
+.hero-right {
+  background: #fff;
+  padding: 64px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.h-right-eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.32);
+  margin-bottom: 20px;
+}
+.h-headline {
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: clamp(40px, 5.8vw, 78px);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  color: #000;
+  margin-bottom: 30px;
+}
+.h-subhead {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  max-width: 400px;
+  margin-bottom: 14px;
+}
+.h-body {
+  font-size: 12px;
+  line-height: 1.68;
+  color: rgba(0,0,0,0.48);
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+.h-stat {
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+.cta-row { display: flex; gap: 10px; }
+.btn {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 16px 11px;
+  border: 1px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.14s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-o { background: transparent; color: #000; }
+.btn-o:hover { background: #000; color: #fff; }
+.btn-s { background: #000; color: #fff; }
+.btn-s:hover { background: #3c4cc7; border-color: #3c4cc7; }
+
+/* ── DIVIDER ────────────────────────────── */
+.divider {
+  background: #f2efe6;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 40px;
+  border-top: 1px solid rgba(0,0,0,0.07);
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+.dv-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(0,0,0,0.35); white-space: nowrap; }
+.dv-line { flex: 1; height: 1px; background: rgba(0,0,0,0.1); }
+
+/* ── LETTER SHELL ────────────────────────── */
+.letter-section {
+  background: #e8e5dc;
+  padding: 56px 40px;
+}
+.ls-header { margin-bottom: 36px; }
+.ls-title { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 26px; letter-spacing: -0.03em; margin-bottom: 4px; }
+.ls-sub { font-size: 11px; color: rgba(0,0,0,0.42); }
+
+/* ROUTING SLIP */
+.routing {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-bottom: 3px solid #8b0000;
+  padding: 12px 20px;
+  position: relative;
+  font-family: 'Special Elite', cursive;
+  font-size: 10px;
+}
+.routing-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b0000;
+  margin-bottom: 8px;
+}
+.routing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 12px;
+}
+.rc { border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+.rc-label { font-size: 7.5px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+.rc-val { font-family: 'Caveat', cursive; font-size: 14px; color: #1a4fa0; }
+.routing-initials {
+  position: absolute;
+  top: 8px; right: 16px;
+  font-family: 'Caveat', cursive;
+  font-size: 26px;
+  color: #c0392b;
+  transform: rotate(6deg);
+}
+
+/* THE DOCUMENT */
+.letter-doc {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fffef8;
+  border: 1px solid #bbb;
+  border-top: none;
+  padding: 52px 64px 60px;
+  position: relative;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 11.5pt;
+  line-height: 1.72;
+  color: #111;
+  box-shadow: 2px 4px 16px rgba(0,0,0,0.1);
+}
+
+/* Paper texture / aging */
+.letter-doc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120px 100px at 88% 8%, rgba(100,70,30,0.06) 0%, transparent 100%),
+    radial-gradient(ellipse 80px 60px at 12% 90%, rgba(80,60,20,0.04) 0%, transparent 100%);
+}
+
+/* Fold line */
+.fold {
+  position: absolute;
+  left: 0; right: 0;
+  top: 31%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.07) 50%, rgba(0,0,0,0.05) 70%, transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Coffee ring */
+.coffee {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+.coffee-1 {
+  width: 90px; height: 82px;
+  top: 38px; right: 52px;
+  background: radial-gradient(ellipse at center,
+    transparent 35%,
+    rgba(90,55,20,0.08) 42%,
+    rgba(90,55,20,0.12) 48%,
+    rgba(90,55,20,0.05) 56%,
+    transparent 62%
+  );
+  transform: rotate(12deg) scaleX(1.1);
+}
+.coffee-2 {
+  width: 46px; height: 42px;
+  top: 65px; right: 88px;
+  background: radial-gradient(ellipse at center,
+    transparent 28%,
+    rgba(90,55,20,0.06) 36%,
+    rgba(90,55,20,0.09) 43%,
+    transparent 52%
+  );
+  transform: rotate(-6deg);
+}
+
+/* Staple holes */
+.staple {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  left: 22px;
+}
+
+/* STAMPS */
+.stamp {
+  position: absolute;
+  font-family: 'Special Elite', cursive;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-style: solid;
+  padding: 4px 8px;
+  pointer-events: none;
+  z-index: 15;
+  line-height: 1.25;
+}
+.s-received {
+  top: 18px; left: 48px;
+  font-size: 10px;
+  color: rgba(26,79,160,0.65);
+  border-color: rgba(26,79,160,0.55);
+  border-width: 2px;
+  transform: rotate(-7deg);
+}
+.s-reviewed {
+  top: 50px; right: 168px;
+  font-size: 9px;
+  color: rgba(26,107,58,0.6);
+  border-color: rgba(26,107,58,0.5);
+  border-width: 2px;
+  transform: rotate(3deg);
+  text-align: center;
+}
+.s-confidential {
+  bottom: 90px; left: 48px;
+  font-size: 8px;
+  color: rgba(80,80,80,0.45);
+  border-color: rgba(80,80,80,0.38);
+  border-width: 1.5px;
+  transform: rotate(-2deg);
+}
+.s-shame {
+  top: 118px; right: 40px;
+  font-size: 15px;
+  color: rgba(139,0,0,0.55);
+  border-color: rgba(139,0,0,0.5);
+  border-width: 2.5px;
+  transform: rotate(-11deg);
+}
+.s-prior {
+  bottom: 170px; right: 40px;
+  font-size: 8px;
+  color: rgba(139,0,0,0.52);
+  border-color: rgba(139,0,0,0.45);
+  border-width: 1.5px;
+  transform: rotate(6deg);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* POST-IT */
+.postit {
+  position: absolute;
+  background: #fffb77;
+  padding: 10px 14px;
+  box-shadow: 2px 3px 8px rgba(0,0,0,0.16);
+  font-family: 'Caveat', cursive;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #222;
+  transform: rotate(2deg);
+  z-index: 20;
+  min-width: 170px;
+}
+.postit-hdr { font-size: 9px; font-family: 'Inter', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #888; margin-bottom: 4px; }
+
+/* WATERMARK */
+.wmark {
+  position: absolute;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 54px;
+  color: rgba(0,0,0,0.04);
+  transform: rotate(-28deg);
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+  top: 42%; left: -2%;
+}
+
+/* Content layer sits above decorations */
+.lc { position: relative; z-index: 5; }
+
+/* ── LETTER TYPOGRAPHY ─────────────── */
+.firm-hdr { text-align: center; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid #bbb; }
+.firm-name { font-size: 14pt; font-weight: bold; letter-spacing: 0.08em; }
+.firm-addr { font-size: 7.5pt; color: #555; margin-top: 3px; line-height: 1.5; }
+.firm-offices { font-size: 7pt; color: #888; margin-top: 2px; }
+.court-hdr { text-align: center; font-size: 8pt; color: #666; font-family: 'Inter', sans-serif; letter-spacing: 0.04em; margin-bottom: 14px; }
+.l-date { text-align: center; margin: 20px 0; font-size: 11pt; }
+.l-addr { margin-bottom: 14px; font-size: 10.5pt; }
+.l-re { margin-bottom: 13px; font-size: 10.5pt; }
+.l-sal { margin-bottom: 12px; font-size: 10.5pt; }
+.l-p { margin-bottom: 13px; font-size: 10.5pt; text-indent: 2em; position: relative; }
+.l-close { margin-top: 22px; font-size: 10.5pt; }
+.l-sig { font-style: italic; }
+
+/* HIGHLIGHTS */
+.hy { background: rgba(255,235,0,0.58); padding: 0 1px; }   /* yellow */
+.ho { background: rgba(255,180,0,0.3); padding: 0 1px; }    /* amber — used sparingly for "CHOICE" lines */
+.hg { background: rgba(26,107,58,0.1); padding: 0 1px; }    /* green opp counsel */
+
+/* INLINE NOTES */
+.nr { font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; color: #c0392b; vertical-align: super; font-style: normal; line-height: 1; }
+.nb { font-family: 'Caveat', cursive; font-size: 13px; color: #1a4fa0; vertical-align: super; font-style: normal; line-height: 1; }
+.np { font-family: 'Caveat', cursive; font-size: 13px; color: #555; vertical-align: super; font-style: normal; line-height: 1; }
+.ng { font-family: 'Caveat', cursive; font-size: 12px; color: #1a6b3a; vertical-align: super; font-style: normal; line-height: 1; }
+
+/* MARGIN NOTES */
+.mn {
+  position: absolute;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.3;
+  width: 155px;
+  pointer-events: none;
+  z-index: 18;
+}
+.mn-r { right: -175px; }
+.mn-l { left: -175px; text-align: right; }
+.mn.red { color: #c0392b; }
+.mn.blue { color: #1a4fa0; }
+.mn.pencil { color: #555; }
+.mn.green { color: #1a6b3a; }
+
+/* Circles / underlines */
+.circ {
+  border: 2px solid #c0392b;
+  border-radius: 50%;
+  padding: 0 3px;
+  display: inline;
+}
+.ul-r { border-bottom: 2px solid #c0392b; }
+.ul-b { border-bottom: 1.5px solid #1a4fa0; }
+.stk { text-decoration: line-through; text-decoration-color: #c0392b; text-decoration-thickness: 2px; }
+
+/* SCHEDULE NOTE */
+.sched-note {
+  margin-top: 36px;
+  padding: 18px 22px;
+  background: #fff5f5;
+  border: 1px solid rgba(192,57,43,0.2);
+  border-left: 4px solid #c0392b;
+}
+.sn-label { font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: #c0392b; font-family: 'Inter', sans-serif; font-weight: 600; margin-bottom: 7px; }
+.sn-body { font-size: 11.5px; line-height: 1.65; color: rgba(0,0,0,0.68); font-family: 'Inter', sans-serif; }
+.sn-body strong { color: #000; }
+
+/* FOOTER */
+footer {
+  background: #000;
+  color: rgba(255,255,255,0.22);
+  padding: 28px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ft-brand { font-size: 13px; color: rgba(255,255,255,0.6); }
+.ft-r { font-size: 10px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="../brand-assets/Kingsfield 3D Skull Header.jpg" alt="Kingsfield Lawfare" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <div class="top"><strong>Smart.</strong> Not Stupid.</div>
+      <div class="bot">Ted Underhill, Partner, Pierce &amp; Pierce</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">About</a></li>
+    <li><a href="#">Index</a></li>
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="h-eyebrow">Smart. Not Stupid.</div>
+    <div class="h-center">
+      <div class="dear-judge-wrap">
+        <span class="dear-judge">"Dear Chief<br>Judge"</span>
+        <div class="dear-judge-strike"></div>
+      </div>
+      <div class="h-desc">A Modest Revision of Sullivan &amp; Cromwell's Letter to the Court.</div>
+    </div>
+    <div class="h-foot">Kingsfield Lawfare &nbsp;·&nbsp; 2026</div>
+  </div>
+  <div class="hero-right">
+    <div class="h-right-eyebrow">Judicial &amp; Litigation Intelligence</div>
+    <div class="h-headline">JUDICIAL<br>&amp;&nbsp;LITIGATION<br>INTELLIGENCE</div>
+    <div class="h-subhead">Life is a game. The game has rules, judges and courts — hundreds of years of prestigious legal titans with critical issues debated.</div>
+    <div class="h-body">
+      Most people don't need a lawyer. They need clarity, leverage, and someone who knows how to think.<br><br>
+      We are not lawyers. <strong>We are Smart. Not Stupid.</strong>
+    </div>
+    <div class="h-stat">We cut your bills by up to 75%.</div>
+    <div class="cta-row">
+      <button class="btn btn-o">Our Work</button>
+      <button class="btn btn-s">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider">
+  <div class="dv-label">Exhibit A</div>
+  <div class="dv-line"></div>
+  <div class="dv-label">Sullivan &amp; Cromwell LLP · April 18, 2026 · In re Prince Global Holdings · A Close Reading</div>
+  <div class="dv-line"></div>
+  <div class="dv-label">↓ The Letter</div>
+</div>
+
+<!-- LETTER SECTION -->
+<div class="letter-section">
+  <div class="ls-header">
+    <div class="ls-title">A Modest Revision</div>
+    <div class="ls-sub">With annotations. Filed for the record. In the tradition of Lazlo Toth.</div>
+  </div>
+
+  <!-- ROUTING SLIP -->
+  <div class="routing">
+    <div class="routing-title">Internal Routing — Kingsfield Litigation Department</div>
+    <div class="routing-grid">
+      <div class="rc"><div class="rc-label">Received by</div><div class="rc-val">T. Underhill</div></div>
+      <div class="rc"><div class="rc-label">Date received</div><div class="rc-val">4/18/26</div></div>
+      <div class="rc"><div class="rc-label">File no.</div><div class="rc-val">Prince / 26-10769</div></div>
+      <div class="rc"><div class="rc-label">Opp. Counsel</div><div class="rc-val">✓ screenshotted</div></div>
+      <div class="rc"><div class="rc-label">Paralegal</div><div class="rc-val">J. Briggs 4/19</div></div>
+      <div class="rc"><div class="rc-label">Action</div><div class="rc-val">Frame. Immediately.</div></div>
+    </div>
+    <div class="routing-initials">TU</div>
+  </div>
+
+  <!-- DOCUMENT -->
+  <div class="letter-doc">
+
+    <!-- Paper decorations -->
+    <div class="fold"></div>
+    <div class="coffee coffee-1"></div>
+    <div class="coffee coffee-2"></div>
+    <div class="staple" style="top:16px;"></div>
+    <div class="staple" style="top:26px;"></div>
+    <div class="wmark">WANT TO WIN? HIRE KINGSFIELD.</div>
+
+    <!-- Stamps -->
+    <div class="stamp s-received">Received<br><span style="font-size:8px;">4/18/26 · 11:04 AM<br>Docketing Dept.</span></div>
+    <div class="stamp s-reviewed">Reviewed<br><span style="font-size:8px;">Litigation · 4/19<br>T.U. ✓</span></div>
+    <div class="stamp s-confidential">Attorney–Client Privilege · Work Product Doctrine</div>
+    <div class="stamp s-shame">Hall of Shame</div>
+    <div class="stamp s-prior">Prior Incident on File<br>NJ Workers' Comp<br>AI Sanctions · 2025</div>
+
+    <!-- Post-it -->
+    <div class="postit" style="top:195px; right:-16px;">
+      <div class="postit-hdr">From T.U.</div>
+      Read every word.<br>Then ask yourself<br><em>how</em> this was filed.
+    </div>
+
+    <div class="lc">
+
+      <!-- COURT HEADER -->
+      <div class="court-hdr">26-10769-mg &nbsp;·&nbsp; Doc 25 &nbsp;·&nbsp; Filed 04/18/26 &nbsp;·&nbsp; Entered 04/18/26 16:10:41 &nbsp;·&nbsp; Main Document &nbsp;·&nbsp; Pg 1 of 5</div>
+
+      <!-- FIRM HEADER -->
+      <div class="firm-hdr" style="position:relative;">
+        <div class="firm-name">SULLIVAN &amp; CROMWELL LLP</div>
+        <div class="firm-addr">125 BROAD STREET &nbsp;·&nbsp; NEW YORK, NEW YORK 10004-2498 &nbsp;·&nbsp; TEL: 1-212-558-4000 &nbsp;·&nbsp; FAX: 1-212-558-3588</div>
+        <div class="firm-offices">LOS ANGELES · PALO ALTO · WASHINGTON, D.C. · BRUSSELS · FRANKFURT · LONDON · PARIS · BEIJING · HONG KONG · TOKYO · MELBOURNE · SYDNEY</div>
+        <div style="position:absolute;bottom:-2px;right:0;font-family:'Caveat',cursive;font-size:12px;color:#555;transform:rotate(0.8deg);">14 offices. Hallucinations in court. Impressive range.</div>
+      </div>
+
+      <!-- DATE -->
+      <div class="l-date" style="position:relative;">
+        April 18, 2026
+        <span style="position:absolute;left:0;top:2px;font-family:'Caveat',cursive;font-size:12px;color:#1a4fa0;transform:rotate(-1.5deg);">→ filed April 9th. this is the 18th.</span>
+      </div>
+
+      <!-- ADDRESS -->
+      <div class="l-addr" style="position:relative;">
+        Via ECF<br><br>
+        Hon. Martin Glenn,<br>
+        U.S. Bankruptcy Court, S.D.N.Y.,<br>
+        One Bowling Green,<br>
+        New York, NY 10004-1408.
+        <div class="mn mn-r green" style="top:0;transform:rotate(1.5deg);">opp. counsel note:<br>screenshotted.<br>framed.<br>sent to the group chat.</div>
+      </div>
+
+      <!-- RE LINE -->
+      <div class="l-re">
+        Re:&nbsp;&nbsp;<u><em>In re Prince Global Holdings Limited, et al.</em>, No. 26-10769</u>
+        <span style="font-family:'Caveat',cursive;font-size:11px;color:#555;margin-left:8px;">[the Cambodian forced-labor crypto scam — for context]</span>
+      </div>
+
+      <!-- SALUTATION -->
+      <div class="l-sal">Dear Chief Judge Glenn:</div>
+
+      <!-- ── PARA 1 ── "I became aware Thursday evening" -->
+      <div class="l-p" style="position:relative;">
+        Sullivan &amp; Cromwell LLP (the "Firm") represents the Joint Provisional Liquidators (the "JPLs") in the above-referenced matter.
+        <span class="hy"> I became aware <em>Thursday evening</em></span><span class="nr"> ← NINE DAYS after filing. Someone else caught it.</span>
+        that the JPLs' <em>Emergency Motion for Entry of Orders Granting (I) Ex Parte Relief and (II) Provisional Relief, Pursuant to Section 1519 of the Bankruptcy Code</em> filed with the Court on April 9, 2026 (the "Motion") [D.I. 9] includes inaccurate citations and other errors, each of which is identified and corrected in Schedule A to this letter.
+        <div class="mn mn-r red" style="top:0;transform:rotate(2deg);">"became aware"<br>= Thursday evening<br>= Boies Schiller<br>told them first.</div>
+      </div>
+
+      <!-- ── PARA 2 ── THE HALLUCINATION PARAGRAPH -->
+      <div class="l-p" style="position:relative;">
+        The inaccuracies and errors in the Motion include
+        <span class="hy">artificial intelligence ("AI") "hallucinations."</span>
+        <span class="hy"> "Hallucinations" are instances in which artificial intelligence tools fabricate case citations, misquote authorities, or generate non-existent legal sources.</span><span class="nr">¹ </span>
+        <span class="hy">We deeply regret that this has occurred.</span><span class="np"> (do you, though)</span>
+        The Firm maintains
+        <span class="hy ul-r">comprehensive policies and training requirements</span>
+        governing the use of AI tools in legal work.
+        <span class="hy">These safeguards are designed to prevent exactly this situation.</span><span class="nr"> DESIGNED TO ≠ DID.</span>
+        <span class="ho">The Firm's policies on the use of AI were not followed</span>
+        in connection with the preparation of the Motion. In addition, the Firm has general policies and training requirements for the proper review of legal citations.
+        <span class="hy">Regrettably, this review process did not identify the inaccurate citations generated by AI, nor did it identify other errors that appear to have resulted in whole or in part from manual error.</span><span class="nr">²</span>
+
+        <div class="mn mn-l red" style="top:0;transform:rotate(-2deg);">¹ Good of them to define "hallucinations" for the federal judge. I'm sure he needed that.</div>
+        <div class="mn mn-r red" style="top:55%;transform:rotate(2.5deg);">² AI errors AND manual errors.<br><br>Two-for-one.<br>Comprehensive failure.</div>
+      </div>
+
+      <!-- ── PARA 3 ── NEW ERRORS FOUND (the CHOICE paragraph) -->
+      <div class="l-p" style="position:relative; border-left:3px solid rgba(192,57,43,0.35); padding-left:12px; margin-left:-15px;">
+        The Firm has
+        <span class="hy">undertaken immediate remedial measures, including but not limited to a full review</span>
+        of the circumstances leading to these errors, and a re-review of all filings in this matter, and we can confirm that the other filings do not include any AI-related errors.
+        <span class="ho">Our re-review did identify non-substantive and/or clerical errors in other filings in this matter</span><span class="nr">← !!!! FOUND MORE ERRORS. While fixing the first ones.</span>
+        (and <span class="circ">one citation that confuses Section 1517(d) and Rule 6004(h)</span><span class="nr">³</span>), which we do not believe to be the result of AI usage. These errors are also identified in Schedule A for the sake of completeness.
+
+        <div class="mn mn-r red" style="top:0;transform:rotate(1.5deg);">³ They confused<br>a STATUTE<br>with a RULE.<br><br>A STATUTE.<br>WITH A RULE.<br><br>$1,500/hr.</div>
+        <div class="mn mn-l pencil" style="top:65%;transform:rotate(-2.5deg);">So: fixing Problem A revealed Problems B, C, D, E.<br><br>Chef's kiss.</div>
+      </div>
+
+      <!-- ── PARA 4 ── "KEENLY AWARE" -->
+      <div class="l-p" style="position:relative;">
+        The Firm and I are
+        <span class="hy">keenly aware</span><span class="np"> (keenly)</span>
+        of our responsibility to ensure the accuracy of all submissions including under Local Bankruptcy Rule 9011-1(d), and
+        <span class="hy">I take responsibility for the failure to do so.</span><span class="nr"> Noted.</span>
+
+        <div class="mn mn-r pencil" style="top:0;transform:rotate(1deg);">"keenly aware"<br>is doing so<br>much work here</div>
+      </div>
+
+      <!-- ── PARA 5 ── MANDATORY TRAINING COMPLETED -->
+      <div class="l-p" style="position:relative;">
+        I want to assure the Court that the Firm's policies governing AI use are both clear and rigorous.
+        <span class="hy">Access to AI tools is conditioned on completion of mandatory training.</span>
+        Before any Firm lawyer is granted access to generative AI tools, the lawyer must complete
+        <span class="hy">two required training modules, completion of which is tracked and verified.</span><span class="nr">⬅ tracked ✓ · verified ✓ · remembered ✗</span>
+
+        <div class="mn mn-l blue" style="top:10px;transform:rotate(-2deg);">Two modules. Completed. Then immediately forgotten. Great tracking system.</div>
+      </div>
+
+      <!-- ── PARA 6 ── "TRUST NOTHING AND VERIFY EVERYTHING" ★★★ -->
+      <div class="l-p" style="position:relative; background:rgba(255,235,0,0.07); padding:4px 8px; margin:0 -8px;">
+        The training repeatedly emphasizes the risk of AI "hallucinations," including the fabrication of case citations, misrepresentation of authorities, and inaccurate quotations. It instructs lawyers to
+        <span class="hy circ">"trust nothing and verify everything"</span><span class="nr"> ★★★</span>
+        and makes clear that failure to independently verify AI-generated output constitutes a violation of Firm policy. The training also reviews the significant consequences of AI-related errors in various cases.<span class="np"> including, presumably, this attorney's own prior sanctions in NJ.</span>
+
+        <div class="mn mn-r red" style="top:5px;transform:rotate(-2deg);font-size:14px;">NARRATOR:<br><br>They trusted<br>everything and<br>verified nothing.</div>
+        <div class="mn mn-l red" style="top:55%;transform:rotate(3deg);">This attorney was<br>sanctioned for AI<br>hallucinations in<br>a <em>different case</em>.<br><br>2025. NJ.<br><br>McDonald's also<br>had "comprehensive<br>safety protocols"<br>for the coffee.</div>
+      </div>
+
+      <!-- ── PARA 7 ── THE OFFICE MANUAL -->
+      <div class="l-p" style="position:relative;">
+        These requirements are reinforced in the
+        <span class="hy">Firm's Office Manual for Lawyers, which provides that lawyers "must independently check all answers, case citations, and other information or work product received from an AI Program for both substantive and non-substantive accuracy."</span><span class="np"> (it's in the manual too)</span>
+        The policy further states that no communication may be sent to a court, regulator, client, or other external party without the exercise of appropriate professional judgment and oversight.
+
+        <div class="mn mn-r pencil" style="top:0;transform:rotate(2deg);">THEY HAVE<br>A MANUAL.<br><br>The manual<br>was apparently<br>decorative.</div>
+      </div>
+
+      <!-- ── PARA 8 ── NOTWITHSTANDING -->
+      <div class="l-p" style="position:relative;">
+        <span class="ho" style="font-weight:bold;">Notwithstanding these safeguards,</span><span class="nr"> ← THE LINE.</span>
+        <span class="ho">the Firm's protocols were not followed here.</span><span class="nr"> Understatement of 2026.</span>
+        The Firm is also evaluating whether
+        <span class="hy">further enhancements to its internal training and review processes are warranted.</span><span class="np"> (perhaps try reading the existing ones)</span>
+
+        <div class="mn mn-r red" style="top:0;transform:rotate(3.5deg);font-size:14px;">"Notwithstanding"<br>= we had every rule<br>and broke them all<br>anyway.<br><br>Bold strategy.</div>
+      </div>
+
+      <!-- ── PARA 9 ── BOIES / MCDONALD'S ★ -->
+      <div class="l-p" style="position:relative;">
+        We
+        <span class="hy">sincerely regret</span><span class="np"> (billing $1,500/hr to write "sincerely regret")</span>
+        the errors in the Motion and the burden they have imposed on the Court and the parties, and I apologize on behalf of our entire team. I also
+        <span class="ho ul-r">called Boies Schiller Flexner LLP on Friday to thank them</span><span class="nr">← CALLED THEM TO THANK THEM?</span>
+        for bringing this matter to our attention and to apologize directly to them as well. A corrected version of the Motion, together with a redline reflecting the revisions, is being filed later today.
+
+        <div class="mn mn-r red" style="top:0;transform:rotate(-2.5deg);font-size:13px;">Called Boies.<br>To THANK them.<br>For CATCHING you.<br><br>McDonald's also<br>thanked Mrs. Liebeck<br>for her "feedback"<br>on the coffee temp.<br><br>Same. Exact. Energy.</div>
+        <div class="mn mn-l green" style="top:60%;transform:rotate(2deg);">opp. counsel:<br>we have a record<br>of this phone call.<br>it will be framed.</div>
+      </div>
+
+      <!-- CLOSING -->
+      <div class="l-close">
+        Sincerely,<br><br><br>
+        <span class="l-sig">/s/ Andrew G. Dietderich</span><br>
+        Andrew G. Dietderich
+        <span style="font-family:'Caveat',cursive;font-size:12px;color:#555;margin-left:16px;display:inline-block;transform:rotate(-0.5deg);">prev. sanctioned for AI hallucinations, NJ Workers' Comp, 2025. see file.</span>
+      </div>
+
+      <!-- SCHEDULE A SUMMARY NOTE -->
+      <div class="sched-note">
+        <div class="sn-label">Editor's Note — Schedule A (Pages 3–5 of 5, not reproduced)</div>
+        <div class="sn-body">
+          Schedule A runs two additional pages cataloguing errors across <strong>five separate filings:</strong> Declaration of Andrew Chissick (¶¶ 20, 33, 48, 50, 53, 60, 65); Declaration of Paul Pretlove (¶¶ 9, 21, 25, 27, 39, 42, 45, 46); Verified Petition (¶ 28); Motion for Joint Administration (¶ 6); Motion for Recognition Hearing Order (¶¶ 6–7). Errors include fabricated citations, wrong reporters, wrong case numbers, misstated holdings. <strong>One verified error: the phrase "the The" — a word duplicated in the final text — survived the entire drafting and review process undetected.</strong> This is not a routine correction filing. This is a confession spanning five pleadings.
+        </div>
+      </div>
+
+      <!-- KINGSFIELD SIGN-OFF -->
+      <div style="margin-top:32px; padding-top:18px; border-top:1px solid rgba(0,0,0,0.1); text-align:center;">
+        <div style="font-family:'Caveat',cursive;font-size:19px;color:rgba(0,0,0,0.3);transform:rotate(-.4deg);display:inline-block;line-height:1.4;">
+          Want to win? Hire Kingsfield. &nbsp;·&nbsp; Zero hallucinated citations. &nbsp;·&nbsp; kingsfield.io
+        </div>
+      </div>
+
+    </div><!-- /.lc -->
+  </div><!-- /.letter-doc -->
+</div><!-- /.letter-section -->
+
+<footer>
+  <div class="ft-brand">Kingsfield Lawfare</div>
+  <div class="ft-r">2026</div>
+</footer>
+
+</body>
+</html>

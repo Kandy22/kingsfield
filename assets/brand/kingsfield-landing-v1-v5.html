@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingsfield — Five Landing Page Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700;800;900&family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; overflow-x: hidden; }
+
+  /* ============== TOP SWITCHER ============== */
+  .switcher {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: #0a0a0a; color: #fff;
+    padding: 10px 16px; z-index: 1000;
+    display: flex; gap: 8px; align-items: center;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    border-bottom: 1px solid #222;
+    overflow-x: auto;
+  }
+  .switcher .label { opacity: 0.6; white-space: nowrap; }
+  .switcher button {
+    background: transparent; border: 1px solid #333; color: #fff;
+    padding: 6px 10px; font-family: inherit; font-size: 11px;
+    cursor: pointer; white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .switcher button.active { background: #fff; color: #000; border-color: #fff; }
+  .switcher button:hover:not(.active) { border-color: #666; }
+  .switcher .featured { border-color: #c9a96e; color: #c9a96e; }
+  .switcher .featured.active { background: #c9a96e; color: #000; }
+
+  .page { display: none; padding-top: 44px; }
+  .page.active { display: block; }
+
+
+  /* ===========================================================
+     V5 — THE TYPOGRAPHIC POSITION  ★ NEW LEAD ★
+     Image 2 + Image 6 + V3 product proof.
+     Massive black sans on cream. Split wordmark. Live verification output.
+     The wedge is NOT "cheaper Harvey" — it's "we veto our own output."
+     =========================================================== */
+  .v5 { background: #efece4; color: #0a0a0a; font-family: 'Inter Tight', sans-serif; min-height: 100vh; }
+
+  .v5-nav {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    align-items: center; padding: 20px 40px;
+    border-bottom: 1px solid #0a0a0a;
+    font-size: 13px; font-weight: 500;
+  }
+  .v5-nav .left { display: flex; gap: 32px; }
+  .v5-nav .center { font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 22px; letter-spacing: -0.02em; }
+  .v5-nav .right { display: flex; gap: 16px; justify-content: flex-end; align-items: center; }
+  .v5-nav .right .login { cursor: pointer; }
+  .v5-nav .right .signup {
+    background: #0a0a0a; color: #efece4; padding: 10px 22px;
+    border-radius: 999px; font-weight: 600; cursor: pointer;
+  }
+  .v5-nav span { cursor: pointer; }
+
+  /* HERO — split with wordmark slab on the right */
+  .v5-hero {
+    display: grid; grid-template-columns: 1.4fr 1fr;
+    min-height: 78vh; border-bottom: 1px solid #0a0a0a;
+  }
+  .v5-hero-left {
+    padding: 80px 56px 60px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .v5-eyebrow {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #0a0a0a; opacity: 0.7; margin-bottom: 32px;
+  }
+  .v5-eyebrow .dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: #c0392b; margin-right: 10px; vertical-align: middle;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .v5-headline {
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(56px, 8vw, 124px);
+    line-height: 0.92; font-weight: 900; letter-spacing: -0.035em;
+    color: #0a0a0a;
+  }
+  .v5-headline .strike { text-decoration: line-through; text-decoration-thickness: 6px; color: #0a0a0a; opacity: 0.4; }
+  .v5-headline .red { color: #c0392b; }
+  .v5-deck {
+    margin-top: 36px; font-size: 21px; line-height: 1.45;
+    max-width: 540px; font-weight: 400; color: #2a2a2a;
+  }
+  .v5-cta-row { display: flex; gap: 14px; margin-top: 44px; align-items: center; flex-wrap: wrap; }
+  .v5-btn1 {
+    background: #0a0a0a; color: #efece4; padding: 16px 32px;
+    border-radius: 999px; font-weight: 600; font-size: 14px;
+    border: none; cursor: pointer;
+  }
+  .v5-btn2 {
+    background: transparent; color: #0a0a0a; padding: 16px 28px;
+    font-weight: 600; font-size: 14px; border: none; cursor: pointer;
+    text-decoration: underline; text-underline-offset: 4px;
+  }
+  .v5-hero-foot {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.6; padding-top: 32px;
+    border-top: 1px solid rgba(10,10,10,0.15);
+  }
+
+  .v5-hero-right {
+    background: #0a0a0a; color: #efece4;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 40px;
+    position: relative; overflow: hidden;
+  }
+  .v5-wordmark {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: clamp(60px, 10vw, 140px);
+    line-height: 0.82; letter-spacing: -0.05em;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    align-self: flex-end; margin-right: -8px;
+    white-space: nowrap;
+  }
+  .v5-corner {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: 22px; letter-spacing: -0.01em;
+  }
+  .v5-corner .sub {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    opacity: 0.6; font-weight: 400; margin-top: 6px;
+  }
+  .v5-power {
+    position: absolute; bottom: 40px; left: 40px;
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: 26px; letter-spacing: -0.01em;
+  }
+
+  /* PROOF — the verification output (the actual differentiator) */
+  .v5-proof {
+    padding: 100px 56px;
+    border-bottom: 1px solid #0a0a0a;
+  }
+  .v5-proof-head {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    margin-bottom: 56px;
+  }
+  .v5-proof-head h2 {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: clamp(40px, 5.5vw, 78px); line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .v5-proof-head h2 em { font-style: italic; font-weight: 400; }
+  .v5-proof-head .lede {
+    font-size: 19px; line-height: 1.55; align-self: end;
+    max-width: 480px;
+  }
+  .v5-terminal {
+    background: #0a0a0a; color: #efece4; padding: 36px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+    line-height: 1.9;
+    border: 1px solid #0a0a0a;
+  }
+  .v5-terminal .head {
+    display: flex; justify-content: space-between;
+    padding-bottom: 16px; margin-bottom: 16px;
+    border-bottom: 1px solid #2a2a2a; opacity: 0.6; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .v5-terminal .ok { color: #7dff9d; font-weight: 700; }
+  .v5-terminal .warn { color: #ffd96b; font-weight: 700; }
+  .v5-terminal .fail { color: #ff6b6b; font-weight: 700; }
+  .v5-terminal .arrow { color: #c9a96e; margin-right: 14px; }
+  .v5-terminal .dim { opacity: 0.55; }
+  .v5-terminal .verdict {
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid #2a2a2a;
+    font-size: 16px; font-weight: 700;
+  }
+
+  /* THE THREE-LAYER STACK */
+  .v5-stack {
+    padding: 100px 56px; background: #0a0a0a; color: #efece4;
+  }
+  .v5-stack h2 {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: clamp(40px, 5.5vw, 78px); line-height: 0.95;
+    letter-spacing: -0.03em; max-width: 900px; margin-bottom: 60px;
+  }
+  .v5-stack h2 em { font-style: italic; font-weight: 400; color: #c9a96e; }
+  .v5-stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #2a2a2a; border: 1px solid #2a2a2a; }
+  .v5-stack-grid > div { background: #0a0a0a; padding: 44px 32px; }
+  .v5-layer-num {
+    font-family: 'Archivo', sans-serif; font-weight: 900; font-size: 96px;
+    line-height: 0.85; color: #c9a96e; margin-bottom: 32px; letter-spacing: -0.04em;
+  }
+  .v5-layer-tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    opacity: 0.6; margin-bottom: 8px;
+  }
+  .v5-layer-name {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: 28px; letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .v5-layer-body { font-size: 15px; line-height: 1.6; opacity: 0.85; }
+
+  /* THE BIG SLAB — Smart. Not Stupid. */
+  .v5-slab {
+    padding: 120px 56px; background: #efece4;
+    border-bottom: 1px solid #0a0a0a; border-top: 1px solid #0a0a0a;
+  }
+  .v5-slab-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px; }
+  .v5-slab h2 {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: clamp(68px, 11vw, 180px);
+    line-height: 0.88; letter-spacing: -0.045em;
+  }
+  .v5-slab h2 .it { font-style: italic; font-weight: 400; }
+  .v5-slab .right { align-self: end; }
+  .v5-slab .right p {
+    font-size: 19px; line-height: 1.55; margin-bottom: 18px;
+  }
+  .v5-slab .right p strong { font-weight: 700; }
+
+  /* THE COMPARE — them vs us, brutally direct */
+  .v5-compare {
+    padding: 100px 56px; background: #0a0a0a; color: #efece4;
+  }
+  .v5-compare h2 {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: clamp(40px, 5.5vw, 78px); line-height: 0.95;
+    letter-spacing: -0.03em; margin-bottom: 60px; max-width: 900px;
+  }
+  .v5-compare-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 15px;
+  }
+  .v5-compare-table th, .v5-compare-table td {
+    text-align: left; padding: 20px 24px;
+    border-bottom: 1px solid #2a2a2a;
+    vertical-align: top;
+  }
+  .v5-compare-table th {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    opacity: 0.6; font-weight: 400;
+  }
+  .v5-compare-table th.us { color: #c9a96e; opacity: 1; font-weight: 700; }
+  .v5-compare-table td:first-child {
+    font-family: 'Archivo', sans-serif; font-weight: 700;
+    font-size: 18px;
+  }
+  .v5-compare-table td.them { opacity: 0.6; }
+  .v5-compare-table td.us { font-weight: 600; color: #efece4; }
+
+  /* FINAL — Power to the People */
+  .v5-final {
+    padding: 140px 56px 80px;
+    background: #efece4;
+    text-align: center;
+  }
+  .v5-final h2 {
+    font-family: 'Archivo', sans-serif; font-weight: 900;
+    font-size: clamp(64px, 12vw, 200px);
+    line-height: 0.88; letter-spacing: -0.05em;
+    margin-bottom: 48px;
+  }
+  .v5-final h2 .line2 { font-style: italic; font-weight: 400; }
+  .v5-final .ctas { display: inline-flex; gap: 14px; }
+  .v5-final-btn1 {
+    background: #0a0a0a; color: #efece4; padding: 20px 40px;
+    border-radius: 999px; font-weight: 600; font-size: 15px;
+    border: none; cursor: pointer;
+  }
+  .v5-final-btn2 {
+    background: transparent; color: #0a0a0a; padding: 20px 36px;
+    border: 1px solid #0a0a0a; border-radius: 999px;
+    font-weight: 600; font-size: 15px; cursor: pointer;
+  }
+  .v5-foot {
+    padding: 32px 56px; font-size: 12px; opacity: 0.55;
+    font-family: 'IBM Plex Mono', monospace; line-height: 1.7;
+    border-top: 1px solid rgba(10,10,10,0.15);
+    text-align: center; max-width: 900px; margin: 0 auto;
+  }
+
+
+  /* ===========================================================
+     V1 — THE COURTROOM (alternate)
+     =========================================================== */
+  .v1 { background: #0e0e0e; color: #ededed; font-family: 'Cormorant Garamond', serif; min-height: 100vh; }
+  .v1-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 48px; border-bottom: 1px solid #2a2a2a;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .v1-nav .brand { font-family: 'Playfair Display', serif; font-size: 22px; letter-spacing: 0; text-transform: none; font-weight: 700; }
+  .v1-nav .links { display: flex; gap: 28px; opacity: 0.7; }
+  .v1-nav .cta { border: 1px solid #ededed; padding: 8px 16px; cursor: pointer; }
+
+  .v1-hero {
+    padding: 80px 48px 40px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .v1-eyebrow {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.55;
+    margin-bottom: 28px;
+  }
+  .v1-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(56px, 9vw, 132px);
+    line-height: 0.92; font-weight: 700; letter-spacing: -0.02em;
+  }
+  .v1-headline em { font-style: italic; font-weight: 400; color: #c9a96e; }
+  .v1-subhead { font-size: 22px; line-height: 1.5; max-width: 460px; margin-top: 32px; opacity: 0.82; font-style: italic; }
+  .v1-stat { border-left: 1px solid #2a2a2a; padding-left: 32px; display: flex; flex-direction: column; justify-content: center; }
+  .v1-stat-num { font-family: 'Playfair Display', serif; font-size: 96px; font-weight: 900; line-height: 1; color: #c9a96e; }
+  .v1-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 12px; opacity: 0.7; }
+  .v1-stat-detail { margin-top: 24px; font-size: 18px; line-height: 1.5; opacity: 0.75; max-width: 380px; }
+
+  .v1-final { padding: 120px 48px; text-align: center; border-top: 1px solid #2a2a2a; }
+  .v1-final h2 { font-family: 'Playfair Display', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1; font-weight: 400; font-style: italic; margin-bottom: 40px; }
+  .v1-final h2 strong { font-style: normal; font-weight: 900; }
+  .v1-btn-primary { background: #c9a96e; color: #0e0e0e; padding: 18px 36px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; border: none; }
+  .v1-btn-secondary { background: transparent; color: #ededed; padding: 18px 36px; border: 1px solid #ededed; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; }
+
+
+  /* ===========================================================
+     V2 — THE PHARMA PARODY
+     =========================================================== */
+  .v2 { background: #f4f1e8; color: #1a1a1a; font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  .v2-band { background: #d4453a; color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 10px 24px; text-align: center; }
+  .v2-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; background: #fff; }
+  .v2-nav .brand { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+  .v2-nav .links { display: flex; gap: 32px; font-size: 14px; }
+  .v2-nav .cta { background: #1a1a1a; color: #fff; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+  .v2-hero { padding: 90px 48px 80px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; }
+  .v2-headline { font-family: 'Playfair Display', serif; font-size: clamp(52px, 7.5vw, 108px); line-height: 0.98; letter-spacing: -0.025em; font-weight: 900; }
+  .v2-headline span { background: #d4453a; color: #fff; padding: 0 12px; }
+  .v2-sub { font-size: 20px; line-height: 1.55; margin-top: 28px; max-width: 520px; }
+  .v2-pill-row { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+  .v2-pill { border: 1px solid #1a1a1a; padding: 10px 18px; font-size: 13px; font-weight: 500; border-radius: 999px; }
+
+  .v2-ad-mock { background: #fff; border: 2px solid #1a1a1a; padding: 32px; position: relative; box-shadow: 8px 8px 0 #1a1a1a; }
+  .v2-ad-mock .rx { font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 700; color: #d4453a; line-height: 1; }
+  .v2-ad-mock .product { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 900; margin: 12px 0 4px; line-height: 1; }
+  .v2-ad-mock .generic { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.15em; opacity: 0.6; text-transform: uppercase; }
+  .v2-ad-mock .for { margin: 24px 0 12px; font-size: 14px; font-weight: 700; }
+  .v2-ad-mock ul { list-style: none; }
+  .v2-ad-mock li { font-size: 14px; padding: 6px 0; border-bottom: 1px dotted #ccc; }
+  .v2-ad-mock .warn { margin-top: 24px; padding-top: 16px; border-top: 1px solid #1a1a1a; font-size: 11px; font-family: 'IBM Plex Mono', monospace; line-height: 1.4; opacity: 0.7; }
+
+  .v2-section { padding: 100px 48px; background: #fff; }
+  .v2-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(42px, 6vw, 78px); line-height: 1.02; font-weight: 900; margin-bottom: 16px; max-width: 900px; }
+  .v2-section h2 em { color: #d4453a; font-style: italic; }
+  .v2-section .lead { font-size: 22px; line-height: 1.55; max-width: 680px; margin-bottom: 60px; opacity: 0.8; }
+
+  .v2-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1100px; }
+  .v2-card { padding: 36px; border: 2px solid #1a1a1a; }
+  .v2-card.them { background: #f4f1e8; }
+  .v2-card.us { background: #1a1a1a; color: #fff; }
+  .v2-card h4 { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.7; margin-bottom: 18px; }
+  .v2-card .price { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 24px; }
+  .v2-card ul { list-style: none; }
+  .v2-card li { padding: 10px 0; border-bottom: 1px solid currentColor; font-size: 16px; opacity: 0.85; }
+  .v2-card.them li::before { content: "× "; color: #d4453a; font-weight: 900; }
+  .v2-card.us li::before { content: "✓ "; color: #c9a96e; font-weight: 900; }
+
+  .v2-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); padding: 80px 48px; background: #1a1a1a; color: #fff; gap: 1px; }
+  .v2-stat { padding: 24px; }
+  .v2-stat .n { font-family: 'Playfair Display', serif; font-size: 72px; font-weight: 900; color: #c9a96e; line-height: 1; }
+  .v2-stat .l { margin-top: 12px; font-size: 14px; opacity: 0.7; line-height: 1.4; }
+
+  .v2-final { padding: 120px 48px; text-align: center; background: #d4453a; color: #fff; }
+  .v2-final h2 { font-family: 'Playfair Display', serif; font-size: clamp(48px, 8vw, 120px); line-height: 1; font-weight: 900; margin-bottom: 36px; }
+  .v2-final .cta { background: #fff; color: #d4453a; padding: 22px 48px; font-weight: 900; font-size: 16px; letter-spacing: 0.05em; text-transform: uppercase; display: inline-block; cursor: pointer; }
+
+
+  /* ===========================================================
+     V3 — THE TERMINAL
+     =========================================================== */
+  .v3 { background: #0a0e0a; color: #d4e0d4; font-family: 'IBM Plex Mono', monospace; min-height: 100vh; font-size: 14px; }
+  .v3::before { content: ""; position: fixed; inset: 44px 0 0 0; pointer-events: none; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,100,0.015) 2px, rgba(0,255,100,0.015) 3px); z-index: 1; }
+  .v3-shell { position: relative; z-index: 2; padding: 0 32px; max-width: 1200px; margin: 0 auto; }
+  .v3-titlebar { border-bottom: 1px solid #1f3a1f; padding: 16px 0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  .v3-titlebar .brand { color: #7dff9d; font-weight: 700; }
+  .v3-titlebar .meta { opacity: 0.5; }
+  .v3-titlebar .login { color: #7dff9d; cursor: pointer; }
+
+  .v3-prompt { padding: 60px 0 20px; font-size: 13px; opacity: 0.55; }
+  .v3-prompt span { color: #7dff9d; }
+  .v3-hero { padding: 0 0 60px; }
+  .v3-hero h1 { font-family: 'Space Mono', monospace; font-size: clamp(42px, 6.5vw, 96px); line-height: 1; font-weight: 700; letter-spacing: -0.02em; color: #f0fff0; margin-bottom: 24px; }
+  .v3-hero h1 .accent { color: #7dff9d; }
+  .v3-hero h1 .blink::after { content: "_"; animation: blink 1s steps(2) infinite; color: #7dff9d; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .v3-hero .desc { font-size: 16px; line-height: 1.6; max-width: 680px; margin-top: 20px; opacity: 0.85; }
+
+  .v3-output { background: #061006; border: 1px solid #1f3a1f; padding: 28px; margin: 40px 0; }
+  .v3-output .line { padding: 4px 0; }
+  .v3-output .line .arrow { color: #7dff9d; margin-right: 12px; }
+  .v3-output .ok { color: #7dff9d; }
+  .v3-output .warn { color: #ffd96b; }
+  .v3-output .fail { color: #ff6b6b; }
+  .v3-output .dim { opacity: 0.5; }
+
+  .v3-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #1f3a1f; margin: 60px 0; border: 1px solid #1f3a1f; }
+  .v3-col { background: #0a0e0a; padding: 32px; }
+  .v3-col .kbd { display: inline-block; background: #1f3a1f; padding: 2px 8px; color: #7dff9d; font-size: 11px; margin-bottom: 16px; }
+  .v3-col h3 { font-size: 18px; color: #f0fff0; margin-bottom: 12px; font-weight: 700; }
+  .v3-col p { font-size: 13px; opacity: 0.75; line-height: 1.6; }
+
+  .v3-compare { margin: 80px 0; border: 1px solid #1f3a1f; padding: 32px; }
+  .v3-compare table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .v3-compare th, .v3-compare td { text-align: left; padding: 12px 16px; border-bottom: 1px solid #1f3a1f; }
+  .v3-compare th { color: #7dff9d; font-weight: 700; }
+  .v3-compare tr:last-child td { border-bottom: none; }
+  .v3-compare td.them { color: #ff8a8a; }
+  .v3-compare td.us { color: #7dff9d; }
+
+  .v3-final { border: 1px solid #7dff9d; padding: 48px; margin: 60px 0; text-align: center; background: rgba(125, 255, 157, 0.04); }
+  .v3-final h2 { font-family: 'Space Mono', monospace; font-size: 36px; color: #f0fff0; margin-bottom: 16px; letter-spacing: -0.02em; }
+  .v3-final p { opacity: 0.75; margin-bottom: 32px; }
+  .v3-final .cmd { display: inline-block; background: #0a0e0a; border: 1px solid #7dff9d; padding: 16px 32px; color: #7dff9d; font-size: 14px; cursor: pointer; }
+  .v3-foot { padding: 32px 0; border-top: 1px solid #1f3a1f; font-size: 11px; opacity: 0.5; line-height: 1.6; }
+
+
+  /* ===========================================================
+     V4 — THE GENTLEMAN'S MAGAZINE (alternate)
+     =========================================================== */
+  .v4 { background: #f1ece0; color: #1a1410; font-family: 'Cormorant Garamond', serif; min-height: 100vh; }
+  .v4-masthead { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 20px 56px; border-bottom: 2px solid #1a1410; font-family: 'Instrument Serif', serif; }
+  .v4-masthead .left { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.7; }
+  .v4-masthead .brand { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: -0.01em; }
+  .v4-masthead .right { text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.7; }
+  .v4-masthead .right .cta { margin-left: 16px; border-bottom: 1px solid #1a1410; padding-bottom: 2px; cursor: pointer; }
+
+  .v4-cover { padding: 60px 56px 80px; display: grid; grid-template-columns: 5fr 4fr; gap: 64px; border-bottom: 1px solid #1a1410; }
+  .v4-issue { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.65; margin-bottom: 32px; }
+  .v4-headline { font-family: 'Playfair Display', serif; font-size: clamp(60px, 8.5vw, 140px); line-height: 0.9; font-weight: 900; letter-spacing: -0.03em; }
+  .v4-headline em { font-style: italic; font-weight: 400; color: #8b2c1a; }
+  .v4-deck { margin-top: 32px; font-style: italic; font-size: 26px; line-height: 1.35; max-width: 540px; font-weight: 500; }
+  .v4-byline { margin-top: 40px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.6; padding-top: 24px; border-top: 1px solid #1a1410; max-width: 540px; }
+
+  .v4-cover-aside { border-left: 1px solid #1a1410; padding-left: 40px; display: flex; flex-direction: column; justify-content: space-between; }
+  .v4-aside-block { margin-bottom: 36px; }
+  .v4-aside-block .label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #8b2c1a; margin-bottom: 8px; }
+  .v4-aside-block .text { font-family: 'Playfair Display', serif; font-size: 22px; line-height: 1.3; font-weight: 500; }
+  .v4-aside-block .text em { font-style: italic; color: #8b2c1a; }
+
+
+  /* MOBILE */
+  @media (max-width: 760px) {
+    .v5-hero, .v5-proof-head, .v5-slab-grid, .v1-hero, .v2-hero, .v4-cover { grid-template-columns: 1fr !important; gap: 36px !important; }
+    .v5-stack-grid, .v3-cols, .v2-stats-row { grid-template-columns: 1fr 1fr !important; }
+    .v5-hero-right { min-height: 240px; padding: 24px; }
+    .v5-wordmark { writing-mode: horizontal-tb; transform: none; margin-right: 0; font-size: clamp(48px, 16vw, 80px); }
+    .v5-nav, .v2-nav, .v4-masthead { padding-left: 18px; padding-right: 18px; }
+    .v5-nav { grid-template-columns: 1fr auto; }
+    .v5-nav .left { display: none; }
+    .v5-hero-left, .v5-proof, .v5-stack, .v5-slab, .v5-compare, .v5-final { padding-left: 20px; padding-right: 20px; }
+    .v5-final { padding-top: 80px; }
+    .v3-shell { padding: 0 16px; }
+    .v5-compare-table td, .v5-compare-table th { padding: 14px 8px; font-size: 13px; }
+    .v5-compare-table td:first-child { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="switcher" role="navigation" aria-label="Landing page version switcher">
+  <span class="label">VERSION:</span>
+  <button class="featured active" data-page="v5" aria-pressed="true">★ V5 — Position</button>
+  <button data-page="v2" aria-pressed="false">V2 — Pharma</button>
+  <button data-page="v3" aria-pressed="false">V3 — Terminal</button>
+  <button data-page="v1" aria-pressed="false">V1 — Courtroom (alt)</button>
+  <button data-page="v4" aria-pressed="false">V4 — Magazine (alt)</button>
+</nav>
+
+
+<!-- ================= V5 : THE POSITION (NEW LEAD) ================= -->
+<section class="page v5 active" id="v5" aria-label="Version 5 The Position">
+  <nav class="v5-nav">
+    <div class="left">
+      <span>Product</span><span>Council</span><span>Pricing</span><span>Manifesto</span>
+    </div>
+    <div class="center">Kingsfield</div>
+    <div class="right">
+      <span class="login">Log in</span>
+      <span class="signup">Sign up</span>
+    </div>
+  </nav>
+
+  <section class="v5-hero">
+    <div class="v5-hero-left">
+      <div>
+        <div class="v5-eyebrow"><span class="dot"></span>Live · Skeptic on · 4 gates armed</div>
+        <h1 class="v5-headline">
+          The only legal AI that <span class="red">vetoes</span> its own work <span class="strike">before you do</span>.
+        </h1>
+        <p class="v5-deck">Mike forked Harvey. We forked Mike — and then added the layer they refused to ship. Nine adversarial reviewers. Four authority gates. Zero hallucinated cites. Bring your own keys. Self-host. Own it.</p>
+        <div class="v5-cta-row">
+          <button class="v5-btn1">Start free →</button>
+          <button class="v5-btn2">See it veto a brief</button>
+        </div>
+      </div>
+      <div class="v5-hero-foot">Smart. Not Stupid. &nbsp;·&nbsp; Open Source &nbsp;·&nbsp; AGPL v3</div>
+    </div>
+    <div class="v5-hero-right">
+      <div class="v5-corner">K<div class="sub">Est. MMXXVI</div></div>
+      <div class="v5-wordmark">KINGSFIELD</div>
+      <div class="v5-power">Power to the People.</div>
+    </div>
+  </section>
+
+  <section class="v5-proof">
+    <div class="v5-proof-head">
+      <h2>Harvey writes confidently. <em>We write correctly.</em></h2>
+      <p class="lede">Every citation runs four gates before it ever reaches your screen. The Skeptic has hard veto. This is one real verification pass — exactly what you see in-product.</p>
+    </div>
+    <div class="v5-terminal" aria-label="Live verification output sample">
+      <div class="head">
+        <span>verification.log</span><span>matter: smith-v-acme · brief: msj-opp.draft</span>
+      </div>
+      <div><span class="arrow">→</span>Gate 1 · Citation extraction: 14 cites identified</div>
+      <div><span class="arrow">→</span>Gate 2 · Authority check (CourtListener): <span class="ok">14/14 EXIST</span></div>
+      <div><span class="arrow">→</span>Gate 3 · Jurisdiction match (CA Civil): <span class="ok">13 OK</span> · <span class="warn">1 OUT-OF-DISTRICT</span></div>
+      <div><span class="arrow">→</span>Gate 4 · Proposition fit: <span class="ok">12 OK</span> · <span class="fail">1 MISCITED · 1 OVERREACH</span></div>
+      <div class="dim">&nbsp;</div>
+      <div><span class="arrow">→</span>Cross-matter check: Expert Foster appeared in 3 prior matters <span class="warn">[REVIEW]</span></div>
+      <div><span class="arrow">→</span>Privilege scan: 2 items redacted <span class="ok">[ACTION TAKEN]</span></div>
+      <div class="dim">&nbsp;</div>
+      <div class="verdict">Skeptic verdict: <span class="fail">RED · 2 cites blocked</span> &nbsp;·&nbsp; Brief returned to Crew for revision.</div>
+    </div>
+  </section>
+
+  <section class="v5-stack">
+    <h2>Three layers. <em>One coherent answer.</em></h2>
+    <div class="v5-stack-grid">
+      <div>
+        <div class="v5-layer-num">01</div>
+        <div class="v5-layer-tag">The Crew · does the work</div>
+        <div class="v5-layer-name">Four specialists.</div>
+        <div class="v5-layer-body">Researcher, contract analyst, strategist, team lead. Run silently behind the assistant. You see one response. It was built by four.</div>
+      </div>
+      <div>
+        <div class="v5-layer-num">02</div>
+        <div class="v5-layer-tag">The Council · vetoes the work</div>
+        <div class="v5-layer-name">Nine adversaries.</div>
+        <div class="v5-layer-body">Skeptic, Judge, Opposing Counsel, Procedural Clerk, Evidence Master, Witness Coach, Translator, Historian, Strategist. Skeptic has hard veto. Always on.</div>
+      </div>
+      <div>
+        <div class="v5-layer-num">03</div>
+        <div class="v5-layer-tag">The LLM Council · decides the call</div>
+        <div class="v5-layer-name">Five advisors.</div>
+        <div class="v5-layer-body">Karpathy-style decision council across Claude + Gemini. For the questions where being wrong is expensive. Convene on demand.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="v5-slab">
+    <div class="v5-slab-grid">
+      <h2>Smart.<br>Not <span class="it">Stupid.</span></h2>
+      <div class="right">
+        <p><strong>The system runs on confusion, intimidation, and billing by the hour.</strong> That is the business model. We are not part of it.</p>
+        <p>We don't pretend to be lawyers. We don't hide behind credentials. We don't sell jargon to justify four-figure invoices.</p>
+        <p>We break things down. We research, strategize, pressure-test. We show you what is actually happening — and what to do next.</p>
+        <p><strong>We are not lawyers.</strong> We are advisors, strategists, researchers, operators — and relentless problem-solvers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="v5-compare">
+    <h2>The receipts.</h2>
+    <table class="v5-compare-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Harvey · Legora</th>
+          <th>Mike (OSS)</th>
+          <th class="us">Kingsfield</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Per-seat license</td><td class="them">$800–$1,200/mo</td><td class="them">$0</td><td class="us">$0 — BYO keys</td></tr>
+        <tr><td>Data residency</td><td class="them">their servers</td><td class="them">your servers</td><td class="us">your servers</td></tr>
+        <tr><td>Adversarial verification layer</td><td class="them">no</td><td class="them">no</td><td class="us">9 reviewers, hard veto</td></tr>
+        <tr><td>Four-gate citation pipeline</td><td class="them">no</td><td class="them">no</td><td class="us">CourtListener + eCFR + Congress</td></tr>
+        <tr><td>Cross-matter pattern matching</td><td class="them">no</td><td class="them">no</td><td class="us">yes — the Vault</td></tr>
+        <tr><td>LLM decision council</td><td class="them">no</td><td class="them">no</td><td class="us">5 advisors, mixed providers</td></tr>
+        <tr><td>Hallucinated cite rate</td><td class="them">~3–8%</td><td class="them">unverified</td><td class="us">0% — blocked at gate</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="v5-final">
+    <h2>Know the rules.<br><span class="line2">Use them.</span></h2>
+    <div class="ctas">
+      <button class="v5-final-btn1">Start free →</button>
+      <button class="v5-final-btn2">Read the Manifesto</button>
+    </div>
+  </section>
+
+  <p class="v5-foot">We are not lawyers · This is not legal advice · No attorney-client relationship is created · Open source under AGPL v3 · Kingsfield · MMXXVI</p>
+</section>
+
+
+<!-- ================= V1 : COURTROOM (alt) ================= -->
+<section class="page v1" id="v1" aria-label="Version 1 The Courtroom">
+  <nav class="v1-nav">
+    <div class="brand">Kingsfield</div>
+    <div class="links"><span>Product</span><span>Council</span><span>Pricing</span><span>Manifesto</span></div>
+    <button class="cta">Get Access</button>
+  </nav>
+  <section class="v1-hero">
+    <div>
+      <div class="v1-eyebrow">Vol. 01 / Issue 01 — Legal Intelligence</div>
+      <h1 class="v1-headline">First, kill all the <em>billable hours.</em></h1>
+      <p class="v1-subhead">"He who controls the past controls the future. He who controls the present controls the past." — Kingsfield is your operator on both.</p>
+    </div>
+    <div class="v1-stat">
+      <div class="v1-stat-num">92%</div>
+      <div class="v1-stat-label">of civil legal problems go unrepresented</div>
+      <p class="v1-stat-detail">Low-income Americans receive no — or not enough — legal help for 92% of the problems that substantially affect their lives. We did not build Kingsfield for the other 8%.</p>
+    </div>
+  </section>
+  <section class="v1-final">
+    <h2>You don't need a lawyer.<br><strong>You need a plan.</strong></h2>
+    <div style="display:inline-flex; gap:16px;">
+      <button class="v1-btn-primary">Start Free</button>
+      <button class="v1-btn-secondary">Read the Manifesto</button>
+    </div>
+  </section>
+</section>
+
+
+<!-- ================= V2 : PHARMA PARODY ================= -->
+<section class="page v2" id="v2" aria-label="Version 2 Pharma Parody">
+  <div class="v2-band">⚠ Side effects of legal clarity may include: reduced anxiety, smaller invoices, the unsettling feeling of being in control</div>
+  <nav class="v2-nav">
+    <div class="brand">Kingsfield</div>
+    <div class="links"><span>How it works</span><span>For litigators</span><span>For pro se</span><span>Council</span></div>
+    <button class="cta">Ask your lawyer →</button>
+  </nav>
+  <section class="v2-hero">
+    <div>
+      <h1 class="v2-headline">Ask your lawyer about <span>Kingsfield.</span></h1>
+      <p class="v2-sub">A legal intelligence platform for people who think a $1,200 invoice should come with a result, not jargon. Side effects include reduced billable hours, increased outcomes, and a vague sense that the system was rigged the whole time.</p>
+      <div class="v2-pill-row">
+        <span class="v2-pill">FDA-approved confidence</span>
+        <span class="v2-pill">Non-habit-forming</span>
+        <span class="v2-pill">No fee-sharing</span>
+        <span class="v2-pill">May cause winning</span>
+      </div>
+    </div>
+    <div class="v2-ad-mock">
+      <div class="rx">℞</div>
+      <div class="product">Kingsfield</div>
+      <div class="generic">(legal-intelligence)</div>
+      <div class="for">Indicated for:</div>
+      <ul>
+        <li>Pro se litigants in family, civil, or HOA disputes</li>
+        <li>Solo and small-firm litigators drowning in discovery</li>
+        <li>In-house counsel who already pay too much for Harvey</li>
+        <li>Anyone who has ever read an invoice and laughed</li>
+      </ul>
+      <p class="warn">Warning: Do not use Kingsfield if you are billing by the hour and would prefer the case last another year. Consult your common sense before use.</p>
+    </div>
+  </section>
+  <section class="v2-section">
+    <h2>Harvey costs <em>$1,200 a seat.</em><br>We cost about a coffee.</h2>
+    <p class="lead">The legal AI gold rush priced clarity at "luxury subscription." We think the price of knowing the rules should be lower than the price of breaking them.</p>
+    <div class="v2-compare">
+      <div class="v2-card them">
+        <h4>Harvey · Legora · Westlaw</h4>
+        <div class="price">$1,200/mo</div>
+        <ul>
+          <li>Per seat. Per lawyer. Per year. Forever.</li>
+          <li>You upload your data to their servers</li>
+          <li>Closed source. Vendor lock-in.</li>
+          <li>Built for BigLaw. Priced for BigLaw.</li>
+          <li>Chatbot with the agent features turned off</li>
+        </ul>
+      </div>
+      <div class="v2-card us">
+        <h4>Kingsfield</h4>
+        <div class="price">~$50/mo</div>
+        <ul>
+          <li>Open source. Self-hostable. Yours.</li>
+          <li>Data never leaves your machine</li>
+          <li>Bring your own Claude or Gemini key</li>
+          <li>Crew + Council + cross-matter Vault</li>
+          <li>Every citation verified through four gates</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="v2-stats-row">
+    <div class="v2-stat"><div class="n">92%</div><div class="l">of civil legal problems unrepresented</div></div>
+    <div class="v2-stat"><div class="n">$437B</div><div class="l">spent annually on U.S. legal services</div></div>
+    <div class="v2-stat"><div class="n">10–80h</div><div class="l">to draft a brief the old way</div></div>
+    <div class="v2-stat"><div class="n">20min</div><div class="l">the Kingsfield way, with citations</div></div>
+  </section>
+  <section class="v2-final">
+    <h2>Smart. Not Stupid.</h2>
+    <div class="cta">Start free →</div>
+  </section>
+</section>
+
+
+<!-- ================= V3 : THE TERMINAL ================= -->
+<section class="page v3" id="v3" aria-label="Version 3 The Terminal">
+  <div class="v3-shell">
+    <div class="v3-titlebar">
+      <span class="brand">kingsfield@local:~$</span>
+      <span class="meta">v0.4.7 · self-hosted · open source</span>
+      <span class="login">login →</span>
+    </div>
+    <div class="v3-prompt"><span>$</span> ./kingsfield --help</div>
+    <section class="v3-hero">
+      <h1>Legal intelligence<br>you actually <span class="accent">own.</span><span class="blink"></span></h1>
+      <p class="desc">The legal AI gold rush priced workflow software at $1,200 a seat. Kingsfield is the same workflow, self-hostable, with a verification layer they refused to ship. Bring your own API keys. Your data does not leave your machine. Ever.</p>
+    </section>
+    <div class="v3-output">
+      <div class="line"><span class="arrow">→</span> Authority check: Howell v. Hamilton Meats, 52 Cal.4th 541 (2011) <span class="ok">[VERIFIED]</span></div>
+      <div class="line"><span class="arrow">→</span> Jurisdiction: California / Civil <span class="ok">[OK]</span></div>
+      <div class="line"><span class="arrow">→</span> Proposition fit: Plaintiff's recoverable medical specials <span class="ok">[OK]</span></div>
+      <div class="line"><span class="arrow">→</span> PII / privilege scan: 2 items redacted <span class="warn">[ACTION TAKEN]</span></div>
+      <div class="line"><span class="arrow">→</span> Cross-matter check: Expert Frank Vetter appeared in 3 prior matters <span class="warn">[REVIEW]</span></div>
+      <div class="line"><span class="arrow">→</span> Skeptic verdict: <span class="ok">GREEN — ship</span></div>
+      <div class="line dim"><span class="arrow">→</span> 4 gates passed · 0 hallucinated cites · ready for human review</div>
+    </div>
+    <div class="v3-cols">
+      <div class="v3-col">
+        <span class="kbd">layer/01</span>
+        <h3>The Crew</h3>
+        <p>Researcher, contract analyst, strategist, team lead. Four specialists, one output. Runs silently behind the assistant on any task that benefits from specialization.</p>
+      </div>
+      <div class="v3-col">
+        <span class="kbd">layer/02</span>
+        <h3>The Council</h3>
+        <p>Nine adversarial reviewers. Skeptic always on, hard veto on bad cites. The other eight convene when you click Review or attempt to export a filing.</p>
+      </div>
+      <div class="v3-col">
+        <span class="kbd">layer/03</span>
+        <h3>The LLM Council</h3>
+        <p>Karpathy-style 5-advisor decision council. Mixed providers (Claude + Gemini). For the questions where being wrong is expensive.</p>
+      </div>
+    </div>
+    <div class="v3-compare">
+      <table>
+        <thead><tr><th>Feature</th><th>Harvey / Legora</th><th>Kingsfield</th></tr></thead>
+        <tbody>
+          <tr><td>Per-seat license</td><td class="them">$800–$1,200/mo</td><td class="us">$0 (open source)</td></tr>
+          <tr><td>Data residency</td><td class="them">their servers</td><td class="us">your servers</td></tr>
+          <tr><td>Cross-matter pattern matching</td><td class="them">no</td><td class="us">yes</td></tr>
+          <tr><td>Adversarial verification layer</td><td class="them">no</td><td class="us">nine reviewers</td></tr>
+          <tr><td>Hallucinated cite rate</td><td class="them">~3–8%</td><td class="us">0% (four-gate)</td></tr>
+          <tr><td>Subpoena exposure</td><td class="them">high</td><td class="us">none</td></tr>
+          <tr><td>Vendor lock-in</td><td class="them">total</td><td class="us">none</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="v3-final">
+      <h2>$ kingsfield init</h2>
+      <p>Free. Open source. Self-hostable. Bring your own keys.</p>
+      <span class="cmd">git clone github.com/kingsfield/kingsfield</span>
+    </div>
+    <p class="v3-foot">We are not lawyers · This is not legal advice · No attorney-client relationship is created · AGPL v3</p>
+  </div>
+</section>
+
+
+<!-- ================= V4 : MAGAZINE (alt) ================= -->
+<section class="page v4" id="v4" aria-label="Version 4 The Gentlemans Magazine">
+  <div class="v4-masthead">
+    <div class="left">Established 2026 · Vol. I, No. 1</div>
+    <div class="brand">Kingsfield</div>
+    <div class="right"><span>Manifesto</span> · <span>Product</span> · <span class="cta">Subscribe →</span></div>
+  </div>
+  <section class="v4-cover">
+    <div>
+      <div class="v4-issue">A Quarterly in Defiance of the Billable Hour</div>
+      <h1 class="v4-headline">The case <em>against</em> your lawyer.</h1>
+      <p class="v4-deck">An open-source legal intelligence platform, a verification council with hard veto, and a quiet observation: most people do not need a lawyer. They need a plan.</p>
+      <p class="v4-byline">Filed under: Litigation · Pro Se · Insurgency</p>
+    </div>
+    <aside class="v4-cover-aside">
+      <div class="v4-aside-block">
+        <div class="label">In this issue</div>
+        <p class="text">Why Harvey is worth eleven billion and <em>still won't read your depositions.</em></p>
+      </div>
+      <div class="v4-aside-block">
+        <div class="label">Field notes</div>
+        <p class="text">A solo litigator, fourteen transcripts, and the contradiction that <em>changed the case.</em></p>
+      </div>
+      <div class="v4-aside-block">
+        <div class="label">Editorial</div>
+        <p class="text">Smart. Not stupid. A working <em>position</em> on legal technology.</p>
+      </div>
+    </aside>
+  </section>
+</section>
+
+
+<script>
+  const buttons = document.querySelectorAll('.switcher button');
+  const pages = document.querySelectorAll('.page');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      pages.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      const target = document.getElementById(btn.dataset.page);
+      if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+    });
+  });
+</script>
+</body>
+</html>

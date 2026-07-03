@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kingsfield Lawfare — AI Hallucination Network</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --black2: #111111;
+    --panel: #161616;
+    --border: #2a2a2a;
+    --cream: #f0ead6;
+    --cream2: #c8c0a8;
+    --gold: #d4af37;
+    --gold2: #b8960c;
+    --gold-dim: rgba(212,175,55,0.15);
+    --red: #e05555;
+    --blue: #4a90d9;
+    --green: #2ecc71;
+    --teal: #1abc9c;
+    --orange: #f39c12;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Courier New', 'Consolas', monospace;
+    overflow: hidden;
+  }
+
+  #header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 52px;
+    background: var(--black2);
+    border-bottom: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  #header-left { display: flex; align-items: baseline; gap: 12px; }
+  #wordmark { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; }
+  #subtitle { font-size: 10px; color: var(--cream2); letter-spacing: 0.1em; }
+  #stats-bar { display: flex; gap: 20px; align-items: center; }
+  .stat { text-align: right; }
+  .stat-val { font-size: 14px; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; }
+  .stat-lbl { font-size: 9px; color: var(--cream2); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  #canvas { position: fixed; top: 52px; left: 0; right: 280px; bottom: 0; }
+  svg { width: 100%; height: 100%; background: var(--black); }
+
+  #sidebar {
+    position: fixed; top: 52px; right: 0; width: 280px; bottom: 0;
+    background: var(--panel); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  #filters { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+  .filter-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .filter-group { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .filter-btn {
+    font-family: inherit; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 8px; border: 1px solid var(--border); background: transparent;
+    color: var(--cream2); cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .filter-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .filter-btn.type-Court.active { border-color: #d4af37; color: #d4af37; background: rgba(212,175,55,0.12); }
+  .filter-btn.type-LegalField.active { border-color: #4a90d9; color: #4a90d9; background: rgba(74,144,217,0.12); }
+  .filter-btn.type-AITool.active { border-color: #2ecc71; color: #2ecc71; background: rgba(46,204,113,0.12); }
+  .filter-btn.type-Outcome.active { border-color: #e05555; color: #e05555; background: rgba(224,85,85,0.12); }
+  .filter-btn.type-Party.active { border-color: #f39c12; color: #f39c12; background: rgba(243,156,18,0.12); }
+  .filter-btn.type-HalType.active { border-color: #1abc9c; color: #1abc9c; background: rgba(26,188,156,0.12); }
+
+  #legend { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-text { font-size: 10px; color: var(--cream2); letter-spacing: 0.05em; }
+
+  #controls { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .ctrl-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .ctrl-lbl { font-size: 9px; color: var(--cream2); letter-spacing: 0.1em; text-transform: uppercase; width: 72px; flex-shrink: 0; }
+  input[type=range] { -webkit-appearance: none; appearance: none; flex: 1; height: 2px; background: var(--border); outline: none; border: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+  .ctrl-val { font-size: 10px; color: var(--gold); width: 28px; text-align: right; }
+  .btn-row { display: flex; gap: 6px; }
+  .ctrl-btn {
+    font-family: inherit; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 10px; background: transparent; border: 1px solid var(--border);
+    color: var(--cream2); cursor: pointer; flex: 1; transition: all 0.15s;
+  }
+  .ctrl-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .ctrl-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+  #info { flex: 1; padding: 14px 16px; overflow-y: auto; }
+  #info::-webkit-scrollbar { width: 3px; }
+  #info::-webkit-scrollbar-track { background: transparent; }
+  #info::-webkit-scrollbar-thumb { background: var(--border); }
+  #info-default { color: var(--cream2); font-size: 10px; line-height: 1.6; letter-spacing: 0.05em; }
+  #info-node { display: none; }
+  .info-type { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; }
+  .info-name { font-size: 16px; font-weight: 700; color: var(--cream); margin-bottom: 10px; line-height: 1.2; }
+  .info-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 10px; }
+  .info-key { color: var(--cream2); letter-spacing: 0.08em; }
+  .info-val { color: var(--cream); font-weight: 700; }
+  #info-connections { margin-top: 12px; }
+  .conn-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .conn-item { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 10px; color: var(--cream2); border-bottom: 1px solid rgba(42,42,42,0.5); cursor: pointer; }
+  .conn-item:hover { color: var(--cream); }
+  .conn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .conn-wt { color: var(--gold); font-size: 9px; margin-left: auto; }
+
+  #tooltip { position: fixed; background: var(--panel); border: 1px solid var(--gold); padding: 8px 12px; font-size: 11px; color: var(--cream); pointer-events: none; opacity: 0; transition: opacity 0.12s; z-index: 200; max-width: 200px; letter-spacing: 0.05em; }
+  .tt-name { font-weight: 700; color: var(--gold); margin-bottom: 2px; }
+  .tt-type { font-size: 9px; color: var(--cream2); letter-spacing: 0.12em; text-transform: uppercase; }
+  .tt-wt { font-size: 10px; color: var(--cream2); margin-top: 2px; }
+
+  #search-wrap { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  #search { width: 100%; background: var(--black2); border: 1px solid var(--border); color: var(--cream); font-family: inherit; font-size: 10px; letter-spacing: 0.08em; padding: 6px 10px; outline: none; }
+  #search:focus { border-color: var(--gold); }
+  #search::placeholder { color: var(--cream2); }
+
+  #watermark { position: fixed; bottom: 12px; left: 12px; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(212,175,55,0.25); pointer-events: none; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="header-left">
+    <div id="wordmark">Kingsfield Lawfare</div>
+    <div id="subtitle">AI Hallucination Case Network · Charlotin DB · USA</div>
+  </div>
+  <div id="stats-bar">
+    <div class="stat"><div class="stat-val">1,146</div><div class="stat-lbl">Cases</div></div>
+    <div class="stat"><div class="stat-val">65</div><div class="stat-lbl">Nodes</div></div>
+    <div class="stat"><div class="stat-val">209</div><div class="stat-lbl">Edges</div></div>
+    <div class="stat"><div class="stat-val" id="visible-count">65</div><div class="stat-lbl">Visible</div></div>
+  </div>
+</div>
+
+<div id="canvas"><svg id="svg"></svg></div>
+
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes…" autocomplete="off"/>
+  </div>
+  <div id="filters">
+    <div class="filter-label">Node Type</div>
+    <div class="filter-group" id="type-filters">
+      <button class="filter-btn type-Court active" data-type="Court">Court</button>
+      <button class="filter-btn type-LegalField active" data-type="LegalField">Legal Field</button>
+      <button class="filter-btn type-AITool active" data-type="AITool">AI Tool</button>
+      <button class="filter-btn type-Outcome active" data-type="Outcome">Outcome</button>
+      <button class="filter-btn type-Party active" data-type="Party">Party</button>
+      <button class="filter-btn type-HalType active" data-type="HalType">Hal. Type</button>
+    </div>
+  </div>
+  <div id="legend">
+    <div class="filter-label">Legend</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d4af37"></div><div class="legend-text">Court / Jurisdiction</div></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div><div class="legend-text">Legal Field</div></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2ecc71"></div><div class="legend-text">AI Tool</div></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e05555"></div><div class="legend-text">Outcome / Sanction</div></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div><div class="legend-text">Party Type</div></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1abc9c"></div><div class="legend-text">Hallucination Type</div></div>
+  </div>
+  <div id="controls">
+    <div class="filter-label">Physics</div>
+    <div class="ctrl-row"><span class="ctrl-lbl">Charge</span><input type="range" id="ctrl-charge" min="-800" max="-50" value="-300" step="10"/><span class="ctrl-val" id="val-charge">-300</span></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">Link Dist</span><input type="range" id="ctrl-dist" min="20" max="200" value="80" step="5"/><span class="ctrl-val" id="val-dist">80</span></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">Gravity</span><input type="range" id="ctrl-grav" min="0" max="1" value="0.08" step="0.01"/><span class="ctrl-val" id="val-grav">0.08</span></div>
+    <div class="ctrl-row"><span class="ctrl-lbl">Node Size</span><input type="range" id="ctrl-size" min="0.3" max="3" value="1" step="0.1"/><span class="ctrl-val" id="val-size">1.0</span></div>
+    <div class="btn-row" style="margin-top:4px">
+      <button class="ctrl-btn active" id="btn-labels">Labels</button>
+      <button class="ctrl-btn active" id="btn-physics">Physics</button>
+      <button class="ctrl-btn" id="btn-reset">Reset</button>
+    </div>
+  </div>
+  <div id="info">
+    <div id="info-default">
+      <div style="color:var(--gold);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;">Select a node</div>
+      Click any node to inspect connections.<br/><br/>
+      Drag to reposition. Scroll to zoom.<br/><br/>
+      Node size = case volume.<br/>
+      Edge weight = co-occurrence strength.
+    </div>
+    <div id="info-node">
+      <div class="info-type" id="info-type-lbl"></div>
+      <div class="info-name" id="info-name-lbl"></div>
+      <div class="info-row"><span class="info-key">Cases</span><span class="info-val" id="info-weight"></span></div>
+      <div class="info-row"><span class="info-key">Connections</span><span class="info-val" id="info-degree"></span></div>
+      <div class="info-row"><span class="info-key">Total Edge Wt</span><span class="info-val" id="info-edge-wt"></span></div>
+      <div id="info-connections"><div class="conn-label">Connected To</div><div id="conn-list"></div></div>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-type" id="tt-type"></div>
+  <div class="tt-wt" id="tt-wt"></div>
+</div>
+
+<div id="watermark">⊕ Kingsfield Lawfare · Citation Integrity</div>
+
+<script>
+const TYPE_COLOR = { Court:'#d4af37', LegalField:'#4a90d9', AITool:'#2ecc71', Outcome:'#e05555', Party:'#f39c12', HalType:'#1abc9c' };
+const TYPE_LABEL = { Court:'Court', LegalField:'Legal Field', AITool:'AI Tool', Outcome:'Outcome', Party:'Party', HalType:'Hallucination Type' };
+
+const rawNodes = [
+  {id:'0',label:'S.D. New York',type:'Court',weight:39},{id:'1',label:'W.D. Washington',type:'Court',weight:26},
+  {id:'2',label:'D. Nevada',type:'Court',weight:25},{id:'3',label:'N.D. Illinois',type:'Court',weight:24},
+  {id:'4',label:'D. Arizona',type:'Court',weight:24},{id:'5',label:'E.D. Michigan',type:'Court',weight:24},
+  {id:'6',label:'N.D. California',type:'Court',weight:24},{id:'7',label:'CA California',type:'Court',weight:23},
+  {id:'8',label:'C.D. California',type:'Court',weight:22},{id:'9',label:'D. New Jersey',type:'Court',weight:20},
+  {id:'10',label:'S.D. Florida',type:'Court',weight:19},{id:'11',label:'GAO',type:'Court',weight:17},
+  {id:'12',label:'M.D. Florida',type:'Court',weight:17},{id:'13',label:'D. Colorado',type:'Court',weight:15},
+  {id:'14',label:'E.D. California',type:'Court',weight:14},{id:'15',label:'D. Maryland',type:'Court',weight:14},
+  {id:'16',label:'E.D. Texas',type:'Court',weight:13},{id:'17',label:'W.D. Virginia',type:'Court',weight:12},
+  {id:'18',label:'W.D. Oklahoma',type:'Court',weight:12},{id:'19',label:'D. Kansas',type:'Court',weight:12},
+  {id:'20',label:'SC New York',type:'Court',weight:12},{id:'21',label:'M.D. Pennsylvania',type:'Court',weight:11},
+  {id:'22',label:'S.D. Indiana',type:'Court',weight:11},{id:'23',label:'CA Indiana',type:'Court',weight:11},
+  {id:'24',label:'D. Oregon',type:'Court',weight:11},{id:'25',label:'contract',type:'LegalField',weight:313},
+  {id:'26',label:'civil rights',type:'LegalField',weight:165},{id:'27',label:'Unknown',type:'LegalField',weight:121},
+  {id:'28',label:'tort',type:'LegalField',weight:109},{id:'29',label:'employment',type:'LegalField',weight:107},
+  {id:'30',label:'other',type:'LegalField',weight:82},{id:'31',label:'administrative',type:'LegalField',weight:80},
+  {id:'32',label:'family',type:'LegalField',weight:68},{id:'33',label:'criminal',type:'LegalField',weight:30},
+  {id:'34',label:'bankruptcy',type:'LegalField',weight:27},{id:'35',label:'Implied',type:'AITool',weight:806},
+  {id:'36',label:'Unidentified',type:'AITool',weight:216},{id:'37',label:'ChatGPT/OpenAI',type:'AITool',weight:65},
+  {id:'38',label:'Other/Niche',type:'AITool',weight:17},{id:'39',label:'LexisNexis AI',type:'AITool',weight:8},
+  {id:'40',label:'Westlaw/CoCounsel',type:'AITool',weight:7},{id:'41',label:'Claude',type:'AITool',weight:6},
+  {id:'42',label:'Microsoft Copilot',type:'AITool',weight:6},{id:'43',label:'Fastcase/vLex',type:'AITool',weight:5},
+  {id:'44',label:'Google Gemini/Bard',type:'AITool',weight:4},{id:'45',label:'Warning',type:'Outcome',weight:391},
+  {id:'46',label:'No outcome recorded',type:'Outcome',weight:153},{id:'47',label:'Monetary Sanction',type:'Outcome',weight:136},
+  {id:'48',label:'Order to Show Cause',type:'Outcome',weight:92},{id:'49',label:'Other',type:'Outcome',weight:64},
+  {id:'50',label:'Admonishment/Reprimand',type:'Outcome',weight:60},{id:'51',label:'Brief/Filing Struck',type:'Outcome',weight:49},
+  {id:'52',label:'Dismissed/Rejected',type:'Outcome',weight:35},{id:'53',label:'Monetary Sanction + Bar Referral',type:'Outcome',weight:31},
+  {id:'54',label:'Dismissed with prejudice',type:'Outcome',weight:31},{id:'55',label:'Court Order (Other)',type:'Outcome',weight:24},
+  {id:'56',label:'Adverse Costs Order',type:'Outcome',weight:24},{id:'57',label:'Pro Se Litigant',type:'Party',weight:688},
+  {id:'58',label:'Lawyer',type:'Party',weight:443},{id:'59',label:'Expert',type:'Party',weight:8},
+  {id:'60',label:'Judge/Prosecutor',type:'Party',weight:6},{id:'61',label:'Fabricated',type:'HalType',weight:952},
+  {id:'62',label:'False Quotes',type:'HalType',weight:89},{id:'63',label:'Misrepresented',type:'HalType',weight:31},
+];
+
+const rawEdges = [
+  {s:'35',t:'45',w:331},{s:'32',t:'61',w:61},{s:'57',t:'45',w:332},{s:'35',t:'46',w:136},
+  {s:'26',t:'61',w:136},{s:'57',t:'46',w:116},{s:'2',t:'29',w:5},{s:'35',t:'51',w:32},
+  {s:'29',t:'61',w:94},{s:'57',t:'51',w:34},{s:'36',t:'53',w:8},{s:'28',t:'61',w:95},
+  {s:'58',t:'53',w:31},{s:'11',t:'31',w:13},{s:'36',t:'45',w:51},{s:'31',t:'61',w:72},
+  {s:'58',t:'45',w:59},{s:'11',t:'45',w:15},{s:'9',t:'45',w:7},{s:'58',t:'46',w:36},
+  {s:'30',t:'61',w:71},{s:'35',t:'47',w:56},{s:'28',t:'62',w:8},{s:'57',t:'47',w:36},
+  {s:'16',t:'26',w:3},{s:'38',t:'47',w:4},{s:'0',t:'26',w:8},{s:'0',t:'45',w:17},
+  {s:'35',t:'55',w:13},{s:'57',t:'55',w:7},{s:'36',t:'47',w:46},{s:'58',t:'47',w:100},
+  {s:'32',t:'27',w:3},{s:'36',t:'56',w:8},{s:'57',t:'56',w:9},{s:'35',t:'53',w:16},
+  {s:'3',t:'26',w:8},{s:'3',t:'47',w:3},{s:'35',t:'49',w:33},{s:'58',t:'49',w:27},
+  {s:'4',t:'46',w:5},{s:'13',t:'25',w:7},{s:'25',t:'62',w:23},{s:'58',t:'48',w:64},
+  {s:'36',t:'50',w:7},{s:'57',t:'50',w:28},{s:'12',t:'25',w:3},{s:'25',t:'61',w:276},
+  {s:'3',t:'25',w:6},{s:'3',t:'45',w:11},{s:'35',t:'50',w:44},{s:'36',t:'55',w:6},
+  {s:'58',t:'55',w:17},{s:'30',t:'27',w:4},{s:'35',t:'48',w:76},{s:'26',t:'62',w:20},
+  {s:'26',t:'63',w:7},{s:'58',t:'50',w:32},{s:'5',t:'26',w:13},{s:'25',t:'63',w:8},
+  {s:'37',t:'53',w:3},{s:'21',t:'26',w:3},{s:'21',t:'45',w:5},{s:'27',t:'61',w:62},
+  {s:'58',t:'56',w:15},{s:'31',t:'62',w:5},{s:'5',t:'45',w:12},{s:'37',t:'50',w:6},
+  {s:'36',t:'49',w:16},{s:'57',t:'49',w:29},{s:'22',t:'26',w:4},{s:'23',t:'30',w:4},
+  {s:'23',t:'50',w:3},{s:'30',t:'63',w:3},{s:'3',t:'46',w:4},{s:'8',t:'25',w:8},
+  {s:'8',t:'45',w:6},{s:'33',t:'61',w:23},{s:'29',t:'62',w:9},{s:'36',t:'48',w:9},
+  {s:'17',t:'26',w:4},{s:'34',t:'61',w:23},{s:'28',t:'27',w:3},{s:'0',t:'29',w:4},
+  {s:'39',t:'47',w:5},{s:'0',t:'47',w:3},{s:'27',t:'62',w:5},{s:'38',t:'49',w:4},
+  {s:'29',t:'27',w:3},{s:'0',t:'50',w:4},{s:'57',t:'48',w:27},{s:'8',t:'46',w:3},
+  {s:'18',t:'26',w:4},{s:'18',t:'50',w:3},{s:'6',t:'55',w:3},{s:'9',t:'26',w:3},
+  {s:'9',t:'48',w:3},{s:'14',t:'26',w:4},{s:'14',t:'45',w:3},{s:'13',t:'47',w:3},
+  {s:'36',t:'54',w:12},{s:'57',t:'54',w:28},{s:'8',t:'48',w:5},{s:'6',t:'30',w:3},
+  {s:'6',t:'47',w:6},{s:'58',t:'51',w:14},{s:'2',t:'45',w:18},{s:'15',t:'46',w:4},
+  {s:'15',t:'45',w:5},{s:'12',t:'30',w:3},{s:'37',t:'55',w:3},{s:'0',t:'25',w:13},
+  {s:'15',t:'25',w:6},{s:'15',t:'48',w:3},{s:'3',t:'48',w:3},{s:'19',t:'26',w:6},
+  {s:'19',t:'45',w:8},{s:'4',t:'25',w:9},{s:'4',t:'51',w:3},{s:'6',t:'26',w:4},
+  {s:'6',t:'45',w:6},{s:'8',t:'26',w:3},{s:'8',t:'47',w:4},{s:'6',t:'29',w:4},
+  {s:'22',t:'45',w:5},{s:'14',t:'25',w:3},{s:'16',t:'25',w:3},{s:'25',t:'27',w:6},
+  {s:'16',t:'45',w:5},{s:'13',t:'29',w:3},{s:'13',t:'45',w:6},{s:'14',t:'48',w:5},
+  {s:'3',t:'28',w:4},{s:'24',t:'25',w:5},{s:'24',t:'46',w:3},{s:'10',t:'25',w:13},
+  {s:'10',t:'45',w:4},{s:'18',t:'45',w:4},{s:'28',t:'63',w:3},{s:'36',t:'52',w:14},
+  {s:'57',t:'52',w:27},{s:'2',t:'25',w:9},{s:'8',t:'28',w:4},{s:'36',t:'51',w:12},
+  {s:'1',t:'29',w:4},{s:'1',t:'45',w:11},{s:'34',t:'62',w:3},{s:'6',t:'25',w:8},
+  {s:'35',t:'54',w:16},{s:'4',t:'31',w:4},{s:'4',t:'45',w:10},{s:'31',t:'63',w:3},
+  {s:'35',t:'52',w:17},{s:'1',t:'48',w:5},{s:'4',t:'29',w:4},{s:'35',t:'56',w:12},
+  {s:'36',t:'46',w:13},{s:'2',t:'30',w:3},{s:'22',t:'25',w:4},{s:'24',t:'45',w:4},
+  {s:'23',t:'32',w:4},{s:'23',t:'45',w:5},{s:'0',t:'27',w:3},{s:'1',t:'25',w:8},
+  {s:'9',t:'25',w:5},{s:'0',t:'46',w:8},{s:'4',t:'26',w:3},{s:'37',t:'47',w:15},
+  {s:'58',t:'52',w:7},{s:'37',t:'49',w:10},{s:'59',t:'49',w:5},{s:'1',t:'26',w:7},
+  {s:'9',t:'29',w:5},{s:'2',t:'28',w:3},{s:'17',t:'45',w:8},{s:'37',t:'45',w:7},
+  {s:'0',t:'28',w:7},{s:'7',t:'32',w:4},{s:'7',t:'53',w:4},{s:'7',t:'45',w:5},
+  {s:'19',t:'25',w:3},{s:'12',t:'26',w:5},{s:'10',t:'46',w:4},{s:'7',t:'27',w:6},
+  {s:'7',t:'48',w:4},{s:'7',t:'25',w:9},{s:'7',t:'47',w:4},{s:'6',t:'49',w:3},
+  {s:'20',t:'25',w:5},{s:'20',t:'28',w:4},{s:'23',t:'46',w:3},{s:'1',t:'28',w:4},
+  {s:'7',t:'46',w:4},{s:'5',t:'51',w:3},{s:'15',t:'26',w:3},{s:'12',t:'45',w:5},
+  {s:'33',t:'62',w:5},{s:'20',t:'45',w:3},{s:'30',t:'62',w:4},{s:'32',t:'62',w:4},
+  {s:'5',t:'25',w:4},{s:'12',t:'33',w:3},{s:'37',t:'48',w:4},{s:'27',t:'27',w:52},
+  {s:'60',t:'49',w:3},{s:'10',t:'49',w:3},{s:'10',t:'54',w:3},{s:'11',t:'27',w:4},
+];
+
+const svg = d3.select('#svg');
+const container = document.getElementById('canvas');
+let W = container.clientWidth, H = container.clientHeight;
+let showLabels = true, physicsRunning = true, sizeScale = 1.0;
+let activeTypes = new Set(['Court','LegalField','AITool','Outcome','Party','HalType']);
+let selectedNode = null, searchTerm = '';
+
+const nodeById = {};
+rawNodes.forEach(n => { nodeById[n.id] = n; });
+
+const degree = {}, edgeWeightSum = {};
+rawNodes.forEach(n => { degree[n.id] = 0; edgeWeightSum[n.id] = 0; });
+rawEdges.forEach(e => {
+  if(e.s !== e.t) { degree[e.s] = (degree[e.s]||0)+1; degree[e.t] = (degree[e.t]||0)+1; }
+  edgeWeightSum[e.s] = (edgeWeightSum[e.s]||0)+e.w;
+  edgeWeightSum[e.t] = (edgeWeightSum[e.t]||0)+e.w;
+});
+
+const adj = {};
+rawNodes.forEach(n => { adj[n.id] = []; });
+rawEdges.forEach(e => {
+  if(e.s !== e.t) { adj[e.s].push({id:e.t,weight:e.w}); adj[e.t].push({id:e.s,weight:e.w}); }
+});
+
+const maxWeight = d3.max(rawNodes, d => d.weight);
+const sizeR = d => Math.sqrt(d.weight/maxWeight)*28*sizeScale+4;
+const edgeW = d3.scaleLinear().domain([1,d3.max(rawEdges,e=>e.w)]).range([0.3,4]);
+
+let nodes = rawNodes.map(d => ({...d}));
+let edges = rawEdges.map(e => ({...e,source:e.s,target:e.t}));
+
+const g = svg.append('g');
+const zoom = d3.zoom().scaleExtent([0.1,8]).on('zoom',ev=>g.attr('transform',ev.transform));
+svg.call(zoom);
+
+const linkG = g.append('g').attr('class','links');
+const nodeG = g.append('g').attr('class','nodes');
+const labelG = g.append('g').attr('class','labels');
+
+let simulation, linkSel, nodeSel, labelSel;
+
+function buildSim() {
+  const charge = +document.getElementById('ctrl-charge').value;
+  const dist = +document.getElementById('ctrl-dist').value;
+  const grav = +document.getElementById('ctrl-grav').value;
+  if(simulation) simulation.stop();
+  simulation = d3.forceSimulation(nodes)
+    .force('link',d3.forceLink(edges).id(d=>d.id).distance(d=>dist/Math.sqrt(d.w/10+1)+20).strength(d=>Math.min(1,d.w/80)))
+    .force('charge',d3.forceManyBody().strength(charge))
+    .force('center',d3.forceCenter(W/2,H/2))
+    .force('x',d3.forceX(W/2).strength(grav))
+    .force('y',d3.forceY(H/2).strength(grav))
+    .force('collide',d3.forceCollide().radius(d=>sizeR(d)+3))
+    .alphaDecay(0.015)
+    .on('tick',ticked);
+}
+
+function ticked() {
+  linkSel.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+  nodeSel.attr('cx',d=>d.x).attr('cy',d=>d.y);
+  labelSel.attr('x',d=>d.x).attr('y',d=>d.y+sizeR(d)+10);
+}
+
+function render() {
+  const visibleIds = new Set(nodes.filter(n=>activeTypes.has(n.type)&&(searchTerm===''||n.label.toLowerCase().includes(searchTerm))).map(n=>n.id));
+  const visibleEdges = edges.filter(e=>{
+    const sid=typeof e.source==='object'?e.source.id:e.source;
+    const tid=typeof e.target==='object'?e.target.id:e.target;
+    return visibleIds.has(sid)&&visibleIds.has(tid)&&sid!==tid;
+  });
+  document.getElementById('visible-count').textContent = visibleIds.size;
+
+  linkG.selectAll('line').remove();
+  linkSel = linkG.selectAll('line').data(visibleEdges).join('line')
+    .attr('stroke','#2a2a2a').attr('stroke-width',d=>edgeW(d.w)).attr('opacity',0.6);
+
+  nodeG.selectAll('circle').remove();
+  nodeSel = nodeG.selectAll('circle').data(nodes.filter(n=>visibleIds.has(n.id))).join('circle')
+    .attr('r',d=>sizeR(d)).attr('fill',d=>TYPE_COLOR[d.type]).attr('fill-opacity',0.85)
+    .attr('stroke',d=>TYPE_COLOR[d.type]).attr('stroke-width',1.5).attr('stroke-opacity',0.4)
+    .style('cursor','pointer')
+    .on('mouseover',onHover).on('mousemove',onMove).on('mouseout',onOut).on('click',onClick)
+    .call(d3.drag().on('start',dragStart).on('drag',dragged).on('end',dragEnd));
+
+  labelG.selectAll('text').remove();
+  labelSel = labelG.selectAll('text').data(nodes.filter(n=>visibleIds.has(n.id))).join('text')
+    .text(d=>d.label).attr('text-anchor','middle')
+    .attr('font-family',"'Courier New', monospace")
+    .attr('font-size',d=>Math.max(7,Math.min(11,6+sizeR(d)*0.25)))
+    .attr('fill',d=>TYPE_COLOR[d.type]).attr('fill-opacity',0.85)
+    .attr('pointer-events','none').style('display',showLabels?null:'none');
+
+  ticked();
+}
+
+function dragStart(event,d){if(!event.active)simulation.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;}
+function dragged(event,d){d.fx=event.x;d.fy=event.y;}
+function dragEnd(event,d){if(!event.active)simulation.alphaTarget(0);d.fx=null;d.fy=null;}
+
+const tooltip = document.getElementById('tooltip');
+function onHover(event,d){
+  document.getElementById('tt-name').textContent=d.label;
+  document.getElementById('tt-type').textContent=TYPE_LABEL[d.type];
+  document.getElementById('tt-wt').textContent=`${d.weight} cases · ${degree[d.id]} connections`;
+  tooltip.style.opacity='1'; onMove(event);
+}
+function onMove(event){
+  let x=event.clientX+14,y=event.clientY-10;
+  if(x+210>window.innerWidth)x=event.clientX-220;
+  tooltip.style.left=x+'px';tooltip.style.top=y+'px';
+}
+function onOut(){tooltip.style.opacity='0';}
+
+function onClick(event,d){selectedNode=d;highlightNode(d);showInfo(d);}
+
+function highlightNode(d){
+  const connectedIds=new Set(adj[d.id].map(a=>a.id));connectedIds.add(d.id);
+  nodeSel.attr('opacity',n=>connectedIds.has(n.id)?1:0.06)
+    .attr('stroke-width',n=>n.id===d.id?3:1.5)
+    .attr('stroke-opacity',n=>n.id===d.id?1:0.4);
+  linkSel.attr('stroke',e=>{const sid=typeof e.source==='object'?e.source.id:e.source,tid=typeof e.target==='object'?e.target.id:e.target;return(sid===d.id||tid===d.id)?'#d4af37':'#2a2a2a';})
+    .attr('opacity',e=>{const sid=typeof e.source==='object'?e.source.id:e.source,tid=typeof e.target==='object'?e.target.id:e.target;return(sid===d.id||tid===d.id)?0.9:0.05;})
+    .attr('stroke-width',e=>{const sid=typeof e.source==='object'?e.source.id:e.source,tid=typeof e.target==='object'?e.target.id:e.target;return(sid===d.id||tid===d.id)?edgeW(e.w)*2:edgeW(e.w);});
+  labelSel.attr('fill-opacity',n=>connectedIds.has(n.id)?1:0.06);
+}
+
+function clearHighlight(){
+  selectedNode=null;
+  nodeSel.attr('opacity',1).attr('stroke-width',1.5).attr('stroke-opacity',0.4);
+  linkSel.attr('stroke','#2a2a2a').attr('opacity',0.6).attr('stroke-width',d=>edgeW(d.w));
+  labelSel.attr('fill-opacity',0.85);
+  document.getElementById('info-default').style.display='';
+  document.getElementById('info-node').style.display='none';
+}
+
+svg.on('click',function(event){if(event.target===this)clearHighlight();});
+
+function showInfo(d){
+  document.getElementById('info-default').style.display='none';
+  document.getElementById('info-node').style.display='';
+  document.getElementById('info-type-lbl').textContent=TYPE_LABEL[d.type];
+  document.getElementById('info-type-lbl').style.color=TYPE_COLOR[d.type];
+  document.getElementById('info-name-lbl').textContent=d.label;
+  document.getElementById('info-weight').textContent=d.weight.toLocaleString();
+  document.getElementById('info-degree').textContent=degree[d.id];
+  document.getElementById('info-edge-wt').textContent=edgeWeightSum[d.id].toLocaleString();
+  const connList=document.getElementById('conn-list');
+  connList.innerHTML='';
+  [...adj[d.id]].sort((a,b)=>b.weight-a.weight).forEach(c=>{
+    const cn=nodeById[c.id];if(!cn)return;
+    const item=document.createElement('div');item.className='conn-item';
+    item.innerHTML=`<div class="conn-dot" style="background:${TYPE_COLOR[cn.type]}"></div><span>${cn.label}</span><span class="conn-wt">${c.weight}</span>`;
+    item.addEventListener('click',()=>{const nd=nodes.find(n=>n.id===c.id);if(nd)onClick(null,nd);});
+    connList.appendChild(item);
+  });
+}
+
+document.querySelectorAll('.filter-btn[data-type]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const t=btn.dataset.type;
+    if(activeTypes.has(t))activeTypes.delete(t);else activeTypes.add(t);
+    btn.classList.toggle('active',activeTypes.has(t));
+    clearHighlight();render();simulation.alpha(0.3).restart();
+  });
+});
+
+function bindCtrl(id,valId,cb){
+  const el=document.getElementById(id),vl=document.getElementById(valId);
+  el.addEventListener('input',()=>{vl.textContent=parseFloat(el.value).toFixed(el.step&&el.step<1?2:0);cb();});
+}
+bindCtrl('ctrl-charge','val-charge',()=>{buildSim();render();});
+bindCtrl('ctrl-dist','val-dist',()=>{buildSim();render();});
+bindCtrl('ctrl-grav','val-grav',()=>{buildSim();render();});
+bindCtrl('ctrl-size','val-size',()=>{
+  sizeScale=+document.getElementById('ctrl-size').value;render();
+  simulation.force('collide',d3.forceCollide().radius(d=>sizeR(d)+3));simulation.alpha(0.1).restart();
+});
+
+document.getElementById('btn-labels').addEventListener('click',function(){
+  showLabels=!showLabels;this.classList.toggle('active',showLabels);labelSel.style('display',showLabels?null:'none');
+});
+document.getElementById('btn-physics').addEventListener('click',function(){
+  physicsRunning=!physicsRunning;this.classList.toggle('active',physicsRunning);
+  if(physicsRunning)simulation.alpha(0.3).restart();else simulation.stop();
+});
+document.getElementById('btn-reset').addEventListener('click',()=>{
+  clearHighlight();svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity);buildSim();render();
+});
+
+document.getElementById('search').addEventListener('input',function(){
+  searchTerm=this.value.toLowerCase().trim();clearHighlight();render();simulation.alpha(0.2).restart();
+});
+
+window.addEventListener('resize',()=>{
+  W=container.clientWidth;H=container.clientHeight;
+  simulation.force('center',d3.forceCenter(W/2,H/2))
+    .force('x',d3.forceX(W/2).strength(+document.getElementById('ctrl-grav').value))
+    .force('y',d3.forceY(H/2).strength(+document.getElementById('ctrl-grav').value));
+  simulation.alpha(0.1).restart();
+});
+
+buildSim();
+render();
+</script>
+</body>
+</html>

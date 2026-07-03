@@ -1,0 +1,14 @@
+venv/
+.env
+*.bak
+*.bak.*
+
+# Citation grinder caches (local, resumable)
+opinion_cache/
+
+# Judicial intelligence media (large — store on S3/R2 for production)
+judicial-intel/data/audio/
+judicial-intel/data/video/
+judicial-intel/data/frames/
+judicial-intel/data/transcripts/
+judicial-intel/data/signals/

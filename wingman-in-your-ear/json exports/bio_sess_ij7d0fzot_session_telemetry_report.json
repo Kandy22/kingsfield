@@ -1,0 +1,126 @@
+{
+  "sessionId": "bio_sess_ij7d0fzot",
+  "downloadTimestamp": "2026-06-15T21:50:10.402Z",
+  "vocalMetrics": {
+    "volume": 0,
+    "peakVolume": 0,
+    "isSpeaking": false,
+    "hesitationCount": 0,
+    "speechRate": 0,
+    "deferralCount": 0,
+    "interruptionCount": 0,
+    "interruptionTimestamps": []
+  },
+  "diagnosticReport": {
+    "stressLevel": 0,
+    "sentiment": "OFFLINE",
+    "insights": "Continuous speech diagnostics will initialize once System Activation completes."
+  },
+  "logs": [
+    {
+      "id": "init_log_1",
+      "timestamp": "5:49:07 PM",
+      "source": "SYSTEM",
+      "message": "Client-side acoustic-telemetry analyzer booted. Preflight checks active...",
+      "type": "info"
+    },
+    {
+      "id": "08f6a",
+      "timestamp": "5:49:08 PM",
+      "source": "SYSTEM",
+      "message": "Stateful speech processor synced with Gemini core.",
+      "type": "success"
+    },
+    {
+      "id": "im1qyy",
+      "timestamp": "5:49:08 PM",
+      "source": "SYSTEM",
+      "message": "Stateful speech processor synced with Gemini core.",
+      "type": "success"
+    },
+    {
+      "id": "pufq8",
+      "timestamp": "5:49:25 PM",
+      "source": "SYSTEM",
+      "message": "Requesting microphone-only capture permissions...",
+      "type": "info"
+    },
+    {
+      "id": "2c2qzj",
+      "timestamp": "5:49:25 PM",
+      "source": "SYSTEM",
+      "message": "Microphone capture verified. Calibrating silence filters...",
+      "type": "success"
+    },
+    {
+      "id": "jqwk",
+      "timestamp": "5:49:30 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "sixxvn",
+      "timestamp": "5:49:33 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "44x20f",
+      "timestamp": "5:49:36 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "otlnb",
+      "timestamp": "5:49:39 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "pd9zxk",
+      "timestamp": "5:49:42 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "33dn17",
+      "timestamp": "5:49:45 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "pcl33g",
+      "timestamp": "5:49:48 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "li4ubd",
+      "timestamp": "5:49:51 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "anleen",
+      "timestamp": "5:49:54 PM",
+      "source": "TRANSCRIPTION",
+      "message": "[Silence or Tone Detected]",
+      "type": "success"
+    },
+    {
+      "id": "on1gv",
+      "timestamp": "5:49:54 PM",
+      "source": "SYSTEM",
+      "message": "Vocal streaming link closed. Decoupled diagnostic channels.",
+      "type": "info"
+    }
+  ]
+}
