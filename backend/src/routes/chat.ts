@@ -20,6 +20,7 @@ import {
 } from "../lib/userSettings";
 import { checkProjectAccess } from "../lib/access";
 import { safeErrorLog, safeErrorMessage } from "../lib/safeError";
+import { verifyDraftForSse } from "../middleware/hallucination_guard";
 
 export const chatRouter = Router();
 
@@ -590,6 +591,20 @@ chatRouter.post("/", requireAuth, async (req, res) => {
             fullTextLen: fullText?.length ?? 0,
             eventCount: events?.length ?? 0,
         });
+
+        const verification = await verifyDraftForSse(fullText, {
+            courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+            supabase: db,
+        });
+        write(
+            `data: ${JSON.stringify({
+                type: "verification",
+                verdicts: verification.verdicts,
+                hasVetoes: verification.hasVetoes,
+                hasConditional: verification.hasConditional,
+                error: verification.error,
+            })}\n\n`,
+        );
 
         const persistedEvents = stripTransientAssistantEvents(events);
         await db.from("chat_messages").insert({
