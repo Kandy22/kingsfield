@@ -101,8 +101,9 @@ export async function citationLookup(
  * fetch the opinion text for Gate 2 (quote accuracy).
  *
  * Normalises two CL v4 quirks so pipeline.ts doesn't have to know about them:
- *   1. `court` comes back as a full resource URL  → we extract the slug
- *      e.g. ".../api/rest/v4/courts/scotus/" → "scotus"
+ *   1. `court`/`court_id` are NOT present on the cluster resource itself —
+ *      as of the current v4 API, court lives on the linked `docket`
+ *      resource instead. We fetch it and resolve to a slug (e.g. "scotus").
  *   2. `sub_opinions` may be relative paths or full URLs; we ensure full URLs.
  */
 export async function getCluster(clusterId: number, token: string): Promise<OpinionCluster> {
@@ -112,11 +113,7 @@ export async function getCluster(clusterId: number, token: string): Promise<Opin
   if (!res.ok) throw new Error(`Cluster fetch failed: ${res.status}`);
   const data = await res.json();
 
-  // Normalise court: full URL → slug
-  const courtRaw: string = typeof data.court === 'string' ? data.court : '';
-  const court = courtRaw
-    ? courtRaw.replace(/\/$/, '').split('/').pop() ?? courtRaw
-    : String(data.court_id ?? '');
+  const court = await resolveCourtFromDocket(data.docket, token);
 
   // Normalise sub_opinions: ensure all entries are fully-qualified URLs
   const sub_opinions: string[] = (data.sub_opinions ?? []).map((u: string) =>
@@ -124,6 +121,27 @@ export async function getCluster(clusterId: number, token: string): Promise<Opin
   );
 
   return { ...data, court, sub_opinions };
+}
+
+/**
+ * Resolve a cluster's court slug via its linked docket resource.
+ * The docket exposes both `court_id` (already a slug, e.g. "scotus") and
+ * `court` (full resource URL) — prefer the slug, fall back to parsing the
+ * URL. Returns '' on any failure so callers degrade to Gate 4 treating the
+ * source as unknown-jurisdiction rather than throwing.
+ */
+async function resolveCourtFromDocket(docketUrl: unknown, token: string): Promise<string> {
+  if (typeof docketUrl !== 'string' || !docketUrl) return '';
+  try {
+    const res = await fetch(docketUrl, { headers: authHeaders(token) });
+    if (!res.ok) return '';
+    const docket = await res.json();
+    if (typeof docket.court_id === 'string' && docket.court_id) return docket.court_id;
+    const courtRaw: string = typeof docket.court === 'string' ? docket.court : '';
+    return courtRaw ? (courtRaw.replace(/\/$/, '').split('/').pop() ?? courtRaw) : '';
+  } catch {
+    return '';
+  }
 }
 
 /**
