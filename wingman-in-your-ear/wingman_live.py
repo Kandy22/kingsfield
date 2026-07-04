@@ -35,32 +35,68 @@ except ImportError:
 
 MODEL_ID = "gemini-3.1-flash-live-preview"
 
-LIVE_CONFIG = {
-    "response_modalities": ["AUDIO"],
-    "input_audio_transcription": {},   # lets us log what was heard
-    "output_audio_transcription": {},  # lets us log what was said
-
-    "system_instruction": (
-        "You are a silent tactical courtroom and litigation advisor. "
-        "Listen to the live dialogue stream. Do not transcribe or repeat what you hear. "
-        "Cross-reference the statements against the rules of evidence and logic. "
-        "Only speak when you catch a blatant contradiction, a logic flaw, or a valid legal objection. "
-        "Keep your spoken notes under 7 words total. Be crisp, brutal, and fast."
-    ),
-
-    "speech_config": {
-        "voice_config": {
-            "prebuilt_voice_config": {
-                "voice_name": "Kore"
-            }
-        }
-    },
-
-    # Minimal thinking — optimize for lowest latency
-    "thinking_config": {
-        "thinking_level": "minimal"
-    }
+# Agent harnesses — same files wingman-demo's server.ts loads (harness/*.md).
+# Select with: python wingman_live.py [court_pro_se|broadcast_market|deposition]
+HARNESS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "harness")
+AGENTS = {
+    "court_pro_se":     {"file": "court_pro_se.md",     "voice": "Charon", "label": "Court Pro Se"},
+    "broadcast_market": {"file": "broadcast_market.md", "voice": "Fenrir", "label": "Broadcast Market Watch"},
+    "deposition":       {"file": "deposition.md",       "voice": "Charon", "label": "Deposition"},
 }
+DEFAULT_AGENT = "court_pro_se"
+
+FALLBACK_INSTRUCTION = (
+    "You are a silent tactical courtroom and litigation advisor. "
+    "Listen to the live dialogue stream. Do not transcribe or repeat what you hear. "
+    "Cross-reference the statements against the rules of evidence and logic. "
+    "Only speak when you catch a blatant contradiction, a logic flaw, or a valid legal objection. "
+    "Keep your spoken notes under 7 words total. Be crisp, brutal, and fast. "
+    "When silent, produce no output whatsoever — no placeholders."
+)
+
+def load_harness(agent_key):
+    """Read the agent's harness file; fall back to the built-in instruction."""
+    agent = AGENTS.get(agent_key, AGENTS[DEFAULT_AGENT])
+    path = os.path.join(HARNESS_DIR, agent["file"])
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read(), agent
+    except OSError:
+        print(f"[WARN] Harness file missing: {path} — using built-in fallback instruction.")
+        return FALLBACK_INSTRUCTION, agent
+
+def build_live_config(agent_key):
+    # Harness goes in system_instruction at connect time. Do NOT inject it via
+    # send_client_content — on gemini-3.1 live models that call is restricted to
+    # seeding initial history and silently no-ops without history_config.
+    instruction, agent = load_harness(agent_key)
+    return {
+        "response_modalities": ["AUDIO"],
+        "input_audio_transcription": {},   # lets us log what was heard
+        "output_audio_transcription": {},  # lets us log what was said
+
+        "system_instruction": instruction,
+
+        "speech_config": {
+            "voice_config": {
+                "prebuilt_voice_config": {
+                    "voice_name": agent["voice"]
+                }
+            }
+        },
+
+        # Minimal thinking — optimize for lowest latency
+        "thinking_config": {
+            "thinking_level": "minimal"
+        },
+
+        # NOTE: proactivity/proactive_audio is NOT supported on this model
+        # (rejected at setup, tested 2026-07-03) — silence is enforced by the
+        # harness instruction instead.
+        # Sliding-window compression lifts the session time limit so a full
+        # hearing doesn't kill the connection mid-argument
+        "context_window_compression": {"sliding_window": {}},
+    }, agent
 
 # Audio specs — DO NOT CHANGE
 INPUT_RATE  = 16000   # Gemini expects 16kHz in
@@ -87,14 +123,14 @@ def advisory(msg):
     """Wingman spoke — highlight it."""
     print(f"\n{AQUA}{BOLD}◈ WINGMAN [{ts()}]: {msg}{RESET}\n")
 
-def header():
+def header(agent):
     print(f"""
 {AQUA}╔══════════════════════════════════════════╗
 ║          W I N G M A N                  ║
 ║  Silent Tactical Courtroom Advisor       ║
 ╚══════════════════════════════════════════╝{RESET}
 {DIM}Model : {MODEL_ID}
-Voice : Kore  |  In: 16kHz  |  Out: 24kHz{RESET}
+Agent : {agent["label"]}  |  Voice : {agent["voice"]}  |  In: 16kHz  |  Out: 24kHz{RESET}
 """)
 
 # ── AUDIO I/O ───────────────────────────────────────────────────────────────
@@ -173,7 +209,13 @@ async def receive_advisory(session):
 # ── MAIN ─────────────────────────────────────────────────────────────────────
 
 async def main():
-    header()
+    agent_key = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_AGENT
+    if agent_key not in AGENTS:
+        print(f"{RED}[ABORT] Unknown agent '{agent_key}'. Options: {', '.join(AGENTS)}{RESET}")
+        sys.exit(1)
+
+    live_config, agent = build_live_config(agent_key)
+    header(agent)
 
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -184,7 +226,7 @@ async def main():
 
     log("SYSTEM", "Connecting to Gemini Live...", AQUA)
     try:
-        async with client.aio.live.connect(model=MODEL_ID, config=LIVE_CONFIG) as session:
+        async with client.aio.live.connect(model=MODEL_ID, config=live_config) as session:
             log("SYSTEM", "WebSocket established. Session live.", AQUA)
             log("SYSTEM", "Speak freely. Wingman will interject only when it matters.", DIM)
             print(f"{DIM}─────────────────────────────────────────────{RESET}\n")

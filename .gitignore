@@ -63,3 +63,7 @@ lcov.info
 # ── OVER GITHUB'S 100MB HARD LIMIT, LFS BLOCKED BY ACCOUNT BILLING ────────────
 # 257MB pirated book scan — not worth resolving the LFS billing issue for.
 /assets/blog/blog-voice/Fake Americana/
+
+# Heavy media — never in git (decisions.md 2026-07-03: data weight via gitignore)
+videos/
+*.zip

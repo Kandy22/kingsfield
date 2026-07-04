@@ -7,6 +7,13 @@
       "runtimeArgs": [],
       "port": 3000,
       "autoPort": false
+    },
+    {
+      "name": "wingman-pwa",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/aaronray/kingsfield/wingman-in-your-ear/wingman-demo", "run", "dev"],
+      "port": 3000,
+      "autoPort": false
     }
   ]
 }

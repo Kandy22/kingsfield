@@ -48,54 +48,13 @@ Update `current-state.md` when wiring tasks are completed. Add to `decisions.md`
 
 ---
 
-## Open Wiring Tasks
+## Open Tasks
 
 Setup and commands are in `README.md` and `docs/SETUP.md`.
 
-### 1. Frontend chat route
+**The task list lives in `docs/context/current-state.md` — this file does not track tasks.** The four original wiring tasks (chat route, migration 110, `cl_opinion_id`, Gemini key) were all resolved by 2026-07-04. Note the chat-route one was resolved *differently* than originally specced here: citation verification was wired into the real authenticated chat routes (`chat.ts`/`projectChat.ts`) rather than repointing the frontend at the unauthenticated `/api/crew/chat` demo endpoint (see decisions.md 2026-07-03).
 
-`frontend/src/app/lib/mikeApi.ts` still posts chat messages to Mike's original route. Wire it to the Crew instead:
-
-```
-- /chat               →  /api/crew/chat
-- /projects/:id/chat  →  /api/projects/:id/crew/chat
-```
-
-The crew route is defined in `backend/src/routes/index.ts`. The frontend should pass `projectId` and `documentContext` in the request body so the Coordinator can decide which roles to spawn.
-
-### 2. Migration 110 not applied
-
-`backend/migrations/110_council_and_crew_schema.sql` has not been run. It adds `llm_council_sessions` and `crew_traces`.
-
-Run in the Supabase SQL editor after `100_kingsfield_schema.sql`:
-
-```sql
-\i backend/migrations/110_council_and_crew_schema.sql
-```
-
-### 3. Missing column: `sources.cl_opinion_id`
-
-`100_kingsfield_schema.sql` defines `cl_opinion_id bigint` on the `sources` table but the column is missing from the live database:
-
-```sql
-alter table sources add column if not exists cl_opinion_id bigint;
-```
-
-The Researcher (`backend/src/crew/researcher.ts`) writes to this column when materializing a CourtListener authority. Without it, every Researcher run fails on insert.
-
-### 4. Gemini API key for LLM Council
-
-The Council routes `first_principles` → Gemini Pro and `outsider` → Gemini Flash. Without the key both fall back to Claude Opus and provider diversity is lost.
-
-Add to `backend/.env`:
-
-```
-GEMINI_API_KEY=<your key>
-```
-
-Confirm instantiation in `backend/src/llm-council/orchestrator.ts`. The `providers.ts` fallback logs a warning when Gemini is absent.
-
-**Do not commit the key.** `backend/.env` is in `.gitignore`.
+Lesson recorded in decisions.md: verify live DB/code state before trusting any static task list, including this file.
 
 ---
 

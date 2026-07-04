@@ -44,11 +44,20 @@ def segments_to_srt(segments: list) -> str:
 def transcribe_faster_whisper(audio_path: str, model_name: str, device: str) -> list:
     from faster_whisper import WhisperModel  # type: ignore
 
+    # VAD needs onnxruntime, which has no wheel on some platforms (e.g. macOS
+    # x86_64 + Python 3.14) — run without the filter rather than crash.
+    try:
+        import onnxruntime  # type: ignore  # noqa: F401
+        vad = True
+    except ImportError:
+        print("[transcribe] onnxruntime unavailable — running without VAD filter")
+        vad = False
+
     model = WhisperModel(model_name, device=device, compute_type="int8" if device == "cpu" else "float16")
     segments, _ = model.transcribe(
         audio_path,
         temperature=0.0,
-        vad_filter=True,
+        vad_filter=vad,
         word_timestamps=False,
     )
     return [{"start": s.start, "end": s.end, "text": s.text} for s in segments]
