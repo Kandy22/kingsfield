@@ -2,7 +2,28 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, AlertCircle, Gavel, FileText } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { supabase } from "@/lib/supabase";
+
+// Renders council output as formatted Markdown (headings, bold, lists) instead
+// of raw ## / ** text. Element styles are set with arbitrary variants so this
+// works without the @tailwindcss/typography plugin (which isn't installed).
+function Prose({ children }: { children: string }) {
+    return (
+        <div className="text-sm leading-relaxed text-gray-800
+            [&_h1]:text-lg [&_h1]:font-semibold [&_h1]:mt-4 [&_h1]:mb-2
+            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-4 [&_h2]:mb-1.5
+            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1
+            [&_p]:my-2 [&_strong]:font-semibold [&_em]:italic
+            [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-2 [&_li]:my-0.5
+            [&_hr]:my-3 [&_hr]:border-current [&_hr]:opacity-20
+            [&_code]:bg-black/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[0.85em]
+            [&_blockquote]:border-l-2 [&_blockquote]:border-current [&_blockquote]:opacity-90 [&_blockquote]:pl-3 [&_blockquote]:italic">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>
+        </div>
+    );
+}
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
@@ -73,12 +94,11 @@ const ADVISORS = [
 function ProviderBadge({ provider, model }: { provider: string; model: string }) {
     const isGemini = provider === "gemini";
     return (
-        <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded"
+        <span className="inline-flex items-center gap-1 font-mono font-medium px-2 py-0.5 rounded"
             style={{
-                background: isGemini ? "rgba(64,128,200,0.15)" : "rgba(200,100,40,0.15)",
+                background: isGemini ? "rgba(64,128,200,0.12)" : "rgba(200,100,40,0.12)",
                 color: isGemini ? "#5B8ECC" : "#C8642A",
                 border: `1px solid ${isGemini ? "rgba(64,128,200,0.30)" : "rgba(200,100,40,0.30)"}`,
-                fontFamily: "var(--font-ibm-plex-mono), 'IBM Plex Mono', monospace",
                 fontSize: 10,
             }}>
             <span className="h-1.5 w-1.5 rounded-full" style={{ background: isGemini ? "#5B8ECC" : "#C8642A" }} />
@@ -90,34 +110,27 @@ function ProviderBadge({ provider, model }: { provider: string; model: string })
 function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; response?: AdvisorResponse }) {
     const [expanded, setExpanded] = useState(false);
     return (
-        <div className="rounded p-4 transition-all"
-            style={{
-                background: "#161615",
-                border: `1px solid #2A2A28`,
-                borderLeft: `3px solid ${advisor.accent}`,
-            }}>
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 transition-all"
+            style={{ borderLeft: `3px solid ${advisor.accent}` }}>
             <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span style={{
-                            fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-                            fontSize: 13,
-                            fontWeight: 700,
-                            color: "#F7F6F2",
-                        }}>{advisor.label.split(" ").map(w => w[0] + w.slice(1).toLowerCase()).join(" ")}</span>
+                        <span className="font-serif text-[13px] font-bold text-gray-900">
+                            {advisor.label.split(" ").map(w => w[0] + w.slice(1).toLowerCase()).join(" ")}
+                        </span>
                         <ProviderBadge provider={advisor.provider} model={advisor.model} />
                     </div>
-                    <p className="text-xs leading-relaxed" style={{ color: "#A09485" }}>{advisor.description}</p>
+                    <p className="text-xs leading-relaxed text-gray-500">{advisor.description}</p>
                 </div>
                 {response && (
-                    <button onClick={() => setExpanded(!expanded)} className="flex-shrink-0 transition-colors" style={{ color: "#717171" }}>
+                    <button onClick={() => setExpanded(!expanded)} className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors">
                         {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                     </button>
                 )}
             </div>
             {response && expanded && (
-                <div className="mt-3 pt-3" style={{ borderTop: "1px solid #2A2A28" }}>
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed" style={{ color: "#ABABAB" }}>{response.text}</p>
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                    <Prose>{response.text}</Prose>
                 </div>
             )}
             {response && !expanded && (
@@ -126,7 +139,7 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
                 </button>
             )}
             {!response && (
-                <div className="mt-2 h-1 rounded animate-pulse" style={{ background: "#2A2A28" }} />
+                <div className="mt-2 h-1 rounded bg-gray-200 animate-pulse" />
             )}
         </div>
     );
@@ -134,20 +147,15 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
 
 function VerdictSection({ verdict }: { verdict: string }) {
     return (
-        <div className="rounded p-5" style={{ background: "#161615", border: "1px solid #2B5CE6" }}>
+        <div className="rounded-lg bg-gray-50 p-5" style={{ border: "1px solid #2B5CE6" }}>
             <div className="flex items-center gap-2 mb-4">
                 <Gavel className="h-4 w-4" style={{ color: "#2B5CE6" }} />
-                <span className="font-bold tracking-widest" style={{
-                    fontFamily: "var(--font-inter), Inter, sans-serif",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: "#2B5CE6",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase" as const,
-                }}>CHAIRMAN'S VERDICT</span>
-                <span className="text-xs" style={{ color: "#717171", fontFamily: "var(--font-ibm-plex-mono), monospace" }}>· Claude Opus</span>
+                <span className="text-[11px] font-semibold uppercase" style={{ color: "#2B5CE6", letterSpacing: "0.12em" }}>
+                    CHAIRMAN'S VERDICT
+                </span>
+                <span className="text-xs font-mono text-gray-400">· Claude Opus</span>
             </div>
-            <div className="text-sm whitespace-pre-wrap leading-relaxed" style={{ color: "#ECECEC" }}>{verdict}</div>
+            <Prose>{verdict}</Prose>
         </div>
     );
 }
@@ -183,26 +191,19 @@ export default function CouncilPage() {
     const getAdvisorResponse = (role: string) => result?.advisors.find(a => a.role === role);
 
     return (
-        <div className="h-full overflow-y-auto" style={{ background: "#FFFFFF" }}>
+        <div className="h-full overflow-y-auto bg-white">
             <div className="max-w-4xl mx-auto px-6 py-10">
 
                 {/* ── Header ── */}
                 <div className="mb-10">
-                    <div className="text-xs font-semibold tracking-widest mb-2" style={{ color: "#5A5A56", letterSpacing: "0.15em" }}>
+                    <div className="text-xs font-semibold tracking-widest text-gray-500 mb-2" style={{ letterSpacing: "0.15em" }}>
                         KINGSFIELD · MULTI-MODEL DELIBERATION
                     </div>
-                    <h1 style={{
-                        fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-                        fontSize: 56,
-                        fontWeight: 900,
-                        lineHeight: 1.0,
-                        color: "#0A0A0A",
-                        letterSpacing: "-0.03em",
-                    }}>
+                    <h1 className="font-serif font-black text-gray-900" style={{ fontSize: 56, lineHeight: 1.0, letterSpacing: "-0.03em" }}>
                         The Council
                     </h1>
                     <div style={{ width: 48, height: 2, background: "#2B5CE6", marginTop: 16, marginBottom: 16 }} />
-                    <p className="text-sm leading-relaxed max-w-2xl" style={{ color: "#5A5A56" }}>
+                    <p className="text-sm leading-relaxed max-w-2xl text-gray-500">
                         Five advisors. Two model providers. One chairman. Each advisor attacks your question from a
                         different angle — then they peer-review each other before the chairman synthesizes the verdict.
                     </p>
@@ -214,61 +215,49 @@ export default function CouncilPage() {
                         <AdvisorCard key={advisor.role} advisor={advisor} response={getAdvisorResponse(advisor.role)} />
                     ))}
                     {/* Chairman */}
-                    <div className="rounded p-4 sm:col-span-2 lg:col-span-3"
-                        style={{ background: "#161615", border: "1px solid #2A2A28", borderLeft: "3px solid #2B5CE6" }}>
+                    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 sm:col-span-2 lg:col-span-3"
+                        style={{ borderLeft: "3px solid #2B5CE6" }}>
                         <div className="flex items-center gap-2 flex-wrap">
                             <Gavel className="h-4 w-4" style={{ color: "#2B5CE6" }} />
-                            <span style={{
-                                fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-                                fontSize: 13,
-                                fontWeight: 700,
-                                color: "#F7F6F2",
-                            }}>The Chairman</span>
+                            <span className="font-serif text-[13px] font-bold text-gray-900">The Chairman</span>
                             <ProviderBadge provider="claude" model="Claude Opus" />
                         </div>
-                        <p className="text-xs mt-1" style={{ color: "#717171" }}>
+                        <p className="text-xs mt-1 text-gray-500">
                             Synthesizes all five advisors + peer reviews into a single verdict. Has the final word.
                         </p>
                     </div>
                 </div>
 
                 {/* ── Word Plugin Banner ── */}
-                <div className="rounded mb-8 flex items-center justify-between gap-4 px-5 py-4"
-                    style={{ background: "#161615", border: "1px solid #2A2A28", borderLeft: "3px solid #2B5CE6" }}>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 mb-8 flex items-center justify-between gap-4 px-5 py-4"
+                    style={{ borderLeft: "3px solid #2B5CE6" }}>
                     <div className="flex items-center gap-3 min-w-0">
                         <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded"
-                            style={{ background: "rgba(224,155,48,0.12)" }}>
+                            style={{ background: "rgba(43,92,230,0.10)" }}>
                             <FileText className="h-5 w-5" style={{ color: "#2B5CE6" }} />
                         </div>
                         <div>
-                            <div style={{
-                                fontFamily: "var(--font-inter), Inter, sans-serif",
-                                fontSize: 11,
-                                fontWeight: 700,
-                                color: "#2B5CE6",
-                                letterSpacing: "0.12em",
-                                textTransform: "uppercase",
-                            }}>
+                            <div className="text-[11px] font-bold uppercase" style={{ color: "#2B5CE6", letterSpacing: "0.12em" }}>
                                 Word Plugin — Early Access
                             </div>
-                            <div className="text-xs mt-0.5" style={{ color: "#ABABAB" }}>
+                            <div className="text-xs mt-0.5 text-gray-500">
                                 Research, cite, and run the council without leaving Microsoft Word. The gap BigLaw doesn't want you to close.
                             </div>
                         </div>
                     </div>
                     <a
-                        href="#word-plugin"
-                        className="flex-shrink-0 px-4 py-2 rounded text-xs font-semibold transition-all hover:opacity-80"
-                        style={{ background: "#2B5CE6", color: "#FFFFFF", whiteSpace: "nowrap", fontWeight: 600 }}
+                        href="mailto:aray.aaron@gmail.com?subject=Kingsfield%20Word%20Plugin%20—%20Early%20Access&body=I%27d%20like%20early%20access%20to%20the%20Kingsfield%20Word%20plugin."
+                        className="flex-shrink-0 px-4 py-2 rounded text-xs font-semibold text-white transition-all hover:opacity-80"
+                        style={{ background: "#2B5CE6", whiteSpace: "nowrap" }}
                     >
-                        Get the Plugin →
+                        Request Early Access →
                     </a>
                 </div>
 
                 {/* ── Input form ── */}
                 {!result && (
-                    <div className="rounded p-5 mb-6" style={{ background: "#161615", border: "1px solid #2A2A28" }}>
-                        <label className="block text-xs font-semibold tracking-widest mb-3" style={{ color: "#ABABAB", letterSpacing: "0.10em" }}>
+                    <div className="rounded-lg border border-gray-200 bg-gray-50 p-5 mb-6">
+                        <label className="block text-xs font-semibold tracking-widest text-gray-700 mb-3" style={{ letterSpacing: "0.10em" }}>
                             WHAT DO YOU NEED THE COUNCIL TO PRESSURE-TEST?
                         </label>
                         <textarea
@@ -276,36 +265,27 @@ export default function CouncilPage() {
                             onChange={e => setQuestion(e.target.value)}
                             placeholder="e.g. We're about to file a 12(b)(6) motion on preemption grounds. The plaintiff's complaint alleges state-law fraud arising from the same conduct as an SEC enforcement action. Do we have a strong field-preemption argument, or are we better off arguing implied conflict preemption?"
                             rows={5}
-                            className="w-full rounded px-3 py-2.5 text-sm resize-none focus:outline-none"
-                            style={{ background: "#FFFFFF", color: "#ECECEC", border: "1px solid #2A2A28", fontFamily: "var(--font-inter), Inter, sans-serif" }}
+                            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                         />
-                        <label className="block text-xs font-semibold tracking-widest mb-3 mt-5" style={{ color: "#ABABAB", letterSpacing: "0.10em" }}>
-                            CONTEXT <span className="font-normal normal-case" style={{ color: "#717171", letterSpacing: 0 }}>(optional — matter summary, prior filings, key facts)</span>
+                        <label className="block text-xs font-semibold tracking-widest text-gray-700 mb-3 mt-5" style={{ letterSpacing: "0.10em" }}>
+                            CONTEXT <span className="font-normal normal-case text-gray-400" style={{ letterSpacing: 0 }}>(optional — matter summary, prior filings, key facts)</span>
                         </label>
                         <textarea
                             value={context}
                             onChange={e => setContext(e.target.value)}
                             placeholder="Add background the council should know — opposing counsel's arguments, the judge's tendencies, prior rulings, key facts you can't ignore..."
                             rows={3}
-                            className="w-full rounded px-3 py-2.5 text-sm resize-none focus:outline-none"
-                            style={{ background: "#FFFFFF", color: "#ECECEC", border: "1px solid #2A2A28", fontFamily: "var(--font-inter), Inter, sans-serif" }}
+                            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                         />
                         <div className="mt-5 flex items-center justify-between flex-wrap gap-3">
-                            <p className="text-xs" style={{ color: "#717171", fontFamily: "var(--font-ibm-plex-mono), monospace" }}>
+                            <p className="text-xs font-mono text-gray-400">
                                 11 model calls · ~30s · ~$0.40
                             </p>
                             <button
                                 onClick={convene}
                                 disabled={loading || question.trim().length < 10}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded text-sm font-bold tracking-widest transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                                style={{
-                                    background: "#2B5CE6",
-                                    color: "#FFFFFF",
-                                    fontFamily: "var(--font-inter), Inter, sans-serif",
-                                    fontSize: 13,
-                                    fontWeight: 600,
-                                    letterSpacing: "0.04em",
-                                }}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded text-[13px] font-semibold text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                style={{ background: "#2B5CE6", letterSpacing: "0.04em" }}
                             >
                                 {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> CONVENING…</> : "CONVENE THE COUNCIL"}
                             </button>
@@ -314,31 +294,31 @@ export default function CouncilPage() {
                 )}
 
                 {error && (
-                    <div className="flex items-start gap-3 rounded p-4 mb-6" style={{ background: "#2B0A0A", border: "1px solid #C7341A" }}>
-                        <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: "#C7341A" }} />
+                    <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 mb-6">
+                        <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-red-500" />
                         <div>
-                            <p className="text-sm font-semibold" style={{ color: "#C7341A" }}>Council failed</p>
-                            <p className="text-xs mt-0.5" style={{ color: "#ABABAB" }}>{error}</p>
+                            <p className="text-sm font-semibold text-red-700">Council failed</p>
+                            <p className="text-xs mt-0.5 text-red-600">{error}</p>
                         </div>
                     </div>
                 )}
 
                 {loading && (
-                    <div className="rounded p-6 mb-6 text-center" style={{ background: "#161615", border: "1px solid #2A2A28" }}>
+                    <div className="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-6 text-center">
                         <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3" style={{ color: "#2B5CE6" }} />
-                        <p className="text-sm font-semibold" style={{ color: "#ABABAB" }}>The council is deliberating…</p>
-                        <p className="text-xs mt-1" style={{ color: "#717171" }}>Running five advisors + peer review + chairman synthesis</p>
+                        <p className="text-sm font-semibold text-gray-700">The council is deliberating…</p>
+                        <p className="text-xs mt-1 text-gray-400">Running five advisors + peer review + chairman synthesis</p>
                     </div>
                 )}
 
                 {result && (
                     <div className="space-y-5">
-                        <div className="rounded p-4" style={{ background: "#161615", border: "1px solid #2A2A28" }}>
-                            <p className="text-xs font-semibold tracking-widest mb-2" style={{ color: "#717171", letterSpacing: "0.10em" }}>QUESTION AS FRAMED BY THE COUNCIL</p>
-                            <p className="text-sm leading-relaxed" style={{ color: "#ABABAB" }}>{result.framedQuestion}</p>
+                        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                            <p className="text-xs font-semibold tracking-widest text-gray-400 mb-2" style={{ letterSpacing: "0.10em" }}>QUESTION AS FRAMED BY THE COUNCIL</p>
+                            <Prose>{result.framedQuestion}</Prose>
                         </div>
                         <div>
-                            <p className="text-xs font-semibold tracking-widest mb-3" style={{ color: "#717171", letterSpacing: "0.10em" }}>ADVISOR RESPONSES</p>
+                            <p className="text-xs font-semibold tracking-widest text-gray-400 mb-3" style={{ letterSpacing: "0.10em" }}>ADVISOR RESPONSES</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {ADVISORS.map(advisor => (
                                     <AdvisorCard key={advisor.role} advisor={advisor} response={getAdvisorResponse(advisor.role)} />
@@ -349,8 +329,7 @@ export default function CouncilPage() {
                         <div className="text-center pt-2">
                             <button
                                 onClick={() => { setResult(null); setQuestion(""); setContext(""); setError(null); }}
-                                className="text-sm transition-colors hover:underline underline-offset-4"
-                                style={{ color: "#717171" }}
+                                className="text-sm text-gray-500 hover:text-gray-700 transition-colors hover:underline underline-offset-4"
                             >
                                 Convene a new session
                             </button>

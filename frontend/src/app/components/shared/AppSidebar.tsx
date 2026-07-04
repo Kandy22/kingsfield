@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import {
     MessageSquare, FolderOpen, Table2, Library,
-    User, ChevronsUpDown, ChevronDown,
+    User, ChevronsUpDown, ChevronDown, LogOut,
     BookOpen, Scroll, Scale, Plus, Network,
 } from "lucide-react";
 import Image from "next/image";
@@ -44,7 +44,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
     const { profile } = useUserProfile();
     const { chats, currentChatId, setCurrentChatId } = useChatHistoryContext();
     const router = useRouter();
@@ -301,6 +301,12 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
                                     onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}>
                                     <User style={{ width: 14, height: 14 }} /> Account Settings
+                                </button>
+                                <button onClick={async () => { setDropdownOpen(false); await signOut(); router.push("/"); }}
+                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-dm-sans)" }}
+                                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
+                                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}>
+                                    <LogOut style={{ width: 14, height: 14 }} /> Sign Out
                                 </button>
                             </div>
                         )}

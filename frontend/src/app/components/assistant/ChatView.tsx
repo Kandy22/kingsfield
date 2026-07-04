@@ -741,8 +741,7 @@ export function ChatView({
                             />
                             <div className="py-3 text-center">
                                 <p className="text-xs text-gray-500">
-                                    AI can make mistakes. Answers are not legal
-                                    advice.
+                                    Every citation verified · Primary sources only · Not legal advice — legal knowledge.
                                 </p>
                             </div>
                         </div>

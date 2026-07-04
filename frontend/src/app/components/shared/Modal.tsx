@@ -73,7 +73,7 @@ export function Modal({
         <div
             className={cn(
                 "fixed inset-0 z-[200] flex items-center justify-center px-4",
-                "bg-white/30 backdrop-blur-[2px]",
+                "bg-gray-900/50 backdrop-blur-[2px]",
             )}
             onClick={onClose}
         >
@@ -81,7 +81,7 @@ export function Modal({
                 className={cn(
                     "w-full rounded-3xl flex h-[600px] flex-col",
                     sizeClassName[size],
-                    "border border-white/70 bg-white/94 shadow-[0_12px_36px_rgba(15,23,42,0.1)] backdrop-blur-2xl",
+                    "border border-gray-200 bg-white shadow-[0_12px_36px_rgba(15,23,42,0.18)]",
                     className,
                 )}
                 onClick={(e) => e.stopPropagation()}

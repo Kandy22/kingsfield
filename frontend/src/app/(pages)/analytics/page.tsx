@@ -1,346 +1,407 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
-import * as d3 from "d3";
+import { useEffect, useState, useCallback } from "react";
+import { Loader2, Sparkles, FileText, Network as NetworkIcon, Scale, Gavel, ShieldCheck, Users } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
-type NodeType = "judge" | "case" | "party" | "court";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
-interface GraphNode {
+async function getAuthHeader(): Promise<Record<string, string>> {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return {};
+    return { Authorization: `Bearer ${session.access_token}` };
+}
+
+// ── Types mirroring backend/src/lib/caseIntelligence.ts ────────────────────
+type EntityRole = "judge" | "opposing_counsel" | "da" | "witness" | "party" | "court" | "expert" | "other";
+type Novelty = "common" | "uncommon" | "novel";
+interface CaseEntity { name: string; role: EntityRole; note?: string; }
+interface CaseAllegation { claim: string; authorities: string[]; strength?: string | null; novelty?: Novelty | null; }
+interface CaseDefense { defense: string; responds_to?: string | null; authorities: string[]; novelty?: Novelty | null; }
+interface CaseAuthority { citation: string; proposition?: string; treatment?: string | null; cite_count?: number | null; }
+interface CaseRarity { score: number; label: string; rationale: string; }
+interface Extraction {
     id: string;
-    label: string;
-    type: NodeType;
-    subtitle?: string;
-    x?: number;
-    y?: number;
-    fx?: number | null;
-    fy?: number | null;
+    document_id: string;
+    caption: string | null;
+    entities: CaseEntity[];
+    allegations: CaseAllegation[];
+    defenses: CaseDefense[];
+    authorities: CaseAuthority[];
+    rarity: CaseRarity | null;
+    defense_summary: string | null;
+    updated_at: string;
 }
+interface DocOption { id: string; filename: string; analyzed: boolean; }
 
-interface GraphLink {
-    source: string | GraphNode;
-    target: string | GraphNode;
-    relation: string;
-}
-
-const NODE_COLORS: Record<NodeType, string> = {
-    judge:  "#2B5CE6",
-    case:   "#ECECEC",
-    party:  "#5B8ECC",
-    court:  "#9B6FD8",
+const ROLE_COLORS: Record<string, string> = {
+    judge: "#2B5CE6",
+    opposing_counsel: "#C7341A",
+    da: "#C7341A",
+    witness: "#E8B121",
+    expert: "#7A3FD6",
+    party: "#1F8A5B",
+    court: "#5B8ECC",
+    other: "#8A8A84",
 };
 
-const NODE_RADIUS: Record<NodeType, number> = {
-    judge: 14,
-    case:  11,
-    party:  8,
-    court: 12,
+const ROLE_LABEL: Record<string, string> = {
+    judge: "Judge", opposing_counsel: "Opposing counsel", da: "DA / prosecution",
+    witness: "Witness", expert: "Expert", party: "Party", court: "Court", other: "Other",
 };
 
-const MOCK_NODES: GraphNode[] = [
-    { id: "j1",  label: "Kavanaugh, B.",     type: "judge",  subtitle: "Associate Justice" },
-    { id: "j2",  label: "Roberts, J.",       type: "judge",  subtitle: "Chief Justice" },
-    { id: "j3",  label: "Jackson, K.",       type: "judge",  subtitle: "Associate Justice" },
-    { id: "j4",  label: "Thomas, C.",        type: "judge",  subtitle: "Associate Justice" },
-    { id: "j5",  label: "Sotomayor, S.",     type: "judge",  subtitle: "Associate Justice" },
-    { id: "c1",  label: "Dobbs v. Jackson",  type: "case",   subtitle: "597 U.S. 215 (2022)" },
-    { id: "c2",  label: "Bruen",             type: "case",   subtitle: "597 U.S. 1 (2022)" },
-    { id: "c3",  label: "West Virginia v. EPA", type: "case", subtitle: "597 U.S. 697 (2022)" },
-    { id: "c4",  label: "Moore v. Harper",   type: "case",   subtitle: "600 U.S. 1 (2023)" },
-    { id: "c5",  label: "303 Creative",      type: "case",   subtitle: "600 U.S. 570 (2023)" },
-    { id: "c6",  label: "Loper Bright",      type: "case",   subtitle: "603 U.S. (2024)" },
-    { id: "c7",  label: "Trump v. US",       type: "case",   subtitle: "603 U.S. (2024)" },
-    { id: "p1",  label: "State of MS",       type: "party" },
-    { id: "p2",  label: "Jackson Women's Health", type: "party" },
-    { id: "p3",  label: "EPA",               type: "party" },
-    { id: "p4",  label: "NYSRPA",            type: "party" },
-    { id: "p5",  label: "303 Creative LLC",  type: "party" },
-    { id: "p6",  label: "Loper Bright Enter.", type: "party" },
-    { id: "ct1", label: "SCOTUS",            type: "court" },
-    { id: "ct2", label: "5th Circuit",       type: "court" },
-    { id: "ct3", label: "2nd Circuit",       type: "court" },
+// Column accents — the 3 color-coded categories
+const CAT = {
+    allegation: "#C7341A",
+    authority: "#2B5CE6",
+    defense: "#1F8A5B",
+};
+
+// ── Common ↔ rare clustering ────────────────────────────────────────────────
+// Allegations/defenses: agent-judged novelty. Authorities: CourtListener
+// citation frequency (cite_count), enriched at extraction time.
+const NOVELTY_TIERS: { key: Novelty; label: string }[] = [
+    { key: "common", label: "Common — boilerplate" },
+    { key: "uncommon", label: "Less common — fact-specific" },
+    { key: "novel", label: "Rare / novel theory" },
 ];
 
-const MOCK_LINKS: GraphLink[] = [
-    { source: "j2", target: "c1", relation: "authored majority" },
-    { source: "j1", target: "c2", relation: "authored majority" },
-    { source: "j2", target: "c3", relation: "authored majority" },
-    { source: "j2", target: "c4", relation: "authored majority" },
-    { source: "j1", target: "c5", relation: "authored majority" },
-    { source: "j2", target: "c6", relation: "authored majority" },
-    { source: "j2", target: "c7", relation: "authored majority" },
-    { source: "j4", target: "c1", relation: "concurrence" },
-    { source: "j4", target: "c2", relation: "concurrence" },
-    { source: "j3", target: "c6", relation: "dissent" },
-    { source: "j3", target: "c7", relation: "dissent" },
-    { source: "j5", target: "c1", relation: "dissent" },
-    { source: "j5", target: "c3", relation: "dissent" },
-    { source: "p1", target: "c1", relation: "petitioner" },
-    { source: "p2", target: "c1", relation: "respondent" },
-    { source: "p3", target: "c3", relation: "respondent" },
-    { source: "p4", target: "c2", relation: "petitioner" },
-    { source: "p5", target: "c5", relation: "petitioner" },
-    { source: "p6", target: "c6", relation: "petitioner" },
-    { source: "c1", target: "ct1", relation: "decided by" },
-    { source: "c2", target: "ct1", relation: "decided by" },
-    { source: "c3", target: "ct1", relation: "decided by" },
-    { source: "c4", target: "ct1", relation: "decided by" },
-    { source: "c5", target: "ct1", relation: "decided by" },
-    { source: "c6", target: "ct1", relation: "decided by" },
-    { source: "c7", target: "ct1", relation: "decided by" },
-    { source: "c1", target: "ct2", relation: "appealed from" },
-    { source: "c2", target: "ct3", relation: "appealed from" },
-    { source: "c6", target: "ct2", relation: "appealed from" },
-    { source: "c3", target: "c6",  relation: "overruled by" },
-    { source: "c1", target: "c5",  relation: "cited in" },
-    { source: "c2", target: "c5",  relation: "cited in" },
-];
+function authorityTier(a: CaseAuthority): { order: number; label: string } {
+    if (a.cite_count == null) return { order: 3, label: "Rules, statutes & unresolved" };
+    if (a.cite_count >= 1000) return { order: 0, label: "Landmark — 1,000+ citing opinions" };
+    if (a.cite_count >= 100) return { order: 1, label: "Well-established — 100+ citing opinions" };
+    return { order: 2, label: "Rarely cited — under 100" };
+}
 
-const FILTERS: { key: NodeType | "all"; label: string }[] = [
-    { key: "all",   label: "ALL" },
-    { key: "judge", label: "JUDGES" },
-    { key: "case",  label: "CASES" },
-    { key: "party", label: "PARTIES" },
-    { key: "court", label: "COURTS" },
-];
+function groupBy<T>(items: T[], keyOf: (t: T) => string): [string, T[]][] {
+    const m = new Map<string, T[]>();
+    for (const it of items) {
+        const k = keyOf(it);
+        m.set(k, [...(m.get(k) ?? []), it]);
+    }
+    return [...m.entries()];
+}
 
-export default function AnalyticsPage() {
-    const svgRef = useRef<SVGSVGElement>(null);
-    const [filter, setFilter] = useState<NodeType | "all">("all");
-    const [selected, setSelected] = useState<GraphNode | null>(null);
-    const [connectedLinks, setConnectedLinks] = useState<GraphLink[]>([]);
+// ── The players (entities grouped by role — replaces the force graph) ──────
+function PlayersRow({ entities }: { entities: CaseEntity[] }) {
+    if (entities.length === 0) return null;
+    const groups = groupBy(entities, (e) => e.role);
+    return (
+        <div>
+            <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <Users className="h-3.5 w-3.5" /> The players
+            </div>
+            <div className="flex flex-wrap gap-x-6 gap-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                {groups.map(([role, list]) => (
+                    <div key={role}>
+                        <p className="text-[10px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: ROLE_COLORS[role] ?? "#8A8A84" }}>
+                            {ROLE_LABEL[role] ?? role}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                            {list.map((e, i) => (
+                                <span key={i} title={e.note}
+                                    className="text-xs px-2 py-1 rounded-full border bg-white text-gray-700"
+                                    style={{ borderColor: `${ROLE_COLORS[e.role] ?? "#8A8A84"}55` }}>
+                                    {e.name}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
-    const selectNode = useCallback((node: GraphNode) => {
-        setSelected(node);
-        const links = MOCK_LINKS.filter(l => {
-            const srcId = typeof l.source === "string" ? l.source : l.source.id;
-            const tgtId = typeof l.target === "string" ? l.target : l.target.id;
-            return srcId === node.id || tgtId === node.id;
-        });
-        setConnectedLinks(links);
-    }, []);
+// ── Column building blocks ──────────────────────────────────────────────────
+function ColumnHeader({ color, icon: Icon, label, count }: { color: string; icon: any; label: string; count: number }) {
+    return (
+        <div className="flex items-center gap-1.5 pb-2 mb-3 border-b-2" style={{ borderColor: color }}>
+            <Icon className="h-3.5 w-3.5" style={{ color }} />
+            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color }}>
+                {label} ({count})
+            </span>
+        </div>
+    );
+}
 
-    useEffect(() => {
-        if (!svgRef.current) return;
-        const svg = d3.select(svgRef.current);
-        svg.selectAll("*").remove();
+function TierLabel({ children }: { children: React.ReactNode }) {
+    return (
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mt-3 mb-1.5 first:mt-0">
+            {children}
+        </p>
+    );
+}
 
-        const el = svgRef.current;
-        const W = el.clientWidth || 800;
-        const H = el.clientHeight || 600;
+function AuthorityChips({ citations, hoverAuth, setHoverAuth }: {
+    citations: string[]; hoverAuth: string | null; setHoverAuth: (s: string | null) => void;
+}) {
+    if (citations.length === 0) return null;
+    return (
+        <div className="flex flex-wrap gap-1 mt-2">
+            {citations.map((c, j) => (
+                <span key={j} onMouseEnter={() => setHoverAuth(c)} onMouseLeave={() => setHoverAuth(null)}
+                    className="text-[10px] px-1.5 py-0.5 rounded font-mono cursor-default"
+                    style={{ background: "rgba(43,92,230,0.08)", color: CAT.authority }}>
+                    {c.length > 30 ? c.slice(0, 28) + "…" : c}
+                </span>
+            ))}
+        </div>
+    );
+}
 
-        const visibleTypes = filter === "all"
-            ? (["judge","case","party","court"] as NodeType[])
-            : [filter];
+// ── The 3-column clustered layout ───────────────────────────────────────────
+function ClusterColumns({ ex }: { ex: Extraction }) {
+    const [hoverAuth, setHoverAuth] = useState<string | null>(null);
+    const cites = (list: string[]) => hoverAuth !== null && list.includes(hoverAuth);
 
-        const nodes: GraphNode[] = MOCK_NODES
-            .filter(n => visibleTypes.includes(n.type))
-            .map(n => ({ ...n }));
+    // Allegations & defenses clustered by agent-judged novelty
+    function noveltyTiers<T extends { novelty?: Novelty | null }>(items: T[]) {
+        const tiers = NOVELTY_TIERS
+            .map((t) => ({ label: t.label, items: items.filter((i) => i.novelty === t.key) }))
+            .filter((t) => t.items.length > 0);
+        const unrated = items.filter((i) => !i.novelty);
+        if (unrated.length > 0) {
+            // Old extractions (pre-novelty) land here; re-analyze to classify.
+            tiers.push({ label: tiers.length ? "Unclassified — re-analyze to rank" : "", items: unrated });
+        }
+        return tiers;
+    }
 
-        const nodeIds = new Set(nodes.map(n => n.id));
-        const links: GraphLink[] = MOCK_LINKS.filter(l => {
-            const srcId = typeof l.source === "string" ? l.source : (l.source as GraphNode).id;
-            const tgtId = typeof l.target === "string" ? l.target : (l.target as GraphNode).id;
-            return nodeIds.has(srcId) && nodeIds.has(tgtId);
-        }).map(l => ({ ...l }));
-
-        const g = svg.append("g");
-
-        // Zoom
-        svg.call(d3.zoom<SVGSVGElement, unknown>()
-            .scaleExtent([0.3, 3])
-            .on("zoom", (e) => g.attr("transform", e.transform)) as any);
-
-        const sim = d3.forceSimulation<GraphNode>(nodes)
-            .force("link", d3.forceLink<GraphNode, GraphLink>(links)
-                .id(d => d.id)
-                .distance(d => {
-                    const s = d.source as GraphNode;
-                    const t = d.target as GraphNode;
-                    if (s.type === "judge" && t.type === "case") return 90;
-                    if (s.type === "case"  && t.type === "court") return 80;
-                    return 110;
-                })
-                .strength(0.4))
-            .force("charge", d3.forceManyBody().strength(-280))
-            .force("center", d3.forceCenter(W / 2, H / 2))
-            .force("collision", d3.forceCollide<GraphNode>(d => NODE_RADIUS[d.type] + 18));
-
-        // Links
-        const linkGroup = g.append("g").attr("class", "links");
-        const linkEl = linkGroup.selectAll("line")
-            .data(links)
-            .join("line")
-            .attr("stroke", "#2A2A28")
-            .attr("stroke-width", 1)
-            .attr("stroke-opacity", 0.7);
-
-        // Nodes
-        const nodeGroup = g.append("g").attr("class", "nodes");
-        const nodeEl = nodeGroup.selectAll("g")
-            .data(nodes)
-            .join("g")
-            .attr("cursor", "pointer")
-            .call(d3.drag<SVGGElement, GraphNode>()
-                .on("start", (e, d) => {
-                    if (!e.active) sim.alphaTarget(0.3).restart();
-                    d.fx = d.x; d.fy = d.y;
-                })
-                .on("drag", (e, d) => { d.fx = e.x; d.fy = e.y; })
-                .on("end", (e, d) => {
-                    if (!e.active) sim.alphaTarget(0);
-                    d.fx = null; d.fy = null;
-                }) as any)
-            .on("click", (_, d) => selectNode(d));
-
-        nodeEl.append("circle")
-            .attr("r", d => NODE_RADIUS[d.type])
-            .attr("fill", d => `${NODE_COLORS[d.type]}22`)
-            .attr("stroke", d => NODE_COLORS[d.type])
-            .attr("stroke-width", 1.5);
-
-        nodeEl.append("text")
-            .text(d => d.label.split(" ")[0])
-            .attr("text-anchor", "middle")
-            .attr("dy", "0.35em")
-            .attr("fill", d => NODE_COLORS[d.type])
-            .attr("font-size", d => d.type === "judge" ? 7 : 6)
-            .attr("font-family", "IBM Plex Mono, monospace")
-            .attr("pointer-events", "none");
-
-        nodeEl.append("title").text(d => d.label);
-
-        sim.on("tick", () => {
-            linkEl
-                .attr("x1", d => (d.source as GraphNode).x ?? 0)
-                .attr("y1", d => (d.source as GraphNode).y ?? 0)
-                .attr("x2", d => (d.target as GraphNode).x ?? 0)
-                .attr("y2", d => (d.target as GraphNode).y ?? 0);
-
-            nodeEl.attr("transform", d => `translate(${d.x ?? 0},${d.y ?? 0})`);
-        });
-
-        return () => { sim.stop(); };
-    }, [filter, selectNode]);
-
-    const getConnectedNodes = () => {
-        if (!selected) return [];
-        return connectedLinks.map(l => {
-            const srcId = typeof l.source === "string" ? l.source : (l.source as GraphNode).id;
-            const tgtId = typeof l.target === "string" ? l.target : (l.target as GraphNode).id;
-            const otherId = srcId === selected.id ? tgtId : srcId;
-            return { node: MOCK_NODES.find(n => n.id === otherId), relation: l.relation, direction: srcId === selected.id ? "→" : "←" };
-        }).filter(x => x.node);
-    };
+    // Authorities clustered by CourtListener citation frequency
+    const authorityTiers = groupBy(ex.authorities, (a) => String(authorityTier(a).order))
+        .sort(([a], [b]) => Number(a) - Number(b))
+        .map(([, items]) => ({ label: authorityTier(items[0]).label, items }));
 
     return (
-        <div className="h-full flex flex-col" style={{ background: "#0A0A0A" }}>
-            {/* Header */}
-            <div className="px-6 pt-6 pb-4 flex-shrink-0" style={{ borderBottom: "1px solid #2A2A28" }}>
-                <div className="text-xs font-semibold tracking-widest mb-1" style={{ color: "#717171", letterSpacing: "0.15em" }}>
-                    KINGSFIELD · JUDICIAL INTELLIGENCE
-                </div>
-                <h1 style={{
-                    fontFamily: "var(--font-bebas), 'Bebas Neue', sans-serif",
-                    fontSize: 40,
-                    lineHeight: 1,
-                    color: "#ECECEC",
-                    letterSpacing: "0.02em",
-                }}>JUDICIAL CONNECTION GRAPH</h1>
-                <p className="text-xs mt-1" style={{ color: "#717171" }}>
-                    Map how judges, cases, parties, and courts relate. Click any node to explore its connections.
-                </p>
-
-                {/* Filter tabs */}
-                <div className="flex gap-2 mt-4">
-                    {FILTERS.map(f => (
-                        <button
-                            key={f.key}
-                            onClick={() => { setFilter(f.key); setSelected(null); }}
-                            className="px-3 py-1.5 rounded text-xs font-bold tracking-widest transition-all"
-                            style={{
-                                fontFamily: "var(--font-bebas), 'Bebas Neue', sans-serif",
-                                fontSize: 12,
-                                letterSpacing: "0.10em",
-                                background: filter === f.key ? "#2B5CE6" : "#161615",
-                                color: filter === f.key ? "#0B0B0B" : "#717171",
-                                border: `1px solid ${filter === f.key ? "#2B5CE6" : "#2A2A28"}`,
-                            }}
-                        >
-                            {f.label}
-                        </button>
-                    ))}
-
-                    {/* Legend */}
-                    <div className="ml-auto flex items-center gap-4">
-                        {(["judge","case","party","court"] as NodeType[]).map(t => (
-                            <div key={t} className="flex items-center gap-1.5">
-                                <div className="w-2.5 h-2.5 rounded-full" style={{ background: NODE_COLORS[t] }} />
-                                <span className="text-xs capitalize" style={{ color: "#717171" }}>{t}</span>
-                            </div>
-                        ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Allegations */}
+            <div>
+                <ColumnHeader color={CAT.allegation} icon={Scale} label="Allegations" count={ex.allegations.length} />
+                {noveltyTiers(ex.allegations).map((tier, ti) => (
+                    <div key={ti}>
+                        {tier.label && <TierLabel>{tier.label}</TierLabel>}
+                        <div className="space-y-2">
+                            {tier.items.map((a, i) => (
+                                <div key={i} className={`rounded-lg border p-3 transition-colors ${cites(a.authorities) ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-gray-50"}`}>
+                                    <p className="text-sm text-gray-800">{a.claim}</p>
+                                    {a.strength && (
+                                        <span className="inline-block mt-1.5 text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
+                                            {a.strength}
+                                        </span>
+                                    )}
+                                    <AuthorityChips citations={a.authorities} hoverAuth={hoverAuth} setHoverAuth={setHoverAuth} />
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                ))}
+                {ex.allegations.length === 0 && <p className="text-xs text-gray-400">None extracted.</p>}
             </div>
 
-            {/* Graph + Side panel */}
-            <div className="flex-1 flex min-h-0">
-                <svg
-                    ref={svgRef}
-                    className="flex-1"
-                    style={{ background: "#0A0A0A", cursor: "grab" }}
-                />
-
-                {selected && (
-                    <div className="flex-shrink-0 flex flex-col overflow-y-auto"
-                        style={{ width: 280, background: "#161615", borderLeft: "1px solid #2A2A28" }}>
-                        <div className="p-5" style={{ borderBottom: "1px solid #2A2A28" }}>
-                            <div className="text-xs font-semibold tracking-widest mb-2"
-                                style={{ color: NODE_COLORS[selected.type], letterSpacing: "0.10em", fontFamily: "var(--font-bebas), sans-serif", fontSize: 11 }}>
-                                {selected.type.toUpperCase()}
-                            </div>
-                            <div className="text-base font-semibold" style={{ color: "#ECECEC" }}>{selected.label}</div>
-                            {selected.subtitle && (
-                                <div className="text-xs mt-1" style={{ color: "#717171", fontFamily: "var(--font-ibm-plex-mono), monospace" }}>
-                                    {selected.subtitle}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="p-5">
-                            <div className="text-xs font-semibold tracking-widest mb-3"
-                                style={{ color: "#717171", letterSpacing: "0.10em" }}>
-                                CONNECTIONS ({connectedLinks.length})
-                            </div>
-                            <div className="space-y-2">
-                                {getConnectedNodes().map((item, i) => item.node && (
-                                    <button
-                                        key={i}
-                                        onClick={() => selectNode(item.node!)}
-                                        className="w-full text-left rounded p-2.5 transition-all hover:bg-white/5"
-                                        style={{ border: "1px solid #2A2A28" }}
-                                    >
-                                        <div className="flex items-center justify-between gap-2">
-                                            <span className="text-xs font-medium" style={{ color: NODE_COLORS[item.node.type] }}>
-                                                {item.node.label}
+            {/* Authorities (middle — the connective tissue) */}
+            <div>
+                <ColumnHeader color={CAT.authority} icon={Gavel} label="Authorities" count={ex.authorities.length} />
+                {authorityTiers.map((tier, ti) => (
+                    <div key={ti}>
+                        <TierLabel>{tier.label}</TierLabel>
+                        <div className="space-y-2">
+                            {tier.items.map((a, i) => (
+                                <div key={i} onMouseEnter={() => setHoverAuth(a.citation)} onMouseLeave={() => setHoverAuth(null)}
+                                    className={`rounded-lg border p-2.5 cursor-default transition-colors ${hoverAuth === a.citation ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-white"}`}>
+                                    <div className="flex items-baseline justify-between gap-2">
+                                        <p className="text-xs font-mono font-medium text-gray-900">{a.citation}</p>
+                                        {a.cite_count != null && (
+                                            <span className="text-[10px] font-mono text-gray-400 flex-shrink-0" title="Citing opinions on CourtListener">
+                                                {a.cite_count.toLocaleString()}×
                                             </span>
-                                            <span className="text-xs" style={{ color: "#4A4A46" }}>{item.direction}</span>
-                                        </div>
-                                        <div className="text-xs mt-0.5" style={{ color: "#4A4A46", fontFamily: "var(--font-ibm-plex-mono), monospace" }}>
-                                            {item.relation}
-                                        </div>
+                                        )}
+                                    </div>
+                                    {a.proposition && <p className="text-[11px] text-gray-500 mt-0.5 leading-snug">{a.proposition}</p>}
+                                    {a.treatment && <span className="inline-block mt-1 text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">{a.treatment.replace(/_/g, " ")}</span>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+                {ex.authorities.length === 0 && <p className="text-xs text-gray-400">None cited.</p>}
+            </div>
+
+            {/* Defenses */}
+            <div>
+                <ColumnHeader color={CAT.defense} icon={ShieldCheck} label="Defenses" count={ex.defenses.length} />
+                {noveltyTiers(ex.defenses).map((tier, ti) => (
+                    <div key={ti}>
+                        {tier.label && <TierLabel>{tier.label}</TierLabel>}
+                        <div className="space-y-2">
+                            {tier.items.map((d, i) => (
+                                <div key={i} className={`rounded-lg border p-3 transition-colors ${cites(d.authorities) ? "border-blue-400 bg-blue-50" : "border-gray-200 bg-gray-50"}`}>
+                                    <p className="text-sm text-gray-800">{d.defense}</p>
+                                    {d.responds_to && <p className="text-[11px] text-gray-400 mt-1 italic">↳ responds to: {d.responds_to}</p>}
+                                    <AuthorityChips citations={d.authorities} hoverAuth={hoverAuth} setHoverAuth={setHoverAuth} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+                {ex.defenses.length === 0 && <p className="text-xs text-gray-400">None extracted.</p>}
+            </div>
+        </div>
+    );
+}
+
+export default function AnalyticsPage() {
+    const [extractions, setExtractions] = useState<Extraction[]>([]);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [docs, setDocs] = useState<DocOption[]>([]);
+    const [pickDoc, setPickDoc] = useState<string>("");
+    const [analyzing, setAnalyzing] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const load = useCallback(async () => {
+        setLoading(true);
+        try {
+            const headers = await getAuthHeader();
+            const [exRes, docRes] = await Promise.all([
+                fetch(`${API_BASE}/api/analytics`, { headers }),
+                fetch(`${API_BASE}/api/analytics/documents`, { headers }),
+            ]);
+            const exData = await exRes.json();
+            const docData = await docRes.json();
+            const list: Extraction[] = exData.extractions ?? [];
+            setExtractions(list);
+            setDocs(docData.documents ?? []);
+            if (list.length && !selectedId) setSelectedId(list[0].id);
+        } catch (e: any) {
+            setError(e.message ?? "Failed to load analytics");
+        } finally {
+            setLoading(false);
+        }
+    }, [selectedId]);
+
+    useEffect(() => { void load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    async function analyze() {
+        if (!pickDoc) return;
+        setAnalyzing(true);
+        setError(null);
+        try {
+            const headers = await getAuthHeader();
+            const res = await fetch(`${API_BASE}/api/analytics/extract`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", ...headers },
+                body: JSON.stringify({ documentId: pickDoc }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail ?? "Extraction failed");
+            await load();
+            setSelectedId(data.extraction.id);
+            setPickDoc("");
+        } catch (e: any) {
+            setError(e.message ?? "Extraction failed");
+        } finally {
+            setAnalyzing(false);
+        }
+    }
+
+    const selected = extractions.find(e => e.id === selectedId) ?? null;
+
+    return (
+        <div className="h-full overflow-y-auto bg-white">
+            <div className="max-w-6xl mx-auto px-6 py-8">
+                {/* Header */}
+                <div className="mb-6">
+                    <div className="text-xs font-semibold tracking-widest text-gray-500 mb-1" style={{ letterSpacing: "0.15em" }}>
+                        KINGSFIELD · CASE INTELLIGENCE
+                    </div>
+                    <h1 className="font-serif font-light text-gray-900" style={{ fontSize: 40, lineHeight: 1 }}>Analytics</h1>
+                    <p className="text-sm text-gray-500 mt-2 max-w-2xl">
+                        Upload a document, and the extraction agent maps it: who&apos;s involved (judge, opposing counsel, witnesses),
+                        what&apos;s alleged, what the defense is, which authorities are cited — clustered from boilerplate to novel.
+                    </p>
+                </div>
+
+                {/* Analyze toolbar */}
+                <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-lg border border-gray-200 bg-gray-50">
+                    <FileText className="h-4 w-4 text-gray-400" />
+                    <select value={pickDoc} onChange={e => setPickDoc(e.target.value)}
+                        className="flex-1 min-w-[200px] rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900">
+                        <option value="">Select a document to analyze…</option>
+                        {docs.map(d => (
+                            <option key={d.id} value={d.id}>{d.filename}{d.analyzed ? "  ✓ analyzed" : ""}</option>
+                        ))}
+                    </select>
+                    <button onClick={analyze} disabled={!pickDoc || analyzing}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                        {analyzing ? <><Loader2 className="h-4 w-4 animate-spin" /> Extracting…</> : <><Sparkles className="h-4 w-4" /> Analyze document</>}
+                    </button>
+                </div>
+
+                {error && <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700">{error}</div>}
+
+                {loading ? (
+                    <div className="flex items-center justify-center gap-2 text-sm text-gray-500 py-24">
+                        <Loader2 className="h-4 w-4 animate-spin" /> Loading case intelligence…
+                    </div>
+                ) : extractions.length === 0 ? (
+                    <div className="text-center py-20 border border-dashed border-gray-200 rounded-lg">
+                        <NetworkIcon className="h-8 w-8 text-gray-300 mx-auto mb-3" />
+                        <p className="text-sm font-medium text-gray-700">No case intelligence yet</p>
+                        <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
+                            Pick a document above and hit Analyze. The agent will map its entities, allegations, defenses, and authorities here.
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        {/* Case selector tabs */}
+                        {extractions.length > 1 && (
+                            <div className="flex flex-wrap gap-2 mb-5">
+                                {extractions.map(e => (
+                                    <button key={e.id} onClick={() => setSelectedId(e.id)}
+                                        className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${selectedId === e.id ? "border-gray-900 bg-gray-900 text-white" : "border-gray-200 text-gray-600 hover:border-gray-400"}`}>
+                                        {e.caption ?? "Untitled case"}
                                     </button>
                                 ))}
                             </div>
-                        </div>
+                        )}
 
-                        <button
-                            onClick={() => setSelected(null)}
-                            className="mx-5 mb-5 mt-auto px-3 py-2 rounded text-xs transition-all"
-                            style={{ border: "1px solid #2A2A28", color: "#717171" }}
-                        >
-                            Clear selection
-                        </button>
-                    </div>
+                        {selected && (
+                            <div className="space-y-6">
+                                {/* Caption + rarity */}
+                                <div className="flex flex-wrap items-start justify-between gap-4">
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-gray-900">{selected.caption}</h2>
+                                        {selected.defense_summary && <p className="text-sm text-gray-500 mt-1 max-w-2xl">{selected.defense_summary}</p>}
+                                    </div>
+                                    {selected.rarity && (
+                                        <div className="flex-shrink-0 text-right">
+                                            <div className="text-[10px] uppercase tracking-wider text-gray-400">Fact-pattern rarity</div>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <div className="w-28 h-1.5 rounded-full bg-gray-200 overflow-hidden">
+                                                    <div className="h-full rounded-full" style={{ width: `${selected.rarity.score}%`, background: selected.rarity.score > 66 ? "#C7341A" : selected.rarity.score > 33 ? "#E8B121" : "#1F8A5B" }} />
+                                                </div>
+                                                <span className="text-xs font-medium text-gray-700">{selected.rarity.label}</span>
+                                            </div>
+                                            {selected.rarity.rationale && <p className="text-[11px] text-gray-400 mt-1 max-w-[220px]">{selected.rarity.rationale}</p>}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* The players */}
+                                <PlayersRow entities={selected.entities} />
+
+                                {/* Columnar cluster — the core view */}
+                                <div>
+                                    <div className="flex items-center gap-1.5 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                        <Scale className="h-3.5 w-3.5" /> Allegations · Authorities · Defenses
+                                        <span className="font-normal normal-case text-gray-400 ml-1">— clustered common → rare · hover an authority to see what it supports</span>
+                                    </div>
+                                    <ClusterColumns ex={selected} />
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>
