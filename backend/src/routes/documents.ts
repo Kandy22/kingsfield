@@ -1318,6 +1318,9 @@ async function handleDocumentUpload(
       project_id: projectId,
       user_id: userId,
       status: "processing",
+      filename,
+      file_type: suffix,
+      size_bytes: content.byteLength,
     })
     .select("*")
     .single();
@@ -1433,7 +1436,37 @@ async function handleDocumentUpload(
           active_version_number: 1,
         }
       : updated;
-    return void res.status(201).json(responseDoc);
+    res.status(201).json(responseDoc);
+
+    // Fire-and-forget: project uploads feed Analytics automatically, same as
+    // tabular-review attach (see routes/tabular.ts). Standalone uploads keep
+    // the manual "Analyze" path.
+    if (projectId) {
+      void (async () => {
+        try {
+          const { runCaseExtraction } = await import("../lib/caseIntelligence.js");
+          const { getUserModelSettings } = await import("../lib/userSettings.js");
+          const { data: existing } = await db
+            .from("case_intelligence")
+            .select("id")
+            .eq("document_id", docId)
+            .maybeSingle();
+          if (existing) return; // don't re-extract
+          const settings = await getUserModelSettings(userId, db);
+          await runCaseExtraction({
+            documentId: docId,
+            userId,
+            projectId,
+            model: settings.tabular_model,
+            apiKeys: settings.api_keys,
+            db,
+          });
+        } catch (err) {
+          console.error("[documents/upload] auto case-extraction failed", err);
+        }
+      })();
+    }
+    return;
   } catch (e) {
     await db.from("documents").update({ status: "error" }).eq("id", doc.id);
     return void res

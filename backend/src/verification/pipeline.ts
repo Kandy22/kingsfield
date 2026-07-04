@@ -234,6 +234,10 @@ function assessJurisdictionFit(
   matter: MatterContext,
 ): 'mandatory' | 'persuasive' | 'off-point' | null {
   if (!source) return null;
+  // Empty jurisdiction = court resolution failed upstream (see
+  // resolveCourtFromDocket). Unknown, not mandatory — '' is a substring of
+  // every forum string, so falling through would misreport it.
+  if (!source.jurisdiction) return null;
   // Crude first pass; replace with a real jurisdiction graph in v2.
   if (source.jurisdiction === 'scotus' || source.jurisdiction === 'us-supreme') {
     return 'mandatory'; // SCOTUS binds everyone on federal questions.

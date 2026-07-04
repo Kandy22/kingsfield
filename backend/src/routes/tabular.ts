@@ -156,6 +156,34 @@ tabularRouter.post("/", requireAuth, async (req, res) => {
     if (cells.length) await db.from("tabular_cells").insert(cells);
 
     res.status(201).json(review);
+
+    // Fire-and-forget: run the case-intelligence extraction agent on each
+    // document so it's ready in Analytics without a manual "Analyze" step.
+    // Uploading to Tabular Review is the trigger, per the product spec.
+    void (async () => {
+        try {
+            const { runCaseExtraction } = await import("../lib/caseIntelligence.js");
+            const settings = await getUserModelSettings(userId, db);
+            for (const docId of allowedDocumentIds) {
+                const { data: existing } = await db
+                    .from("case_intelligence")
+                    .select("id")
+                    .eq("document_id", docId)
+                    .maybeSingle();
+                if (existing) continue; // don't re-extract
+                await runCaseExtraction({
+                    documentId: docId,
+                    userId,
+                    projectId: project_id ?? null,
+                    model: settings.tabular_model,
+                    apiKeys: settings.api_keys,
+                    db,
+                });
+            }
+        } catch (err) {
+            console.error("[tabular/create] auto case-extraction failed", err);
+        }
+    })();
 });
 
 // POST /tabular-review/prompt (must come before /:reviewId routes)

@@ -196,7 +196,7 @@ export interface CrewOutput {
 export function detectTaskType(input: CrewInput): CrewTaskType {
   if (input.taskType) return input.taskType;
 
-  const msg = input.userMessage.toLowerCase().trim();
+  const msg = (input.userMessage ?? '').toLowerCase().trim();
 
   // Short / casual → simple
   if (msg.length < 80) return 'simple';

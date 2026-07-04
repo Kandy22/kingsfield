@@ -6,6 +6,59 @@ const devLog = (...args: Parameters<typeof console.log>) => {
   if (isDev) console.log(...args);
 };
 
+// ── Performance ────────────────────────────────────────────────────────────
+// Every authenticated request used to (1) construct a fresh Supabase admin
+// client, (2) make a network round-trip to Supabase to validate the JWT
+// (admin.auth.getUser), and (3) run a DB query for the MFA preference. The
+// frontend fires a burst of parallel requests with the SAME token on each page
+// load, so every one of them paid ~170-330ms independently.
+//
+// Fixes: a single module-level admin client, plus short-TTL in-memory caches
+// keyed by token / user. A valid JWT is cached for 60s so only the first
+// request in a burst pays the round-trip; the MFA preference is cached the same
+// way. TTL is short enough that revocation/preference changes take effect
+// within a minute.
+
+let adminSingleton: SupabaseClient | null = null;
+function getAdmin(): SupabaseClient | null {
+  const supabaseUrl = process.env.SUPABASE_URL ?? "";
+  const serviceKey = process.env.SUPABASE_SECRET_KEY ?? "";
+  if (!supabaseUrl || !serviceKey) return null;
+  if (!adminSingleton) {
+    adminSingleton = createClient(supabaseUrl, serviceKey, {
+      auth: { persistSession: false },
+    });
+  }
+  return adminSingleton;
+}
+
+const USER_TTL_MS = 60_000;
+const MFA_TTL_MS = 60_000;
+const userCache = new Map<string, { userId: string; email: string; exp: number }>();
+const mfaCache = new Map<string, { on: boolean; exp: number }>();
+
+async function resolveUser(
+  admin: SupabaseClient,
+  token: string,
+): Promise<{ userId: string; email: string } | null> {
+  const now = Date.now();
+  const hit = userCache.get(token);
+  if (hit && hit.exp > now) return { userId: hit.userId, email: hit.email };
+  const { data } = await admin.auth.getUser(token);
+  if (!data.user) return null;
+  const entry = {
+    userId: data.user.id,
+    email: data.user.email?.toLowerCase() ?? "",
+    exp: now + USER_TTL_MS,
+  };
+  userCache.set(token, entry);
+  // Opportunistic cleanup so the map can't grow unbounded.
+  if (userCache.size > 500) {
+    for (const [k, v] of userCache) if (v.exp <= now) userCache.delete(k);
+  }
+  return { userId: entry.userId, email: entry.email };
+}
+
 function summarizeMfaFactors(
   factors: Array<{
     factor_type?: string;
@@ -34,27 +87,34 @@ async function enforceLoginMfaIfEnabled(
 ) {
   if (isLoginMfaBootstrapRoute(req)) return true;
 
-  const { data, error } = await admin
-    .from("user_profiles")
-    .select("mfa_on_login")
-    .eq("user_id", res.locals.userId)
-    .maybeSingle();
-
-  if (error) {
-    devLog("[auth/mfa] login preference lookup failed", {
-      method: req.method,
-      path: req.originalUrl,
-      userId: res.locals.userId,
-      error: error.message,
-      code: error.code,
-    });
-    if (error.code === "42703") return true;
-    res.status(500).json({ detail: error.message });
-    return false;
+  const userId = res.locals.userId as string;
+  const now = Date.now();
+  let mfaOn: boolean;
+  const cached = mfaCache.get(userId);
+  if (cached && cached.exp > now) {
+    mfaOn = cached.on;
+  } else {
+    const { data, error } = await admin
+      .from("user_profiles")
+      .select("mfa_on_login")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error) {
+      devLog("[auth/mfa] login preference lookup failed", {
+        method: req.method,
+        path: req.originalUrl,
+        userId,
+        error: error.message,
+        code: error.code,
+      });
+      if (error.code === "42703") return true;
+      res.status(500).json({ detail: error.message });
+      return false;
+    }
+    mfaOn = (data as { mfa_on_login?: boolean } | null)?.mfa_on_login === true;
+    mfaCache.set(userId, { on: mfaOn, exp: now + MFA_TTL_MS });
   }
-
-  const profile = data as { mfa_on_login?: boolean } | null;
-  if (profile?.mfa_on_login !== true) return true;
+  if (!mfaOn) return true;
 
   const { data: assurance, error: assuranceError } =
     await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
@@ -98,25 +158,20 @@ export async function requireAuth(
   }
   const token = auth.slice(7).trim();
 
-  const supabaseUrl = process.env.SUPABASE_URL ?? "";
-  const serviceKey = process.env.SUPABASE_SECRET_KEY ?? "";
-
-  if (!supabaseUrl || !serviceKey) {
+  const admin = getAdmin();
+  if (!admin) {
     res.status(500).json({ detail: "Server auth is not configured" });
     return;
   }
 
-  const admin = createClient(supabaseUrl, serviceKey, {
-    auth: { persistSession: false },
-  });
-  const { data } = await admin.auth.getUser(token);
-  if (!data.user) {
+  const resolved = await resolveUser(admin, token);
+  if (!resolved) {
     res.status(401).json({ detail: "Invalid or expired token" });
     return;
   }
 
-  res.locals.userId = data.user.id;
-  res.locals.userEmail = data.user.email?.toLowerCase() ?? "";
+  res.locals.userId = resolved.userId;
+  res.locals.userEmail = resolved.email;
   res.locals.token = token;
   if (!(await enforceLoginMfaIfEnabled(req, res, admin, token))) {
     return;
@@ -139,17 +194,11 @@ export async function requireMfaIfEnrolled(
     return;
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL ?? "";
-  const serviceKey = process.env.SUPABASE_SECRET_KEY ?? "";
-
-  if (!supabaseUrl || !serviceKey) {
+  const admin = getAdmin();
+  if (!admin) {
     res.status(500).json({ detail: "Server auth is not configured" });
     return;
   }
-
-  const admin = createClient(supabaseUrl, serviceKey, {
-    auth: { persistSession: false },
-  });
   const { data, error } =
     await admin.auth.mfa.getAuthenticatorAssuranceLevel(token);
 

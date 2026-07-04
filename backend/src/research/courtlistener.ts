@@ -19,6 +19,8 @@ export interface CitationLookupHit {
   date_filed?: string;
   court?: string;
   url?: string;
+  /** How many opinions cite this cluster — CL's citation_count. */
+  citation_count?: number;
 }
 
 export interface OpinionCluster {
@@ -92,6 +94,10 @@ export async function citationLookup(
       url: row.clusters?.[0]?.absolute_url
         ? `https://www.courtlistener.com${row.clusters[0].absolute_url}`
         : undefined,
+      citation_count:
+        typeof row.clusters?.[0]?.citation_count === 'number'
+          ? row.clusters[0].citation_count
+          : undefined,
     };
   });
 }

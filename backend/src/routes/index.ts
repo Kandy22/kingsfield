@@ -28,6 +28,21 @@ import { runIpRenewalWatcher } from '../services/ip-renewal-watcher/index.js';
 import { loadActiveVersion } from '../lib/documentVersions.js';
 import { downloadFile } from '../lib/storage.js';
 import { extractPdfText } from '../lib/chatTools.js';
+import { requireAuth } from '../middleware/auth.js';
+import { getUserModelSettings } from '../lib/userSettings.js';
+import { runCaseExtraction } from '../lib/caseIntelligence.js';
+
+/** In-memory copy of the court-list snapshot (loaded once per process;
+ *  restart the server after re-running scripts/fetch-courts.mjs). */
+interface CachedCourt {
+  id: string;
+  full_name: string;
+  short_name: string;
+  citation_string: string;
+  jurisdiction: string;
+  in_use: boolean;
+}
+let courtsCache: { fetchedAt: number; courts: CachedCourt[] } | null = null;
 
 /**
  * Fetch and extract text from one or more uploaded documents.
@@ -89,6 +104,80 @@ export function buildRoutes(deps: RouteDeps): Router {
   // Media — audio/video assets served with range-request support.
   // No auth required so the player works on public-facing pages.
   r.use('/media', mediaRouter);
+
+  // ── Analytics / Case Intelligence ──────────────────────────────────────
+  // The extraction agent strips an uploaded document into structured case
+  // facts (entities, allegations, defenses, authorities, rarity) that power
+  // the Analytics connection graph + allegation/defense/authority clusters.
+
+  // GET /api/analytics — all extractions for the user (optionally by project)
+  r.get('/analytics', requireAuth, async (_req: Request, res: Response) => {
+    const userId = res.locals.userId as string;
+    const projectId = _req.query.projectId as string | undefined;
+    let q = deps.supabase
+      .from('case_intelligence')
+      .select('*')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false });
+    if (projectId) q = q.eq('project_id', projectId);
+    const { data, error } = await q;
+    if (error) return void res.status(500).json({ detail: error.message });
+    res.json({ extractions: data ?? [] });
+  });
+
+  // GET /api/analytics/documents — ready documents the user can analyze
+  r.get('/analytics/documents', requireAuth, async (_req: Request, res: Response) => {
+    const userId = res.locals.userId as string;
+    const { data, error } = await deps.supabase
+      .from('documents')
+      .select('id, filename, project_id, created_at')
+      .eq('user_id', userId)
+      .eq('status', 'ready')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) return void res.status(500).json({ detail: error.message });
+    // Flag which already have an extraction so the UI can show status.
+    const ids = (data ?? []).map((d) => (d as { id: string }).id);
+    const analyzed = new Set<string>();
+    if (ids.length) {
+      const { data: intel } = await deps.supabase
+        .from('case_intelligence')
+        .select('document_id')
+        .in('document_id', ids);
+      for (const row of intel ?? [])
+        analyzed.add((row as { document_id: string }).document_id);
+    }
+    res.json({
+      documents: (data ?? []).map((d) => ({
+        ...(d as Record<string, unknown>),
+        analyzed: analyzed.has((d as { id: string }).id),
+      })),
+    });
+  });
+
+  // POST /api/analytics/extract — run the extraction agent on one document
+  r.post('/analytics/extract', requireAuth, async (req: Request, res: Response) => {
+    const userId = res.locals.userId as string;
+    const { documentId, projectId } = req.body ?? {};
+    if (!documentId || typeof documentId !== 'string')
+      return void res.status(400).json({ detail: 'documentId is required' });
+    try {
+      const settings = await getUserModelSettings(userId, deps.supabase as any);
+      const result = await runCaseExtraction({
+        documentId,
+        userId,
+        projectId: projectId ?? null,
+        model: settings.tabular_model,
+        apiKeys: settings.api_keys,
+        db: deps.supabase as any,
+      });
+      if (!result.ok) return void res.status(422).json({ detail: result.error });
+      res.json({ extraction: result.row });
+    } catch (err: any) {
+      console.error('[analytics/extract] error', err);
+      res.status(500).json({ detail: err?.message ?? 'Extraction failed' });
+    }
+  });
 
   r.post('/council/detect', (req, res) => {
     const { message, source } = req.body ?? {};
@@ -190,6 +279,13 @@ export function buildRoutes(deps: RouteDeps): Router {
         `https://www.courtlistener.com/api/rest/v4/search/?${params}`,
         { headers: { Authorization: `Token ${deps.courtListenerToken}` } },
       );
+      if (clRes.status === 429) {
+        // Surface the throttle honestly so the frontend can say "retry in Ns"
+        // instead of pretending the backend is down.
+        const body = await clRes.json().catch(() => ({}) as any);
+        const wait = Number(String(body?.detail ?? '').match(/(\d+) seconds/)?.[1] ?? 30);
+        return void res.status(429).json({ error: 'rate-limited', retry_in: wait });
+      }
       if (!clRes.ok) throw new Error(`CourtListener ${clRes.status}`);
       const body = await clRes.json() as any;
 
@@ -211,7 +307,46 @@ export function buildRoutes(deps: RouteDeps): Router {
     }
   });
 
+  /**
+   * GET /api/research/courts
+   * Full CourtListener court list (~3,400 courts incl. historical) for the
+   * jurisdiction picker. Served from the snapshot at
+   * backend/data/courtlistener-courts.json — the live /courts endpoint is
+   * hard-capped at page_size=20 and throttled ~5/min, so it cannot be crawled
+   * at request time. Rebuild the snapshot with `node scripts/fetch-courts.mjs`.
+   */
+  r.get('/research/courts', async (_req: Request, res: Response) => {
+    try {
+      if (!courtsCache) {
+        const { readFile } = await import('node:fs/promises');
+        const path = await import('node:path');
+        // Server starts from backend/ (npm run dev), but tolerate repo root too.
+        const candidates = [
+          path.resolve(process.cwd(), 'data/courtlistener-courts.json'),
+          path.resolve(process.cwd(), 'backend/data/courtlistener-courts.json'),
+        ];
+        let raw: any = null;
+        for (const p of candidates) {
+          try {
+            raw = JSON.parse(await readFile(p, 'utf8'));
+            break;
+          } catch { /* try next */ }
+        }
+        if (!raw) throw new Error('snapshot not found');
+        courtsCache = { fetchedAt: Date.now(), courts: raw.courts ?? [] };
+      }
+      res.json({ count: courtsCache.courts.length, courts: courtsCache.courts });
+    } catch (err: any) {
+      console.error('[research/courts] snapshot missing — run scripts/fetch-courts.mjs', err.message);
+      res.status(503).json({ error: 'Court list snapshot not built yet' });
+    }
+  });
+
   r.post('/crew/chat', async (req, res) => {
+    if (typeof req.body?.userMessage !== 'string' || !req.body.userMessage.trim()) {
+      res.status(400).json({ error: 'userMessage (non-empty string) is required' });
+      return;
+    }
     // The frontend hook (useAssistantChat) reads a Server-Sent Events stream.
     // We open the SSE connection immediately, run the crew (which blocks while
     // hitting CourtListener + LLM), then flush the full reply as SSE events.

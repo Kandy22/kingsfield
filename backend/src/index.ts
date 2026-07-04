@@ -19,6 +19,14 @@ import type { GeminiClient } from "./llm-council/providers";
 const app = express();
 const PORT = process.env.PORT ?? 3001;
 
+// A stray rejected promise (e.g. a fire-and-forget inside a route) must not
+// take down the whole server — Node's default since v15 is to crash.
+// Observed 2026-07-03: an async rejection out of the crew/chat path killed
+// the process and every route went dark until manual restart.
+process.on("unhandledRejection", (reason) => {
+  console.error("[unhandledRejection]", reason);
+});
+
 app.use(
   cors({
     origin: process.env.FRONTEND_URL ?? "http://localhost:3000",
