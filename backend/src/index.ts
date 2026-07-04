@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import Anthropic from "@anthropic-ai/sdk";
 import { GoogleGenAI } from "@google/genai";
+import { makeOpenAICompatClient } from "./lib/openaiCompat.js";
 import { chatRouter } from "./routes/chat";
 import { projectsRouter } from "./routes/projects";
 import { projectChatRouter } from "./routes/projectChat";
@@ -70,9 +71,28 @@ if (process.env.GEMINI_API_KEY) {
   };
 }
 
+// DeepSeek + Kimi (Moonshot) — OpenAI-compatible council advisors.
+// Without keys, their council seats fall back to Claude with a warning.
+const deepseek = process.env.DEEPSEEK_API_KEY
+  ? makeOpenAICompatClient(
+      process.env.DEEPSEEK_BASE_URL ?? "https://api.deepseek.com/v1",
+      process.env.DEEPSEEK_API_KEY,
+      "deepseek",
+    )
+  : undefined;
+const kimi = (process.env.MOONSHOT_API_KEY ?? process.env.KIMI_API_KEY)
+  ? makeOpenAICompatClient(
+      process.env.MOONSHOT_BASE_URL ?? "https://api.moonshot.ai/v1",
+      (process.env.MOONSHOT_API_KEY ?? process.env.KIMI_API_KEY)!,
+      "kimi",
+    )
+  : undefined;
+
 app.use("/api", buildRoutes({
   anthropic,
   gemini,
+  deepseek,
+  kimi,
   supabase,
   courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
 }));

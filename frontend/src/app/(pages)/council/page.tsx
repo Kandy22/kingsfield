@@ -60,24 +60,24 @@ const ADVISORS = [
     {
         role: "first_principles",
         label: "FIRST PRINCIPLES",
-        model: "Gemini Pro",
-        provider: "gemini",
+        model: "DeepSeek V4 Pro",
+        provider: "deepseek",
         description: "Strips away precedent and convention. Rebuilds from the actual rule, the actual statute, the actual text — not what everyone assumes it says.",
         accent: "#2B5CE6", // kf-prim-amber-400 — primary accent/clarity
     },
     {
         role: "expansionist",
         label: "THE EXPANSIONIST",
-        model: "Claude Sonnet",
-        provider: "claude",
+        model: "Gemini 3.1 Pro",
+        provider: "gemini",
         description: "Widens the frame. Finds the angle no one is looking at — adjacent claims, overlooked remedies, jurisdictions where the same facts win.",
         accent: "#16A34A", // kf-prim-green-500 — growth/expansion
     },
     {
         role: "outsider",
         label: "THE OUTSIDER",
-        model: "Gemini Flash",
-        provider: "gemini",
+        model: "Kimi K2.6",
+        provider: "kimi",
         description: "No priors. No institutional loyalty. No assumption that the way things are done is the way they must be done. Reads the situation cold.",
         accent: "#A09485", // kf-prim-warm-200 — neutral/cold read
     },
@@ -91,17 +91,24 @@ const ADVISORS = [
     },
 ];
 
+const PROVIDER_COLORS: Record<string, string> = {
+    claude: "#C8642A",
+    gemini: "#5B8ECC",
+    deepseek: "#7A3FD6",
+    kimi: "#1F8A5B",
+};
+
 function ProviderBadge({ provider, model }: { provider: string; model: string }) {
-    const isGemini = provider === "gemini";
+    const c = PROVIDER_COLORS[provider] ?? "#8A8A84";
     return (
         <span className="inline-flex items-center gap-1 font-mono font-medium px-2 py-0.5 rounded"
             style={{
-                background: isGemini ? "rgba(64,128,200,0.12)" : "rgba(200,100,40,0.12)",
-                color: isGemini ? "#5B8ECC" : "#C8642A",
-                border: `1px solid ${isGemini ? "rgba(64,128,200,0.30)" : "rgba(200,100,40,0.30)"}`,
+                background: `${c}1F`,
+                color: c,
+                border: `1px solid ${c}4D`,
                 fontSize: 10,
             }}>
-            <span className="h-1.5 w-1.5 rounded-full" style={{ background: isGemini ? "#5B8ECC" : "#C8642A" }} />
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: c }} />
             {model}
         </span>
     );

@@ -94,6 +94,8 @@ async function fetchDocumentTexts(
 export interface RouteDeps {
   anthropic: Anthropic;
   gemini?: GeminiClient;
+  deepseek?: GeminiClient;
+  kimi?: GeminiClient;
   supabase: SupabaseClient;
   courtListenerToken: string;
 }
@@ -199,7 +201,7 @@ export function buildRoutes(deps: RouteDeps): Router {
       }
       const out = await runLLMCouncil(
         { rawQuestion, context },
-        { anthropic: deps.anthropic, gemini: deps.gemini },
+        { anthropic: deps.anthropic, gemini: deps.gemini, deepseek: deps.deepseek, kimi: deps.kimi },
         deps.supabase,
         projectId,
       );

@@ -3,18 +3,18 @@
  *
  * Five advisors run on a deliberate mix of model providers so the
  * thinking is genuinely diverse, not five Claudes wearing different hats.
+ * Four model families: Anthropic, Google, DeepSeek, Moonshot (Kimi).
  *
  * Default routing (override per-deployment):
- *   Contrarian       → Claude Opus       (deep adversarial reasoning)
- *   First Principles → Gemini Pro        (different training, different priors)
- *   Expansionist     → Claude Sonnet     (creative, fast)
- *   Outsider         → Gemini Flash      (fewer priors = more "fresh eyes")
+ *   Contrarian       → Claude Opus 4.8   (deep adversarial reasoning)
+ *   First Principles → DeepSeek V4 Pro   (strong reasoner, different priors)
+ *   Expansionist     → Gemini 3.1 Pro    (creative breadth, different training)
+ *   Outsider         → Kimi K2.6         (literally the outsider — fourth lab, fresh eyes)
  *   Executor         → Claude Sonnet     (concrete, action-oriented)
- *   Chairman         → Claude Opus       (synthesis)
+ *   Chairman         → Claude Opus 4.8   (synthesis)
  *
- * If a user has not configured a Gemini key, the system falls back to
- * Claude across the board and logs a warning. The diversity benefit
- * degrades but the council still runs.
+ * Any provider without a configured key falls back to Claude with a logged
+ * warning. The diversity benefit degrades but the council still runs.
  */
 
 import type Anthropic from '@anthropic-ai/sdk';
@@ -26,40 +26,49 @@ export type AdvisorRole =
   | 'outsider'
   | 'executor';
 
-export type Provider = 'claude' | 'gemini';
+export type Provider = 'claude' | 'gemini' | 'deepseek' | 'kimi';
 
 export interface ModelChoice {
   provider: Provider;
   model: string;
 }
 
+// NOTE (2026-07): DeepSeek's legacy IDs (deepseek-reasoner/deepseek-chat)
+// hard-deprecate 2026-07-24 — use the v4 IDs only. Kimi's k2 line was
+// discontinued 2026-05-25; kimi-k2.6 is the current flagship.
 export const DEFAULT_ROUTING: Record<AdvisorRole | 'chairman', ModelChoice> = {
-  contrarian: { provider: 'claude', model: 'claude-opus-4-7' },
-  first_principles: { provider: 'gemini', model: 'gemini-2.5-pro' },
-  expansionist: { provider: 'claude', model: 'claude-sonnet-4-6' },
-  outsider: { provider: 'gemini', model: 'gemini-2.5-flash' },
+  contrarian: { provider: 'claude', model: 'claude-opus-4-8' },
+  first_principles: { provider: 'deepseek', model: 'deepseek-v4-pro' },
+  expansionist: { provider: 'gemini', model: 'gemini-3.1-pro-preview' },
+  outsider: { provider: 'kimi', model: 'kimi-k2.6' },
   executor: { provider: 'claude', model: 'claude-sonnet-4-6' },
-  chairman: { provider: 'claude', model: 'claude-opus-4-7' },
+  chairman: { provider: 'claude', model: 'claude-opus-4-8' },
 };
 
-export interface LLMClients {
-  anthropic: Anthropic;
-  /** Optional. If absent, gemini routes fall back to anthropic with a warning. */
-  gemini?: GeminiClient;
-}
-
 /**
- * Minimal Gemini client interface — implement against @google/generative-ai
- * or the REST endpoint, whichever the deployment uses. Kept narrow so the
- * council code doesn't depend on a specific SDK version.
+ * Minimal text-generation client interface. Implemented for Gemini via
+ * @google/genai and for DeepSeek/Kimi via their OpenAI-compatible REST
+ * endpoints (see lib/openaiCompat.ts). Kept narrow so the council code
+ * doesn't depend on any specific SDK version.
  */
-export interface GeminiClient {
+export interface TextGenClient {
   generate(args: {
     model: string;
     system: string;
     user: string;
     maxTokens: number;
   }): Promise<string>;
+}
+
+/** Back-compat alias — index.ts and routes type against GeminiClient. */
+export type GeminiClient = TextGenClient;
+
+export interface LLMClients {
+  anthropic: Anthropic;
+  /** Optional. Any absent provider falls back to anthropic with a warning. */
+  gemini?: TextGenClient;
+  deepseek?: TextGenClient;
+  kimi?: TextGenClient;
 }
 
 export interface ChatTurn {
@@ -73,20 +82,21 @@ export async function callModel(
   turn: ChatTurn,
   clients: LLMClients,
 ): Promise<string> {
-  if (choice.provider === 'gemini') {
-    if (clients.gemini) {
-      return clients.gemini.generate({
+  if (choice.provider !== 'claude') {
+    const client = clients[choice.provider];
+    if (client) {
+      return client.generate({
         model: choice.model,
         system: turn.system,
         user: turn.user,
         maxTokens: turn.maxTokens ?? 2048,
       });
     }
-    // Fallback: use Claude Opus when Gemini isn't configured.
+    // Fallback: use Claude Opus when the provider isn't configured.
     console.warn(
-      `[llm-council] Gemini not configured; falling back to Claude Opus for ${choice.model}.`,
+      `[llm-council] ${choice.provider} not configured; falling back to Claude Opus for ${choice.model}.`,
     );
-    choice = { provider: 'claude', model: 'claude-opus-4-7' };
+    choice = { provider: 'claude', model: 'claude-opus-4-8' };
   }
   const resp = await clients.anthropic.messages.create({
     model: choice.model,
