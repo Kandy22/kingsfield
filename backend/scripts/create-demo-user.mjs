@@ -16,7 +16,12 @@ if (!url || !serviceKey) {
 }
 
 const DEMO_EMAIL = process.env.DEMO_EMAIL || "demo@kingsfield.app";
-const DEMO_PASSWORD = process.env.DEMO_PASSWORD || "KingsfieldDemo-2026";
+// No hardcoded password — pass DEMO_PASSWORD in the env when running this script.
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD;
+if (!DEMO_PASSWORD) {
+  console.error("Set DEMO_PASSWORD in the env, e.g. DEMO_PASSWORD=... node backend/scripts/create-demo-user.mjs");
+  process.exit(1);
+}
 
 const admin = createClient(url, serviceKey, {
   auth: { autoRefreshToken: false, persistSession: false },
