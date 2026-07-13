@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Scroll, ExternalLink, ChevronDown, Globe, Landmark } from "lucide-react";
+import { Search, Scroll, ExternalLink, ChevronDown, Globe, Landmark, MessageSquare } from "lucide-react";
+import { proSeAsk, proSeChatWithDocs } from "@/app/lib/mikeApi";
 
 interface LegislationSource {
     label: string;
@@ -159,15 +160,63 @@ function SourceCard({ source }: { source: LegislationSource }) {
 export default function LegislationPage() {
     const [query, setQuery] = useState("");
     const [showAllStates, setShowAllStates] = useState(false);
+    const [proSeQuestion, setProSeQuestion] = useState("");
+    const [proSeUrl, setProSeUrl] = useState("https://leg.colorado.gov/colorado-revised-statutes");
+    const [proSeAnswer, setProSeAnswer] = useState<string | null>(null);
+    const [proSeWithheld, setProSeWithheld] = useState(false);
+    const [proSeLoading, setProSeLoading] = useState(false);
+    const [proSeError, setProSeError] = useState<string | null>(null);
 
     const displayedStates = showAllStates ? STATES : STATES.slice(0, 20);
 
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();
         if (!query.trim()) return;
-        // Search on congress.gov — best general federal legislation search
         const url = `https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%2C%22search%22%3A%22${encodeURIComponent(query.trim())}%22%7D`;
         window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    async function handleProSeAsk(e: React.FormEvent) {
+        e.preventDefault();
+        if (!proSeQuestion.trim()) return;
+        setProSeLoading(true);
+        setProSeError(null);
+        setProSeAnswer(null);
+        setProSeWithheld(false);
+        try {
+            const result = await proSeAsk({
+                question: proSeQuestion.trim(),
+                jurisdiction: "colorado",
+                sourceUrl: proSeUrl.trim() || undefined,
+            });
+            setProSeAnswer(result.answer);
+            setProSeWithheld(result.withheld);
+        } catch (err: unknown) {
+            setProSeError(err instanceof Error ? err.message : "Ask failed");
+        } finally {
+            setProSeLoading(false);
+        }
+    }
+
+    async function handleChatWithDocs(e: React.FormEvent) {
+        e.preventDefault();
+        if (!proSeQuestion.trim() || !proSeUrl.trim()) return;
+        setProSeLoading(true);
+        setProSeError(null);
+        setProSeAnswer(null);
+        setProSeWithheld(false);
+        try {
+            const result = await proSeChatWithDocs({
+                prompt: proSeQuestion.trim(),
+                urls: [proSeUrl.trim()],
+            });
+            setProSeAnswer(result.text);
+            setProSeWithheld(result.withheld);
+        } catch (err: unknown) {
+            setProSeError(err instanceof Error ? err.message : "Chat failed");
+        } finally {
+            setProSeLoading(false);
+        }
     }
 
     return (
@@ -207,6 +256,51 @@ export default function LegislationPage() {
                         Search
                     </button>
                 </form>
+
+                <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                        <MessageSquare className="h-4 w-4 text-gray-500" />
+                        <h2 className="text-sm font-semibold text-gray-800">Pro Se Ask (verified)</h2>
+                    </div>
+                    <p className="text-xs text-gray-500 mb-3">
+                        Ask-the-manual + chat-with-docs wired to Kingsfield verifier.
+                    </p>
+                    <form onSubmit={handleProSeAsk} className="flex flex-col gap-2">
+                        <input
+                            value={proSeUrl}
+                            onChange={(e) => setProSeUrl(e.target.value)}
+                            className="rounded border border-gray-200 px-3 py-2 text-sm"
+                            placeholder="Allowlisted statute URL"
+                        />
+                        <textarea
+                            value={proSeQuestion}
+                            onChange={(e) => setProSeQuestion(e.target.value)}
+                            rows={3}
+                            className="rounded border border-gray-200 px-3 py-2 text-sm"
+                            placeholder="What does Colorado law say about…?"
+                        />
+                        <div className="flex gap-2">
+                            <button type="submit" disabled={proSeLoading || !proSeQuestion.trim()} className="px-3 py-2 rounded bg-gray-900 text-white text-sm disabled:opacity-40">
+                                Ask corpus
+                            </button>
+                            <button type="button" onClick={handleChatWithDocs} disabled={proSeLoading || !proSeQuestion.trim()} className="px-3 py-2 rounded border border-gray-300 text-sm disabled:opacity-40">
+                                Chat with URL
+                            </button>
+                        </div>
+                    </form>
+                    {proSeLoading && <p className="text-xs text-gray-500 mt-2">Running four-gate verification…</p>}
+                    {proSeError && <p className="text-xs text-red-600 mt-2">{proSeError}</p>}
+                    {proSeWithheld && (
+                        <div className="mt-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2">
+                            Answer withheld — one or more citations failed verification (existence, quote accuracy, currency, or jurisdiction fit). We would rather return nothing than an unverified answer.
+                        </div>
+                    )}
+                    {proSeAnswer && !proSeWithheld && (
+                        <div className="mt-3 text-sm text-gray-800 whitespace-pre-wrap border-t border-gray-200 pt-3">
+                            {proSeAnswer}
+                        </div>
+                    )}
+                </div>
 
                 {/* Federal sources */}
                 <div className="mb-8">
