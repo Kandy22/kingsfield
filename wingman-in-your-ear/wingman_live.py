@@ -24,6 +24,7 @@ import io
 from datetime import datetime
 from google import genai
 from google.genai import types
+from google.genai import errors as genai_errors
 
 try:
     import pyaudio
@@ -65,7 +66,7 @@ def load_harness(agent_key):
         print(f"[WARN] Harness file missing: {path} — using built-in fallback instruction.")
         return FALLBACK_INSTRUCTION, agent
 
-def build_live_config(agent_key):
+def build_live_config(agent_key, resume_handle=None):
     # Harness goes in system_instruction at connect time. Do NOT inject it via
     # send_client_content — on gemini-3.1 live models that call is restricted to
     # seeding initial history and silently no-ops without history_config.
@@ -93,9 +94,13 @@ def build_live_config(agent_key):
         # NOTE: proactivity/proactive_audio is NOT supported on this model
         # (rejected at setup, tested 2026-07-03) — silence is enforced by the
         # harness instruction instead.
-        # Sliding-window compression lifts the session time limit so a full
-        # hearing doesn't kill the connection mid-argument
+        # Sliding-window compression reduces token growth mid-session, but does
+        # NOT lift the hard session-duration cap — the server still sends a
+        # GoAway + closes with code 1008 around the ~10min mark regardless.
+        # session_resumption + the reconnect loop in main() are what actually
+        # carry a hearing across that boundary.
         "context_window_compression": {"sliding_window": {}},
+        "session_resumption": {"handle": resume_handle} if resume_handle else {},
     }, agent
 
 # Audio specs — DO NOT CHANGE
@@ -172,12 +177,18 @@ async def stream_mic(session):
         mic.close()
         log("MIC", "Closed.", DIM)
 
-async def receive_advisory(session):
+async def receive_advisory(session, state):
     """Receive audio + transcripts from Gemini, play to earpiece."""
     speaker = open_output()
     log("EARPIECE", "Armed. Listening for advisories...", AQUA)
     try:
         async for response in session.receive():
+            if response.go_away:
+                log("SYSTEM", f"GoAway — session closing in {response.go_away.time_left}, will reconnect.", RED)
+
+            if response.session_resumption_update and response.session_resumption_update.resumable:
+                state["handle"] = response.session_resumption_update.new_handle
+
             sc = response.server_content
             if not sc:
                 continue
@@ -214,8 +225,7 @@ async def main():
         print(f"{RED}[ABORT] Unknown agent '{agent_key}'. Options: {', '.join(AGENTS)}{RESET}")
         sys.exit(1)
 
-    live_config, agent = build_live_config(agent_key)
-    header(agent)
+    header(AGENTS[agent_key])
 
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -224,26 +234,45 @@ async def main():
 
     client = genai.Client(api_key=api_key)
 
-    log("SYSTEM", "Connecting to Gemini Live...", AQUA)
+    # Carries the session-resumption handle across reconnects so a hearing
+    # that outlives the ~10min Live session cap doesn't kill Wingman outright.
+    state = {"handle": None}
+
     try:
-        async with client.aio.live.connect(model=MODEL_ID, config=live_config) as session:
-            log("SYSTEM", "WebSocket established. Session live.", AQUA)
-            log("SYSTEM", "Speak freely. Wingman will interject only when it matters.", DIM)
-            print(f"{DIM}─────────────────────────────────────────────{RESET}\n")
+        while True:
+            live_config, _ = build_live_config(agent_key, state["handle"])
 
-            mic_task      = asyncio.create_task(stream_mic(session))
-            earpiece_task = asyncio.create_task(receive_advisory(session))
-
+            log("SYSTEM", "Reconnecting..." if state["handle"] else "Connecting to Gemini Live...", AQUA)
             try:
-                await asyncio.gather(mic_task, earpiece_task)
-            except KeyboardInterrupt:
-                mic_task.cancel()
-                earpiece_task.cancel()
-                await asyncio.gather(mic_task, earpiece_task, return_exceptions=True)
+                async with client.aio.live.connect(model=MODEL_ID, config=live_config) as session:
+                    log("SYSTEM", "WebSocket established. Session live.", AQUA)
+                    log("SYSTEM", "Speak freely. Wingman will interject only when it matters.", DIM)
+                    print(f"{DIM}─────────────────────────────────────────────{RESET}\n")
 
-    except Exception as e:
-        print(f"{RED}[ERROR] {e}{RESET}")
-        raise
+                    mic_task      = asyncio.create_task(stream_mic(session))
+                    earpiece_task = asyncio.create_task(receive_advisory(session, state))
+
+                    await asyncio.gather(mic_task, earpiece_task)
+
+                # Gather returned cleanly (session closed by the server after a
+                # GoAway) with a resumption handle in hand — loop and reconnect.
+                if state["handle"]:
+                    continue
+                break
+
+            except genai_errors.APIError as e:
+                # 1008 = policy violation close, the expected shape of hitting
+                # the session-duration cap. Reconnect if we have a resumption
+                # handle to carry the conversation forward; otherwise this is a
+                # real error (bad key, quota, etc.) and should surface.
+                if e.code == 1008 and state["handle"]:
+                    log("SYSTEM", f"Session limit hit — resuming ({e}).", RED)
+                    continue
+                print(f"{RED}[ERROR] {e}{RESET}")
+                raise
+
+    except KeyboardInterrupt:
+        pass
 
     finally:
         p.terminate()
