@@ -242,9 +242,8 @@ function CaseCard({ result, onRead }: { result: CaseResult; onRead: () => void }
 export default function CaseLawPage() {
     const [query, setQuery] = useState("");
     // Court scope comes from the single app-wide jurisdiction (picked once,
-    // shared with Legislation). Empty courtIds = search all courts in scope.
-    const { jurisdiction } = useJurisdiction();
-    const courts = jurisdiction.courtIds;
+    // shared with Legislation). Effective courtIds = preset or multi-select.
+    const { courtIds: courts } = useJurisdiction();
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState<CaseResult[] | null>(null);
     const [totalCount, setTotalCount] = useState(0);

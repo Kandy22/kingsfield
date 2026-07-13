@@ -6,6 +6,7 @@ import { useUserProfile } from "@/contexts/UserProfileContext";
 import { MikeIcon } from "@/components/chat/mike-icon";
 import { ChatInput } from "./ChatInput";
 import { SelectAssistantProjectModal } from "./SelectAssistantProjectModal";
+import { JurisdictionSelector } from "@/app/components/shared/JurisdictionSelector";
 import type { Message } from "../shared/types";
 
 interface InitialViewProps {
@@ -73,6 +74,10 @@ export function InitialView({ onSubmit }: InitialViewProps) {
                         >
                             Hi, {username}
                         </h1>
+                    </div>
+
+                    <div className="mb-4 flex justify-center">
+                        <JurisdictionSelector prominent />
                     </div>
 
                     <ChatInput

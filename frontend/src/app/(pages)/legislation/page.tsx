@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Scroll, ExternalLink, ChevronDown, Globe, Landmark, MessageSquare } from "lucide-react";
+import { Search, Scroll, ExternalLink, Landmark, MessageSquare } from "lucide-react";
 import { proSeAsk, proSeChatWithDocs } from "@/app/lib/mikeApi";
 import { JurisdictionSelector } from "@/app/components/shared/JurisdictionSelector";
 import { useJurisdiction } from "@/contexts/JurisdictionContext";
@@ -51,83 +51,6 @@ const FEDERAL_SOURCES: LegislationSource[] = [
         type: "federal",
     },
 ];
-
-const STATES = [
-    { abbr: "AL", name: "Alabama" }, { abbr: "AK", name: "Alaska" }, { abbr: "AZ", name: "Arizona" },
-    { abbr: "AR", name: "Arkansas" }, { abbr: "CA", name: "California" }, { abbr: "CO", name: "Colorado" },
-    { abbr: "CT", name: "Connecticut" }, { abbr: "DE", name: "Delaware" }, { abbr: "FL", name: "Florida" },
-    { abbr: "GA", name: "Georgia" }, { abbr: "HI", name: "Hawaii" }, { abbr: "ID", name: "Idaho" },
-    { abbr: "IL", name: "Illinois" }, { abbr: "IN", name: "Indiana" }, { abbr: "IA", name: "Iowa" },
-    { abbr: "KS", name: "Kansas" }, { abbr: "KY", name: "Kentucky" }, { abbr: "LA", name: "Louisiana" },
-    { abbr: "ME", name: "Maine" }, { abbr: "MD", name: "Maryland" }, { abbr: "MA", name: "Massachusetts" },
-    { abbr: "MI", name: "Michigan" }, { abbr: "MN", name: "Minnesota" }, { abbr: "MS", name: "Mississippi" },
-    { abbr: "MO", name: "Missouri" }, { abbr: "MT", name: "Montana" }, { abbr: "NE", name: "Nebraska" },
-    { abbr: "NV", name: "Nevada" }, { abbr: "NH", name: "New Hampshire" }, { abbr: "NJ", name: "New Jersey" },
-    { abbr: "NM", name: "New Mexico" }, { abbr: "NY", name: "New York" }, { abbr: "NC", name: "North Carolina" },
-    { abbr: "ND", name: "North Dakota" }, { abbr: "OH", name: "Ohio" }, { abbr: "OK", name: "Oklahoma" },
-    { abbr: "OR", name: "Oregon" }, { abbr: "PA", name: "Pennsylvania" }, { abbr: "RI", name: "Rhode Island" },
-    { abbr: "SC", name: "South Carolina" }, { abbr: "SD", name: "South Dakota" }, { abbr: "TN", name: "Tennessee" },
-    { abbr: "TX", name: "Texas" }, { abbr: "UT", name: "Utah" }, { abbr: "VT", name: "Vermont" },
-    { abbr: "VA", name: "Virginia" }, { abbr: "WA", name: "Washington" }, { abbr: "WV", name: "West Virginia" },
-    { abbr: "WI", name: "Wisconsin" }, { abbr: "WY", name: "Wyoming" },
-    { abbr: "DC", name: "D.C." }, { abbr: "PR", name: "Puerto Rico" },
-];
-
-// Best official statute/code site per state
-const STATE_LAW_URLS: Record<string, string> = {
-    AL: "https://law.justia.com/codes/alabama/",
-    AK: "https://law.alaska.gov/",
-    AZ: "https://www.azleg.gov/arstitle/",
-    AR: "https://advance.lexis.com/container?config=014CJAA5ZGVhZjA3LWI5ZmQtNDljNy1hNzUwLWIwYjYxMzAyZWRhMw==",
-    CA: "https://leginfo.legislature.ca.gov/faces/codes.xhtml",
-    CO: "https://leg.colorado.gov/colorado-revised-statutes",
-    CT: "https://www.cga.ct.gov/current/pub/titles.htm",
-    DE: "https://delcode.delaware.gov/",
-    FL: "https://www.flsenate.gov/Laws/Statutes",
-    GA: "https://law.georgia.gov/georgia-code",
-    HI: "https://www.capitol.hawaii.gov/hrscurrent/",
-    ID: "https://legislature.idaho.gov/statutesrules/idstat/",
-    IL: "https://www.ilga.gov/legislation/ilcs/ilcs.asp",
-    IN: "https://iga.in.gov/laws/",
-    IA: "https://www.legis.iowa.gov/law/iowaCode",
-    KS: "https://kslegislature.org/li/b2023_24/statute/",
-    KY: "https://legislature.ky.gov/Law/Statutes/Pages/default.aspx",
-    LA: "https://www.legis.la.gov/legis/LawSearch.aspx",
-    ME: "https://legislature.maine.gov/statutes/",
-    MD: "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText",
-    MA: "https://malegislature.gov/Laws/GeneralLaws",
-    MI: "https://www.legislature.mi.gov/Laws",
-    MN: "https://www.revisor.mn.gov/statutes/",
-    MS: "https://law.justia.com/codes/mississippi/",
-    MO: "https://revisor.mo.gov/main/PageSelect.aspx",
-    MT: "https://leg.mt.gov/bills/mca/",
-    NE: "https://nebraskalegislature.gov/laws/statutes.php",
-    NV: "https://www.leg.state.nv.us/nrs/",
-    NH: "https://www.gencourt.state.nh.us/rsa/html/indexes/",
-    NJ: "https://www.njleg.state.nj.us/",
-    NM: "https://www.nmlegis.gov/Legislation/Statutes",
-    NY: "https://www.nysenate.gov/legislation/laws/",
-    NC: "https://www.ncleg.gov/Laws/GeneralStatutesSections/Chapter0",
-    ND: "https://ndlegis.gov/information/statutes/cent-code.html",
-    OH: "https://codes.ohio.gov/ohio-revised-code",
-    OK: "https://www.oscn.net/applications/oscn/Index.asp?level=1",
-    OR: "https://www.oregonlegislature.gov/bills_laws/pages/ors.aspx",
-    PA: "https://www.legis.state.pa.us/cfdocs/legis/LI/Public/cons_index.cfm",
-    RI: "https://webserver.rilegislature.gov/Statutes/",
-    SC: "https://www.scstatehouse.gov/code/title1.php",
-    SD: "https://law.sd.gov/",
-    TN: "https://www.tn.gov/sos/acts/",
-    TX: "https://statutes.capitol.texas.gov/",
-    UT: "https://le.utah.gov/xcode/code.html",
-    VT: "https://legislature.vermont.gov/statutes/",
-    VA: "https://law.lis.virginia.gov/vacode/",
-    WA: "https://apps.leg.wa.gov/rcw/",
-    WV: "https://code.wvlegislature.gov/",
-    WI: "https://docs.legis.wisconsin.gov/statutes/statutes",
-    WY: "https://wyoleg.gov/NXT/gateway.dll?f=templates&fn=default.htm",
-    DC: "https://code.dccouncil.gov/",
-    PR: "https://bvirtualogp.pr.gov/ogp/Bvirtual/leyesreferencia/PDF/",
-};
 
 function SourceCard({ source }: { source: LegislationSource }) {
     const typeColor =
