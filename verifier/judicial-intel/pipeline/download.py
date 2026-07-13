@@ -18,8 +18,13 @@ def ensure_dir(path: str) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
 
-def already_done(paths: dict) -> bool:
-    return os.path.exists(paths["audio"]) and os.path.getsize(paths["audio"]) > 1000
+def already_done(paths: dict, download_video: bool = False) -> bool:
+    audio_ok = os.path.exists(paths["audio"]) and os.path.getsize(paths["audio"]) > 1000
+    if not audio_ok:
+        return False
+    if download_video:
+        return os.path.exists(paths["video"]) and os.path.getsize(paths["video"]) > 1000
+    return True
 
 
 def download_one(video: dict, channel_id: str, download_video: bool) -> dict:
@@ -28,7 +33,7 @@ def download_one(video: dict, channel_id: str, download_video: bool) -> dict:
     ensure_dir(paths["audio"])
     ensure_dir(paths["caption_yt"])
 
-    if already_done(paths):
+    if already_done(paths, download_video):
         return {"status": "skipped", "video_id": vid}
 
     url = video["url"]

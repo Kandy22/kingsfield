@@ -35,4 +35,6 @@ def entry_paths(channel_id: str, video_id: str) -> dict:
         "transcript_json": os.path.join(base, "transcripts", f"{video_id}.json"),
         "signals": os.path.join(base, "signals", f"{video_id}.json"),
         "frames_dir": os.path.join(base, "frames", video_id),
+        "diarize": os.path.join(base, "transcripts", f"{video_id}.diarize.json"),
+        "timeline": os.path.join(base, "timelines", f"{video_id}.json"),
     }
