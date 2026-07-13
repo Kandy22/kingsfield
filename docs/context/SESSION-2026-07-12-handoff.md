@@ -82,9 +82,14 @@ missing:
 
 ---
 
-## OTHER FIXES THIS SESSION — **UNCOMMITTED** (protect these!)
+## OTHER FIXES THIS SESSION — **NOW COMMITTED** ✅
 
-These are done and tested but NOT yet committed. A crash loses them.
+All committed at end of session:
+- `acdf83e` pro-se veto enforcement + statute allowlist + safetySettings
+- `f973a46` verifier pipeline (diarize/posture/download)
+- `09d0b5e` Wingman session-cap reconnect
+- Face Mood STOP MUSIC → `5fbb9ba` in the SEPARATE `~/FACE-MOOD-TRACKER` repo
+Detail on each below.
 
 1. **Wingman session-duration crash** — `wingman-in-your-ear/wingman_live.py`:
    added `session_resumption` + reconnect loop so it survives the ~10-min Gemini
