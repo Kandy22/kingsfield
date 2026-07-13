@@ -4,6 +4,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PanelLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { JurisdictionProvider } from "@/contexts/JurisdictionContext";
 import { ChatHistoryProvider } from "@/app/contexts/ChatHistoryContext";
 import { SidebarContext } from "@/app/contexts/SidebarContext";
 import { PageChromeContext } from "@/app/contexts/PageChromeContext";
@@ -85,6 +86,7 @@ export default function MikeLayout({
     if (!isAuthenticated) return null;
 
     return (
+        <JurisdictionProvider>
         <ChatHistoryProvider>
             <PageChromeContext.Provider value={{ mobileActionsContainer }}>
                 <SidebarContext.Provider
@@ -133,5 +135,6 @@ export default function MikeLayout({
                 </SidebarContext.Provider>
             </PageChromeContext.Provider>
         </ChatHistoryProvider>
+        </JurisdictionProvider>
     );
 }

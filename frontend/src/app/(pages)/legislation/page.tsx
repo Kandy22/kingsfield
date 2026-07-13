@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Scroll, ExternalLink, ChevronDown, Globe, Landmark, MessageSquare } from "lucide-react";
 import { proSeAsk, proSeChatWithDocs } from "@/app/lib/mikeApi";
+import { JurisdictionSelector } from "@/app/components/shared/JurisdictionSelector";
+import { useJurisdiction } from "@/contexts/JurisdictionContext";
 
 interface LegislationSource {
     label: string;
@@ -158,16 +160,20 @@ function SourceCard({ source }: { source: LegislationSource }) {
 }
 
 export default function LegislationPage() {
+    // Statutes auto-scope to the single app-wide jurisdiction (shared with Case Law).
+    const { jurisdiction } = useJurisdiction();
     const [query, setQuery] = useState("");
-    const [showAllStates, setShowAllStates] = useState(false);
     const [proSeQuestion, setProSeQuestion] = useState("");
-    const [proSeUrl, setProSeUrl] = useState("https://leg.colorado.gov/colorado-revised-statutes");
+    const [proSeUrl, setProSeUrl] = useState(jurisdiction.statuteUrl);
+
+    // Keep the statute source in sync with the selected jurisdiction.
+    useEffect(() => {
+        setProSeUrl(jurisdiction.statuteUrl);
+    }, [jurisdiction]);
     const [proSeAnswer, setProSeAnswer] = useState<string | null>(null);
     const [proSeWithheld, setProSeWithheld] = useState(false);
     const [proSeLoading, setProSeLoading] = useState(false);
     const [proSeError, setProSeError] = useState<string | null>(null);
-
-    const displayedStates = showAllStates ? STATES : STATES.slice(0, 20);
 
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();
@@ -186,7 +192,7 @@ export default function LegislationPage() {
         try {
             const result = await proSeAsk({
                 question: proSeQuestion.trim(),
-                jurisdiction: "colorado",
+                jurisdiction: jurisdiction.label,
                 sourceUrl: proSeUrl.trim() || undefined,
             });
             setProSeAnswer(result.answer);
@@ -231,9 +237,15 @@ export default function LegislationPage() {
                         <h1 className="text-2xl font-serif font-light text-gray-900">Legislation</h1>
                     </div>
                     <p className="text-sm text-gray-500">
-                        Search by citation (18 USC 1001, 26 CFR 1.61-1, Cal. Penal Code §187) or keyword.
-                        Sources: Congress.gov, GovInfo.gov, eCFR.gov (federal); official state legislature sites.
+                        Statutes and codes for your selected jurisdiction. Primary sources only.
                     </p>
+                </div>
+
+                {/* Single jurisdiction — shared with Case Law */}
+                <div className="mb-6 flex flex-wrap items-center gap-3">
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Jurisdiction</span>
+                    <JurisdictionSelector compact />
+                    <span className="text-xs text-gray-400">Statutes below reflect this selection</span>
                 </div>
 
                 {/* Search bar */}
@@ -302,51 +314,35 @@ export default function LegislationPage() {
                     )}
                 </div>
 
-                {/* Federal sources */}
-                <div className="mb-8">
-                    <div className="flex items-center gap-2 mb-3">
-                        <Globe className="h-4 w-4 text-gray-400" />
-                        <h2 className="text-sm font-semibold text-gray-700">Federal</h2>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {FEDERAL_SOURCES.map((src) => (
-                            <SourceCard key={src.label} source={src} />
-                        ))}
-                    </div>
-                </div>
-
-                {/* State codes */}
+                {/* Statutes & codes for the selected jurisdiction */}
                 <div>
                     <div className="flex items-center gap-2 mb-3">
                         <Landmark className="h-4 w-4 text-gray-400" />
-                        <h2 className="text-sm font-semibold text-gray-700">State Codes</h2>
+                        <h2 className="text-sm font-semibold text-gray-700">{jurisdiction.label} — Statutes &amp; Codes</h2>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                        {displayedStates.map((state) => (
-                            <a
-                                key={state.abbr}
-                                href={STATE_LAW_URLS[state.abbr] ?? `https://law.justia.com/codes/${state.name.toLowerCase().replace(/\s/g, "-")}/`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group flex items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2 hover:border-gray-400 hover:shadow-sm transition-all"
-                            >
-                                <div>
-                                    <span className="text-xs font-semibold text-gray-700 group-hover:text-gray-900">{state.abbr}</span>
-                                    <span className="block text-xs text-gray-400 group-hover:text-gray-600">{state.name}</span>
-                                </div>
-                                <ExternalLink className="h-3 w-3 text-gray-300 group-hover:text-gray-500 transition-colors" />
-                            </a>
-                        ))}
-                    </div>
-                    {!showAllStates && (
-                        <button
-                            onClick={() => setShowAllStates(true)}
-                            className="mt-3 flex items-center gap-1 text-xs text-gray-400 hover:text-gray-700 transition-colors"
+                    {jurisdiction.type === "federal" ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {FEDERAL_SOURCES.map((src) => (
+                                <SourceCard key={src.label} source={src} />
+                            ))}
+                        </div>
+                    ) : (
+                        <a
+                            href={jurisdiction.statuteUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 hover:border-gray-400 hover:shadow-sm transition-all"
                         >
-                            <ChevronDown className="h-3.5 w-3.5" />
-                            Show all {STATES.length} states + territories
-                        </button>
+                            <div>
+                                <span className="text-sm font-semibold text-gray-800 group-hover:text-gray-900">{jurisdiction.statuteLabel}</span>
+                                <span className="block text-xs text-gray-400">Official code / statutes for {jurisdiction.label}</span>
+                            </div>
+                            <ExternalLink className="h-4 w-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
+                        </a>
                     )}
+                    <p className="mt-3 text-xs text-gray-400">
+                        Use “Pro Se Ask” above to query {jurisdiction.label} statutes in-app with citation verification.
+                    </p>
                 </div>
             </div>
         </div>

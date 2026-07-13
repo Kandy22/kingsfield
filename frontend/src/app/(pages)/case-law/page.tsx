@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { Search, BookOpen, ExternalLink, Shield, ChevronDown, ChevronUp, Loader2, AlertCircle, X, FileText } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { CourtPicker } from "@/app/components/case-law/CourtPicker";
+import { JurisdictionSelector } from "@/app/components/shared/JurisdictionSelector";
+import { useJurisdiction } from "@/contexts/JurisdictionContext";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
@@ -240,9 +241,10 @@ function CaseCard({ result, onRead }: { result: CaseResult; onRead: () => void }
 
 export default function CaseLawPage() {
     const [query, setQuery] = useState("");
-    // CourtListener court IDs; empty = all jurisdictions. Multi-select — the
-    // search API takes a space-separated list in its `court` param.
-    const [courts, setCourts] = useState<string[]>([]);
+    // Court scope comes from the single app-wide jurisdiction (picked once,
+    // shared with Legislation). Empty courtIds = search all courts in scope.
+    const { jurisdiction } = useJurisdiction();
+    const courts = jurisdiction.courtIds;
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState<CaseResult[] | null>(null);
     const [totalCount, setTotalCount] = useState(0);
@@ -320,7 +322,7 @@ export default function CaseLawPage() {
                             className="flex-1 bg-transparent text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
                         />
                     </div>
-                    <CourtPicker selected={courts} onChange={setCourts} />
+                    <JurisdictionSelector />
                     <button
                         onClick={search}
                         disabled={loading || !query.trim()}
