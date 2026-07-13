@@ -34,8 +34,14 @@ interface ServerChatDetailOut {
     messages: ServerMessage[];
 }
 
+// Prefer an explicit env override; otherwise call the backend on whatever host
+// the page was opened from (so localhost AND a LAN IP like 192.168.x.x both work
+// with no rebuild — needed for testing from another device on the same Wi-Fi).
 const API_BASE =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    (typeof window !== "undefined"
+        ? `http://${window.location.hostname}:3001`
+        : "http://localhost:3001");
 const isDev = process.env.NODE_ENV !== "production";
 const devLog = (...args: Parameters<typeof console.log>) => {
     if (isDev) console.log(...args);
@@ -161,6 +167,44 @@ async function toApiError(response: Response, path: string) {
 
 export async function listProjects(): Promise<Project[]> {
     return apiRequest<Project[]>("/projects");
+}
+
+export async function getDirectoryData(): Promise<{
+    standaloneDocuments: Document[];
+    projects: Project[];
+}> {
+    return apiRequest("/projects/directory");
+}
+
+export async function proSeAsk(payload: {
+    question: string;
+    jurisdiction?: string;
+    sourceUrl?: string;
+}): Promise<{
+    answer: string | null;
+    withheld: boolean;
+    verification: { hasVetoes: boolean; hasConditional: boolean; verdicts: unknown[] };
+}> {
+    return apiRequest("/pro-se/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    });
+}
+
+export async function proSeChatWithDocs(payload: {
+    prompt: string;
+    urls: string[];
+}): Promise<{
+    text: string | null;
+    withheld: boolean;
+    verification: { hasVetoes: boolean; hasConditional: boolean; verdicts: unknown[] };
+}> {
+    return apiRequest("/pro-se/chat-with-docs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    });
 }
 
 export async function createProject(

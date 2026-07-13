@@ -46,7 +46,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             if (session?.user) {
                 setUser(toUser(session.user));
+                setAuthLoading(false);
+                return;
             }
+
+            // DEMO MODE: no login screen. When enabled, auto-sign-in as a
+            // dedicated throwaway demo account so anyone on the LAN can walk
+            // through the app. Guarded by an env flag so it's off by default.
+            if (
+                process.env.NEXT_PUBLIC_DEMO_MODE === "true" &&
+                process.env.NEXT_PUBLIC_DEMO_EMAIL &&
+                process.env.NEXT_PUBLIC_DEMO_PASSWORD
+            ) {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: process.env.NEXT_PUBLIC_DEMO_EMAIL,
+                    password: process.env.NEXT_PUBLIC_DEMO_PASSWORD,
+                });
+                if (!error && data.session?.user) {
+                    setUser(toUser(data.session.user));
+                }
+            }
+
             setAuthLoading(false);
         };
 
