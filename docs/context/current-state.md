@@ -1,6 +1,11 @@
 # Kingsfield Lawfare — Current State
 *Last updated: 2026-07-04 (evening session)*
 
+> ⚠️ **NEWER: read `SESSION-2026-07-12-handoff.md` first** — covers running the
+> demo suite (Kingsfield = 2 servers!), Video Analyzer fixes (committed), LAN +
+> no-login demo mode (committed), and a list of UNCOMMITTED fixes to protect
+> (Wingman, verifier pipeline, pro-se veto, Face Mood stop-music button).
+
 This file is the handoff brief. Any new session — Claude Code, Cowork, or Claude.ai — should read this first alongside CLAUDE.md.
 
 ---
