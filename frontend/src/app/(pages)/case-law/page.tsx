@@ -5,7 +5,7 @@ import { Search, BookOpen, ExternalLink, Shield, ChevronDown, ChevronUp, Loader2
 import { supabase } from "@/lib/supabase";
 import { CourtPicker } from "@/app/components/case-law/CourtPicker";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 async function getAuthHeader(): Promise<Record<string, string>> {
     const { data: { session } } = await supabase.auth.getSession();

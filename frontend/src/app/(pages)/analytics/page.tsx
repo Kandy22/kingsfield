@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Loader2, Sparkles, FileText, Network as NetworkIcon, Scale, Gavel, ShieldCheck, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 async function getAuthHeader(): Promise<Record<string, string>> {
     const { data: { session } } = await supabase.auth.getSession();

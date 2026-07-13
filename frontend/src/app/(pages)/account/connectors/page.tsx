@@ -81,7 +81,7 @@ type McpOAuthPopupMessage = {
 };
 
 const mcpOAuthMessageOrigin = new URL(
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001",
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001",
 ).origin;
 
 function parseCustomHeaders(raw: string): Record<string, string> | undefined {

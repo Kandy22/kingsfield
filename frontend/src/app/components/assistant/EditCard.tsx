@@ -225,7 +225,7 @@ export function EditCard({
             } = await supabase.auth.getSession();
             const token = session?.access_token;
             const apiBase =
-                process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
+                process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
             const resp = await fetch(
                 `${apiBase}/single-documents/${annotation.document_id}/edits/${annotation.edit_id}/${verb}`,
                 {
