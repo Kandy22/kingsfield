@@ -32,7 +32,7 @@ const SECTIONS: SectionConfig[] = [
     { href: "/case-law",        label: "Case Law",        sublabel: "Search opinions",           icon: BookOpen,      bg: "#161615" },
     { href: "/council",         label: "Council",         sublabel: "Multi-model deliberation",  icon: Scale,         bg: "#161615" },
     { href: "/projects",        label: "Projects",        sublabel: "Case workspaces",           icon: FolderOpen,    bg: "#161615" },
-    { href: "/legislation",     label: "Legislation",     sublabel: "Statutes & codes",          icon: Scroll,        bg: "#161615" },
+    { href: "/legislation",     label: "Statutes",        sublabel: "Codes & primary sources",   icon: Scroll,        bg: "#161615" },
     { href: "/tabular-reviews", label: "Tabular Review",  sublabel: "Structured extraction",     icon: Table2,        bg: "#161615" },
     { href: "/workflows",       label: "Workflows",       sublabel: "Automated pipelines",       icon: Library,       bg: "#161615" },
     { href: "/analytics",       label: "Analytics",       sublabel: "Judicial connections",      icon: Network,       bg: "#161615" },

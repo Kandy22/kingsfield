@@ -169,7 +169,7 @@ export default function LandingPage() {
                     {[
                         ["Council", "/council"],
                         ["Case Law", "/case-law"],
-                        ["Legislation", "/legislation"],
+                        ["Statutes", "/legislation"],
                         ["GitHub", "https://github.com"],
                     ].map(([label, href]) => (
                         <Link

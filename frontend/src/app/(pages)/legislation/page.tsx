@@ -157,7 +157,7 @@ export default function LegislationPage() {
                         <div className="h-9 w-9 rounded-lg bg-gray-900 flex items-center justify-center">
                             <Scroll className="h-5 w-5 text-white" />
                         </div>
-                        <h1 className="text-2xl font-serif font-light text-gray-900">Legislation</h1>
+                        <h1 className="text-2xl font-serif font-light text-gray-900">Statutes</h1>
                     </div>
                     <p className="text-sm text-gray-500">
                         Statutes and codes for your selected jurisdiction. Primary sources only.
