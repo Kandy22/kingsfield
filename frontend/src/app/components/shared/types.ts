@@ -1,4 +1,4 @@
-// Shared TypeScript types for Mike AI legal assistant
+// Shared TypeScript types for Kingsfield AI legal assistant
 
 export interface Folder {
   id: string;
@@ -470,7 +470,7 @@ export interface TabularReviewDetailOut {
   documents: Document[];
 }
 
-// Backward-compat aliases — Kingsfield components use Mike-prefixed names
+// Backward-compat aliases — legacy Mike-prefixed type aliases (fork history)
 export type MikeProject = Project;
 export type MikeDocument = Document;
 export type MikeFolder = Folder;

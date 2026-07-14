@@ -88,7 +88,7 @@ function Blades({ ids }: { ids: Record<string, string> }) {
     );
 }
 
-export function MikeIcon({
+export function KingsfieldIcon({
     spin = false,
     done = false,
     error = false,
@@ -318,3 +318,6 @@ export function MikeIcon({
         </span>
     );
 }
+
+/** @deprecated Use KingsfieldIcon */
+export const MikeIcon = KingsfieldIcon;

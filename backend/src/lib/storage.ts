@@ -1,12 +1,12 @@
 /**
- * Cloudflare R2 storage utilities for Mike document management.
+ * Cloudflare R2 storage utilities for Kingsfield document management.
  * R2 is S3-compatible — uses @aws-sdk/client-s3.
  *
  * Required env vars:
  *   R2_ENDPOINT_URL     — https://<account-id>.r2.cloudflarestorage.com
  *   R2_ACCESS_KEY_ID    — R2 API token (Access Key ID)
  *   R2_SECRET_ACCESS_KEY — R2 API token (Secret Access Key)
- *   R2_BUCKET_NAME      — bucket name (default: "mike")
+ *   R2_BUCKET_NAME      — bucket name (default: "mike" — legacy env; do not rename without migrating R2)
  */
 
 import {

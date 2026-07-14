@@ -20,6 +20,7 @@ import { AddNewTRModal } from "@/app/components/tabular/AddNewTRModal";
 import { OwnerOnlyModal } from "@/app/components/shared/OwnerOnlyModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { PageHeader } from "@/app/components/shared/PageHeader";
+import { SectionIntro } from "@/app/components/shared/SectionIntro";
 import {
     GLASS_DROPDOWN,
     HeaderFilterDropdown,
@@ -251,10 +252,19 @@ export default function TabularReviewsPage() {
                     },
                 ]}
             >
-                <h1 className="text-2xl font-medium font-serif text-gray-900">
+                <h1 className="text-2xl font-serif font-light text-gray-900 dark:text-paper">
                     Tabular Reviews
                 </h1>
             </PageHeader>
+
+            <SectionIntro lead="What tabular review is:">
+                a multi-document matrix — rows are documents, columns are the
+                questions you always ask (parties, governing law, indemnity,
+                change of control). Run a tabular workflow or define columns,
+                then export to Excel. Use it to compare many contracts or
+                filings at once; for a single pleading, use Assistant upload →
+                Case Map instead.
+            </SectionIntro>
 
             <TableToolbar
                 items={REVIEW_SCOPES}

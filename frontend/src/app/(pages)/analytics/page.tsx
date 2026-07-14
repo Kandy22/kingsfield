@@ -1,10 +1,10 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useEffect, useState, useCallback } from "react";
 import { Loader2, Sparkles, FileText, Network as NetworkIcon, Scale, Gavel, ShieldCheck, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 async function getAuthHeader(): Promise<Record<string, string>> {
     const { data: { session } } = await supabase.auth.getSession();
@@ -88,7 +88,7 @@ function PlayersRow({ entities }: { entities: CaseEntity[] }) {
     const groups = groupBy(entities, (e) => e.role);
     return (
         <div>
-            <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+            <div className="flex items-center gap-1.5 mb-2 label-caps text-gray-500">
                 <Users className="h-3.5 w-3.5" /> The players
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
@@ -118,7 +118,7 @@ function ColumnHeader({ color, icon: Icon, label, count }: { color: string; icon
     return (
         <div className="flex items-center gap-1.5 pb-2 mb-3 border-b-2" style={{ borderColor: color }}>
             <Icon className="h-3.5 w-3.5" style={{ color }} />
-            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color }}>
+            <span className="label-caps" style={{ color }}>
                 {label} ({count})
             </span>
         </div>
@@ -127,7 +127,7 @@ function ColumnHeader({ color, icon: Icon, label, count }: { color: string; icon
 
 function TierLabel({ children }: { children: React.ReactNode }) {
     return (
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mt-3 mb-1.5 first:mt-0">
+        <p className="label-caps text-gray-400 mt-3 mb-1.5 first:mt-0" style={{ fontSize: 10 }}>
             {children}
         </p>
     );
@@ -258,29 +258,42 @@ export default function AnalyticsPage() {
     const [analyzing, setAnalyzing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [focusDocumentId, setFocusDocumentId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const q = new URLSearchParams(window.location.search).get("documentId");
+        if (q) setFocusDocumentId(q);
+    }, []);
 
     const load = useCallback(async () => {
         setLoading(true);
         try {
             const headers = await getAuthHeader();
             const [exRes, docRes] = await Promise.all([
-                fetch(`${API_BASE}/api/analytics`, { headers }),
-                fetch(`${API_BASE}/api/analytics/documents`, { headers }),
+                fetch(`${getApiBase()}/api/analytics`, { headers }),
+                fetch(`${getApiBase()}/api/analytics/documents`, { headers }),
             ]);
             const exData = await exRes.json();
             const docData = await docRes.json();
             const list: Extraction[] = exData.extractions ?? [];
             setExtractions(list);
             setDocs(docData.documents ?? []);
-            if (list.length && !selectedId) setSelectedId(list[0].id);
+            if (focusDocumentId) {
+                const match = list.find((e) => e.document_id === focusDocumentId);
+                if (match) setSelectedId(match.id);
+                else if (list.length && !selectedId) setSelectedId(list[0].id);
+            } else if (list.length && !selectedId) {
+                setSelectedId(list[0].id);
+            }
         } catch (e: any) {
-            setError(e.message ?? "Failed to load analytics");
+            setError(e.message ?? "Failed to load case map");
         } finally {
             setLoading(false);
         }
-    }, [selectedId]);
+    }, [selectedId, focusDocumentId]);
 
-    useEffect(() => { void load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => { void load(); }, [focusDocumentId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     async function analyze() {
         if (!pickDoc) return;
@@ -288,7 +301,7 @@ export default function AnalyticsPage() {
         setError(null);
         try {
             const headers = await getAuthHeader();
-            const res = await fetch(`${API_BASE}/api/analytics/extract`, {
+            const res = await fetch(`${getApiBase()}/api/analytics/extract`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", ...headers },
                 body: JSON.stringify({ documentId: pickDoc }),
@@ -309,16 +322,19 @@ export default function AnalyticsPage() {
 
     return (
         <div className="h-full overflow-y-auto bg-white">
-            <div className="max-w-6xl mx-auto px-6 py-8">
+            <div className="w-full max-w-none mx-auto px-6 py-8">
                 {/* Header */}
                 <div className="mb-6">
-                    <div className="text-xs font-semibold tracking-widest text-gray-500 mb-1" style={{ letterSpacing: "0.15em" }}>
-                        KINGSFIELD · CASE INTELLIGENCE
+                    <div className="label-caps text-gray-400 mb-2">
+                        Kingsfield · Case intelligence
                     </div>
-                    <h1 className="font-serif font-light text-gray-900" style={{ fontSize: 40, lineHeight: 1 }}>Analytics</h1>
-                    <p className="text-sm text-gray-500 mt-2 max-w-2xl">
-                        Upload a document, and the extraction agent maps it: who&apos;s involved (judge, opposing counsel, witnesses),
+                    <h1 className="font-serif font-light text-gray-900 dark:text-paper" style={{ fontSize: 40, lineHeight: 1.05, fontWeight: 300 }}>Case Map</h1>
+                    <p className="text-sm font-light text-gray-600 mt-2 leading-relaxed max-w-none">
+                        <span className="font-normal text-gray-900">What Case Map is:</span>{" "}
+                        per-document extract of the matter — who&apos;s involved (judge, opposing counsel, witnesses),
                         what&apos;s alleged, what the defense is, which authorities are cited — clustered from boilerplate to novel.
+                        Upload on Assistant to extract automatically; this page is the deep map, not the front door.
+                        Judicial Analytics (cross-matter patterns) is Coming Soon in the left bar.
                     </p>
                 </div>
 
@@ -371,7 +387,7 @@ export default function AnalyticsPage() {
                                 {/* Caption + rarity */}
                                 <div className="flex flex-wrap items-start justify-between gap-4">
                                     <div>
-                                        <h2 className="text-lg font-semibold text-gray-900">{selected.caption}</h2>
+                                        <h2 className="text-lg font-light text-gray-900">{selected.caption}</h2>
                                         {selected.defense_summary && <p className="text-sm text-gray-500 mt-1 max-w-2xl">{selected.defense_summary}</p>}
                                     </div>
                                     {selected.rarity && (
@@ -393,9 +409,9 @@ export default function AnalyticsPage() {
 
                                 {/* Columnar cluster — the core view */}
                                 <div>
-                                    <div className="flex items-center gap-1.5 mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                                    <div className="flex items-center gap-1.5 mb-3 label-caps text-gray-500">
                                         <Scale className="h-3.5 w-3.5" /> Allegations · Authorities · Defenses
-                                        <span className="font-normal normal-case text-gray-400 ml-1">— clustered common → rare · hover an authority to see what it supports</span>
+                                        <span className="normal-case tracking-normal font-light text-gray-400 ml-1">— clustered common → rare · hover an authority to see what it supports</span>
                                     </div>
                                     <ClusterColumns ex={selected} />
                                 </div>
@@ -403,7 +419,66 @@ export default function AnalyticsPage() {
                         )}
                     </>
                 )}
+
+                {/* Coming soon / differentiators */}
+                <section id="coming-soon" className="mt-12 pt-8 border-t border-gray-200 scroll-mt-8">
+                    <div className="label-caps text-gray-400 mb-3">
+                        Coming soon · Other options
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <ComingSoonCard
+                            title="Word / WordPerfect plugin"
+                            body="Research, cite, and run the Council without leaving Microsoft Word — plus WordPerfect legal tools interop (pleadings, TOA, redline/compare). Web editor ships first; desktop is export/interop."
+                            ctaHref="mailto:aray.aaron@gmail.com?subject=Kingsfield%20Word%20%2F%20WordPerfect%20Plugin%20—%20Early%20Access&body=I%27d%20like%20early%20access%20to%20the%20Kingsfield%20Word%20%2F%20WordPerfect%20plugin."
+                            ctaLabel="Request early access"
+                        />
+                        <ComingSoonCard
+                            title="Judicial Analytics"
+                            body="Cross-matter patterns: judges, opposing counsel, venues, and citation graphs across your portfolio — not the per-document Case Map above."
+                        />
+                        <ComingSoonCard
+                            title="Verifier"
+                            body="Hearing and video citation verification pipeline — primary-source integrity for oral proceedings."
+                        />
+                        <ComingSoonCard
+                            title="Wingman"
+                            body="Live courtroom / deposition earpiece advisor. Separate runtime; teaser until the PWA path is productized here."
+                        />
+                    </div>
+                </section>
             </div>
+        </div>
+    );
+}
+
+function ComingSoonCard({
+    title,
+    body,
+    ctaHref,
+    ctaLabel,
+}: {
+    title: string;
+    body: string;
+    ctaHref?: string;
+    ctaLabel?: string;
+}) {
+    return (
+        <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50/80 p-4">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+                <h3 className="text-sm font-light text-gray-900">{title}</h3>
+                <span className="label-caps text-gray-400 shrink-0" style={{ fontSize: 10 }}>
+                    Coming soon
+                </span>
+            </div>
+            <p className="text-xs text-gray-500 leading-relaxed">{body}</p>
+            {ctaHref && ctaLabel && (
+                <a
+                    href={ctaHref}
+                    className="inline-block mt-3 text-xs font-light text-blue-600 hover:text-blue-800"
+                >
+                    {ctaLabel} →
+                </a>
+            )}
         </div>
     );
 }

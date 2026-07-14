@@ -136,7 +136,7 @@ app.use("/api", buildRoutes({
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.listen(PORT, () => {
-  console.log(`Mike backend running on port ${PORT}`);
+  console.log(`Kingsfield backend running on port ${PORT}`);
   if (!process.env.DEEPSEEK_API_KEY && !openrouterKey) {
     console.warn("[llm-council] no DeepSeek or OpenRouter key — First Principles seat uses Sonnet fallback.");
   } else if (!process.env.DEEPSEEK_API_KEY) {

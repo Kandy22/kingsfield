@@ -3,6 +3,57 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ── Helvetica Neue (brand assets → public/fonts/helvetica-neue) ── */
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-Thin.otf") format("opentype");
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-Light.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-Roman.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-Heavy.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-HeavyItalic.otf") format("opentype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Helvetica Neue";
+    src: url("/fonts/helvetica-neue/HelveticaNeue-Black.otf") format("opentype");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 @theme inline {
     /* Kingsfield brand tokens — source of truth (2026-06-23 redesign) */
     --color-ink:        #0A0A0A;
@@ -30,9 +81,10 @@
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-dm-sans);
-    --font-serif: var(--font-playfair);
-    --font-mono: var(--font-jetbrains-mono);
+    /* Body = Helvetica Neue (local OTFs). Display/headers = Playfair. */
+    --font-sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
+    --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
     --color-blue: rgb(43, 92, 230);
     --color-blue-50: rgba(43, 92, 230, 0.05);
     --color-blue-100: rgba(43, 92, 230, 0.1);
@@ -215,23 +267,68 @@
 
     body {
         @apply bg-background text-foreground;
-        font-family: var(--font-body);
+        font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+        font-weight: 400;
     }
 
     h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-display);
+        font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
         letter-spacing: -0.02em;
+        font-weight: 400;
     }
 
     button {
         cursor: pointer;
     }
+
+    /*
+     * Elegant weight scale — Helvetica Neue reads heavy at 600–900.
+     * Remap Tailwind weight utilities so the UI stays thin, not brutalist.
+     * (true bold reserved for rare emphasis via .font-weight-strong)
+     */
+    .font-black,
+    .font-extrabold {
+        font-weight: 500 !important;
+    }
+    .font-bold {
+        font-weight: 500 !important;
+    }
+    .font-semibold {
+        font-weight: 400 !important;
+    }
+    .font-medium {
+        font-weight: 400 !important;
+    }
+    .font-normal {
+        font-weight: 400 !important;
+    }
+    .font-light {
+        font-weight: 300 !important;
+    }
+    .font-thin {
+        font-weight: 200 !important;
+    }
+    .font-weight-strong {
+        font-weight: 500 !important;
+    }
+
+    /* Section labels: thin uppercase caps (Council, Case Map, etc.) */
+    .label-caps {
+        font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+        font-weight: 300;
+        font-size: 0.6875rem; /* 11px */
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: inherit;
+    }
 }
 
 /* ── Kingsfield utility classes ────────────────────────────────── */
-.font-display   { font-family: var(--font-display) !important; }
-.font-editorial { font-family: var(--font-editorial) !important; }
-.font-brutalist { font-family: var(--font-brutalist) !important; letter-spacing: 0.02em; }
+/* Display / brand headers = Playfair. Body UI = Helvetica Neue (font-sans). */
+.font-display   { font-family: var(--font-playfair), "Playfair Display", Georgia, serif !important; }
+.font-editorial { font-family: var(--font-eb-garamond), "EB Garamond", Georgia, serif !important; }
+.font-brutalist { font-family: var(--font-bebas), "Bebas Neue", Impact, sans-serif !important; letter-spacing: 0.02em; }
+.font-serif     { font-family: var(--font-playfair), "Playfair Display", Georgia, serif !important; }
 .font-mono      { font-family: var(--font-mono) !important; }
 
 /* Gold text / border helpers */
@@ -256,6 +353,54 @@
 .dark .shadow-sm   { box-shadow: none; }
 .dark .hover\:bg-gray-100:hover { background-color: #2A2A28; }
 .dark .hover\:bg-gray-50:hover  { background-color: #161615; }
+
+/* Assistant glass / frosted surfaces — light mode uses white glass; dark must not. */
+.dark .bg-white\/55,
+.dark .bg-white\/60,
+.dark .bg-white\/45,
+.dark .bg-white\/25,
+.dark .hover\:bg-white\/55:hover,
+.dark .hover\:bg-white\/45:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+.dark .border-white\/70,
+.dark .border-white\/65 {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .to-white {
+    --tw-gradient-to: #0A0A0A var(--tw-gradient-to-position);
+}
+
+/* Assistant answer body — high contrast sans on dark */
+.assistant-prose {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: inherit;
+}
+.assistant-prose h1,
+.assistant-prose h2,
+.assistant-prose h3,
+.assistant-prose h4 {
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: inherit;
+}
+.dark .assistant-prose {
+    color: #F7F6F2;
+}
+.dark .assistant-prose strong {
+    color: #FFFFFF;
+    font-weight: 500;
+}
+.dark .assistant-prose a {
+    color: #8BB0FF;
+}
+.dark .assistant-prose code {
+    background-color: #2A2A28;
+    color: #F7F6F2;
+}
 
 .beige body,
 .beige .bg-white    { background-color: var(--background); color: var(--foreground); }
@@ -301,11 +446,11 @@
   --kg-danger:        #C7341A;   /* red */
   --kg-danger-bg:     #2B0A0A;
 
-  /* ── Typography — Kingsfield brand ────────────────────────────── */
-  --font-display:     var(--font-playfair), 'Playfair Display', Georgia, serif;
-  --font-brutalist:   var(--font-bebas), 'Bebas Neue', Impact, sans-serif;
-  --font-editorial:   var(--font-eb-garamond), 'EB Garamond', Georgia, serif;
-  --font-body:        var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  /* ── Typography — Playfair display + Helvetica Neue body ─────── */
+  --font-display:     var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-brutalist:   var(--font-bebas), "Bebas Neue", Impact, sans-serif;
+  --font-editorial:   var(--font-eb-garamond), "EB Garamond", Georgia, serif;
+  --font-body:        "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   --font-mono:        var(--font-jetbrains-mono), 'JetBrains Mono', 'Courier New', monospace;
 
   /* Display type scale */
@@ -513,7 +658,7 @@
 
 @layer utilities {
     .font-eb-garamond {
-        font-family: var(--font-eb-garamond);
+        font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
     }
 
     .sidebar-fade-in {

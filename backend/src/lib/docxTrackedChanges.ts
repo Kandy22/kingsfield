@@ -789,7 +789,7 @@ export async function applyTrackedEdits(
     edits: EditInput[],
     opts?: { author?: string },
 ): Promise<ApplyTrackedEditsResult> {
-    const author = opts?.author ?? "Mike";
+    const author = opts?.author ?? "Kingsfield";
     const now = new Date().toISOString();
 
     const zip = await JSZip.loadAsync(bytes);
@@ -964,7 +964,7 @@ export async function applyTrackedEdits(
         const minEnd = minStart + deleted.length;
         void findEnd;
 
-        const changeId = `mike-${editIdx}-${Date.now()}`;
+        const changeId = `kf--${Date.now()}`;
         const plan: PlannedChange = {
             editIndex: editIdx,
             deleteStart: minStart,

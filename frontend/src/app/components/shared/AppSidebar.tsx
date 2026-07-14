@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import {
     MessageSquare, FolderOpen, Table2, Library,
     User, ChevronsUpDown, ChevronDown, LogOut,
-    BookOpen, Scroll, Scale, Plus, Network,
+    BookOpen, Scroll, Scale, Plus, Network, Sparkles,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
@@ -32,10 +32,10 @@ const SECTIONS: SectionConfig[] = [
     { href: "/case-law",        label: "Case Law",        sublabel: "Search opinions",           icon: BookOpen,      bg: "#161615" },
     { href: "/council",         label: "Council",         sublabel: "Multi-model deliberation",  icon: Scale,         bg: "#161615" },
     { href: "/projects",        label: "Projects",        sublabel: "Case workspaces",           icon: FolderOpen,    bg: "#161615" },
-    { href: "/legislation",     label: "Statutes",        sublabel: "Codes & primary sources",   icon: Scroll,        bg: "#161615" },
-    { href: "/tabular-reviews", label: "Tabular Review",  sublabel: "Structured extraction",     icon: Table2,        bg: "#161615" },
-    { href: "/workflows",       label: "Workflows",       sublabel: "Automated pipelines",       icon: Library,       bg: "#161615" },
-    { href: "/analytics",       label: "Analytics",       sublabel: "Judicial connections",      icon: Network,       bg: "#161615" },
+    { href: "/legislation",     label: "Statutes",        sublabel: "URL packs · dual retrieval", icon: Scroll,        bg: "#161615" },
+    { href: "/tabular-reviews", label: "Tabular Review",  sublabel: "Multi-doc matrix extract",  icon: Table2,        bg: "#161615" },
+    { href: "/workflows",       label: "Workflows",       sublabel: "Reusable review templates", icon: Library,       bg: "#161615" },
+    { href: "/analytics",       label: "Case Map",        sublabel: "Per-document case extract", icon: Network,       bg: "#161615" },
 ];
 
 interface AppSidebarProps {
@@ -134,7 +134,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                         style={{
                             width: 28, height: 28, borderRadius: "50%",
                             background: "#161615", color: "#C4C3BD",
-                            fontSize: 11, fontWeight: 600,
+                            fontSize: 11, fontWeight: 400,
                             display: "flex", alignItems: "center", justifyContent: "center",
                             border: "1px solid #2A2A28", cursor: "pointer",
                         }}>
@@ -155,21 +155,25 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
                     {/* Header — click to collapse */}
                     <button onClick={onToggle} className="text-left px-5 pt-5 pb-4 flex-shrink-0 w-full">
-                        <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-dm-sans)", fontWeight: 600, textTransform: "uppercase", marginBottom: 6 }}>
+                        <div style={{ fontSize: 10, letterSpacing: "0.18em", color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-body)", fontWeight: 400, textTransform: "uppercase", marginBottom: 6 }}>
                             Kingsfield
                         </div>
-                        <div style={{
-                            fontFamily: "var(--font-playfair), 'Playfair Display', Georgia, serif",
-                            fontSize: 22,
-                            fontWeight: 900,
-                            color: "#FFFFFF",
-                            letterSpacing: "-0.02em",
-                            lineHeight: 1.1,
-                        }}>
+                        <div
+                            className="font-serif"
+                            style={{
+                                fontFamily:
+                                    'var(--font-playfair), "Playfair Display", Georgia, serif',
+                                fontSize: 22,
+                                fontWeight: 400,
+                                color: "#FFFFFF",
+                                letterSpacing: "-0.02em",
+                                lineHeight: 1.1,
+                            }}
+                        >
                             {active?.label ?? "Kingsfield"}
                         </div>
                         {active?.sublabel && (
-                            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 3, fontFamily: "var(--font-dm-sans)" }}>
+                            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 3, fontFamily: "var(--font-body)" }}>
                                 {active.sublabel}
                             </div>
                         )}
@@ -187,8 +191,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                         padding: "7px 10px", borderRadius: 4, marginBottom: 2,
                                         background: isActive ? "rgba(255,255,255,0.18)" : "transparent",
                                         color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.50)",
-                                        fontWeight: isActive ? 600 : 400,
-                                        fontSize: 13, fontFamily: "var(--font-dm-sans)",
+                                        fontWeight: isActive ? 500 : 400,
+                                        fontSize: 13, fontFamily: "var(--font-body)",
                                         border: "none", cursor: "pointer", textAlign: "left",
                                         transition: "background 0.1s",
                                     }}
@@ -214,7 +218,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                         display: "flex", alignItems: "center", gap: 7,
                                         padding: "7px 10px", borderRadius: 4, marginBottom: 8,
                                         background: "rgba(255,255,255,0.18)", color: "#FFFFFF",
-                                        fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)",
+                                        fontWeight: 400, fontSize: 13, fontFamily: "var(--font-body)",
                                         border: "none", cursor: "pointer", width: "100%",
                                     }}>
                                     <Plus style={{ width: 13, height: 13 }} /> New Chat
@@ -224,8 +228,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                         display: "flex", alignItems: "center", justifyContent: "space-between",
                                         padding: "0 10px", marginBottom: 4,
                                         background: "transparent", border: "none", cursor: "pointer",
-                                        color: "rgba(255,255,255,0.35)", fontSize: 11, fontWeight: 600,
-                                        fontFamily: "var(--font-dm-sans)", letterSpacing: "0.08em",
+                                        color: "rgba(255,255,255,0.35)", fontSize: 11, fontWeight: 400,
+                                        fontFamily: "var(--font-body)", letterSpacing: "0.08em",
                                         textTransform: "uppercase", width: "100%",
                                     }}>
                                     <span>Recent</span>
@@ -257,24 +261,157 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                         )}
 
                         {active?.href === "/projects" && (
-                            <button onClick={() => router.push("/projects")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)", border: "none", cursor: "pointer", width: "100%" }}>
+                            <button onClick={() => router.push("/projects")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 400, fontSize: 13, fontFamily: "var(--font-body)", border: "none", cursor: "pointer", width: "100%" }}>
                                 <Plus style={{ width: 13, height: 13 }} /> New Project
                             </button>
                         )}
                         {active?.href === "/workflows" && (
-                            <button onClick={() => router.push("/workflows")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)", border: "none", cursor: "pointer", width: "100%" }}>
+                            <button onClick={() => router.push("/workflows")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 400, fontSize: 13, fontFamily: "var(--font-body)", border: "none", cursor: "pointer", width: "100%" }}>
                                 <Plus style={{ width: 13, height: 13 }} /> New Workflow
                             </button>
                         )}
                         {active?.href === "/tabular-reviews" && (
-                            <button onClick={() => router.push("/tabular-reviews")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 600, fontSize: 13, fontFamily: "var(--font-dm-sans)", border: "none", cursor: "pointer", width: "100%" }}>
+                            <button onClick={() => router.push("/tabular-reviews")} style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 10px", borderRadius: 4, background: "rgba(255,255,255,0.18)", color: "#FFFFFF", fontWeight: 400, fontSize: 13, fontFamily: "var(--font-body)", border: "none", cursor: "pointer", width: "100%" }}>
                                 <Plus style={{ width: 13, height: 13 }} /> New Review
                             </button>
                         )}
                     </div>
 
+                    {/* Coming Soon — full teaser list */}
+                    <div
+                        style={{
+                            marginTop: "auto",
+                            flexShrink: 0,
+                            padding: "10px 10px 12px",
+                            borderTop: "1px solid rgba(255,255,255,0.12)",
+                            maxHeight: "42vh",
+                            overflowY: "auto",
+                        }}
+                    >
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 6,
+                                marginBottom: 8,
+                                color: "rgba(255,255,255,0.35)",
+                                fontSize: 10,
+                                fontWeight: 300,
+                                letterSpacing: "0.14em",
+                                textTransform: "uppercase",
+                                fontFamily: "var(--font-body)",
+                                padding: "0 2px",
+                            }}
+                        >
+                            <Sparkles style={{ width: 11, height: 11 }} />
+                            Coming Soon
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                            {(
+                                [
+                                    {
+                                        key: "wp",
+                                        title: "Word / WordPerfect plugin",
+                                        body: "Research, cite & Council inside Word; WP legal tools interop later.",
+                                        href: "mailto:aray.aaron@gmail.com?subject=Kingsfield%20Word%20%2F%20WordPerfect%20Plugin%20—%20Early%20Access&body=I%27d%20like%20early%20access%20to%20the%20Kingsfield%20Word%20%2F%20WordPerfect%20plugin.",
+                                        external: true as const,
+                                        highlight: true,
+                                    },
+                                    {
+                                        key: "judicial",
+                                        title: "Judicial Analytics",
+                                        body: "Cross-matter judges, counsel, venues — not per-doc Case Map.",
+                                        href: "/analytics#coming-soon",
+                                        external: false as const,
+                                        highlight: false,
+                                    },
+                                    {
+                                        key: "verifier",
+                                        title: "Verifier",
+                                        body: "Hearing & video citation verification from primary sources.",
+                                        href: "/analytics#coming-soon",
+                                        external: false as const,
+                                        highlight: false,
+                                    },
+                                    {
+                                        key: "wingman",
+                                        title: "Wingman",
+                                        body: "Live courtroom / deposition earpiece advisor.",
+                                        href: "/analytics#coming-soon",
+                                        external: false as const,
+                                        highlight: false,
+                                    },
+                                ] as const
+                            ).map((item) => {
+                                const style: CSSProperties = {
+                                    display: "block",
+                                    width: "100%",
+                                    textAlign: "left",
+                                    padding: "7px 9px",
+                                    borderRadius: 4,
+                                    background: item.highlight
+                                        ? "rgba(43,92,230,0.12)"
+                                        : "rgba(255,255,255,0.04)",
+                                    border: item.highlight
+                                        ? "1px solid rgba(43,92,230,0.25)"
+                                        : "1px solid rgba(255,255,255,0.08)",
+                                    textDecoration: "none",
+                                    cursor: "pointer",
+                                    fontFamily: "var(--font-body)",
+                                };
+                                const inner = (
+                                    <>
+                                        <div
+                                            style={{
+                                                fontSize: 11,
+                                                fontWeight: 400,
+                                                color: "#FFFFFF",
+                                                lineHeight: 1.25,
+                                            }}
+                                        >
+                                            {item.title}
+                                        </div>
+                                        <div
+                                            style={{
+                                                fontSize: 10,
+                                                fontWeight: 300,
+                                                color: "rgba(255,255,255,0.42)",
+                                                marginTop: 2,
+                                                lineHeight: 1.35,
+                                            }}
+                                        >
+                                            {item.body}
+                                        </div>
+                                    </>
+                                );
+                                if (item.external) {
+                                    return (
+                                        <a
+                                            key={item.key}
+                                            href={item.href}
+                                            title={item.title}
+                                            style={style}
+                                        >
+                                            {inner}
+                                        </a>
+                                    );
+                                }
+                                return (
+                                    <button
+                                        key={item.key}
+                                        type="button"
+                                        onClick={() => router.push(item.href)}
+                                        style={style}
+                                    >
+                                        {inner}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                     {/* User footer */}
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)", marginTop: "auto", flexShrink: 0, position: "relative" }}>
+                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)", flexShrink: 0, position: "relative" }}>
                         <button onClick={() => setDropdownOpen(!dropdownOpen)}
                             style={{
                                 display: "flex", alignItems: "center", gap: 10, width: "100%",
@@ -284,26 +421,26 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                             <div style={{
                                 width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
                                 background: "rgba(255,255,255,0.18)", color: "#FFFFFF",
-                                fontSize: 12, fontWeight: 700, fontFamily: "var(--font-dm-sans)",
+                                fontSize: 12, fontWeight: 500, fontFamily: "var(--font-body)",
                                 display: "flex", alignItems: "center", justifyContent: "center",
                                 border: "1px solid rgba(255,255,255,0.25)",
                             }}>{initials()}</div>
                             <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.85)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "var(--font-dm-sans)" }}>{displayName()}</div>
-                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-dm-sans)" }}>{tier()}</div>
+                                <div style={{ fontSize: 13, fontWeight: 400, color: "rgba(255,255,255,0.85)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "var(--font-body)" }}>{displayName()}</div>
+                                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.40)", fontFamily: "var(--font-body)" }}>{tier()}</div>
                             </div>
                             <ChevronsUpDown style={{ width: 14, height: 14, color: "rgba(255,255,255,0.30)", flexShrink: 0 }} />
                         </button>
                         {dropdownOpen && (
                             <div style={{ position: "absolute", bottom: "100%", left: 0, margin: 4, background: "#161615", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 6, padding: 4, zIndex: 50, width: "calc(100% - 8px)" }}>
                                 <button onClick={() => { router.push("/account"); setDropdownOpen(false); }}
-                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-dm-sans)" }}
+                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-body)" }}
                                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
                                     onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}>
                                     <User style={{ width: 14, height: 14 }} /> Account Settings
                                 </button>
                                 <button onClick={async () => { setDropdownOpen(false); await signOut(); router.push("/"); }}
-                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-dm-sans)" }}
+                                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "8px 12px", background: "transparent", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.70)", fontSize: 13, borderRadius: 4, fontFamily: "var(--font-body)" }}
                                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.08)"}
                                     onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = "transparent"}>
                                     <LogOut style={{ width: 14, height: 14 }} /> Sign Out

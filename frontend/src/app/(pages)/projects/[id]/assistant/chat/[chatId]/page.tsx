@@ -42,7 +42,7 @@ import { ProjectExplorer } from "@/app/components/projects/ProjectExplorer";
 import { DocView } from "@/app/components/shared/DocView";
 import { OwnerOnlyModal } from "@/app/components/shared/OwnerOnlyModal";
 import { DocxView } from "@/app/components/shared/DocxView";
-import { MikeIcon } from "@/components/chat/mike-icon";
+import { KingsfieldIcon } from "@/components/chat/mike-icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
 import { useSidebar } from "@/app/contexts/SidebarContext";
@@ -127,7 +127,7 @@ function AssistantGreeting({ username }: { username: string }) {
                             "transform 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                     }}
                 >
-                    <MikeIcon size={ICON_SIZE} />
+                    <KingsfieldIcon size={ICON_SIZE} />
                 </div>
                 <h1
                     ref={textRef}

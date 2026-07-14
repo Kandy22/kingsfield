@@ -1,5 +1,6 @@
+import { getApiBase } from "./apiBase";
 /**
- * Mike API client — all requests to the Node.js backend.
+ * Kingsfield API client — all requests to the Node.js backend.
  * Attaches the Supabase auth token for user authentication.
  */
 
@@ -34,26 +35,19 @@ interface ServerChatDetailOut {
     messages: ServerMessage[];
 }
 
-// Prefer an explicit env override; otherwise call the backend on whatever host
-// the page was opened from (so localhost AND a LAN IP like 192.168.x.x both work
-// with no rebuild — needed for testing from another device on the same Wi-Fi).
-const API_BASE =
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    (typeof window !== "undefined"
-        ? `http://${window.location.hostname}:3001`
-        : "http://localhost:3001");
+const apiBase = () => getApiBase();
 const isDev = process.env.NODE_ENV !== "production";
 const devLog = (...args: Parameters<typeof console.log>) => {
     if (isDev) console.log(...args);
 };
 
-export class MikeApiError extends Error {
+export class KingsfieldApiError extends Error {
     status: number;
     code: string | null;
 
     constructor(args: { message: string; status: number; code?: string | null }) {
         super(args.message);
-        this.name = "MikeApiError";
+        this.name = "KingsfieldApiError";
         this.status = args.status;
         this.code = args.code ?? null;
     }
@@ -61,7 +55,7 @@ export class MikeApiError extends Error {
 
 export function isMfaRequiredError(error: unknown) {
     return (
-        error instanceof MikeApiError &&
+        error instanceof KingsfieldApiError &&
         error.status === 403 &&
         error.code === "mfa_verification_required"
     );
@@ -78,7 +72,7 @@ async function getAuthHeader(): Promise<Record<string, string>> {
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
     const authHeaders = await getAuthHeader();
     const { headers: initHeaders, ...restInit } = init ?? {};
-    const response = await fetch(`${API_BASE}${path}`, {
+    const response = await fetch(`${apiBase()}${path}`, {
         cache: "no-store",
         ...restInit,
         headers: {
@@ -107,7 +101,7 @@ async function apiBlobRequest(path: string): Promise<{
     filename: string | null;
 }> {
     const authHeaders = await getAuthHeader();
-    const response = await fetch(`${API_BASE}${path}`, {
+    const response = await fetch(`${apiBase()}${path}`, {
         cache: "no-store",
         headers: {
             Accept: "application/json",
@@ -134,13 +128,13 @@ async function toApiError(response: Response, path: string) {
             detail?: unknown;
             code?: unknown;
         };
-        devLog("[mike-api] non-ok response", {
+        devLog("[kingsfield-api] non-ok response", {
             path,
             status: response.status,
             code: parsed.code,
             detail: parsed.detail,
         });
-        return new MikeApiError({
+        return new KingsfieldApiError({
             status: response.status,
             code: typeof parsed.code === "string" ? parsed.code : null,
             message:
@@ -149,12 +143,12 @@ async function toApiError(response: Response, path: string) {
                     : `API error: ${response.status}`,
         });
     } catch {
-        devLog("[mike-api] non-ok non-json response", {
+        devLog("[kingsfield-api] non-ok non-json response", {
             path,
             status: response.status,
             bodyPreview: text.slice(0, 200),
         });
-        return new MikeApiError({
+        return new KingsfieldApiError({
             status: response.status,
             message: text || `API error: ${response.status}`,
         });
@@ -176,14 +170,21 @@ export async function getDirectoryData(): Promise<{
     return apiRequest("/projects/directory");
 }
 
+export type RetrievalVerification = {
+    hasVetoes: boolean;
+    hasConditional: boolean;
+    verdicts: unknown[];
+};
+
 export async function proSeAsk(payload: {
     question: string;
     jurisdiction?: string;
     sourceUrl?: string;
 }): Promise<{
+    engine?: string;
     answer: string | null;
     withheld: boolean;
-    verification: { hasVetoes: boolean; hasConditional: boolean; verdicts: unknown[] };
+    verification: RetrievalVerification;
 }> {
     return apiRequest("/pro-se/ask", {
         method: "POST",
@@ -192,18 +193,92 @@ export async function proSeAsk(payload: {
     });
 }
 
+/** URL Context engine — official pages (chat-with-docs). Max 20 allowlisted URLs. */
 export async function proSeChatWithDocs(payload: {
     prompt: string;
     urls: string[];
 }): Promise<{
+    engine?: string;
     text: string | null;
     withheld: boolean;
-    verification: { hasVetoes: boolean; hasConditional: boolean; verdicts: unknown[] };
+    urls?: string[];
+    urlMetadata?: unknown[];
+    verification: RetrievalVerification;
 }> {
     return apiRequest("/pro-se/chat-with-docs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+    });
+}
+
+export async function proSeUrlSuggestions(urls: string[]): Promise<{
+    engine?: string;
+    suggestions: string[];
+    urls: string[];
+}> {
+    return apiRequest("/pro-se/url-suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ urls }),
+    });
+}
+
+/** File Search engine — create binder store (ask-the-manual). */
+export async function proSeCreateManualStore(displayName?: string): Promise<{
+    engine?: string;
+    ragStoreName: string;
+    displayName: string;
+}> {
+    return apiRequest("/pro-se/manual-store", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ displayName }),
+    });
+}
+
+export async function proSeUploadToManualStore(payload: {
+    ragStoreName: string;
+    documentId: string;
+}): Promise<{
+    engine?: string;
+    ok: boolean;
+    ragStoreName: string;
+    documentId: string;
+    filename: string;
+}> {
+    return apiRequest("/pro-se/manual-store/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    });
+}
+
+export async function proSeAskManual(payload: {
+    question: string;
+    ragStoreName: string;
+}): Promise<{
+    engine?: string;
+    text: string | null;
+    withheld: boolean;
+    ragStoreName: string;
+    groundingChunks?: unknown[];
+    verification: RetrievalVerification;
+}> {
+    return apiRequest("/pro-se/ask-manual", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+    });
+}
+
+export async function proSeManualSuggestions(
+    ragStoreName: string,
+): Promise<{ engine?: string; suggestions: string[] }> {
+    return apiRequest("/pro-se/manual-suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ragStoreName }),
     });
 }
 
@@ -617,7 +692,7 @@ export async function uploadDocumentVersion(
     form.append("file", file);
     if (filename) form.append("filename", filename);
     const response = await fetch(
-        `${API_BASE}/single-documents/${documentId}/versions`,
+        `${apiBase()}/single-documents/${documentId}/versions`,
         {
             method: "POST",
             headers: { ...authHeaders },
@@ -639,7 +714,7 @@ export async function replaceDocumentVersionFile(
     form.append("file", file);
     if (filename) form.append("filename", filename);
     const response = await fetch(
-        `${API_BASE}/single-documents/${documentId}/versions/${versionId}/file`,
+        `${apiBase()}/single-documents/${documentId}/versions/${versionId}/file`,
         {
             method: "PUT",
             headers: { ...authHeaders },
@@ -703,7 +778,7 @@ export async function uploadProjectDocument(
     const form = new FormData();
     form.append("file", file);
     const response = await fetch(
-        `${API_BASE}/projects/${projectId}/documents`,
+        `${apiBase()}/projects/${projectId}/documents`,
         {
             method: "POST",
             headers: { ...authHeaders },
@@ -720,7 +795,7 @@ export async function uploadStandaloneDocument(
     const authHeaders = await getAuthHeader();
     const form = new FormData();
     form.append("file", file);
-    const response = await fetch(`${API_BASE}/single-documents`, {
+    const response = await fetch(`${apiBase()}/single-documents`, {
         method: "POST",
         headers: { ...authHeaders },
         body: form,
@@ -749,7 +824,7 @@ export async function downloadDocumentsZip(
     documentIds: string[],
 ): Promise<Blob> {
     const authHeaders = await getAuthHeader();
-    const response = await fetch(`${API_BASE}/single-documents/download-zip`, {
+    const response = await fetch(`${apiBase()}/single-documents/download-zip`, {
         method: "POST",
         cache: "no-store",
         headers: {
@@ -881,7 +956,7 @@ export async function streamChat(payload: {
 }): Promise<Response> {
     const { signal, ...body } = payload;
     const authHeaders = await getAuthHeader();
-    return fetch(`${API_BASE}/chat`, {
+    return fetch(`${apiBase()}/chat`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -911,7 +986,7 @@ export async function streamProjectChat(payload: {
 }): Promise<Response> {
     const { projectId, signal, ...body } = payload;
     const authHeaders = await getAuthHeader();
-    return fetch(`${API_BASE}/projects/${projectId}/chat`, {
+    return fetch(`${apiBase()}/projects/${projectId}/chat`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -1025,7 +1100,7 @@ export async function streamTabularGeneration(
     reviewId: string,
 ): Promise<Response> {
     const authHeaders = await getAuthHeader();
-    return fetch(`${API_BASE}/tabular-review/${reviewId}/generate`, {
+    return fetch(`${apiBase()}/tabular-review/${reviewId}/generate`, {
         method: "POST",
         headers: { ...authHeaders },
     });
@@ -1039,7 +1114,7 @@ export async function streamTabularChat(
     context?: { reviewTitle?: string | null; projectName?: string | null },
 ): Promise<Response> {
     const authHeaders = await getAuthHeader();
-    return fetch(`${API_BASE}/tabular-review/${reviewId}/chat`, {
+    return fetch(`${apiBase()}/tabular-review/${reviewId}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...authHeaders },
         body: JSON.stringify({

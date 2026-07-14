@@ -22,9 +22,10 @@ import { DisplayWorkflowModal } from "./DisplayWorkflowModal";
 import { NewWorkflowModal } from "./NewWorkflowModal";
 import { TableToolbar } from "../shared/TableToolbar";
 import { RowActionMenuItems, RowActions } from "../shared/RowActions";
-import { MikeIcon } from "@/components/chat/mike-icon";
+import { KingsfieldIcon } from "@/components/chat/mike-icon";
 import { useAuth } from "@/contexts/AuthContext";
 import { PageHeader } from "@/app/components/shared/PageHeader";
+import { SectionIntro } from "@/app/components/shared/SectionIntro";
 import { workflowDetailPath } from "./workflowRoutes";
 import {
     GLASS_DROPDOWN,
@@ -287,10 +288,27 @@ export function WorkflowList() {
                     },
                 ]}
             >
-                <h1 className="text-2xl font-medium font-serif text-gray-900">
+                <h1 className="text-2xl font-light text-gray-900">
                     Workflows
                 </h1>
             </PageHeader>
+
+            <SectionIntro lead="What a workflow is:">
+                a reusable template you apply on purpose — never auto-started from
+                an upload. Two kinds:{" "}
+                <span className="font-normal text-gray-800 dark:text-paper">
+                    Assistant
+                </span>{" "}
+                workflows (a saved prompt you attach in chat — CP checklist, credit
+                agreement summary) and{" "}
+                <span className="font-normal text-gray-800 dark:text-paper">
+                    Tabular
+                </span>{" "}
+                workflows (a column set for multi-document matrix extract —
+                parties, governing law, indemnity, etc.). Use them when you already
+                know the review shape; for a single pleading or complaint, start on
+                Assistant upload → Case Map instead.
+            </SectionIntro>
 
             <TableToolbar
                 items={WORKFLOW_SCOPES}
@@ -496,8 +514,8 @@ export function WorkflowList() {
                                 <TableCell className="w-28">
                                     {wf.is_system ? (
                                         <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600">
-                                            <MikeIcon size={14} />
-                                            Mike
+                                            <KingsfieldIcon size={14} />
+                                            Kingsfield
                                         </span>
                                     ) : wf.user_id === user?.id ? (
                                         <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600">

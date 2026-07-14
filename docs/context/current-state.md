@@ -1,12 +1,27 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-07-04 (evening session)*
+*Last updated: 2026-07-13 (evening handoff — user switched projects)*
 
-> ⚠️ **NEWER: read `SESSION-2026-07-12-handoff.md` first** — covers running the
-> demo suite (Kingsfield = 2 servers!), Video Analyzer fixes (committed), LAN +
-> no-login demo mode (committed), and a list of UNCOMMITTED fixes to protect
-> (Wingman, verifier pipeline, pro-se veto, Face Mood stop-music button).
+> ⭐ **START HERE:** `docs/context/SESSION-2026-07-13-assistant-casemap-handoff.md`  
+> Full notes from the Assistant / Case Map / LAN / extract session.  
+> Also: `SESSION-2026-07-12-handoff.md` (demo suite, Video Analyzer, LAN demo mode).  
+> Servers were **stopped** at end of 2026-07-13 evening; restart backend:3001 + frontend:3000.
 
-This file is the handoff brief. Any new session — Claude Code, Cowork, or Claude.ai — should read this first alongside CLAUDE.md.
+This file is the handoff brief. Any new session — Claude Code, Cowork, Grok, or Claude.ai — should read CLAUDE.md + the latest SESSION handoff first.
+
+---
+
+## ⭐ 2026-07-13 evening — summary (see full SESSION file)
+
+**Product:** Assistant = intake; Case Map (`/analytics`) = per-doc extract view; Workflows never auto-start; Coming Soon in sidebar (Word/WP, Judicial Analytics, Verifier, Wingman). Helvetica Neue site-wide, thin weights.
+
+**Shipped:** auto extract all uploads · extract card · Review editor (blue/green spans) · section definitions full-width · `getApiBase()` for LAN · sparse-scan PDF refusal · Assini = good demo PDF · composer scroll/contrast fix · LAN servers killed on exit.
+
+**Demo PDF:** `…/caselaw/ASSINI v. Hayward, 2026 NY Slip Op 26086…Google Scholar.pdf`  
+**Bad demo (scan):** Heppner PACER RICOH image-only.
+
+**Creds:** `aray.aaron@gmail.com` / `Kingsfield-Reset-2026` · demo `demo@kingsfield.app` / `KingsfieldDemo-2026` · `NEXT_PUBLIC_DEMO_MODE=false`.
+
+**Not done:** OCR for scans, free-form drafting, Judicial Analytics product, commit/push this session, CourtListener 125/day raise.
 
 ---
 

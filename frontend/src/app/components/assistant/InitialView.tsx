@@ -3,10 +3,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUserProfile } from "@/contexts/UserProfileContext";
-import { MikeIcon } from "@/components/chat/mike-icon";
+import { KingsfieldIcon } from "@/components/chat/mike-icon";
 import { ChatInput } from "./ChatInput";
+import { FeatureGuide } from "./FeatureGuide";
 import { SelectAssistantProjectModal } from "./SelectAssistantProjectModal";
-import { JurisdictionSelector } from "@/app/components/shared/JurisdictionSelector";
 import type { Message } from "../shared/types";
 
 interface InitialViewProps {
@@ -42,12 +42,14 @@ export function InitialView({ onSubmit }: InitialViewProps) {
     }, [iconOffset]);
 
     return (
-        <div className="flex flex-col h-full w-full px-6">
-            <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="flex-col items-center w-full max-w-4xl relative px-0 xl:px-8">
-                    <div className="mb-10 relative flex items-center justify-center">
+        <div className="flex flex-col h-full w-full min-h-0 overflow-y-auto px-6">
+            {/* Scrollable home: when extract cards grow after upload, the
+                ask bar must stay reachable (was justify-center + no scroll). */}
+            <div className="flex flex-1 flex-col items-center justify-center min-h-full py-8 sm:py-12">
+                <div className="flex flex-col items-center w-full max-w-4xl relative px-0 xl:px-8">
+                    <div className="mb-8 sm:mb-10 relative flex items-center justify-center h-10 w-full shrink-0">
                         <div
-                            className="absolute h-[30px] w-[30px] top-[-14px]"
+                            className="absolute h-[30px] w-[30px] top-[-2px]"
                             style={{
                                 left: "50%",
                                 transform: loaded
@@ -57,11 +59,11 @@ export function InitialView({ onSubmit }: InitialViewProps) {
                                     "transform 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                             }}
                         >
-                            <MikeIcon size={ICON_SIZE} />
+                            <KingsfieldIcon size={ICON_SIZE} />
                         </div>
                         <h1
                             ref={textRef}
-                            className="absolute text-4xl font-serif font-light text-gray-900 whitespace-nowrap"
+                            className="absolute text-4xl font-serif font-light text-gray-900 dark:text-paper whitespace-nowrap"
                             style={{
                                 left: "50%",
                                 transform: loaded
@@ -76,22 +78,22 @@ export function InitialView({ onSubmit }: InitialViewProps) {
                         </h1>
                     </div>
 
-                    <div className="mb-4 flex justify-center">
-                        <JurisdictionSelector prominent />
+                    <div className="w-full shrink-0">
+                        <ChatInput
+                            onSubmit={onSubmit}
+                            onCancel={() => {}}
+                            isLoading={false}
+                            onProjectsClick={() => setProjectModalOpen(true)}
+                        />
                     </div>
 
-                    <ChatInput
-                        onSubmit={onSubmit}
-                        onCancel={() => {}}
-                        isLoading={false}
-                        onProjectsClick={() => setProjectModalOpen(true)}
-                    />
-
-                    <div className="text-center">
-                        <p className="text-xs py-3 mb-3 text-gray-500">
+                    <div className="text-center shrink-0">
+                        <p className="text-xs py-3 mb-1 text-gray-500">
                             Every citation verified · Primary sources only · Not legal advice — legal knowledge.
                         </p>
                     </div>
+
+                    <FeatureGuide />
                 </div>
             </div>
 

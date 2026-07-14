@@ -125,7 +125,7 @@ export function hallucinationGuard(opts: HallucinationGuardOptions): RequestHand
 }
 
 function extractDraftText(body: any): string | null {
-  // Mike returns assistant messages with a `content` field that's either a
+  // Kingsfield returns assistant messages with a `content` field that's either a
   // string or an array of content blocks. Normalize both.
   if (typeof body?.content === 'string') return body.content;
   if (Array.isArray(body?.content)) {

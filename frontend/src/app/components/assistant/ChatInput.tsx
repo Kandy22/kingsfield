@@ -19,9 +19,12 @@ import {
     X,
 } from "lucide-react";
 import { AddDocButton } from "./AddDocButton";
+import { CaseExtractionCard } from "./CaseExtractionCard";
+import { DocBinderPanel } from "./DocBinderPanel";
 import { AddDocumentsModal } from "../shared/AddDocumentsModal";
 import { AssistantWorkflowModal } from "./AssistantWorkflowModal";
 import { ApiKeyMissingModal } from "../shared/ApiKeyMissingModal";
+import { DocumentEditorModal } from "../shared/DocumentEditorModal";
 import { ModelToggle } from "./ModelToggle";
 import { useSelectedModel } from "@/app/hooks/useSelectedModel";
 import { useUserProfile } from "@/contexts/UserProfileContext";
@@ -30,6 +33,7 @@ import {
     isModelAvailable,
     type ModelProvider,
 } from "@/app/lib/modelAvailability";
+import type { CaseExtraction } from "@/app/lib/caseIntelligenceApi";
 import type { Document, Message } from "../shared/types";
 import { cn } from "@/lib/utils";
 
@@ -77,12 +81,20 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
     const [workflowModalOpen, setWorkflowModalOpen] = useState(false);
     const [apiKeyModalProvider, setApiKeyModalProvider] =
         useState<ModelProvider | null>(null);
+    const [editorDoc, setEditorDoc] = useState<Document | null>(null);
+    const [editorAuthorities, setEditorAuthorities] = useState<string[]>([]);
 
     useImperativeHandle(ref, () => ({
         addDoc: (doc: Document) => {
             setAttachedDocs((prev) => {
                 if (prev.some((d) => d.id === doc.id)) return prev;
                 return [...prev, doc];
+            });
+            requestAnimationFrame(() => {
+                const el = textareaRef.current;
+                if (!el) return;
+                el.focus();
+                el.scrollIntoView({ block: "nearest", behavior: "smooth" });
             });
         },
     }));
@@ -97,12 +109,26 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
         return () => observer.disconnect();
     }, []);
 
-    const handleAddDocFromProject = useCallback((doc: Document) => {
-        setAttachedDocs((prev) => {
-            if (prev.some((d) => d.id === doc.id)) return prev;
-            return [...prev, doc];
+    const focusComposer = useCallback(() => {
+        // After attach/extract UI grows, keep the ask bar focused and on-screen.
+        requestAnimationFrame(() => {
+            const el = textareaRef.current;
+            if (!el) return;
+            el.focus({ preventScroll: false });
+            el.scrollIntoView({ block: "nearest", behavior: "smooth" });
         });
     }, []);
+
+    const handleAddDocFromProject = useCallback(
+        (doc: Document) => {
+            setAttachedDocs((prev) => {
+                if (prev.some((d) => d.id === doc.id)) return prev;
+                return [...prev, doc];
+            });
+            focusComposer();
+        },
+        [focusComposer],
+    );
 
     const handleAddDocsFromSelector = useCallback(
         (selectedDocs: Document[]) => {
@@ -113,8 +139,9 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                     ...selectedDocs.filter((d) => !existing.has(d.id)),
                 ];
             });
+            focusComposer();
         },
-        [],
+        [focusComposer],
     );
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -168,10 +195,18 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
         }
     };
 
+    const openEditor = (doc: Document, extraction: CaseExtraction | null) => {
+        setEditorDoc(doc);
+        setEditorAuthorities(
+            (extraction?.authorities ?? []).map((a) => a.citation).filter(Boolean),
+        );
+    };
+
     return (
         <>
-            <div className="w-full">
-                <div className="rounded-[18px] border border-white/65 bg-white/60 shadow-[0_4px_10px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.85),inset_0_-6px_14px_rgba(255,255,255,0.18)] backdrop-blur-2xl md:rounded-[22px] dark:border-white/10 dark:bg-ink-2 dark:shadow-none dark:backdrop-blur-none">
+            <div className="w-full space-y-3">
+                {/* Composer first — natural chat home; binder only after attach */}
+                <div className="relative z-10 rounded-[18px] border border-gray-200 bg-white shadow-sm md:rounded-[22px] dark:border-white/15 dark:bg-ink-2 dark:shadow-none">
                     {/* Attached chips */}
                     {(selectedWorkflow || attachedDocs.length > 0) && (
                         <div className="flex flex-wrap gap-1.5 px-2 pt-2">
@@ -198,7 +233,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                                 return (
                                     <div
                                         key={doc.id}
-                                        className="inline-flex items-center gap-1 rounded-[10px] border border-white/70 bg-white py-0.5 pl-2 pr-1 text-xs text-gray-800 shadow-[0_2px_6px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl"
+                                        className="inline-flex items-center gap-1 rounded-[10px] border border-gray-200 bg-gray-100 py-0.5 pl-2 pr-1 text-xs text-gray-800 dark:border-white/10 dark:bg-white/10 dark:text-paper"
                                     >
                                         {isPdf ? (
                                             <FileText className="h-2.5 w-2.5 shrink-0 text-red-500" />
@@ -217,7 +252,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                                                     ),
                                                 )
                                             }
-                                            className="ml-0.5 rounded-full p-0.5 text-gray-400 transition-colors hover:bg-gray-900/5 hover:text-gray-700"
+                                            className="ml-0.5 rounded-full p-0.5 text-gray-400 transition-colors hover:bg-gray-900/5 hover:text-gray-700 dark:hover:text-paper"
                                         >
                                             <X className="h-2.5 w-2.5" />
                                         </button>
@@ -227,16 +262,25 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                         </div>
                     )}
 
-                    {/* Input */}
+                    {/* Input — high contrast; always interactive after upload */}
                     <div className="px-4 pt-4">
                         <textarea
                             ref={textareaRef}
-                            rows={1}
-                            placeholder="Ask a question about your documents..."
+                            rows={2}
+                            placeholder="Message, upload, or ask…"
                             value={value}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            className="w-full resize-none text-sm overflow-hidden border-0 text-base p-0 bg-transparent outline-none placeholder:text-gray-400 leading-6 max-h-48"
+                            disabled={false}
+                            aria-label="Message"
+                            className={cn(
+                                "w-full resize-none overflow-y-auto border-0 p-0 bg-transparent outline-none",
+                                "text-base leading-6 max-h-48 min-h-[3rem]",
+                                "text-gray-900 dark:text-paper",
+                                "placeholder:text-gray-400 dark:placeholder:text-gray-500",
+                                "caret-gray-900 dark:caret-paper",
+                                "disabled:cursor-not-allowed",
+                            )}
                         />
                     </div>
 
@@ -264,8 +308,8 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                                     className={cn(
                                         "flex items-center gap-1.5 rounded-lg px-2 h-8 text-sm transition-colors",
                                         selectedWorkflow
-                                            ? "text-blue-600 hover:bg-white/55"
-                                            : "text-gray-400 hover:bg-white/55 hover:text-gray-700",
+                                            ? "text-blue-600 hover:bg-gray-100 dark:hover:bg-white/10"
+                                            : "text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/10 dark:hover:text-paper",
                                     )}
                                 >
                                     {selectedWorkflow ? (
@@ -291,7 +335,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                                     aria-label="Open projects"
                                     className={cn(
                                         "flex items-center gap-1.5 rounded-lg px-2 h-8 text-sm text-gray-400 hover:text-gray-700 transition-colors",
-                                        "hover:bg-white/55",
+                                        "hover:bg-gray-100 dark:hover:bg-white/10 dark:hover:text-paper",
                                     )}
                                 >
                                     <FolderOpen className="h-3.5 w-3.5" />
@@ -330,6 +374,20 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                         </div>
                     </div>
                 </div>
+
+                {/* After attach: case extract + File Search binder */}
+                {attachedDocs.length > 0 && (
+                    <div className="space-y-2 max-h-[45vh] overflow-y-auto overscroll-contain">
+                        {attachedDocs.map((doc) => (
+                            <CaseExtractionCard
+                                key={doc.id}
+                                doc={doc}
+                                onOpenEditor={openEditor}
+                            />
+                        ))}
+                        <DocBinderPanel docs={attachedDocs} />
+                    </div>
+                )}
             </div>
 
             <AddDocumentsModal
@@ -352,6 +410,14 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                 open={apiKeyModalProvider !== null}
                 provider={apiKeyModalProvider}
                 onClose={() => setApiKeyModalProvider(null)}
+            />
+            <DocumentEditorModal
+                doc={editorDoc}
+                authorities={editorAuthorities}
+                onClose={() => {
+                    setEditorDoc(null);
+                    setEditorAuthorities([]);
+                }}
             />
         </>
     );

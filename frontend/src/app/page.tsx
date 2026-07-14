@@ -80,12 +80,12 @@ export default function LandingPage() {
                     Legal AI · Open Source · AGPL-3.0
                 </p>
 
-                {/* Wordmark — Playfair Display 900 */}
+                {/* Wordmark — Playfair Display */}
                 <h1
                     className="text-[#F7F6F2] leading-[0.88] tracking-tight select-none mb-5"
                     style={{
                         fontFamily: "var(--font-display)",
-                        fontWeight: 900,
+                        fontWeight: 400,
                         fontSize: "clamp(52px, 11vw, 148px)",
                         letterSpacing: "-0.025em",
                     }}
@@ -93,13 +93,12 @@ export default function LandingPage() {
                     Kingsfield Lawfare
                 </h1>
 
-                {/* Gold tagline */}
+                {/* Tagline */}
                 <p
                     className="text-[#2B5CE6] mb-5"
                     style={{
-                        fontFamily: "var(--font-display)",
-                        fontStyle: "italic",
-                        fontWeight: 400,
+                        fontFamily: "var(--font-body)",
+                        fontWeight: 300,
                         fontSize: "clamp(16px, 2.2vw, 26px)",
                         letterSpacing: "0.01em",
                     }}

@@ -1438,34 +1438,32 @@ async function handleDocumentUpload(
       : updated;
     res.status(201).json(responseDoc);
 
-    // Fire-and-forget: project uploads feed Analytics automatically, same as
-    // tabular-review attach (see routes/tabular.ts). Standalone uploads keep
-    // the manual "Analyze" path.
-    if (projectId) {
-      void (async () => {
-        try {
-          const { runCaseExtraction } = await import("../lib/caseIntelligence.js");
-          const { getUserModelSettings } = await import("../lib/userSettings.js");
-          const { data: existing } = await db
-            .from("case_intelligence")
-            .select("id")
-            .eq("document_id", docId)
-            .maybeSingle();
-          if (existing) return; // don't re-extract
-          const settings = await getUserModelSettings(userId, db);
-          await runCaseExtraction({
-            documentId: docId,
-            userId,
-            projectId,
-            model: settings.tabular_model,
-            apiKeys: settings.api_keys,
-            db,
-          });
-        } catch (err) {
-          console.error("[documents/upload] auto case-extraction failed", err);
-        }
-      })();
-    }
+    // Fire-and-forget case intelligence on every upload (Assistant standalone,
+    // project vault, etc.). Extraction is owned by the document — Case Map
+    // and the Assistant card both read the same row. Skip if already present.
+    void (async () => {
+      try {
+        const { runCaseExtraction } = await import("../lib/caseIntelligence.js");
+        const { getUserModelSettings } = await import("../lib/userSettings.js");
+        const { data: existing } = await db
+          .from("case_intelligence")
+          .select("id")
+          .eq("document_id", docId)
+          .maybeSingle();
+        if (existing) return;
+        const settings = await getUserModelSettings(userId, db);
+        await runCaseExtraction({
+          documentId: docId,
+          userId,
+          projectId: projectId ?? null,
+          model: settings.tabular_model,
+          apiKeys: settings.api_keys,
+          db,
+        });
+      } catch (err) {
+        console.error("[documents/upload] auto case-extraction failed", err);
+      }
+    })();
     return;
   } catch (e) {
     await db.from("documents").update({ status: "error" }).eq("id", doc.id);

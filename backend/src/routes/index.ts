@@ -112,16 +112,18 @@ export function buildRoutes(deps: RouteDeps): Router {
   // facts (entities, allegations, defenses, authorities, rarity) that power
   // the Analytics connection graph + allegation/defense/authority clusters.
 
-  // GET /api/analytics — all extractions for the user (optionally by project)
+  // GET /api/analytics — extractions for the user (optional projectId / documentId)
   r.get('/analytics', requireAuth, async (_req: Request, res: Response) => {
     const userId = res.locals.userId as string;
     const projectId = _req.query.projectId as string | undefined;
+    const documentId = _req.query.documentId as string | undefined;
     let q = deps.supabase
       .from('case_intelligence')
       .select('*')
       .eq('user_id', userId)
       .order('updated_at', { ascending: false });
     if (projectId) q = q.eq('project_id', projectId);
+    if (documentId) q = q.eq('document_id', documentId);
     const { data, error } = await q;
     if (error) return void res.status(500).json({ detail: error.message });
     res.json({ extractions: data ?? [] });

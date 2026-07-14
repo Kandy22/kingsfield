@@ -6,17 +6,21 @@ import { ArrowDown } from "lucide-react";
 import { UserMessage } from "./UserMessage";
 import { AssistantMessage } from "./AssistantMessage";
 import { ChatInput } from "./ChatInput";
+import { CaseExtractionCard } from "./CaseExtractionCard";
 import {
     AssistantSidePanel,
     type AssistantSidePanelTab,
 } from "./AssistantSidePanel";
 import { AssistantWorkflowModal } from "./AssistantWorkflowModal";
+import { DocumentEditorModal } from "../shared/DocumentEditorModal";
 import type {
     AssistantEvent,
     CitationAnnotation,
+    Document,
     EditAnnotation,
     Message,
 } from "../shared/types";
+import type { CaseExtraction } from "@/app/lib/caseIntelligenceApi";
 import { useSidebar } from "@/app/contexts/SidebarContext";
 import { invalidateDocxBytes } from "@/app/hooks/useFetchDocxBytes";
 import { cn } from "@/lib/utils";
@@ -63,8 +67,22 @@ export function ChatView({
     const [reloadingEditIds, setReloadingEditIds] = useState<Set<string>>(
         () => new Set(),
     );
+    const [editorDoc, setEditorDoc] = useState<Document | null>(null);
+    const [editorAuthorities, setEditorAuthorities] = useState<string[]>([]);
     const { setSidebarOpen } = useSidebar();
     const panelCloseTimerRef = useRef<number | null>(null);
+
+    const openEditorFromExtract = useCallback(
+        (doc: Document, extraction: CaseExtraction | null) => {
+            setEditorDoc(doc);
+            setEditorAuthorities(
+                (extraction?.authorities ?? [])
+                    .map((a) => a.citation)
+                    .filter(Boolean),
+            );
+        },
+        [],
+    );
 
     const showPanel = useCallback(() => {
         if (panelCloseTimerRef.current !== null) {
@@ -622,11 +640,44 @@ export function ChatView({
                                         }
                                     >
                                         {msg.role === "user" ? (
-                                            <UserMessage
-                                                content={msg.content ?? ""}
-                                                files={(msg as any).files}
-                                                workflow={(msg as any).workflow}
-                                            />
+                                            <div className="space-y-3">
+                                                <UserMessage
+                                                    content={msg.content ?? ""}
+                                                    files={msg.files}
+                                                    workflow={msg.workflow}
+                                                />
+                                                {msg.files
+                                                    ?.filter((f) => f.document_id)
+                                                    .map((f) => {
+                                                        const stub: Document = {
+                                                            id: f.document_id!,
+                                                            project_id: null,
+                                                            filename: f.filename,
+                                                            file_type:
+                                                                f.filename
+                                                                    .split(".")
+                                                                    .pop()
+                                                                    ?.toLowerCase() ??
+                                                                null,
+                                                            storage_path: null,
+                                                            pdf_storage_path: null,
+                                                            size_bytes: null,
+                                                            page_count: null,
+                                                            structure_tree: null,
+                                                            status: "ready",
+                                                            created_at: null,
+                                                        };
+                                                        return (
+                                                            <CaseExtractionCard
+                                                                key={f.document_id}
+                                                                doc={stub}
+                                                                onOpenEditor={
+                                                                    openEditorFromExtract
+                                                                }
+                                                            />
+                                                        );
+                                                    })}
+                                            </div>
                                         ) : (
                                             <AssistantMessage
                                                 content={msg.content ?? ""}
@@ -708,7 +759,7 @@ export function ChatView({
                             onClick={scrollToBottom}
                             className={cn(
                                 "rounded-full p-2 cursor-pointer transition-all",
-                                "bg-white/30 shadow-[0_5px_16px_rgba(15,23,42,0.13),inset_0_1px_0_rgba(255,255,255,0.75),inset_0_-8px_18px_rgba(255,255,255,0.26)] backdrop-blur-xl hover:bg-white/45 hover:shadow-[0_7px_20px_rgba(15,23,42,0.16),inset_0_1px_0_rgba(255,255,255,0.85),inset_0_-8px_18px_rgba(255,255,255,0.32)]",
+                                "bg-gray-100/90 shadow-sm hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/15 dark:shadow-none",
                             )}
                         >
                             <ArrowDown className="h-6 w-6 text-gray-500" />
@@ -725,9 +776,10 @@ export function ChatView({
                         className={cn(
                             "pointer-events-none absolute bottom-0 left-0 z-0",
                             "right-4 h-28 bg-gradient-to-t from-white/50 via-white/25 to-transparent backdrop-blur-[1px]",
+                            "dark:from-[#0A0A0A] dark:via-[#0A0A0A]/80 dark:to-transparent",
                         )}
                     />
-                    <div className="relative z-20 w-full max-w-4xl mx-auto px-4 md:px-6">
+                    <div className="relative z-20 w-full max-w-4xl mx-auto px-4 md:px-6 pointer-events-auto">
                         <div
                             className={cn(
                                 "w-full rounded-t-[20px]",
@@ -780,6 +832,15 @@ export function ChatView({
                     />
                 </div>
             )}
+
+            <DocumentEditorModal
+                doc={editorDoc}
+                authorities={editorAuthorities}
+                onClose={() => {
+                    setEditorDoc(null);
+                    setEditorAuthorities([]);
+                }}
+            />
         </div>
     );
 }

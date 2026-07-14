@@ -1,11 +1,11 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronDown, Loader2, Scale, Search, X } from "lucide-react";
 import { useJurisdiction } from "@/contexts/JurisdictionContext";
 import { FEDERAL, STATE_JURISDICTIONS } from "@/app/lib/jurisdictions";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 /**
  * Google-Scholar-style jurisdiction control (Pass 2).
@@ -105,7 +105,7 @@ export function JurisdictionSelector({
         let cancelled = false;
         (async () => {
             try {
-                const res = await fetch(`${API_BASE}/api/research/courts`);
+                const res = await fetch(`${getApiBase()}/api/research/courts`);
                 if (!res.ok) throw new Error(String(res.status));
                 const data = (await res.json()) as { courts: CourtRow[] };
                 if (!cancelled) {

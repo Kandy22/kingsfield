@@ -69,34 +69,64 @@ export interface CaseIntelligence {
   defense_summary: string | null;
 }
 
-const EXTRACTION_SYSTEM = `You are Kingsfield's case-intelligence extraction agent. You read a legal document (a complaint, motion, brief, opinion, or transcript) and strip it down to structured, verifiable facts. You do not editorialize. You extract only what is present or fairly inferable from the text.
+const EXTRACTION_SYSTEM = `You are Kingsfield's case-intelligence extraction agent. You read a legal document (complaint, indictment, motion, brief, judicial opinion/order, or transcript) and strip it to structured, verifiable facts. You do not editorialize. Extract only what is present in the text — never invent parties, holdings, or citations from outside knowledge.
 
 Return ONLY a single JSON object (no markdown fence, no prose) with exactly these keys:
 
 {
-  "caption": string | null,            // the case caption or a short title, e.g. "Smith v. Acme Corp."
+  "caption": string | null,            // full caption when present, e.g. "United States v. Heppner"
   "entities": [                        // every person/institution tied to the matter
     { "name": string, "role": "judge"|"opposing_counsel"|"da"|"witness"|"party"|"court"|"expert"|"other", "note": string }
   ],
-  "allegations": [                     // claims/causes of action asserted
+  "allegations": [                     // claims / charges / issues framed for decision
     { "claim": string, "authorities": [string], "strength": "strong"|"moderate"|"weak"|null, "novelty": "common"|"uncommon"|"novel" }
   ],
-  "defenses": [                        // defenses / rebuttals raised or available
+  "defenses": [                        // defenses, counter-arguments, or court's resolution of issues
     { "defense": string, "responds_to": string|null, "authorities": [string], "novelty": "common"|"uncommon"|"novel" }
   ],
   "authorities": [                     // every legal authority cited in the document
     { "citation": string, "proposition": string, "treatment": "relied_on"|"distinguished"|"cited"|"criticized"|null }
   ],
   "rarity": { "score": number, "label": string, "rationale": string },  // 0=routine fact pattern, 100=novel/rare
-  "defense_summary": string            // 1-3 sentence plain-English summary of the defense theory
+  "defense_summary": string            // 1-3 sentence plain-English summary of the theory / holding
 }
 
+Document-type mapping:
+- Complaint / indictment: allegations = causes of action or counts; defenses = if any; authorities = cited law.
+- Motion / brief: allegations = movant's contentions; defenses = opposition positions if present; authorities = brief cites.
+- Judicial opinion / order / memorandum: allegations = issues presented or charges addressed; defenses = arguments the court considers OR holdings framed as the court's resolution of each issue (label note in the string, e.g. "Held: …"); authorities = every case/statute/rule the court cites; defense_summary = plain-English holding and disposition.
+- If the text is only PACER stamps / headers with no body, return empty arrays and nulls — do not invent.
+
 Rules:
-- "novelty" judges how routine that claim/defense is in litigation generally: "common" (boilerplate, seen constantly), "uncommon" (seen sometimes, fact-specific), "novel" (rare theory or unusual application).
-- "authorities" inside allegations/defenses must be citation strings that also appear (or clearly belong) in the top-level "authorities" list.
-- Use the exact citation form found in the document (e.g. "550 U.S. 544", "Fed. R. Civ. P. 12(b)(6)").
-- If a field is genuinely absent, use an empty array or null — never invent parties or citations.
+- "novelty" judges how routine that claim/defense is in litigation generally: "common" (boilerplate), "uncommon" (fact-specific), "novel" (rare theory).
+- "authorities" inside allegations/defenses must also appear in the top-level "authorities" list.
+- Use the exact citation form found in the document.
+- If a field is genuinely absent, use an empty array or null — never invent.
 - Keep every string concise. No newlines inside strings.`;
+
+/** PACER/scanner PDFs often have only header stamps as a text layer. */
+export function isSparseLegalText(text: string): boolean {
+  const raw = text ?? "";
+  const withoutStamps = raw
+    .replace(
+      /Case\s+[\d:\-A-Za-z.]+\s+Document\s+\d+\s+Filed[\s\S]{0,80}?Page\s+\d+\s+of\s+\d+/gi,
+      " ",
+    )
+    .replace(/\[Page\s+\d+\]/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (withoutStamps.length < 400) return true;
+  const stampHits = (raw.match(/Case\s+[\d:\-A-Za-z.]+\s+Document\s+\d+/gi) ?? [])
+    .length;
+  const words = withoutStamps.split(/\s+/).filter(Boolean).length;
+  if (stampHits >= 3 && words < 100) return true;
+  return false;
+}
+
+const SPARSE_TEXT_ERROR =
+  "This PDF has almost no extractable text (likely a scan / image-only PACER filing). " +
+  "Only header stamps were readable. Re-download a text PDF, OCR it, or paste text — " +
+  "then re-upload. Case extract cannot invent allegations, authorities, or defenses from a blank body.";
 
 function coerce(raw: string): CaseIntelligence {
   // The model should return bare JSON; strip any accidental fence.
@@ -217,7 +247,19 @@ export async function runCaseExtraction(params: {
   const db = params.db ?? createServerSupabase();
   const loaded = await loadDocumentPlainText(params.documentId, params.userId, db);
   if (!loaded) return { ok: false, error: "Document not found or has no readable text." };
-  if (!loaded.text.trim()) return { ok: false, error: "Document contains no extractable text." };
+  if (!loaded.text.trim()) {
+    return {
+      ok: false,
+      error:
+        "Document contains no extractable text (empty or image-only PDF). OCR or re-upload a text-based file.",
+    };
+  }
+  if (isSparseLegalText(loaded.text)) {
+    console.warn(
+      `[caseIntelligence] sparse text for doc=${params.documentId} filename="${loaded.filename}" chars=${loaded.text.length}`,
+    );
+    return { ok: false, error: SPARSE_TEXT_ERROR };
+  }
 
   let intel: CaseIntelligence;
   try {

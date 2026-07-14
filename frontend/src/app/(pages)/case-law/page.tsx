@@ -1,12 +1,12 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useState, useEffect } from "react";
 import { Search, BookOpen, ExternalLink, Shield, ChevronDown, ChevronUp, Loader2, AlertCircle, X, FileText } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { JurisdictionSelector } from "@/app/components/shared/JurisdictionSelector";
 import { useJurisdiction } from "@/contexts/JurisdictionContext";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 async function getAuthHeader(): Promise<Record<string, string>> {
     const { data: { session } } = await supabase.auth.getSession();
@@ -69,7 +69,7 @@ function OpinionReader({ result, onClose }: { result: CaseResult; onClose: () =>
         (async () => {
             try {
                 const headers = await getAuthHeader();
-                const res = await fetch(`${API_BASE}/case-law/case-opinions`, {
+                const res = await fetch(`${getApiBase()}/case-law/case-opinions`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json", ...headers },
                     body: JSON.stringify({ clusterId: result.id }),
@@ -259,7 +259,7 @@ export default function CaseLawPage() {
             const headers = await getAuthHeader();
             const qs = new URLSearchParams({ q: query.trim() });
             if (courts.length) qs.set("jurisdiction", courts.join(" "));
-            const res = await fetch(`${API_BASE}/api/research/case-law?${qs.toString()}`, {
+            const res = await fetch(`${getApiBase()}/api/research/case-law?${qs.toString()}`, {
                 headers,
             });
             if (res.status === 429) {
@@ -285,26 +285,34 @@ export default function CaseLawPage() {
 
     return (
         <div className="h-full overflow-y-auto bg-white">
-            <div className="max-w-3xl mx-auto px-4 py-8">
+            <div className="w-full max-w-none mx-auto px-6 py-8">
                 {/* Header */}
                 <div className="mb-7">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="label-caps text-gray-400 mb-2">
+                        Kingsfield · Primary sources
+                    </div>
+                    <div className="flex items-center gap-3 mb-3">
                         <div className="h-9 w-9 rounded-lg bg-gray-900 flex items-center justify-center">
                             <BookOpen className="h-5 w-5 text-white" />
                         </div>
-                        <h1 className="text-2xl font-serif font-light text-gray-900">Case Law</h1>
+                        <h1 className="text-2xl font-serif font-light text-gray-900 dark:text-paper">Case Law</h1>
                     </div>
-                    <p className="text-sm text-gray-500">
-                        Search case name, citation, or keywords. Sources:{" "}
+                    <p className="text-sm font-light text-gray-600 leading-relaxed max-w-none">
+                        <span className="font-normal text-gray-900">What case law is here:</span>{" "}
+                        search opinions by case name, citation, or keywords against{" "}
                         <a
                             href="https://www.courtlistener.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="underline hover:text-gray-700"
+                            className="underline hover:text-gray-800"
                         >
                             CourtListener
                         </a>{" "}
-                        (Free Law Project, 501(c)(3)) · four-gate citation verification on every result.
+                        (Free Law Project, 501(c)(3)) — public case law, not a Westlaw toll road.
+                        Scope courts with the jurisdiction picker. Open opinions in-app; every
+                        citation path is subject to four-gate verification (existence, quote,
+                        currency, jurisdiction fit). This is research, not a substitute for
+                        reading the full opinion.
                     </p>
                 </div>
 

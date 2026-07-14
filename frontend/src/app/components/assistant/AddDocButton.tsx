@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { uploadStandaloneDocument } from "@/app/lib/mikeApi";
 import type { Document } from "../shared/types";
+import { cn } from "@/lib/utils";
 
 interface Props {
     onSelectDoc: (doc: Document) => void;
@@ -18,6 +19,9 @@ interface Props {
     hideLabel?: boolean;
 }
 
+/**
+ * Primary attach control — always high-contrast (not faded gray-400).
+ */
 export function AddDocButton({
     onSelectDoc,
     onBrowseAll,
@@ -45,6 +49,8 @@ export function AddDocButton({
         }
     };
 
+    const hasDocs = selectedDocIds.length > 0;
+
     return (
         <>
             <input
@@ -58,25 +64,42 @@ export function AddDocButton({
             <DropdownMenu onOpenChange={setIsOpen}>
                 <DropdownMenuTrigger asChild>
                     <button
-                        className={`flex items-center gap-1 px-2 h-8 rounded-lg text-sm transition-colors cursor-pointer ${
-                            selectedDocIds.length > 0
-                                ? "text-black hover:bg-gray-100"
-                                : "text-gray-400 hover:text-gray-700 hover:bg-gray-100"
-                        } ${isOpen ? "bg-gray-100" : ""}`}
+                        type="button"
+                        disabled={uploading}
+                        className={cn(
+                            "flex items-center gap-1.5 h-8 rounded-lg px-2.5 text-sm font-medium transition-colors cursor-pointer",
+                            "border border-gray-300 bg-white text-gray-900",
+                            "hover:bg-gray-50 hover:border-gray-400",
+                            "dark:border-white/20 dark:bg-white/10 dark:text-paper dark:hover:bg-white/15",
+                            "disabled:opacity-60 disabled:cursor-wait",
+                            isOpen && "ring-2 ring-gray-900/20 dark:ring-white/20",
+                            hasDocs && "border-blue-500/50 bg-blue-50 text-blue-900 dark:bg-blue-500/15 dark:text-blue-100",
+                        )}
                         title="Add documents"
                         aria-label="Add documents"
                     >
-                        {selectedDocIds.length > 0 ? (
-                            <span className="font-medium tabular-nums">{selectedDocIds.length}</span>
+                        {uploading ? (
+                            <Loader2Icon className="h-4 w-4 shrink-0 animate-spin" />
+                        ) : hasDocs ? (
+                            <span className="font-medium tabular-nums min-w-[1ch]">
+                                {selectedDocIds.length}
+                            </span>
                         ) : (
                             <PlusIcon
-                                className={`h-4 w-4 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-[135deg]" : ""}`}
+                                className={cn(
+                                    "h-4 w-4 shrink-0 transition-transform duration-300",
+                                    isOpen && "rotate-[135deg]",
+                                )}
                             />
                         )}
                         <span className={hideLabel ? "hidden" : "hidden sm:inline"}>
-                            {selectedDocIds.length === 1
-                                ? "Document"
-                                : "Documents"}
+                            {uploading
+                                ? "Uploading…"
+                                : hasDocs
+                                  ? selectedDocIds.length === 1
+                                      ? "Document"
+                                      : "Documents"
+                                  : "Documents"}
                         </span>
                     </button>
                 </DropdownMenuTrigger>

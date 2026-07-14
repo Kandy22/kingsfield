@@ -1,7 +1,9 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Loader2, AlertCircle, Gavel, FileText } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, AlertCircle, Gavel } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { supabase } from "@/lib/supabase";
@@ -12,10 +14,10 @@ import { supabase } from "@/lib/supabase";
 function Prose({ children }: { children: string }) {
     return (
         <div className="text-sm leading-relaxed text-gray-800
-            [&_h1]:text-lg [&_h1]:font-semibold [&_h1]:mt-4 [&_h1]:mb-2
-            [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-4 [&_h2]:mb-1.5
-            [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1
-            [&_p]:my-2 [&_strong]:font-semibold [&_em]:italic
+            [&_h1]:text-lg [&_h1]:font-light [&_h1]:mt-4 [&_h1]:mb-2
+            [&_h2]:text-base [&_h2]:font-light [&_h2]:mt-4 [&_h2]:mb-1.5
+            [&_h3]:text-sm [&_h3]:font-normal [&_h3]:mt-3 [&_h3]:mb-1
+            [&_p]:my-2 [&_strong]:font-medium [&_em]:italic
             [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-2 [&_li]:my-0.5
             [&_hr]:my-3 [&_hr]:border-current [&_hr]:opacity-20
             [&_code]:bg-black/10 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[0.85em]
@@ -24,8 +26,6 @@ function Prose({ children }: { children: string }) {
         </div>
     );
 }
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
 
 async function getAuthHeader(): Promise<Record<string, string>> {
     const { data: { session } } = await supabase.auth.getSession();
@@ -122,7 +122,7 @@ function AdvisorCard({ advisor, response }: { advisor: typeof ADVISORS[0]; respo
             <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="font-serif text-[13px] font-bold text-gray-900">
+                        <span className="text-[13px] font-light text-gray-900 tracking-tight">
                             {advisor.label.split(" ").map(w => w[0] + w.slice(1).toLowerCase()).join(" ")}
                         </span>
                         <ProviderBadge provider={advisor.provider} model={advisor.model} />
@@ -157,8 +157,8 @@ function VerdictSection({ verdict }: { verdict: string }) {
         <div className="rounded-lg bg-gray-50 p-5" style={{ border: "1px solid #2B5CE6" }}>
             <div className="flex items-center gap-2 mb-4">
                 <Gavel className="h-4 w-4" style={{ color: "#2B5CE6" }} />
-                <span className="text-[11px] font-semibold uppercase" style={{ color: "#2B5CE6", letterSpacing: "0.12em" }}>
-                    CHAIRMAN'S VERDICT
+                <span className="label-caps" style={{ color: "#2B5CE6" }}>
+                    Chairman&apos;s verdict
                 </span>
                 <span className="text-xs font-mono text-gray-400">· Claude Opus</span>
             </div>
@@ -181,7 +181,7 @@ export default function CouncilPage() {
         setResult(null);
         try {
             const headers = await getAuthHeader();
-            const res = await fetch(`${API_BASE}/api/council`, {
+            const res = await fetch(`${getApiBase()}/api/council`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json", ...headers },
                 body: JSON.stringify({ rawQuestion: question.trim(), context: context.trim() || undefined }),
@@ -199,20 +199,23 @@ export default function CouncilPage() {
 
     return (
         <div className="h-full overflow-y-auto bg-white">
-            <div className="max-w-4xl mx-auto px-6 py-10">
+            <div className="w-full max-w-none mx-auto px-6 py-10">
 
                 {/* ── Header ── */}
                 <div className="mb-10">
-                    <div className="text-xs font-semibold tracking-widest text-gray-500 mb-2" style={{ letterSpacing: "0.15em" }}>
-                        KINGSFIELD · MULTI-MODEL DELIBERATION
+                    <div className="label-caps text-gray-400 mb-3">
+                        Kingsfield · Multi-model deliberation
                     </div>
-                    <h1 className="font-serif font-black text-gray-900" style={{ fontSize: 56, lineHeight: 1.0, letterSpacing: "-0.03em" }}>
+                    <h1 className="font-serif font-light text-gray-900 dark:text-paper" style={{ fontSize: 48, lineHeight: 1.05, letterSpacing: "-0.03em", fontWeight: 300 }}>
                         The Council
                     </h1>
-                    <div style={{ width: 48, height: 2, background: "#2B5CE6", marginTop: 16, marginBottom: 16 }} />
-                    <p className="text-sm leading-relaxed max-w-2xl text-gray-500">
-                        Five advisors. Two model providers. One chairman. Each advisor attacks your question from a
-                        different angle — then they peer-review each other before the chairman synthesizes the verdict.
+                    <div style={{ width: 40, height: 1, background: "#2B5CE6", marginTop: 16, marginBottom: 16, opacity: 0.7 }} />
+                    <p className="text-sm font-light leading-relaxed max-w-none text-gray-600">
+                        <span className="font-normal text-gray-900">What the Council is:</span>{" "}
+                        five advisors across multiple model providers, plus a chairman. Each advisor attacks your
+                        question from a different angle — then they peer-review each other before the chairman
+                        synthesizes the verdict. Use it when a strategy needs adversarial pressure-testing, not for
+                        routine cite lookup (use Case Law) or single-doc extract (use Assistant → Case Map).
                     </p>
                 </div>
 
@@ -226,7 +229,7 @@ export default function CouncilPage() {
                         style={{ borderLeft: "3px solid #2B5CE6" }}>
                         <div className="flex items-center gap-2 flex-wrap">
                             <Gavel className="h-4 w-4" style={{ color: "#2B5CE6" }} />
-                            <span className="font-serif text-[13px] font-bold text-gray-900">The Chairman</span>
+                            <span className="text-[13px] font-light text-gray-900 tracking-tight">The Chairman</span>
                             <ProviderBadge provider="claude" model="Claude Opus" />
                         </div>
                         <p className="text-xs mt-1 text-gray-500">
@@ -235,37 +238,11 @@ export default function CouncilPage() {
                     </div>
                 </div>
 
-                {/* ── Word Plugin Banner ── */}
-                <div className="rounded-lg border border-gray-200 bg-gray-50 mb-8 flex items-center justify-between gap-4 px-5 py-4"
-                    style={{ borderLeft: "3px solid #2B5CE6" }}>
-                    <div className="flex items-center gap-3 min-w-0">
-                        <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded"
-                            style={{ background: "rgba(43,92,230,0.10)" }}>
-                            <FileText className="h-5 w-5" style={{ color: "#2B5CE6" }} />
-                        </div>
-                        <div>
-                            <div className="text-[11px] font-bold uppercase" style={{ color: "#2B5CE6", letterSpacing: "0.12em" }}>
-                                Word Plugin — Early Access
-                            </div>
-                            <div className="text-xs mt-0.5 text-gray-500">
-                                Research, cite, and run the council without leaving Microsoft Word. The gap BigLaw doesn't want you to close.
-                            </div>
-                        </div>
-                    </div>
-                    <a
-                        href="mailto:aray.aaron@gmail.com?subject=Kingsfield%20Word%20Plugin%20—%20Early%20Access&body=I%27d%20like%20early%20access%20to%20the%20Kingsfield%20Word%20plugin."
-                        className="flex-shrink-0 px-4 py-2 rounded text-xs font-semibold text-white transition-all hover:opacity-80"
-                        style={{ background: "#2B5CE6", whiteSpace: "nowrap" }}
-                    >
-                        Request Early Access →
-                    </a>
-                </div>
-
                 {/* ── Input form ── */}
                 {!result && (
                     <div className="rounded-lg border border-gray-200 bg-gray-50 p-5 mb-6">
-                        <label className="block text-xs font-semibold tracking-widest text-gray-700 mb-3" style={{ letterSpacing: "0.10em" }}>
-                            WHAT DO YOU NEED THE COUNCIL TO PRESSURE-TEST?
+                        <label className="label-caps block text-gray-500 mb-3">
+                            What do you need the council to pressure-test?
                         </label>
                         <textarea
                             value={question}
@@ -274,8 +251,11 @@ export default function CouncilPage() {
                             rows={5}
                             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                         />
-                        <label className="block text-xs font-semibold tracking-widest text-gray-700 mb-3 mt-5" style={{ letterSpacing: "0.10em" }}>
-                            CONTEXT <span className="font-normal normal-case text-gray-400" style={{ letterSpacing: 0 }}>(optional — matter summary, prior filings, key facts)</span>
+                        <label className="label-caps block text-gray-500 mb-3 mt-5">
+                            Context{" "}
+                            <span className="normal-case tracking-normal font-light text-gray-400">
+                                (optional — matter summary, prior filings, key facts)
+                            </span>
                         </label>
                         <textarea
                             value={context}
@@ -291,10 +271,10 @@ export default function CouncilPage() {
                             <button
                                 onClick={convene}
                                 disabled={loading || question.trim().length < 10}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded text-[13px] font-semibold text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                                style={{ background: "#2B5CE6", letterSpacing: "0.04em" }}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded text-[13px] font-light text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                style={{ background: "#2B5CE6", letterSpacing: "0.06em" }}
                             >
-                                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> CONVENING…</> : "CONVENE THE COUNCIL"}
+                                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Convening…</> : "Convene the council"}
                             </button>
                         </div>
                     </div>
@@ -304,7 +284,7 @@ export default function CouncilPage() {
                     <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 mb-6">
                         <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-red-500" />
                         <div>
-                            <p className="text-sm font-semibold text-red-700">Council failed</p>
+                            <p className="text-sm font-light text-red-700">Council failed</p>
                             <p className="text-xs mt-0.5 text-red-600">{error}</p>
                         </div>
                     </div>
@@ -313,7 +293,7 @@ export default function CouncilPage() {
                 {loading && (
                     <div className="rounded-lg border border-gray-200 bg-gray-50 p-6 mb-6 text-center">
                         <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3" style={{ color: "#2B5CE6" }} />
-                        <p className="text-sm font-semibold text-gray-700">The council is deliberating…</p>
+                        <p className="text-sm font-light text-gray-700">The council is deliberating…</p>
                         <p className="text-xs mt-1 text-gray-400">Running five advisors + peer review + chairman synthesis</p>
                     </div>
                 )}
@@ -321,11 +301,11 @@ export default function CouncilPage() {
                 {result && (
                     <div className="space-y-5">
                         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                            <p className="text-xs font-semibold tracking-widest text-gray-400 mb-2" style={{ letterSpacing: "0.10em" }}>QUESTION AS FRAMED BY THE COUNCIL</p>
+                            <p className="label-caps text-gray-400 mb-2">Question as framed by the council</p>
                             <Prose>{result.framedQuestion}</Prose>
                         </div>
                         <div>
-                            <p className="text-xs font-semibold tracking-widest text-gray-400 mb-3" style={{ letterSpacing: "0.10em" }}>ADVISOR RESPONSES</p>
+                            <p className="label-caps text-gray-400 mb-3">Advisor responses</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {ADVISORS.map(advisor => (
                                     <AdvisorCard key={advisor.role} advisor={advisor} response={getAdvisorResponse(advisor.role)} />

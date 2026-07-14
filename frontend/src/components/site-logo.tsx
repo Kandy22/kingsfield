@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MikeIcon } from "@/components/chat/mike-icon";
+import { KingsfieldIcon } from "@/components/chat/mike-icon";
 
 interface SiteLogoProps {
     size?: "sm" | "md" | "lg" | "xl";
@@ -34,11 +34,12 @@ export function SiteLogo({
 
     const logo = (
         <h1
-            className={`flex items-center gap-1.5 ${sizeClasses[size]} font-light font-serif ${
+            className={`flex items-center gap-1.5 ${sizeClasses[size]} font-light ${
                 animate ? "sidebar-fade-in" : ""
             } ${className}`}
+            style={{ fontFamily: "var(--font-body)" }}
         >
-            <MikeIcon size={iconSizes[size]} />
+            <KingsfieldIcon size={iconSizes[size]} />
             <span>Kingsfield</span>
         </h1>
     );

@@ -1,5 +1,7 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useCallback, useEffect, useState } from "react";
 import {
     ChevronDown,
@@ -19,7 +21,7 @@ import {
 } from "@/app/components/shared/MfaVerificationPopup";
 import {
     type McpConnectorSummary,
-    MikeApiError,
+    KingsfieldApiError,
     createMcpConnector,
     deleteMcpConnector,
     getMcpConnector,
@@ -81,7 +83,7 @@ type McpOAuthPopupMessage = {
 };
 
 const mcpOAuthMessageOrigin = new URL(
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001",
+    getApiBase(),
 ).origin;
 
 function parseCustomHeaders(raw: string): Record<string, string> | undefined {
@@ -367,7 +369,7 @@ export default function ConnectorsPage() {
                     refreshed = await refreshMcpConnectorTools(connector.id);
                 } catch (err) {
                     if (
-                        err instanceof MikeApiError &&
+                        err instanceof KingsfieldApiError &&
                         err.code === "oauth_required"
                     ) {
                         replaceConnector(connector);
@@ -493,7 +495,7 @@ export default function ConnectorsPage() {
                     replaceConnector(await refreshMcpConnectorTools(connectorId));
                 } catch (err) {
                     if (
-                        err instanceof MikeApiError &&
+                        err instanceof KingsfieldApiError &&
                             err.code === "oauth_required"
                     ) {
                         await connectConnectorOAuth(connectorId);

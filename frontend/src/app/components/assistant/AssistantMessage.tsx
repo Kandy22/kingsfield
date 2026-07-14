@@ -1,5 +1,7 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useId, useRef, useEffect, useState } from "react";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkMath from "remark-math";
@@ -16,7 +18,7 @@ import {
     Loader2,
     Scale,
 } from "lucide-react";
-import { MikeIcon } from "@/components/chat/mike-icon";
+import { KingsfieldIcon } from "@/components/chat/mike-icon";
 import { displayCitationQuote, formatCitationPage } from "../shared/types";
 import type {
     AssistantEvent,
@@ -27,10 +29,11 @@ import { EditCard, applyOptimisticResolution } from "./EditCard";
 import { PreResponseWrapper } from "../shared/PreResponseWrapper";
 import { supabase } from "@/lib/supabase";
 
+/* Light: soft paper glass. Dark: low-contrast ink panels (no white cards). */
 const RESPONSE_GLASS_SURFACE =
-    "rounded-xl border border-white/70 bg-white/55 shadow-[0_3px_9px_rgba(15,23,42,0.03),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-4px_9px_rgba(255,255,255,0.05)] backdrop-blur-2xl";
+    "rounded-xl border border-gray-200/80 bg-gray-50/90 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none dark:backdrop-blur-none";
 const RESPONSE_GLASS_ANNOTATION =
-    "inline-flex h-4 w-4 items-center justify-center rounded-full border border-gray-200/60 bg-gray-200/80 text-[12px] font-serif font-medium text-gray-800 shadow-[0_1px_2px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(243,244,246,0.85),inset_0_-2px_4px_rgba(229,231,235,0.65)] backdrop-blur-xl transition-colors hover:bg-gray-200 hover:text-gray-950";
+    "inline-flex h-4 w-4 items-center justify-center rounded-full border border-gray-300/80 bg-gray-100 text-[11px] font-sans font-medium text-gray-800 transition-colors hover:bg-gray-200 hover:text-gray-950 dark:border-white/15 dark:bg-white/10 dark:text-paper dark:hover:bg-white/15 dark:hover:text-white";
 
 function toolCallLabel(name: string): string {
     if (name === "generate_docx") return "Creating document...";
@@ -115,7 +118,7 @@ function BulkEditActions({
             } = await supabase.auth.getSession();
             const token = session?.access_token;
             const apiBase =
-                process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+                getApiBase();
 
             // Sequential so the per-document version counter advances in a
             // predictable order and the viewer doesn't race between bumps.
@@ -220,7 +223,7 @@ function BulkEditActions({
                 Reject all
             </button>
             {progress && (
-                <span className="text-xs font-serif text-gray-500">
+                <span className="text-xs font-sans text-gray-500">
                     {progress.done}/{progress.total}
                 </span>
             )}
@@ -298,7 +301,7 @@ function EditCardsSection({
         <div className="border border-gray-200 rounded-lg bg-white overflow-hidden">
             {/* Row 1: summary + chevron */}
             <div className="flex items-center gap-2 px-3 pt-3">
-                <p className="flex-1 min-w-0 text-sm font-serif text-gray-700 truncate">
+                <p className="flex-1 min-w-0 text-sm font-sans text-gray-700 truncate">
                     {summary}
                 </p>
                 <button
@@ -364,7 +367,7 @@ function ResponseStatus({ status }: { status: StatusState }) {
 
     return (
         <div className="w-full h-9 flex items-center mb-2">
-            <MikeIcon
+            <KingsfieldIcon
                 spin={isActive}
                 done={showDone && doneVisible}
                 error={isError}
@@ -448,7 +451,7 @@ function ReasoningBlock({
                     setUserToggledContent(true);
                     setIsContentOpen((v) => !v);
                 }}
-                className="flex items-center text-sm font-serif text-gray-500 hover:text-gray-600 transition-colors"
+                className="flex items-center text-sm font-sans text-gray-500 hover:text-gray-600 transition-colors"
             >
                 {isStreaming ? (
                     <div className="w-1.5 h-1.5 rounded-full border border-gray-400 border-t-transparent animate-spin shrink-0" />
@@ -481,14 +484,14 @@ function ReasoningBlock({
                     >
                         <div
                             ref={contentRef}
-                            className="text-sm font-serif text-gray-400 prose prose-sm max-w-none [&>*]:text-gray-400 [&>*]:text-sm"
+                            className="text-sm font-sans text-gray-400 prose prose-sm max-w-none [&>*]:text-gray-400 [&>*]:text-sm"
                         >
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
                                     code: ({ node, ...props }) => (
                                         <code
-                                            className="font-serif text-gray-600"
+                                            className="font-sans text-gray-600"
                                             {...props}
                                         />
                                     ),
@@ -499,7 +502,7 @@ function ReasoningBlock({
                         </div>
                         {isCollapsed && (
                             <>
-                                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-white/0 to-white" />
+                                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-background" />
                                 <button
                                     type="button"
                                     onClick={() => setIsExpanded(true)}
@@ -539,7 +542,7 @@ function DocReadBlock({
     isStreaming?: boolean;
 }) {
     return (
-        <div className="flex items-start text-sm font-serif text-gray-500 relative">
+        <div className="flex items-start text-sm font-sans text-gray-500 relative">
             {showConnector && (
                 <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
@@ -587,7 +590,7 @@ function DocFindBlock({
         ? ""
         : ` (${totalMatches} ${totalMatches === 1 ? "match" : "matches"})`;
     return (
-        <div className="flex items-start text-sm font-serif text-gray-500 relative">
+        <div className="flex items-start text-sm font-sans text-gray-500 relative">
             {showConnector && (
                 <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
@@ -620,7 +623,7 @@ function DocCreatedBlock({
     isStreaming?: boolean;
 }) {
     return (
-        <div className="flex items-start text-sm font-serif text-gray-500 relative">
+        <div className="flex items-start text-sm font-sans text-gray-500 relative">
             {showConnector && (
                 <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
@@ -664,7 +667,7 @@ function DocReplicatedBlock({
               ? "..."
               : "";
     return (
-        <div className="flex items-start text-sm font-serif text-gray-500 relative">
+        <div className="flex items-start text-sm font-sans text-gray-500 relative">
             {showConnector && (
                 <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
@@ -715,10 +718,9 @@ function DocDownloadBlock({
     // Only backend-relative URLs are accepted. The download fetch carries
     // the user's bearer token, so any absolute URL from tool output is
     // refused to keep the token from leaking off-origin.
-    const API_BASE =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+    const apiBase = () => getApiBase();
     const isSafeHref = download_url.startsWith("/");
-    const href = isSafeHref ? `${API_BASE}${download_url}` : null;
+    const href = isSafeHref ? `${apiBase()}${download_url}` : null;
     const [busy, setBusy] = useState(false);
 
     const handleDownload = async (e?: {
@@ -758,11 +760,11 @@ function DocDownloadBlock({
         <div className="flex items-center gap-3 px-4 py-3 min-w-0 flex-1">
             <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 min-w-0">
-                    <p className="text-base font-serif text-gray-900 text-wrap">
+                    <p className="text-base font-sans text-gray-900 text-wrap">
                         {basename}
                     </p>
                     {hasVersion && (
-                        <span className="shrink-0 inline-flex items-center rounded-md border border-white/70 bg-white/55 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur-xl">
+                        <span className="shrink-0 inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600 dark:border-white/10 dark:bg-white/10 dark:text-stone">
                             V{versionNumber}
                         </span>
                     )}
@@ -775,7 +777,7 @@ function DocDownloadBlock({
     const downloadIcon = spinning ? (
         <div
             aria-disabled
-            className="shrink-0 flex items-center bg-white/25 px-6 text-gray-400 cursor-not-allowed"
+            className="shrink-0 flex items-center bg-gray-100/80 px-6 text-gray-400 cursor-not-allowed dark:bg-white/5"
         >
             <Loader2 size={13} className="animate-spin" />
         </div>
@@ -783,7 +785,7 @@ function DocDownloadBlock({
         <button
             type="button"
             onClick={handleDownload}
-            className="shrink-0 flex items-center bg-white/25 px-6 text-gray-500 transition-colors hover:bg-white/55 hover:text-gray-700 cursor-pointer"
+            className="shrink-0 flex items-center bg-gray-100/80 px-6 text-gray-500 transition-colors hover:bg-gray-200 hover:text-gray-800 cursor-pointer dark:bg-white/5 dark:hover:bg-white/10 dark:hover:text-paper"
         >
             <Download size={13} />
         </button>
@@ -797,7 +799,7 @@ function DocDownloadBlock({
                 <button
                     type="button"
                     onClick={onOpen}
-                    className="flex items-stretch flex-1 min-w-0 text-left transition-colors hover:bg-white/45 cursor-pointer"
+                    className="flex items-stretch flex-1 min-w-0 text-left transition-colors hover:bg-gray-100/80 cursor-pointer dark:hover:bg-white/[0.06]"
                 >
                     {body}
                 </button>
@@ -824,7 +826,7 @@ function DocDownloadBlock({
             <button
                 type="button"
                 onClick={handleDownload}
-                className="flex items-stretch flex-1 min-w-0 text-left transition-colors hover:bg-white/45 cursor-pointer"
+                className="flex items-stretch flex-1 min-w-0 text-left transition-colors hover:bg-gray-100/80 cursor-pointer dark:hover:bg-white/[0.06]"
             >
                 {body}
             </button>
@@ -843,7 +845,7 @@ function WorkflowAppliedBlock({
     onClick?: () => void;
 }) {
     return (
-        <div className="flex items-start text-sm font-serif text-gray-500 relative">
+        <div className="flex items-start text-sm font-sans text-gray-500 relative">
             {showConnector && (
                 <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
@@ -897,7 +899,7 @@ function CourtListenerBlock({
             {showConnector && (
                 <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
-            <div className="flex items-start text-sm font-serif text-gray-500">
+            <div className="flex items-start text-sm font-sans text-gray-500">
                 {isStreaming ? (
                     <div className="mt-2 w-1.5 h-1.5 rounded-full border border-gray-400 border-t-transparent animate-spin shrink-0" />
                 ) : (
@@ -929,7 +931,7 @@ function CourtListenerBlock({
                 </div>
             </div>
             {isOpen && hasItems && (
-                <ul className="mt-2 ml-[14px] flex flex-col gap-1 text-sm font-serif text-gray-500">
+                <ul className="mt-2 ml-[14px] flex flex-col gap-1 text-sm font-sans text-gray-500">
                     {items!.map((item, idx) => {
                         const label = [item.caseName, item.citation]
                             .filter(Boolean)
@@ -989,7 +991,7 @@ function DocEditedBlock({
     hasError?: boolean;
 }) {
     return (
-        <div className="flex items-start text-sm font-serif text-gray-500 relative">
+        <div className="flex items-start text-sm font-sans text-gray-500 relative">
             {showConnector && (
                 <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
             )}
@@ -1084,7 +1086,7 @@ function MarkdownContent({
     return (
         <div
             ref={divRef}
-            className="text-gray-900 mb-4 text-base prose prose-sm max-w-none font-serif"
+            className="assistant-prose text-gray-900 mb-4 text-base prose prose-sm max-w-none font-sans prose-headings:font-sans"
         >
             <ReactMarkdown
                 remarkPlugins={[
@@ -1128,13 +1130,13 @@ function MarkdownContent({
                     ),
                     h1: ({ node, ...props }) => (
                         <h1
-                            className="mt-6 mb-4 text-3xl font-serif font-semibold"
+                            className="mt-6 mb-4 text-3xl font-sans font-semibold"
                             {...props}
                         />
                     ),
                     h2: ({ node, ...props }) => (
                         <h2
-                            className="mt-5 mb-3 text-2xl font-serif font-semibold"
+                            className="mt-5 mb-3 text-2xl font-sans font-semibold"
                             {...props}
                         />
                     ),
@@ -1207,7 +1209,7 @@ function MarkdownContent({
                         }
                         return (
                             <code
-                                className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-serif"
+                                className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-sans"
                                 {...props}
                             >
                                 {children}
@@ -1438,8 +1440,8 @@ function CitationsBlock({
     return (
         <div className="mt-2 mb-3">
             <div className={`overflow-hidden ${RESPONSE_GLASS_SURFACE}`}>
-                <div className="flex items-center justify-between gap-3 bg-white/25 px-3 py-2">
-                    <h3 className="text-base font-serif text-gray-900">
+                <div className="flex items-center justify-between gap-3 bg-gray-100/80 px-3 py-2 dark:bg-white/[0.04]">
+                    <h3 className="text-base font-sans font-medium text-gray-900">
                         Citations
                     </h3>
                     {isLoading && (
@@ -1460,7 +1462,7 @@ function CitationsBlock({
                                     type="button"
                                     onClick={() => onOpenSource?.(row.source)}
                                     disabled={!sourceIsClickable}
-                                    className="flex min-w-0 flex-1 items-center gap-2 rounded-lg text-left text-sm font-serif text-gray-700 transition-colors enabled:hover:text-gray-950 disabled:cursor-default"
+                                    className="flex min-w-0 flex-1 items-center gap-2 rounded-lg text-left text-sm font-sans text-gray-700 transition-colors enabled:hover:text-gray-950 disabled:cursor-default"
                                 >
                                     <CitationSourceIcon
                                         annotation={row.source}
@@ -1572,7 +1574,7 @@ interface Props {
     events?: AssistantEvent[];
     isStreaming?: boolean;
     isError?: boolean;
-    /** Human-readable error text rendered alongside the red Mike icon. */
+    /** Human-readable error text rendered alongside the red Kingsfield icon. */
     errorMessage?: string;
     annotations?: CitationAnnotation[];
     citationStatus?: "started" | "partial" | "final";
@@ -1908,7 +1910,7 @@ export function AssistantMessage({
             return (
                 <div
                     key={globalIdx}
-                    className="flex items-center text-sm font-serif text-gray-500 relative"
+                    className="flex items-center text-sm font-sans text-gray-500 relative"
                 >
                     {showConnector && (
                         <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
@@ -1924,7 +1926,7 @@ export function AssistantMessage({
             return (
                 <div
                     key={globalIdx}
-                    className="flex items-center text-sm font-serif text-gray-500 relative"
+                    className="flex items-center text-sm font-sans text-gray-500 relative"
                 >
                     {showConnector && (
                         <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
@@ -1942,7 +1944,7 @@ export function AssistantMessage({
             return (
                 <div
                     key={globalIdx}
-                    className="flex items-start text-sm font-serif text-gray-500 relative"
+                    className="flex items-start text-sm font-sans text-gray-500 relative"
                 >
                     {showConnector && (
                         <div className="absolute bottom-0 w-[1px] bg-gray-300 top-[13px] left-[2.5px] h-[calc(100%+11px)]" />
@@ -2419,7 +2421,7 @@ export function AssistantMessage({
                 ) : null}
 
                 {topLevelErrorMessage && (
-                    <p className="mt-2 text-base font-serif leading-7 text-red-700">
+                    <p className="mt-2 text-base font-sans leading-7 text-red-700">
                         {topLevelErrorMessage}
                     </p>
                 )}

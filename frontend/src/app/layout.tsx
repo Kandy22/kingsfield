@@ -67,6 +67,11 @@ export default function RootLayout({
         <html lang="en">
             <body
                 className={`${inter.variable} ${ebGaramond.variable} ${playfairDisplay.variable} ${ibmPlexMono.variable} ${bebasNeue.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+                style={{
+                    /* Body default; headings use font-serif / Playfair via CSS */
+                    fontFamily:
+                        '"Helvetica Neue", Helvetica, Arial, system-ui, sans-serif',
+                }}
             >
                 <Providers>{children}</Providers>
             </body>

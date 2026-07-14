@@ -1,12 +1,14 @@
 {
-  "name": "mike-backend",
+  "name": "kingsfield-backend",
   "version": "1.0.0",
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "migrate": "node scripts/migrate.mjs",
+    "migrate:status": "node scripts/migrate-status.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
@@ -28,6 +30,7 @@
     "mammoth": "^1.9.0",
     "multer": "^1.4.5-lts.2",
     "pdfjs-dist": "^4.10.38",
+    "pg": "^8.22.0",
     "resend": "^4.5.1",
     "zod": "^3.25.76"
   },

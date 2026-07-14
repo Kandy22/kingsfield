@@ -1,5 +1,7 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { EditAnnotation } from "../shared/types";
@@ -225,7 +227,7 @@ export function EditCard({
             } = await supabase.auth.getSession();
             const token = session?.access_token;
             const apiBase =
-                process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+                getApiBase();
             const resp = await fetch(
                 `${apiBase}/single-documents/${annotation.document_id}/edits/${annotation.edit_id}/${verb}`,
                 {
