@@ -1,0 +1,42 @@
+{
+ "judge_id": "rex-m-barbas",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 11,
+   "affirmed": 10,
+   "reversed": 1,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.091,
+   "reversal_rate_ci95": {
+    "lo": 0.016,
+    "hi": 0.377,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2022-2590",
+    "2D2023-0096",
+    "2D2023-1789",
+    "2D2020-1951",
+    "2D2023-0584",
+    "2D2020-3532",
+    "2D2022-1281",
+    "2D2023-1197",
+    "2D2020-1841",
+    "2D2022-3756",
+    "2D2022-4099"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

@@ -1,0 +1,35 @@
+{
+ "video_id": "yvb-80gtIag",
+ "title": "24 1806",
+ "case_number": "2D2024-1806",
+ "case_numbers_all": [
+  "2D2024-1806"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1806",
+ "case_name": "THE FLORIDA CENTER FOR GOVERNMENT ACCOUNTABILITY, INC.; v. CHRISTIAN ZIEGLER; BRIDGET ZIEGLER; OFFICE OF THE STATE",
+ "decided_date": "2026-09-02",
+ "cl_cluster_id": 10964718,
+ "cl_opinion_id": 11432329,
+ "cl_url": "https://www.courtlistener.com/opinion/10964718/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded with directions.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": "Northcutt; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": "Villanti",
+ "county": "Sarasota",
+ "trial_judge": "Hunter W. Carroll",
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": true,
+ "is_pca": false,
+ "opinion_chars": 63627,
+ "_tried": [
+  "2D2024-1806"
+ ],
+ "looked_up_at": "2026-09-19T08:18:56Z"
+}

@@ -1,5 +1,77 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-07-13 (evening handoff — user switched projects)*
+*Last updated: 2026-09-19 (judicial-intel OA panel — full 2DCA run, catalog implemented)*
+
+---
+
+## ⭐ 2026-09-19 — Judicial intel: FL 2DCA/6DCA oral arguments scored with Jev; offer catalog implemented
+
+**Nothing is on fire.** This session's work is on branch `judicial-intel-oa-panel-2026-09-19` (PR to `main`); it stages additions and modifications only — the 345 working-tree deletions (wingman data-info, business/, old `verifier/judicial-intel` path) were deliberately NOT committed and need the user's eyes.
+
+### NEW: captions-track pipeline in `verifier/judicial-intel-analytics/pipeline/`
+
+`pull_captions.py` → `build_transcripts.py` → `run_oa_panel.py` → `enrich_flcourts.py` (+ `enrich_dockets.py` secondary, `validate_roles.py`). Full docs in that folder's `README.md`; sources in `DATA-SOURCES.md`.
+
+- **1,438 2DCA clips** with captions + metadata (5 have no captions), **98 6DCA** clips. Live-stream tabs excluded (multi-case, exceed Jev's state budget).
+- **1,428 transcripts scored** by `typesafe/jev-1.13` via OpenRouter, 15-question panel, **$0.465**, 4 s at 12 threads. 9-video hand-checked validation first.
+- **Ground truth from the Florida courts' own opinion JSON API** (`flcourts-media.flcourts.gov/_search/opinions/`, the endpoint Juriscraper wraps): 23,659 2DCA decisions 2016–2026 incl. PCAs; **1,236/1,438 videos matched**; 1,204 opinion PDFs parsed for panel / trial judge / counsel. CourtListener demoted to secondary — the token is throttled to **100 req/hour**.
+- **Findings (n=1,097 argued cases with decisions):** argued cases affirm 74% (court-wide 86%). `ruling_lean` raw 64% — below baseline — but confidence is monotonic (≥0.7 → 90%) and the Python-composed **skepticism gap** is the signal: ≥+1 → 95% affirmed (n=208), ≤−1 → 44%; inside gap 0 a confident `reverse` lean is right 77% (n=22). Two-thirds of cases fall in the abstain bin. Behavioral nouls describe, don't predict. 13–21% of score rows are bimodal. Replicates on 6DCA.
+- **Pass-1 speaker roles** are heuristic (fuzzy intro anchors + Viterbi): 86.8% BENCH/COUNSEL on a hand-labeled video. The existing Gemini `diarize.py` output is chunk-local and **not usable as ground truth**.
+
+### NEW: offer catalog implemented — `verifier/new-kingsfield-judicial-intel-categories/`
+
+`src/value_types.py`, `src/sources.py`, `src/build_snapshots.py`, `src/voting.py`. **9 of 29 facts populated** for 2DCA (F12 F13 F17 F19 F21 F22 F25 F26 F29): court snapshot, 17 appellate judges, 81 trial-judge appellate trails, 22 counsel rows (floor n=5), 1,416 F26 cards. `taxonomy/COVERAGE-fl_2dca.md`. Producers are arithmetic only.
+
+### Cleanup done
+Mock `Case_*` stub folders (iCloud, 250) trashed; GDrive `Florida_Court_Archive` (1,780 stubs) trashed by user. Stale `verifier/judicial-intel` paths fixed in config/manifest/README/HANDOFF. `index_channel.py` no longer drops video ids starting with `UC`.
+
+### Open, in priority order
+1. **Review the 345 unstaged deletions** and commit or restore them (this PR does not touch them).
+2. **Mike upstream sync** — `Kandy22/mike` is a current copy of upstream (pushed 2026-09-19); Kingsfield forked from a much older Mike. 600+ upstream changes need a deliberate merge, not a sync.
+3. **Gemini pass 2 for roles** — rewrite `diarize.py` for whole-file audio with a role-constrained schema; validate against `data/fl_2dca/transcripts/_truth_eLU5je2C12I.json`.
+4. Whisper for the 5 caption-less videos; Phase-2 per-turn rolling scorer + biometric join (`mike` / `video-analyzer4` lineage).
+5. Colorado OA video is on `cojudicial.ompnetwork.org`, not YouTube — separate ingestion.
+6. CourtListener membership if the API is needed above 100/hour; otherwise flcourts covers Florida.
+
+---
+
+## ⭐ 2026-07-27 — Hallucination registry built; published benchmark corrected
+
+**Nothing is on fire.** Production Gate 1 was checked and is sound (see below). All work this session is **uncommitted** on `main` — 216 changed files in the root repo, of which the relevant ones are `verifier/` (23) and the new `hallucination-registry/`. Nothing pushed.
+
+### NEW: `hallucination-registry/` — normalization layer over the Charlotin AI-hallucination case database
+
+Turns his flat 18-column CSV into two queryable tables. Stdlib only, deterministic, source SHA-256 in `manifest.json`.
+
+- `normalize.py` → `out/incidents.csv` (**1,810 cases, 1,251 US**) + `out/incident_items.csv` (**5,406 items, 3,869 US**) + `qa_unmapped.csv` + `report.md`
+- `schema.sql` — Postgres/Supabase DDL, with enrichment columns stubbed and NULL (`judge_name`, `docket_number`, `case_citation`, `cl_opinion_id`, `order_sha256`, `sanctioning_authority`, `bar_referral_disposition`, `appellate_history`)
+- Coverage: court mapping **95.8% high confidence** (2 unmapped of 1,251), **875 CourtListener court IDs resolved**, outcomes **1,052/1,216 recorded mapped (86.5%)**
+- Traps handled and unit-tested (20/20): `CA California` = state Court of Appeal vs `CA 5th Cir.` = federal circuit; `D.C. New Jersey` = *District Court*, not DC; **New York's "Supreme Court" is a TRIAL court** and is classified `state_trial` — getting this wrong inverts any NY analysis
+- `monetary_is_placeholder` flags the 22 rows where upstream uses a bare `1` to mean "sanctioned, amount unknown". Guarded, real US figures are n=160, **median $2,000, max $110,204**
+- Three AI-specific remedy codes coined that upstream has no field for: `authority_production_ordered`, `ai_certification_ordered`, `client_notification_ordered` (18 US cases — small but the seed of the standing-order product)
+
+**NOT done:** nothing loaded into Supabase (the MCP is connected and could), no enrichment run, no intake pipeline, `kingsfield_network_v2.html` still shows stale static numbers.
+
+### FIXED: `verifier/` benchmark had 87 groundings scored against the wrong opinion
+
+The old direct-REST resolver mapped historical citations to 2025–26 CourtListener clusters. Quarantined via new `quarantine_bad_grounding.py` (reversible; backup + `quarantine_report.json`). **Real grounding is 55/1,979 (2.8%), of which 49 (89.1%) verified** — not the 139 (7.0%) previously claimed. `CITATION_BENCHMARK.md` and `benchmark_summary.md` rewritten as v0.2 with the correction visible. Also corrected: "3-way unanimous 33%" (wrong denominator; 37.1% of the 1,780 actually scored), "200 human labels" (only 139 usable — 61 are `unsure`), and a **backwards Gemini verdict row** that had led to the opposite conclusion.
+
+**✅ Production is NOT affected.** `backend/src/verification/pipeline.ts` uses `citationLookup()` (CourtListener's Citation Lookup API — parses volume/reporter/page, filters `status === 'matched'`, fails closed). Different and correct mechanism. Do not refactor it.
+
+### PUBLISHED: HF dataset corrected in place
+
+`Kingsfield-Lawfare/legal-citation-benchmark` (public, CC BY 4.0, 146 downloads) had **every row duplicated** — both JSON files sat in the repo root and the loader concatenated them (~3,958 rows for 1,979 entries). Fixed with an explicit `configs:`/`data_files:` block pinning the split to `results_full.json`. Card rewritten as v0.2, leading with the correction, and now carries a **verified worked example**: entry `idx: 1`'s Claude rationale cites two fabricated cases ("Los Alamos Grazing" returns zero results in 8.2M opinions; 526 U.S. 434 is *203 North LaSalle*, not *Dewsnup*). Staged at `verifier/hf_release_v0.2/`.
+
+### Open, in priority order
+
+1. **Commit and push** — today's work exists only on this machine
+2. Re-ground the 87 quarantined + 803 queued citations via the MCP route; add the **date-consistency guard** (reject any cluster whose date can't match the cited reporter volume) — free, background, ~890 fetches
+3. Load `hallucination-registry` into Supabase; write `enrich.py` (judge / docket / CL opinion ID / sanctioning authority)
+4. Audit all 1,780 `agent_verdicts.reason` fields for fabricated citations → measured per-model fabrication rate
+5. Standing-order + bar-opinion registry (greenfield; the compliance product)
+
+---
+
+*Previous update: 2026-07-13 (evening handoff — user switched projects)*
 
 > ⭐ **START HERE:** `docs/context/SESSION-2026-07-13-assistant-casemap-handoff.md`  
 > Full notes from the Assistant / Case Map / LAN / extract session.  

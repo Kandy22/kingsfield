@@ -1,0 +1,35 @@
+{
+ "video_id": "jW3AC8x7CPc",
+ "title": "25 416",
+ "case_number": "2D2025-0416",
+ "case_numbers_all": [
+  "2D2025-0416"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0416",
+ "case_name": "DYLAN DEAN KREN v. WEST PARK VILLAGE OWNER LLC",
+ "decided_date": "2025-10-29",
+ "cl_cluster_id": 10751844,
+ "cl_opinion_id": 11218429,
+ "cl_url": "https://www.courtlistener.com/opinion/10751844/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Northcutt; Black; Atkinson",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Jennifer P. Johnson",
+ "appellant_counsel": null,
+ "appellee_counsel": "YLAN DEAN KREN, Appellant, v. WEST PARK VILLAGE OWNER LLC, Appellee. No. 2D2025-0416 October 29, 2025 Appeal from the Circuit Court for Hillsborough County; Jennifer P. Johnson, Judge. Dylan Dean Kren, pro se. Ginger Barry Boyd and Jill Kowalski of Nelson Mullins Riley & Scarborough LLP, Tallahassee",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 749,
+ "_tried": [
+  "2D2025-0416"
+ ],
+ "looked_up_at": "2026-09-19T07:48:36Z"
+}

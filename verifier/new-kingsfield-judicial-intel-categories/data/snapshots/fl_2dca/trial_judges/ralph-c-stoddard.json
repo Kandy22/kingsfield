@@ -1,0 +1,35 @@
+{
+ "judge_id": "ralph-c-stoddard",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 4,
+   "affirmed": 4,
+   "reversed": 0,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.0,
+   "reversal_rate_ci95": {
+    "lo": 0.0,
+    "hi": 0.49,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-2631",
+    "2D2019-1961",
+    "2D2020-2596",
+    "2D2020-1764"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

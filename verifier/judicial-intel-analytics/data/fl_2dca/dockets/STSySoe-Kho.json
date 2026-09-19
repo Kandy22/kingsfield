@@ -1,0 +1,35 @@
+{
+ "video_id": "STSySoe-Kho",
+ "title": "24 2478",
+ "case_number": "2D2024-2478",
+ "case_numbers_all": [
+  "2D2024-2478"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2478",
+ "case_name": "JAMES D. BRITT v. BAYSHORE ROYAL CONDOMINIUMS, a/k/a",
+ "decided_date": "2026-02-20",
+ "cl_cluster_id": 10796771,
+ "cl_opinion_id": 11263442,
+ "cl_url": "https://www.courtlistener.com/opinion/10796771/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Paul Huey",
+ "appellant_counsel": "JAMES D. BRITT, Appellant, v. BAYSHORE ROYAL CONDOMINIUMS, a/k/a BAYSHORE CONDOMINIUMS & COMPANY, INC., Appellee. No. 2D2024-2478 February 20, 2026 Appeal from the Circuit Court for Hillsborough County; Paul Huey, Judge. Daniel F. Pilka and Richard Randolph Kosan of Pilka Adams & Reed, P.A., Brandon",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 852,
+ "_tried": [
+  "2D2024-2478"
+ ],
+ "looked_up_at": "2026-09-19T07:23:41Z"
+}

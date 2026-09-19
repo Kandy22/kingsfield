@@ -1,0 +1,30 @@
+{
+ "video_id": "Z6TOBQP1pPA",
+ "title": "24 2167",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-2167"
+ ],
+ "case_number": "2D2024-2167",
+ "source": "flcourts",
+ "case_name": "Farrell v. The Bank of New York Mellon",
+ "decided_date": "2026-01-16",
+ "disposition_text": "Affirmed in part, reversed in part, and remanded.",
+ "disposition": "mixed",
+ "opinion_type": "Appeal - Per Curiam Opinion",
+ "is_pca": false,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2483821/opinion/Opinion_2024-2167.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/january/16/2024-2167",
+ "ctrack_id": "ctrack_19255227",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:11:44Z",
+ "panel_judges": "Kelly; Rothstein-Youakim; Smith",
+ "trial_judge": "Thomas M. Ramsberger",
+ "county": "Pinellas",
+ "appellant_counsel": "ustee for the holders of CWALT, Inc. Alternative Loan Trust 2005-24, Mortgage Pass-Through Certificates, Series 2005-24, Appellee. No. 2D2024-2167 January 16, 2026 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Michael Alex Wasylik of Ricardo & Wasylik, PL, Dade City",
+ "appellee_counsel": "tgage Pass-Through Certificates, Series 2005-24, Appellee. No. 2D2024-2167 January 16, 2026 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Michael Alex Wasylik of Ricardo & Wasylik, PL, Dade City, for Appellant. Danielle Spradley of Kelley Kronenberg, Fort Lauderdale",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1968
+}

@@ -1,0 +1,29 @@
+{
+ "video_id": "s6NF4hhzFTA",
+ "title": "22 1239",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-1239"
+ ],
+ "case_number": "2D2022-1239",
+ "source": "flcourts",
+ "case_name": "ELKINS v. PAC WIREGRASS RANCH, LLC, D/ B/ A HORIZON WIREGRASS RANCH",
+ "decided_date": "2024-05-10",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2434285/opinion/Opinion_2022-1239.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/May/10/2022-1239",
+ "ctrack_id": "ctrack_18501022",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:16:27Z",
+ "panel_judges": "Lucas; Atkinson; Smith",
+ "trial_judge": "Kent Compton",
+ "county": "Pasco",
+ "appellee_counsel": "ELKINS, Appellant, v. PAC WIREGRASS RANCH d/b/a HORIZON WIREGRASS RANCH, Appellee. No. 2D2022-1239 May 10, 2024 Appeal from the County Court for Pasco County; Kent Compton, Judge. Sabrina Elkins, pro se. Darren J. Ayoub, Ryan R. McCain, and Donna S. Barfield of Barfield McCain, P.A., West Palm Beach",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 802
+}

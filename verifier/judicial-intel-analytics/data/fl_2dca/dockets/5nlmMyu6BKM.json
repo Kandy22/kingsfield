@@ -1,0 +1,41 @@
+{
+ "video_id": "5nlmMyu6BKM",
+ "title": "24 2661",
+ "case_number": "2D2024-2661",
+ "case_numbers_all": [
+  "2D2024-2661"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2661",
+ "case_name": "Rennhack v. Walmart Stores, Inc.",
+ "decided_date": "2026-06-05",
+ "cl_cluster_id": 10870536,
+ "cl_opinion_id": 11337994,
+ "cl_url": "https://www.courtlistener.com/opinion/10870536/rennhack-v-walmart-stores-inc/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Kelly; Morris; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Manatee",
+ "trial_judge": "Edward Nicholas",
+ "appellant_counsel": " June 5, 2026 Appeal from the Circuit Court for Manatee County; Edward Nicholas, Judge. Bard D. Rockenbach of Burlington & Rockenbach, P.A., West Palm Beach; W. Nelon Kirkland of Dye Harrison Knowles Kirkland Pratt & DePaola, PLLC, Bradenton; and Thomas P. Whitaker, Jr. of Kingdom Counsel, Bradenton",
+ "appellee_counsel": "Bard D. Rockenbach of Burlington & Rockenbach, P.A., West Palm Beach; W. Nelon Kirkland of Dye Harrison Knowles Kirkland Pratt & DePaola, PLLC, Bradenton; and Thomas P. Whitaker, Jr. of Kingdom Counsel, Bradenton, for Appellant. Jack R. Reiter and Sydney Feldman D'Angelo of GrayRobinson, P.A., Miami",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1190,
+ "_tried": [
+  "2D2024-2661"
+ ],
+ "looked_up_at": "2026-09-19T07:03:43Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2489705/opinion/Opinion_2024-2661.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/june/05/2024-2661",
+ "ctrack_id": "ctrack_19445941",
+ "n_decision_records": 1
+}

@@ -1,0 +1,25 @@
+{
+ "video_id": "w2ulUjwunOA",
+ "title": "Oral Argument - December 11, 2025 - Case # 24-1772",
+ "found": true,
+ "case_numbers_all": [
+  "6D2024-1772"
+ ],
+ "case_number": "6D2024-1772",
+ "source": "flcourts",
+ "case_name": "COMELCO, INC v. FCCI INSURANCE COMPANY",
+ "decided_date": "2025-12-16",
+ "disposition_text": "Affirmed PCA",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2492197/opinion/Opinion_2024-1772.pdf",
+ "flcourts_page": "https://6dca.flcourts.gov/opinions/Opinions-Archive/pcas/2025/december/16/2024-1772",
+ "ctrack_id": "ctrack_19215994",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T08:34:08Z",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1208
+}

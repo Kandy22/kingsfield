@@ -1,0 +1,33 @@
+{
+ "video_id": "8-vKRPb-u2I",
+ "title": "24 1930",
+ "case_number": "2D2024-1930",
+ "case_numbers_all": [
+  "2D2024-1930"
+ ],
+ "found": true,
+ "_tried": [
+  "2D2024-1930",
+  "2024-1930"
+ ],
+ "looked_up_at": "2026-09-19T07:04:23Z",
+ "source": "flcourts",
+ "case_name": "Umsted v. Athanas",
+ "decided_date": "2025-08-29",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2458791/opinion/Opinion_2024-1930.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/August/29/2024-1930",
+ "ctrack_id": "ctrack_19076094",
+ "n_decision_records": 1,
+ "panel_judges": "Northcutt; Morris; Black",
+ "trial_judge": "James R. Stearns",
+ "county": "Pasco",
+ "appellee_counsel": "STRICT In re Estate of Nicholas Manganas, HUGH C. UMSTED, Appellant, v. ANGELA ATHANAS, Appellee. No. 2D2024-1930 August 29, 2025 Appeal from the Circuit Court for Pasco County; James R. Stearns, Judge. Hugh C. Umsted, pro se. Thomas P. Atlman of Law Offices of James J. Altman, P.A., New Port Richey",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 790
+}

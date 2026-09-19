@@ -1,0 +1,30 @@
+{
+ "video_id": "xDrJpk5OqQ8",
+ "title": "23 2315",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-2315"
+ ],
+ "case_number": "2D2023-2315",
+ "source": "flcourts",
+ "case_name": "SMITH v. THE SCHOOL BOARD OF HILLSBOROUGH COUNTY, FLORIDA",
+ "decided_date": "2025-05-21",
+ "disposition_text": "Reversed and remanded with instructions.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2458305/opinion/Opinion_2023-2315.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/May/21/2023-2315",
+ "ctrack_id": "ctrack_18945033",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:17:52Z",
+ "author": "Khouzam",
+ "panel_judges": "Khouzam; Moe",
+ "special_concurrence_judges": "Moe",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT JARVIS SMITH, Appellant, v. THE SCHOOL BOARD OF HILLSBOROUGH COUNTY, Appellee. No. 2D2023-2315 May 21, 2025 Appeal from the School Board of Hillsborough County. Branden Vicari of Herdman & Vicari, P.A., Clearwater",
+ "appellee_counsel": "ARD OF HILLSBOROUGH COUNTY, Appellee. No. 2D2023-2315 May 21, 2025 Appeal from the School Board of Hillsborough County. Branden Vicari of Herdman & Vicari, P.A., Clearwater, for Appellant. Kristen M. Fiore of Akerman, LLP, Tallahassee; and Phillip J. Harris and Emily C. Ayvazian, Akerman, LLP, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": true,
+ "opinion_chars": 9392
+}

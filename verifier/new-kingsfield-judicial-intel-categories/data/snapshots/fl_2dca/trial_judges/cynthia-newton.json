@@ -1,0 +1,36 @@
+{
+ "judge_id": "cynthia-newton",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 5,
+   "affirmed": 3,
+   "reversed": 2,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.4,
+   "reversal_rate_ci95": {
+    "lo": 0.118,
+    "hi": 0.769,
+    "method": "wilson"
+   },
+   "county": "Pinellas",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2021-1190",
+    "2D2022-0953",
+    "2D2023-0495",
+    "2D2022-2280",
+    "2D2023-0088"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

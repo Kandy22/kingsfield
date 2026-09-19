@@ -1,0 +1,82 @@
+{
+ "judge_id": "nardella",
+ "court_id": "fl_6dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "appellate_judge_panels",
+   "n": 7,
+   "affirmed": 2,
+   "reversed": 4,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.714,
+   "reversal_rate_ci95": {
+    "lo": 0.359,
+    "hi": 0.918,
+    "method": "wilson"
+   },
+   "note": "cases argued on video where this judge sat; reversal is a panel outcome, not an individual vote"
+  },
+  "F12": [
+   {
+    "name": "reverse",
+    "count": 4,
+    "share": 0.571
+   },
+   {
+    "name": "affirm",
+    "count": 2,
+    "share": 0.286
+   },
+   {
+    "name": "mixed",
+    "count": 1,
+    "share": 0.143
+   }
+  ],
+  "F13": {
+   "n": 7,
+   "median": 85,
+   "mean": 95.1,
+   "p10": 21,
+   "p90": 182,
+   "from_event": "oral_argument",
+   "to_event": "decision"
+  },
+  "F22": {
+   "target": "affirm",
+   "fit_on": "panel-level skepticism gap on this judge's panels",
+   "n": 7,
+   "root": {
+    "leaf": true,
+    "n": 7,
+    "p_affirm": null,
+    "label": "see court F22"
+   },
+   "rules_text": [
+    "share of panels with gap>=+1: 0.00",
+    "share with gap<=-1: 0.14",
+    "authored: 7 of 7"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F12": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F13": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F22": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  }
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "video_id": "BSXb6O-tmcQ",
+ "title": "25 1113",
+ "case_number": "2D2025-1113",
+ "case_numbers_all": [
+  "2D2025-1113"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1113",
+ "case_name": "Prime Property & Casualty Insurance, Inc. v. Garisto, Personal Representative, Estate Of Chris Woodrow Raines, et al",
+ "decided_date": "2026-01-30",
+ "cl_cluster_id": 10781784,
+ "cl_opinion_id": 11248408,
+ "cl_url": "https://www.courtlistener.com/opinion/10781784/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Silberman; Atkinson; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Helene L. Daniel",
+ "appellant_counsel": "and DOUGLAS B. STALLEY, as personal representative of the Estate of David Wayne Bailey, deceased, Appellees. No. 2D2025-1113 January 30, 2026 Appeal from the Circuit Court for Hillsborough County; Helene L. Daniel, Judge. Elizabeth K. Russo and Paulo R. Lima of Russo Lima Appellate Firm, P.A., Miami",
+ "appellee_counsel": " of David Wayne Bailey, deceased, Appellees. No. 2D2025-1113 January 30, 2026 Appeal from the Circuit Court for Hillsborough County; Helene L. Daniel, Judge. Elizabeth K. Russo and Paulo R. Lima of Russo Lima Appellate Firm, P.A., Miami, for Appellant. Scott A. Arthur and Joseph F. Diaco, Jr., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1121,
+ "_tried": [
+  "2D2025-1113"
+ ],
+ "looked_up_at": "2026-09-19T07:05:18Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2484392/opinion/Opinion_2025-1113.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/january/30/2025-1113",
+ "ctrack_id": "ctrack_19273028",
+ "n_decision_records": 1
+}

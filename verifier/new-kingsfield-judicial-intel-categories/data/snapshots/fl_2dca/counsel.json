@@ -1,0 +1,979 @@
+{
+ "F21": {
+  "entity_type": "counsel",
+  "court_id": "fl_2dca",
+  "rows": [
+   {
+    "counsel": "Judge. J. Andrew Crawford",
+    "firm": "J. Andrew Crawford, P.A.",
+    "side": "appellee",
+    "n": 15,
+    "wins": 9,
+    "win_rate": 0.6,
+    "win_rate_ci95": {
+     "lo": 0.357,
+     "hi": 0.802,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.164,
+    "cases": [
+     "2D2025-2518",
+     "2D2024-0325",
+     "2D2023-0394",
+     "2D2018-0706",
+     "2D2020-3281",
+     "2D2022-1464",
+     "2D2017-0504",
+     "2D2023-1558",
+     "2D2021-1832",
+     "2D2025-1874",
+     "2D2021-0278",
+     "2D2024-0251",
+     "2D2022-3333",
+     "2D2022-1458",
+     "2D2022-3484"
+    ]
+   },
+   {
+    "counsel": "Judge. Brian J. Lee",
+    "firm": "Morgan & Morgan",
+    "side": "appellee",
+    "n": 9,
+    "wins": 8,
+    "win_rate": 0.889,
+    "win_rate_ci95": {
+     "lo": 0.565,
+     "hi": 0.98,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.187,
+    "cases": [
+     "2D2025-0213",
+     "2D2024-0800",
+     "2D2024-0840",
+     "2D2024-2425",
+     "2D2024-2738",
+     "2D2021-0372",
+     "2D2023-2648",
+     "2D2025-0602",
+     "2D2025-0191"
+    ]
+   },
+   {
+    "counsel": "Judge. Michael Ufferman",
+    "firm": "Michael Ufferman Law Firm, P.A.",
+    "side": "appellee",
+    "n": 8,
+    "wins": 6,
+    "win_rate": 0.75,
+    "win_rate_ci95": {
+     "lo": 0.409,
+     "hi": 0.929,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.195,
+    "cases": [
+     "2D2021-3150",
+     "2D2024-1429",
+     "2D2019-4607",
+     "2D2024-2389",
+     "2D2019-2362",
+     "2D2024-0531",
+     "2D2023-0044",
+     "2D2022-2858"
+    ]
+   },
+   {
+    "counsel": "Judge. Brian J. Lee",
+    "firm": "Morgan & Morgan",
+    "side": "appellant",
+    "n": 7,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_ci95": {
+     "lo": 0.0,
+     "hi": 0.354,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.27,
+    "cases": [
+     "2D2024-0800",
+     "2D2024-2425",
+     "2D2021-0372",
+     "2D2023-2648",
+     "2D2025-0602",
+     "2D2020-2189",
+     "2D2025-0191"
+    ]
+   },
+   {
+    "counsel": ") ) Appellants",
+    "firm": "Giasi Law, P.A.",
+    "side": "appellant",
+    "n": 6,
+    "wins": 1,
+    "win_rate": 0.167,
+    "win_rate_ci95": {
+     "lo": 0.03,
+     "hi": 0.564,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.362,
+    "cases": [
+     "2D2019-2563",
+     "2D2017-3974",
+     "2D2020-0036",
+     "2D2018-1116",
+     "2D2019-4883",
+     "2D2019-1715"
+    ]
+   },
+   {
+    "counsel": "Appellants",
+    "firm": "The Nation Law Firm",
+    "side": "appellant",
+    "n": 5,
+    "wins": 1,
+    "win_rate": 0.2,
+    "win_rate_ci95": {
+     "lo": 0.036,
+     "hi": 0.624,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.138,
+    "cases": [
+     "2D2020-0429",
+     "2D2020-3722",
+     "2D2023-0853",
+     "2D2023-2567",
+     "2D2024-1964"
+    ]
+   },
+   {
+    "counsel": "Judge. Mark A. Nation",
+    "firm": "The Nation Law Firm",
+    "side": "appellant",
+    "n": 5,
+    "wins": 1,
+    "win_rate": 0.2,
+    "win_rate_ci95": {
+     "lo": 0.036,
+     "hi": 0.624,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.138,
+    "cases": [
+     "2D2020-0429",
+     "2D2020-3722",
+     "2D2023-0853",
+     "2D2023-2567",
+     "2D2024-1964"
+    ]
+   },
+   {
+    "counsel": "Judge. Mark A. Nation",
+    "firm": "The Nation Law Firm",
+    "side": "appellee",
+    "n": 5,
+    "wins": 4,
+    "win_rate": 0.8,
+    "win_rate_ci95": {
+     "lo": 0.376,
+     "hi": 0.964,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.18,
+    "cases": [
+     "2D2020-0429",
+     "2D2020-3722",
+     "2D2023-0853",
+     "2D2023-2567",
+     "2D2024-1964"
+    ]
+   },
+   {
+    "counsel": "Appellant",
+    "firm": "Older Lundy Koch & Martino",
+    "side": "appellant",
+    "n": 5,
+    "wins": 1,
+    "win_rate": 0.2,
+    "win_rate_ci95": {
+     "lo": 0.036,
+     "hi": 0.624,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.158,
+    "cases": [
+     "2D2022-0660",
+     "2D2022-2334",
+     "2D2024-1156",
+     "2D2024-2875",
+     "2D2024-2222"
+    ]
+   },
+   {
+    "counsel": "Judge. Eric R. Maier",
+    "firm": "Older Lundy Koch & Martino",
+    "side": "appellant",
+    "n": 5,
+    "wins": 1,
+    "win_rate": 0.2,
+    "win_rate_ci95": {
+     "lo": 0.036,
+     "hi": 0.624,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.158,
+    "cases": [
+     "2D2022-0660",
+     "2D2022-2334",
+     "2D2024-1156",
+     "2D2024-2875",
+     "2D2024-2222"
+    ]
+   },
+   {
+    "counsel": "Appellant",
+    "firm": "Brunvand Wise, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 2,
+    "win_rate": 0.4,
+    "win_rate_ci95": {
+     "lo": 0.118,
+     "hi": 0.769,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.182,
+    "cases": [
+     "2D2021-0849",
+     "2D2019-4274",
+     "2D2023-0322",
+     "2D2023-0191",
+     "2D2023-1369"
+    ]
+   },
+   {
+    "counsel": "v. STATE OF FLORIDA",
+    "firm": "Brunvand Wise, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 2,
+    "win_rate": 0.4,
+    "win_rate_ci95": {
+     "lo": 0.118,
+     "hi": 0.769,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.182,
+    "cases": [
+     "2D2021-0849",
+     "2D2019-4274",
+     "2D2023-0322",
+     "2D2023-0191",
+     "2D2023-1369"
+    ]
+   },
+   {
+    "counsel": "Judge. J. Jervis Wise",
+    "firm": "Brunvand Wise, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 2,
+    "win_rate": 0.4,
+    "win_rate_ci95": {
+     "lo": 0.118,
+     "hi": 0.769,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.182,
+    "cases": [
+     "2D2021-0849",
+     "2D2019-4274",
+     "2D2023-0322",
+     "2D2023-0191",
+     "2D2023-1369"
+    ]
+   },
+   {
+    "counsel": "Judge. J. Jervis Wise",
+    "firm": "Brunvand Wise, P.A.",
+    "side": "appellee",
+    "n": 5,
+    "wins": 3,
+    "win_rate": 0.6,
+    "win_rate_ci95": {
+     "lo": 0.231,
+     "hi": 0.882,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.126,
+    "cases": [
+     "2D2021-0849",
+     "2D2019-4274",
+     "2D2023-0322",
+     "2D2023-0191",
+     "2D2023-1369"
+    ]
+   },
+   {
+    "counsel": "Brandon S. Vesely",
+    "firm": "The Florida Appellate Firm, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_ci95": {
+     "lo": 0.0,
+     "hi": 0.434,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.202,
+    "cases": [
+     "2D2023-0776",
+     "2D2024-1345",
+     "2D2023-2606",
+     "2D2023-0088",
+     "2D2023-0826"
+    ]
+   },
+   {
+    "counsel": "Judge. Erin M. Berger",
+    "firm": "Giasi Law, P.A.",
+    "side": "appellee",
+    "n": 5,
+    "wins": 3,
+    "win_rate": 0.6,
+    "win_rate_ci95": {
+     "lo": 0.231,
+     "hi": 0.882,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.252,
+    "cases": [
+     "2D2019-2563",
+     "2D2020-2575",
+     "2D2018-1116",
+     "2D2019-4883",
+     "2D2020-0525"
+    ]
+   },
+   {
+    "counsel": "Melissa A. Giasi",
+    "firm": "Giasi Law, P.A.",
+    "side": "appellee",
+    "n": 5,
+    "wins": 3,
+    "win_rate": 0.6,
+    "win_rate_ci95": {
+     "lo": 0.231,
+     "hi": 0.882,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.252,
+    "cases": [
+     "2D2019-2563",
+     "2D2020-2575",
+     "2D2018-1116",
+     "2D2019-4883",
+     "2D2020-0525"
+    ]
+   },
+   {
+    "counsel": "Judge. Melissa A. Giasi",
+    "firm": "Giasi Law, P.A.",
+    "side": "appellee",
+    "n": 5,
+    "wins": 4,
+    "win_rate": 0.8,
+    "win_rate_ci95": {
+     "lo": 0.376,
+     "hi": 0.964,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.18,
+    "cases": [
+     "2D2017-3974",
+     "2D2023-0881",
+     "2D2020-0036",
+     "2D2020-2440",
+     "2D2020-2665"
+    ]
+   },
+   {
+    "counsel": ") ) Appellant",
+    "firm": "Gomez & Touger, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 0,
+    "win_rate": 0.0,
+    "win_rate_ci95": {
+     "lo": 0.0,
+     "hi": 0.434,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.276,
+    "cases": [
+     "2D2020-0715",
+     "2D2019-2233",
+     "2D2019-4938",
+     "2D2019-4352",
+     "2D2020-1017"
+    ]
+   },
+   {
+    "counsel": "Appellant",
+    "firm": "Florida Appeals, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 1,
+    "win_rate": 0.2,
+    "win_rate_ci95": {
+     "lo": 0.036,
+     "hi": 0.624,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.23,
+    "cases": [
+     "2D2021-0747",
+     "2D2022-3803",
+     "2D2020-3425",
+     "2D2020-3523",
+     "2D2022-3427"
+    ]
+   },
+   {
+    "counsel": "Judge. Allison M. Perry",
+    "firm": "Florida Appeals, P.A.",
+    "side": "appellant",
+    "n": 5,
+    "wins": 1,
+    "win_rate": 0.2,
+    "win_rate_ci95": {
+     "lo": 0.036,
+     "hi": 0.624,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.23,
+    "cases": [
+     "2D2021-0747",
+     "2D2022-3803",
+     "2D2020-3425",
+     "2D2020-3523",
+     "2D2022-3427"
+    ]
+   },
+   {
+    "counsel": "Erin M. Berger",
+    "firm": "Giasi Law, P.A.",
+    "side": "appellee",
+    "n": 5,
+    "wins": 4,
+    "win_rate": 0.8,
+    "win_rate_ci95": {
+     "lo": 0.376,
+     "hi": 0.964,
+     "method": "wilson"
+    },
+    "bench_hostile_mass_mean": 0.164,
+    "cases": [
+     "2D2023-0881",
+     "2D2020-0036",
+     "2D2020-2440",
+     "2D2021-1839",
+     "2D2020-2665"
+    ]
+   }
+  ],
+  "floor_n": 5
+ },
+ "F29": [
+  {
+   "counsel": "Judge. J. Andrew Crawford",
+   "firm": "J. Andrew Crawford, P.A.",
+   "side": "appellee",
+   "n": 15,
+   "wins": 9,
+   "win_rate": 0.6,
+   "win_rate_ci95": {
+    "lo": 0.357,
+    "hi": 0.802,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.164,
+   "cases": [
+    "2D2025-2518",
+    "2D2024-0325",
+    "2D2023-0394",
+    "2D2018-0706",
+    "2D2020-3281",
+    "2D2022-1464",
+    "2D2017-0504",
+    "2D2023-1558",
+    "2D2021-1832",
+    "2D2025-1874",
+    "2D2021-0278",
+    "2D2024-0251",
+    "2D2022-3333",
+    "2D2022-1458",
+    "2D2022-3484"
+   ]
+  },
+  {
+   "counsel": "Judge. Brian J. Lee",
+   "firm": "Morgan & Morgan",
+   "side": "appellee",
+   "n": 9,
+   "wins": 8,
+   "win_rate": 0.889,
+   "win_rate_ci95": {
+    "lo": 0.565,
+    "hi": 0.98,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.187,
+   "cases": [
+    "2D2025-0213",
+    "2D2024-0800",
+    "2D2024-0840",
+    "2D2024-2425",
+    "2D2024-2738",
+    "2D2021-0372",
+    "2D2023-2648",
+    "2D2025-0602",
+    "2D2025-0191"
+   ]
+  },
+  {
+   "counsel": "Judge. Michael Ufferman",
+   "firm": "Michael Ufferman Law Firm, P.A.",
+   "side": "appellee",
+   "n": 8,
+   "wins": 6,
+   "win_rate": 0.75,
+   "win_rate_ci95": {
+    "lo": 0.409,
+    "hi": 0.929,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.195,
+   "cases": [
+    "2D2021-3150",
+    "2D2024-1429",
+    "2D2019-4607",
+    "2D2024-2389",
+    "2D2019-2362",
+    "2D2024-0531",
+    "2D2023-0044",
+    "2D2022-2858"
+   ]
+  },
+  {
+   "counsel": "Judge. Brian J. Lee",
+   "firm": "Morgan & Morgan",
+   "side": "appellant",
+   "n": 7,
+   "wins": 0,
+   "win_rate": 0.0,
+   "win_rate_ci95": {
+    "lo": 0.0,
+    "hi": 0.354,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.27,
+   "cases": [
+    "2D2024-0800",
+    "2D2024-2425",
+    "2D2021-0372",
+    "2D2023-2648",
+    "2D2025-0602",
+    "2D2020-2189",
+    "2D2025-0191"
+   ]
+  },
+  {
+   "counsel": ") ) Appellants",
+   "firm": "Giasi Law, P.A.",
+   "side": "appellant",
+   "n": 6,
+   "wins": 1,
+   "win_rate": 0.167,
+   "win_rate_ci95": {
+    "lo": 0.03,
+    "hi": 0.564,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.362,
+   "cases": [
+    "2D2019-2563",
+    "2D2017-3974",
+    "2D2020-0036",
+    "2D2018-1116",
+    "2D2019-4883",
+    "2D2019-1715"
+   ]
+  },
+  {
+   "counsel": "Appellants",
+   "firm": "The Nation Law Firm",
+   "side": "appellant",
+   "n": 5,
+   "wins": 1,
+   "win_rate": 0.2,
+   "win_rate_ci95": {
+    "lo": 0.036,
+    "hi": 0.624,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.138,
+   "cases": [
+    "2D2020-0429",
+    "2D2020-3722",
+    "2D2023-0853",
+    "2D2023-2567",
+    "2D2024-1964"
+   ]
+  },
+  {
+   "counsel": "Judge. Mark A. Nation",
+   "firm": "The Nation Law Firm",
+   "side": "appellant",
+   "n": 5,
+   "wins": 1,
+   "win_rate": 0.2,
+   "win_rate_ci95": {
+    "lo": 0.036,
+    "hi": 0.624,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.138,
+   "cases": [
+    "2D2020-0429",
+    "2D2020-3722",
+    "2D2023-0853",
+    "2D2023-2567",
+    "2D2024-1964"
+   ]
+  },
+  {
+   "counsel": "Judge. Mark A. Nation",
+   "firm": "The Nation Law Firm",
+   "side": "appellee",
+   "n": 5,
+   "wins": 4,
+   "win_rate": 0.8,
+   "win_rate_ci95": {
+    "lo": 0.376,
+    "hi": 0.964,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.18,
+   "cases": [
+    "2D2020-0429",
+    "2D2020-3722",
+    "2D2023-0853",
+    "2D2023-2567",
+    "2D2024-1964"
+   ]
+  },
+  {
+   "counsel": "Appellant",
+   "firm": "Older Lundy Koch & Martino",
+   "side": "appellant",
+   "n": 5,
+   "wins": 1,
+   "win_rate": 0.2,
+   "win_rate_ci95": {
+    "lo": 0.036,
+    "hi": 0.624,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.158,
+   "cases": [
+    "2D2022-0660",
+    "2D2022-2334",
+    "2D2024-1156",
+    "2D2024-2875",
+    "2D2024-2222"
+   ]
+  },
+  {
+   "counsel": "Judge. Eric R. Maier",
+   "firm": "Older Lundy Koch & Martino",
+   "side": "appellant",
+   "n": 5,
+   "wins": 1,
+   "win_rate": 0.2,
+   "win_rate_ci95": {
+    "lo": 0.036,
+    "hi": 0.624,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.158,
+   "cases": [
+    "2D2022-0660",
+    "2D2022-2334",
+    "2D2024-1156",
+    "2D2024-2875",
+    "2D2024-2222"
+   ]
+  },
+  {
+   "counsel": "Appellant",
+   "firm": "Brunvand Wise, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 2,
+   "win_rate": 0.4,
+   "win_rate_ci95": {
+    "lo": 0.118,
+    "hi": 0.769,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.182,
+   "cases": [
+    "2D2021-0849",
+    "2D2019-4274",
+    "2D2023-0322",
+    "2D2023-0191",
+    "2D2023-1369"
+   ]
+  },
+  {
+   "counsel": "v. STATE OF FLORIDA",
+   "firm": "Brunvand Wise, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 2,
+   "win_rate": 0.4,
+   "win_rate_ci95": {
+    "lo": 0.118,
+    "hi": 0.769,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.182,
+   "cases": [
+    "2D2021-0849",
+    "2D2019-4274",
+    "2D2023-0322",
+    "2D2023-0191",
+    "2D2023-1369"
+   ]
+  },
+  {
+   "counsel": "Judge. J. Jervis Wise",
+   "firm": "Brunvand Wise, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 2,
+   "win_rate": 0.4,
+   "win_rate_ci95": {
+    "lo": 0.118,
+    "hi": 0.769,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.182,
+   "cases": [
+    "2D2021-0849",
+    "2D2019-4274",
+    "2D2023-0322",
+    "2D2023-0191",
+    "2D2023-1369"
+   ]
+  },
+  {
+   "counsel": "Judge. J. Jervis Wise",
+   "firm": "Brunvand Wise, P.A.",
+   "side": "appellee",
+   "n": 5,
+   "wins": 3,
+   "win_rate": 0.6,
+   "win_rate_ci95": {
+    "lo": 0.231,
+    "hi": 0.882,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.126,
+   "cases": [
+    "2D2021-0849",
+    "2D2019-4274",
+    "2D2023-0322",
+    "2D2023-0191",
+    "2D2023-1369"
+   ]
+  },
+  {
+   "counsel": "Brandon S. Vesely",
+   "firm": "The Florida Appellate Firm, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 0,
+   "win_rate": 0.0,
+   "win_rate_ci95": {
+    "lo": 0.0,
+    "hi": 0.434,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.202,
+   "cases": [
+    "2D2023-0776",
+    "2D2024-1345",
+    "2D2023-2606",
+    "2D2023-0088",
+    "2D2023-0826"
+   ]
+  },
+  {
+   "counsel": "Judge. Erin M. Berger",
+   "firm": "Giasi Law, P.A.",
+   "side": "appellee",
+   "n": 5,
+   "wins": 3,
+   "win_rate": 0.6,
+   "win_rate_ci95": {
+    "lo": 0.231,
+    "hi": 0.882,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.252,
+   "cases": [
+    "2D2019-2563",
+    "2D2020-2575",
+    "2D2018-1116",
+    "2D2019-4883",
+    "2D2020-0525"
+   ]
+  },
+  {
+   "counsel": "Melissa A. Giasi",
+   "firm": "Giasi Law, P.A.",
+   "side": "appellee",
+   "n": 5,
+   "wins": 3,
+   "win_rate": 0.6,
+   "win_rate_ci95": {
+    "lo": 0.231,
+    "hi": 0.882,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.252,
+   "cases": [
+    "2D2019-2563",
+    "2D2020-2575",
+    "2D2018-1116",
+    "2D2019-4883",
+    "2D2020-0525"
+   ]
+  },
+  {
+   "counsel": "Judge. Melissa A. Giasi",
+   "firm": "Giasi Law, P.A.",
+   "side": "appellee",
+   "n": 5,
+   "wins": 4,
+   "win_rate": 0.8,
+   "win_rate_ci95": {
+    "lo": 0.376,
+    "hi": 0.964,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.18,
+   "cases": [
+    "2D2017-3974",
+    "2D2023-0881",
+    "2D2020-0036",
+    "2D2020-2440",
+    "2D2020-2665"
+   ]
+  },
+  {
+   "counsel": ") ) Appellant",
+   "firm": "Gomez & Touger, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 0,
+   "win_rate": 0.0,
+   "win_rate_ci95": {
+    "lo": 0.0,
+    "hi": 0.434,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.276,
+   "cases": [
+    "2D2020-0715",
+    "2D2019-2233",
+    "2D2019-4938",
+    "2D2019-4352",
+    "2D2020-1017"
+   ]
+  },
+  {
+   "counsel": "Appellant",
+   "firm": "Florida Appeals, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 1,
+   "win_rate": 0.2,
+   "win_rate_ci95": {
+    "lo": 0.036,
+    "hi": 0.624,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.23,
+   "cases": [
+    "2D2021-0747",
+    "2D2022-3803",
+    "2D2020-3425",
+    "2D2020-3523",
+    "2D2022-3427"
+   ]
+  },
+  {
+   "counsel": "Judge. Allison M. Perry",
+   "firm": "Florida Appeals, P.A.",
+   "side": "appellant",
+   "n": 5,
+   "wins": 1,
+   "win_rate": 0.2,
+   "win_rate_ci95": {
+    "lo": 0.036,
+    "hi": 0.624,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.23,
+   "cases": [
+    "2D2021-0747",
+    "2D2022-3803",
+    "2D2020-3425",
+    "2D2020-3523",
+    "2D2022-3427"
+   ]
+  },
+  {
+   "counsel": "Erin M. Berger",
+   "firm": "Giasi Law, P.A.",
+   "side": "appellee",
+   "n": 5,
+   "wins": 4,
+   "win_rate": 0.8,
+   "win_rate_ci95": {
+    "lo": 0.376,
+    "hi": 0.964,
+    "method": "wilson"
+   },
+   "bench_hostile_mass_mean": 0.164,
+   "cases": [
+    "2D2023-0881",
+    "2D2020-0036",
+    "2D2020-2440",
+    "2D2021-1839",
+    "2D2020-2665"
+   ]
+  }
+ ],
+ "provenance": {
+  "source": "flcourts opinion PDF (counsel) + jev panel",
+  "collected_at": "2026-09-19T08:32:01+00:00"
+ }
+}

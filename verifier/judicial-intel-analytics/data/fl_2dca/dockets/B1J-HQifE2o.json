@@ -1,0 +1,31 @@
+{
+ "video_id": "B1J-HQifE2o",
+ "title": "2D20 3602",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-3602"
+ ],
+ "case_number": "2D2020-3602",
+ "source": "flcourts",
+ "case_name": "HILLSBOROUGH COUNTY AVIATION AUTHORITY VS BOB HENRIQUEZ, PROPERTY APPRAISER",
+ "decided_date": "2023-07-07",
+ "disposition_text": "Reversed - Authored Opinion ~ and remanded; question certified. **CORRECTED**",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/873226/opinion/Opinion_2020-3602.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2023/July/07/2020-3602",
+ "ctrack_id": "ctrack_16694086",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:05:13Z",
+ "author": "Labrit",
+ "panel_judges": "Labrit; Black; Smith",
+ "trial_judge": "Gregory P. Holder",
+ "county": "Hillsborough",
+ "appellant_counsel": "y Appraiser, Appellee. No. 2D20-3602 July 7, 2023 Appeal from the Circuit Court for Hillsborough County; Gregory P. Holder, Judge. Marie A. Borland, Robert E.V. Kelley, Jr., and B. Benjamin Dachepalli of Hill, Ward & Henderson, P.A., Tampa; and Chris W. Altenbernd of Banker Lopez Gassler P.A., Tampa",
+ "appellee_counsel": ", Ward & Henderson, P.A., Tampa; and Chris W. Altenbernd of Banker Lopez Gassler P.A., Tampa, for Appellant. William D. Shepherd of Hillsborough County Property Appraiser's Office, Tampa (withdrew after briefing and oral argument), Loren E. Levy and Sydney E. Rodkey of The Levy Law Firm, Tallahassee",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 35972
+}

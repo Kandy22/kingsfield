@@ -1,0 +1,35 @@
+{
+ "video_id": "q6wPGrPlJZo",
+ "title": "24 0306",
+ "case_number": "2D2024-0306",
+ "case_numbers_all": [
+  "2D2024-0306"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-0306",
+ "case_name": "QOL MEDICAL, LLC v. SHAWNA SCHOENBECK",
+ "decided_date": "2026-04-08",
+ "cl_cluster_id": 10839190,
+ "cl_opinion_id": 11306534,
+ "cl_url": "https://www.courtlistener.com/opinion/10839190/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Black; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "W. Douglas Baird",
+ "appellant_counsel": "DA SECOND DISTRICT QOL MEDICAL, LLC, Appellant, v. SHAWNA SCHOENBECK, Appellee. No. 2D2024-0306 April 8, 2026 Appeal from the Circuit Court for Pinellas County; W. Douglas Baird, Senior Judge. Kristen M. Fiore of Akerman LLP, Tallahassee; Phillip J. Harris and Emily C. Ayvazian of Akerman LLP, Tampa",
+ "appellee_counsel": "ee. No. 2D2024-0306 April 8, 2026 Appeal from the Circuit Court for Pinellas County; W. Douglas Baird, Senior Judge. Kristen M. Fiore of Akerman LLP, Tallahassee; Phillip J. Harris and Emily C. Ayvazian of Akerman LLP, Tampa, for Appellant. Scott L. Terry and Christopher D. Gray of Florin Gray, Lutz",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 833,
+ "_tried": [
+  "2D2024-0306"
+ ],
+ "looked_up_at": "2026-09-19T08:01:38Z"
+}

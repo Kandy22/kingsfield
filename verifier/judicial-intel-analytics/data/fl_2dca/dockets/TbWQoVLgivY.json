@@ -1,0 +1,35 @@
+{
+ "video_id": "TbWQoVLgivY",
+ "title": "24 1927",
+ "case_number": "2D2024-1927",
+ "case_numbers_all": [
+  "2D2024-1927"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1927",
+ "case_name": "PATRICIO EDUARDO LANAS v. STATE OF FLORIDA",
+ "decided_date": "2026-05-20",
+ "cl_cluster_id": 10861675,
+ "cl_opinion_id": 11329104,
+ "cl_url": "https://www.courtlistener.com/opinion/10861675/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Kelly; Morris; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pasco",
+ "trial_judge": "Gregory G. Groger",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT PATRICIO EDUARDO LANAS, Appellant, v. STATE OF FLORIDA, Appellee. No. 2D2024-1927 May 20, 2026 Appeal from the Circuit Court for Pasco County; Gregory G. Groger, Judge. Ronald L. Frey of The Frey Law Firm, LLC, Tampa",
+ "appellee_counsel": " v. STATE OF FLORIDA, Appellee. No. 2D2024-1927 May 20, 2026 Appeal from the Circuit Court for Pasco County; Gregory G. Groger, Judge. Ronald L. Frey of The Frey Law Firm, LLC, Tampa, for Appellant. James Uthmeier, Attorney General, Tallahassee, and Sonia C. Lawson, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 804,
+ "_tried": [
+  "2D2024-1927"
+ ],
+ "looked_up_at": "2026-09-19T07:24:56Z"
+}

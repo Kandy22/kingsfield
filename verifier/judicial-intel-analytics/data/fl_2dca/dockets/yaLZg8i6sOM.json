@@ -1,0 +1,35 @@
+{
+ "video_id": "yaLZg8i6sOM",
+ "title": "25 2791",
+ "case_number": "2D2025-2791",
+ "case_numbers_all": [
+  "2D2025-2791"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-2791",
+ "case_name": null,
+ "decided_date": null,
+ "cl_cluster_id": 10869456,
+ "cl_opinion_id": 11336913,
+ "cl_url": "https://www.courtlistener.com/opinion/10869456/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Denied.",
+ "disposition": "denied",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Kelly; Morris; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 1056,
+ "_tried": [
+  "2D2025-2791"
+ ],
+ "looked_up_at": "2026-09-19T08:15:56Z"
+}

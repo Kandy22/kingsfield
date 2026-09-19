@@ -1,0 +1,35 @@
+{
+ "video_id": "ncUPUuKhoTg",
+ "title": "24 2875",
+ "case_number": "2D2024-2875",
+ "case_numbers_all": [
+  "2D2024-2875"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2875",
+ "case_name": "DANIEL P. COLLINS v. SAUDIA WADUD",
+ "decided_date": "2025-10-31",
+ "cl_cluster_id": 10751825,
+ "cl_opinion_id": 11218410,
+ "cl_url": "https://www.courtlistener.com/opinion/10751825/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Wesley D. Tibbals",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT DANIEL P. COLLINS, Appellant, v. SAUDIA WADUD, Appellee. No. 2D2024-2875 October 31, 2025 Appeal from the Circuit Court for Hillsborough County; Wesley D. Tibbals, Judge. Eric R. Maier and Jeffrey S. Koster of Older Lundy Koch & Martino, Tampa",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 797,
+ "_tried": [
+  "2D2024-2875"
+ ],
+ "looked_up_at": "2026-09-19T07:58:32Z"
+}

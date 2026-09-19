@@ -1,0 +1,29 @@
+{
+ "video_id": "1zHqOteQV1U",
+ "title": "24 1034",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-1034"
+ ],
+ "case_number": "2D2024-1034",
+ "source": "flcourts",
+ "case_name": "Smith, Smith v. Four Marnan Inc., Equity Lifestyles Properties, Inc., et al",
+ "decided_date": "2025-08-22",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2458764/opinion/Opinion_2024-1034.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/August/22/2024-1034",
+ "ctrack_id": "ctrack_19066542",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:02:44Z",
+ "panel_judges": "Kelly; Rothstein-Youakim; Smith",
+ "trial_judge": "Don T. Hall",
+ "county": "DeSoto",
+ "appellee_counsel": "PARKS LIMITED PARTNERSHIP, a foreign limited partnership, Appellees. No. 2D2024-1034 August 22, 2025 Appeal from the Circuit Court for DeSoto County; Don T. Hall, Judge. Linda Bellomio Commons of Linda Bellomio Commons, P.A., Tampa, for Appellants. Hunter A. Hall of Hall Keener, P.A., St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1065
+}

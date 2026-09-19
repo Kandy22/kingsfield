@@ -1,0 +1,41 @@
+{
+ "judge_id": "kimberly-sharpe-byrd",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 10,
+   "affirmed": 7,
+   "reversed": 2,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.3,
+   "reversal_rate_ci95": {
+    "lo": 0.108,
+    "hi": 0.603,
+    "method": "wilson"
+   },
+   "county": "Pasco",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2024-0640",
+    "2D2024-2657",
+    "2D2023-1124",
+    "2D2021-2298",
+    "2D2022-0761",
+    "2D2023-1572",
+    "2D2025-0486",
+    "2D2024-1281",
+    "2D2022-4168",
+    "2D2023-0987"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

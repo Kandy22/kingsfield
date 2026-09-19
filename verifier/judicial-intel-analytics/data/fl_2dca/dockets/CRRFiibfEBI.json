@@ -1,0 +1,41 @@
+{
+ "video_id": "CRRFiibfEBI",
+ "title": "24 2826",
+ "case_number": "2D2024-2826",
+ "case_numbers_all": [
+  "2D2024-2826"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2826",
+ "case_name": "Jackowska v. Blessitt",
+ "decided_date": "2026-01-23",
+ "cl_cluster_id": 10778612,
+ "cl_opinion_id": 11245222,
+ "cl_url": "https://www.courtlistener.com/opinion/10778612/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Sleet",
+ "panel_judges": "Sleet; Silberman; Morris",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Sarasota",
+ "trial_judge": "Rochelle T. Curley",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT JOANNA JACKOWSKA, Appellant, v. KEITH BLESSITT, Appellee. No. 2D2024-2826 January 23, 2026 Appeal from the Circuit Court for Sarasota County; Rochelle T. Curley, Judge. Elizabeth S. Wheeler of Berg & Wheeler, P.A., Valrico",
+ "appellee_counsel": "ND DISTRICT JOANNA JACKOWSKA, Appellant, v. KEITH BLESSITT, Appellee. No. 2D2024-2826 January 23, 2026 Appeal from the Circuit Court for Sarasota County; Rochelle T. Curley, Judge. Elizabeth S. Wheeler of Berg & Wheeler, P.A., Valrico, for Appellant. Mark A. Sessums of Sessums Law Group, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 8700,
+ "_tried": [
+  "2D2024-2826"
+ ],
+ "looked_up_at": "2026-09-19T07:05:35Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2484057/opinion/Opinion_2024-2826.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/january/23/2024-2826",
+ "ctrack_id": "ctrack_19263267",
+ "n_decision_records": 1
+}

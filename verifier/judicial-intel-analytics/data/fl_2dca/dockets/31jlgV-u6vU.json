@@ -1,0 +1,26 @@
+{
+ "video_id": "31jlgV-u6vU",
+ "title": "2D22 853 a",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-0853"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:02:54Z",
+ "case_number": "2D2022-0853",
+ "case_name": "EUGENE ZENTKO  vs DEPARTMENT OF HIGHWAY SAFETY AND MOTOR VEHICLES",
+ "decided_date": "2022-08-17",
+ "disposition_text": "Denied",
+ "disposition": "denied",
+ "opinion_type": "Denied",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/845632/opinion/Opinion_22-0853.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/August/17/22-0853",
+ "ctrack_id": "4695191",
+ "n_decision_records": 1,
+ "panel_judges": "Northcutt; Casanueva; Khouzam",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 980
+}

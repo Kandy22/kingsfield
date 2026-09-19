@@ -1,0 +1,41 @@
+{
+ "video_id": "eLU5je2C12I",
+ "title": "25 1145",
+ "case_number": "2D2025-1145",
+ "case_numbers_all": [
+  "2D2025-1145"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1145",
+ "case_name": "Nimbus Apollo, LLC v. U. S. Bank National Association",
+ "decided_date": "2026-08-12",
+ "cl_cluster_id": 10945788,
+ "cl_opinion_id": 11413373,
+ "cl_url": "https://www.courtlistener.com/opinion/10945788/nimbus-apollo-llc-v-u-s-bank-national-association/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Khouzam; Morris; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Amy M. Williams",
+ "appellant_counsel": "OWN TENANTS, ETC. IN POSSESSION UNIT 2; UNKNOWN TENANTS, ETC. IN POSSESSION UNIT 3; UNKNOWN TENANTS, ETC. IN POSSESSION UNIT 4, Appellees. No. 2D2025-1145 August 12, 2026 Appeal from the Circuit Court for Pinellas County; Amy M. Williams, Judge. Jawdet I. Rubaii of Jawdet I. Rubaii, P.A., Clearwater",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1565,
+ "_tried": [
+  "2D2025-1145"
+ ],
+ "looked_up_at": "2026-09-19T07:13:14Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2493434/opinion/Opinion_2025-1145.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/august/12/2025-1145",
+ "ctrack_id": "ctrack_19538725",
+ "n_decision_records": 1
+}

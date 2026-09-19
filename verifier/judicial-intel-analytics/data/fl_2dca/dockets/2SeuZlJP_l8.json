@@ -1,0 +1,31 @@
+{
+ "video_id": "2SeuZlJP_l8",
+ "title": "24 1022",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-1022"
+ ],
+ "case_number": "2D2024-1022",
+ "source": "flcourts",
+ "case_name": "Krocka v. Public Storage, Inc., Unknown Third-Party Auction Bidder",
+ "decided_date": "2025-10-29",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2481966/opinion/Opinion_2024-1022.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/october/29/2024-1022",
+ "ctrack_id": "ctrack_19153601",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:02:50Z",
+ "author": "Villanti",
+ "panel_judges": "Villanti; Silberman; Smith",
+ "trial_judge": "Jennifer Gabbard",
+ "county": "Hillsborough",
+ "appellant_counsel": "C. and UNKNOWN THIRD-PARTY AUCTION BIDDER, Appellees. No. 2D2024-1022 __________________________ October 29, 2025 Appeal from the Circuit Court for Hillsborough County; Jennifer Gabbard, Judge. Jeremy D. Bailie, Timothy W. Weber, and Sandford Blaine Kinne of Weber, Crabb & Wein, P.A., St. Petersburg",
+ "appellee_counsel": "________ October 29, 2025 Appeal from the Circuit Court for Hillsborough County; Jennifer Gabbard, Judge. Jeremy D. Bailie, Timothy W. Weber, and Sandford Blaine Kinne of Weber, Crabb & Wein, P.A., St. Petersburg, for Appellant. Jeffrey R. Geldens of Lewis Brisbois Bisgaard & Smith LLP, Coral Gables",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 13416
+}

@@ -1,0 +1,218 @@
+{
+  "video_id": "eLU5je2C12I",
+  "channel": "fl_2dca",
+  "merged_at": "2026-07-09T13:11:28.983774+00:00",
+  "segment_count": 26,
+  "has_diarization": true,
+  "has_visual": false,
+  "timeline": [
+    {
+      "t": 0,
+      "end": 6,
+      "speaker": "Speaker 1",
+      "text": "Calling is the case involving Nimbus Apollo versus US Bank National Association.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 7,
+      "end": 12,
+      "speaker": "Speaker 1",
+      "text": "So we should have Mr. Rubye for the appellate and Mr. Donovan on behalf of the Appley.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 16,
+      "end": 17,
+      "speaker": "Speaker 1",
+      "text": "Thank you very much.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 23,
+      "end": 24,
+      "speaker": "Speaker 2",
+      "text": "So, Mr. Rubai, you were just here.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 25,
+      "end": 26,
+      "speaker": "Speaker 1",
+      "text": "Oh, you're right.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 27,
+      "end": 28,
+      "speaker": "Speaker 2",
+      "text": "just here some place.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 29,
+      "end": 31,
+      "speaker": "Speaker 1",
+      "text": "Good morning, Mr. Rubar.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 31,
+      "end": 32,
+      "speaker": "Speaker 2",
+      "text": "just wait.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 33,
+      "end": 35,
+      "speaker": "Speaker 1",
+      "text": "All right. How how much time would you like to reserve for your party?",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 35,
+      "end": 37,
+      "speaker": "Speaker 2",
+      "text": "Oh, five minutes. Very good. Five minutes.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 37,
+      "end": 40,
+      "speaker": "Speaker 1",
+      "text": "All right. Whenever you're ready, Mr. Riby, please proceed.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 40,
+      "end": 144,
+      "speaker": "Speaker 2",
+      "text": "Um, this is a case involving a foreclosure and the appeal is about the fact that I've never actually had this happen, although I've been involved in a lot of foreclosures. Somehow or another the clerk issued the certificate of title. Uh the sale was a uh 26. It's two days in February. They issued on on on uh the fourth and not the 10 days that's required by the statute. And in in in inquiring to how and why that happened, it turned out that one of the orders that was entered on a presale objection that was filed 8:36 in the morning to this objection of the sale because they didn't want the sale to take place at all. Um, and we had filed that objection, that the order that was entered on that, which was actually entered the next day, had an extra paragraph in the bottom of it. And what it said was the clerk is instructed to complete the necessary steps towards issuance of a certificate of title and disbursement of funds to the final judgment of foreclosure and at August 16th and pursuant to Florida law. See that that paragraph shouldn't have been there because the clerk took that to mean, because it says the clerk is instructed to complete the necessary steps for certificate of title. They do that automatically. If there's a if you have a foreclosure sale, unless a judge calls down with the day to cancel it, or unless there's an order entered before that date cancel it. They automatically just go forward with the sale. And under the statute that 10 days, you have to file an objection within 10 days after that sale is filed. And of course, you can have different objections based on how much is bid, who bid, how much it was, efficiency of sale, etc, etc. But what happened here was,",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 25,
+      "end": 26,
+      "speaker": "Speaker 1",
+      "text": "Let me ask you a threshold question here.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 27,
+      "end": 27,
+      "speaker": "Speaker 2",
+      "text": "Yes.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 27,
+      "end": 34,
+      "speaker": "Speaker 1",
+      "text": "Your your friend on the other side suggests, your friend on the other side suggests that this issue is not preserved for review.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 35,
+      "end": 35,
+      "speaker": "Speaker 2",
+      "text": "Is not what?",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 36,
+      "end": 38,
+      "speaker": "Speaker 1",
+      "text": "Preserved for review. You know what that means, right?",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 38,
+      "end": 38,
+      "speaker": "Speaker 2",
+      "text": "Yes.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 39,
+      "end": 42,
+      "speaker": "Speaker 1",
+      "text": "So, can you, I assume you've read his brief. Tell me about it.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 42,
+      "end": 184,
+      "speaker": "Speaker 2",
+      "text": "The reason it's preserved for review is because we made a motion to re hear it with the court, was denied without a hearing. And that shouldn't have happened because uh we filed several, we filed an objection, we filed a motion to re hear, we filed a motion to vacate, we filed three motions directed to the court to add the search. And under the case law I've put in my brief.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 184,
+      "end": 194,
+      "speaker": "Speaker 1",
+      "text": "What did you do to try to get it set for hearing? Because you know that a motion for re hearing is not guaranteed. Judge can rule on that without having a hearing. What did you do to get a hearing set on it?",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 197,
+      "end": 200,
+      "speaker": "Speaker 2",
+      "text": "Well, you know, we call up and try to get you have to go through draws and",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 200,
+      "end": 203,
+      "speaker": "Speaker 1",
+      "text": "What do we have in our record that shows that you tried to get a hearing?",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 206,
+      "end": 211,
+      "speaker": "Speaker 2",
+      "text": "I don't think there's anything on the records. I requested an evidentiary hearing then I filed a motion for it to be heard.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 212,
+      "end": 213,
+      "speaker": "Speaker 1",
+      "text": "What so there was a motion for that?",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    },
+    {
+      "t": 214,
+      "end": 300,
+      "speaker": "Speaker 2",
+      "text": "Yeah, I filed a motion for evidentiary hearing. I filed um I filed Okay, so first of all, um on the 20 um Okay, I filed um Motion to on 3/7/2025 and best before the end of the 10 days that would have occurred. I filed a motion to vacate certificate of sale prematurely issued. I also filed on the same date an objection to sale and request for an evidentiary hearing. And then on 3/10, three days later, still before well, I think it would have ran 3/8, but I filed a motion for re hearing and vacate order with the attached copy of order. That was within the 15 days. So I filed all three of those. Um and then they um submitted these orders uh through a cover letter, which attached, it showed to be served to Gabriel Stream, who was the prior attorney way before me. Um, and they gave form orders to deny all them in chambers without a hearing. But the case law is very clear under that um I my case I got Regnar and thatker case. Umker case, they're both very clear that the statute that uh uh the what we're operating under. When you make an objection like that, there has to be a hearing. It's required. That you get a hearing, an evidentiary hearing, a hearing.",
+      "emotion_audio": "Neutral",
+      "source": "diarization"
+    }
+  ]
+}

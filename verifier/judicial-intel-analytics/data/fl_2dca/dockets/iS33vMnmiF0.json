@@ -1,0 +1,30 @@
+{
+ "video_id": "iS33vMnmiF0",
+ "title": "2D20 3560",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-3560"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:14:09Z",
+ "case_number": "2D2020-3560",
+ "case_name": "309 HOLDINGS L L C, ET AL  vs BANK OF CENTRAL FLORIDA",
+ "decided_date": "2022-10-28",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/851718/opinion/Opinion_20-3560.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/October/28/20-3560",
+ "ctrack_id": "4713318",
+ "n_decision_records": 1,
+ "panel_judges": "Lucas; Rothstein-Youakim; Smith",
+ "trial_judge": "Steven Scott Stephens",
+ "county": "Hillsborough",
+ "appellant_counsel": "DISTRICT 309 HOLDINGS LLC, and 2408 W. KENNEDY, LLC, Appellants, v. BANK OF CENTRAL FLORIDA, Appellee. No. 2D20-3560 October 28, 2022 Appeal from the Circuit Court for Hillsborough County; Steven Scott Stephens, Judge. W. Bart Meacham, Tampa; and Heather A. DeGrave of Walters Levine & DeGrave, Tampa",
+ "appellee_counsel": "pa; and Heather A. DeGrave of Walters Levine & DeGrave, Tampa, for Appellants. J. Ellsworth Summers, Jr., of Burr & Forman LLP, Jacksonville; Dana L. Robbins of Burr & Forman LLP, Tampa; Gerald D. Davis and Marie Tomassi of Trenam, Kemker, Scharf, Barkin, Frye, O’Neill & Mullis, P.A., St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 966
+}

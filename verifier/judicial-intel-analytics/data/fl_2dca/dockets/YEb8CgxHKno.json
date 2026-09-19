@@ -1,0 +1,26 @@
+{
+ "video_id": "YEb8CgxHKno",
+ "title": "22 3224",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-3224"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:11:29Z",
+ "case_number": "2D2022-3224",
+ "case_name": "MILLER & SONS, LLC  vs CITY OF TAMPA",
+ "decided_date": "2023-03-31",
+ "disposition_text": "Denied",
+ "disposition": "denied",
+ "opinion_type": "Denied",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/864927/opinion/Opinion_22-3224.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/March/31/22-3224",
+ "ctrack_id": "4748492",
+ "n_decision_records": 1,
+ "panel_judges": "Villanti; Lucas; Smith",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 778
+}

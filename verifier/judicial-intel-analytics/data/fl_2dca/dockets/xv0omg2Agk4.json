@@ -1,0 +1,35 @@
+{
+ "video_id": "xv0omg2Agk4",
+ "title": "25 1862",
+ "case_number": "2D2025-1862",
+ "case_numbers_all": [
+  "2D2025-1862"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1862",
+ "case_name": "JONATHAN A. FROST v. STATE OF FLORIDA",
+ "decided_date": "2026-05-27",
+ "cl_cluster_id": 10864723,
+ "cl_opinion_id": 11332168,
+ "cl_url": "https://www.courtlistener.com/opinion/10864723/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Michelle Sisco",
+ "appellant_counsel": null,
+ "appellee_counsel": " Appellee. No. 2D2025-1862 May 27, 2026 Appeal from the Circuit Court for Hillsborough County; Michelle Sisco, Judge. Terry P. Roberts of Law Office of Terry P. Roberts, Tallahassee, for Appellant. James Uthmeier, Attorney General, Tallahassee, and Cynthia Richards, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 827,
+ "_tried": [
+  "2D2025-1862"
+ ],
+ "looked_up_at": "2026-09-19T08:14:41Z"
+}

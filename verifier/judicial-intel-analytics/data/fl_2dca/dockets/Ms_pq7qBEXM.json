@@ -1,0 +1,35 @@
+{
+ "video_id": "Ms_pq7qBEXM",
+ "title": "24 2883",
+ "case_number": "2D2024-2883",
+ "case_numbers_all": [
+  "2D2024-2883"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2883",
+ "case_name": "DYLAN CHARLES NICHOLS v. DANIEL W. FRENCH",
+ "decided_date": "2026-05-20",
+ "cl_cluster_id": 10861674,
+ "cl_opinion_id": 11329103,
+ "cl_url": "https://www.courtlistener.com/opinion/10861674/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded with instructions.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Khouzam",
+ "panel_judges": "Khouzam; Kelly; Atkinson",
+ "dissenting_judges": null,
+ "special_concurrence_judges": "Atkinson",
+ "county": "Pinellas",
+ "trial_judge": "Thomas M. Ramsberger",
+ "appellant_counsel": null,
+ "appellee_counsel": "EL W. FRENCH, Appellee. No. 2D2024-2883 May 20, 2026 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Dorothy DiFiore of Quintairos, Prieto, Wood & Boyer, P.A., Tampa, for Appellant. Chad A. Barr and Dalton L. Gray of Law Office of Chad A. Barr, P.A., Altamonte Springs",
+ "has_dissent": false,
+ "has_special_concurrence": true,
+ "is_pca": false,
+ "opinion_chars": 7261,
+ "_tried": [
+  "2D2024-2883"
+ ],
+ "looked_up_at": "2026-09-19T07:11:53Z"
+}

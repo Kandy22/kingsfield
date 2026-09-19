@@ -1,0 +1,29 @@
+{
+ "video_id": "AI0nto8BhYE",
+ "title": "2D20 2290",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2290"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:05:02Z",
+ "case_number": "2D2020-2290",
+ "case_name": "NANCY WARD HARRIS AND WILLIAM LOUIS HARRIS vs RICHARD TINER",
+ "decided_date": "2022-03-16",
+ "disposition_text": "Affirmed in Part/Reversed in Part and remanded.",
+ "disposition": "mixed",
+ "opinion_type": "Affirmed in Part/Reversed in Part",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/832411/opinion/Opinion_20-2290.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/March/16/20-2290",
+ "ctrack_id": "4657694",
+ "n_decision_records": 1,
+ "author": "Northcutt",
+ "panel_judges": "Northcutt; Silberman; Sleet",
+ "trial_judge": "James R. Shenko",
+ "county": "Lee",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 6328
+}

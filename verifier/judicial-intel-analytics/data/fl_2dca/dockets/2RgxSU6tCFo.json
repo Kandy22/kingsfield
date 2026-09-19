@@ -1,0 +1,29 @@
+{
+ "video_id": "2RgxSU6tCFo",
+ "title": "2D20 3141",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-3141"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:02:49Z",
+ "case_number": "2D2020-3141",
+ "case_name": "ERIC STALLINGS  vs DEVIN BERNARD",
+ "decided_date": "2022-02-18",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/829363/opinion/Opinion_20-3141.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/February/18/20-3141",
+ "ctrack_id": "4651521",
+ "n_decision_records": 1,
+ "author": "Sleet",
+ "panel_judges": "Sleet; Atkinson; Smith",
+ "trial_judge": "Amy M. Williams",
+ "county": "Pinellas",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 11087
+}

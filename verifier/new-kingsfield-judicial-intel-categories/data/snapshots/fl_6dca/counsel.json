@@ -1,0 +1,13 @@
+{
+ "F21": {
+  "entity_type": "counsel",
+  "court_id": "fl_6dca",
+  "rows": [],
+  "floor_n": 5
+ },
+ "F29": [],
+ "provenance": {
+  "source": "flcourts opinion PDF (counsel) + jev panel",
+  "collected_at": "2026-09-19T08:34:16+00:00"
+ }
+}

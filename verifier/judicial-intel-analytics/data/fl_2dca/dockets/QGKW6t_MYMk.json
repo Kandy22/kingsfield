@@ -1,0 +1,35 @@
+{
+ "video_id": "QGKW6t_MYMk",
+ "title": "25 2263",
+ "case_number": "2D2025-2263",
+ "case_numbers_all": [
+  "2D2025-2263"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-2263",
+ "case_name": "CAROLYN HOSKINS and LOLITA E. JOHNS, her wife v. JENNA HARRISON, D.O., and WOMEN'S CARE FLORIDA, LLC",
+ "decided_date": "2026-04-22",
+ "cl_cluster_id": 10846584,
+ "cl_opinion_id": 11313951,
+ "cl_url": "https://www.courtlistener.com/opinion/10846584/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Dismissed.",
+ "disposition": "dismissed",
+ "per_curiam": false,
+ "author": "Khouzam",
+ "panel_judges": "Khouzam; Northcutt; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 7022,
+ "_tried": [
+  "2D2025-2263"
+ ],
+ "looked_up_at": "2026-09-19T07:19:20Z"
+}

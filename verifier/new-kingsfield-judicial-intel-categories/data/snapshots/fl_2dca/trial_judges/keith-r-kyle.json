@@ -1,0 +1,38 @@
+{
+ "judge_id": "keith-r-kyle",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 7,
+   "affirmed": 6,
+   "reversed": 0,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.143,
+   "reversal_rate_ci95": {
+    "lo": 0.026,
+    "hi": 0.513,
+    "method": "wilson"
+   },
+   "county": "Lee",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-2960",
+    "2D2021-2230",
+    "2D2020-1777",
+    "2D2021-0491",
+    "2D2020-2173",
+    "2D2021-1875",
+    "2D2020-2977"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

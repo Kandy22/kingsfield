@@ -1,0 +1,35 @@
+{
+ "video_id": "Ogr_d43kXvQ",
+ "title": "25 0001",
+ "case_number": "2D2025-0001",
+ "case_numbers_all": [
+  "2D2025-0001"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0001",
+ "case_name": "JOSE LEONARDO COSME, JR. v. STATE OF FLORIDA",
+ "decided_date": "2026-05-22",
+ "cl_cluster_id": 10863227,
+ "cl_opinion_id": 11330664,
+ "cl_url": "https://www.courtlistener.com/opinion/10863227/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded for a new trial.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Khouzam",
+ "panel_judges": "Khouzam; Northcutt; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pasco",
+ "trial_judge": "Joshua Riba",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT JOSE LEONARDO COSME, JR., Appellant, v. STATE OF FLORIDA, Appellee. No. 2D2025-0001 May 22, 2026 Appeal from the Circuit Court for Pasco County; Joshua Riba, Judge. Matthew R. McLain of McLain Law, P.A., Longwood",
+ "appellee_counsel": ", v. STATE OF FLORIDA, Appellee. No. 2D2025-0001 May 22, 2026 Appeal from the Circuit Court for Pasco County; Joshua Riba, Judge. Matthew R. McLain of McLain Law, P.A., Longwood, for Appellant. James Uthmeier, Attorney General, Tallahassee, and Krystle Celine Cacci, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 17355,
+ "_tried": [
+  "2D2025-0001"
+ ],
+ "looked_up_at": "2026-09-19T07:16:14Z"
+}

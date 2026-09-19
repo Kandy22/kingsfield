@@ -1,0 +1,36 @@
+{
+ "judge_id": "gregory-p-holder",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 5,
+   "affirmed": 2,
+   "reversed": 2,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.6,
+   "reversal_rate_ci95": {
+    "lo": 0.231,
+    "hi": 0.882,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-3711",
+    "2D2020-3602",
+    "2D2019-4789",
+    "2D2020-3722",
+    "2D2020-2665"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

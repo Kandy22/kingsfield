@@ -1,0 +1,82 @@
+{
+ "judge_id": "rothstein-youakim",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "appellate_judge_panels",
+   "n": 165,
+   "affirmed": 119,
+   "reversed": 33,
+   "mixed": 13,
+   "other": 0,
+   "reversal_rate": 0.279,
+   "reversal_rate_ci95": {
+    "lo": 0.216,
+    "hi": 0.352,
+    "method": "wilson"
+   },
+   "note": "cases argued on video where this judge sat; reversal is a panel outcome, not an individual vote"
+  },
+  "F12": [
+   {
+    "name": "affirm",
+    "count": 119,
+    "share": 0.721
+   },
+   {
+    "name": "reverse",
+    "count": 33,
+    "share": 0.2
+   },
+   {
+    "name": "mixed",
+    "count": 13,
+    "share": 0.079
+   }
+  ],
+  "F13": {
+   "n": 165,
+   "median": 14,
+   "mean": 57.4,
+   "p10": 6,
+   "p90": 168,
+   "from_event": "oral_argument",
+   "to_event": "decision"
+  },
+  "F22": {
+   "target": "affirm",
+   "fit_on": "panel-level skepticism gap on this judge's panels",
+   "n": 165,
+   "root": {
+    "leaf": true,
+    "n": 165,
+    "p_affirm": null,
+    "label": "see court F22"
+   },
+   "rules_text": [
+    "share of panels with gap>=+1: 0.19",
+    "share with gap<=-1: 0.06",
+    "authored: 21 of 165"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F12": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F13": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F22": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

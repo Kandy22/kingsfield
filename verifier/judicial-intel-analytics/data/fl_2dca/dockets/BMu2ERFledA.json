@@ -1,0 +1,41 @@
+{
+ "video_id": "BMu2ERFledA",
+ "title": "24 2657",
+ "case_number": "2D2024-2657",
+ "case_numbers_all": [
+  "2D2024-2657"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2657",
+ "case_name": "Progressive Select Insurance Company v. Reinberger",
+ "decided_date": "2026-09-18",
+ "cl_cluster_id": 10976649,
+ "cl_opinion_id": 11444291,
+ "cl_url": "https://www.courtlistener.com/opinion/10976649/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed in part, reversed in part, and remanded with instructions.",
+ "disposition": "mixed",
+ "per_curiam": false,
+ "author": "Morris",
+ "panel_judges": "Morris",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pasco",
+ "trial_judge": "Kimberly Sharpe Byrd",
+ "appellant_counsel": "PPEAL OF FLORIDA SECOND DISTRICT PROGRESSIVE SELECT INSURANCE COMPANY, Appellant, v. MARRIETTA REINBERGER, Appellee. No. 2D2024-2657 September 18, 2026 Appeal from the Circuit Court for Pasco County; Kimberly Sharpe Byrd, Judge. Drew W. Peeler and Kevin D. Franz of Boyd & Jenerette, P.A., Boca Raton",
+ "appellee_counsel": "COMPANY, Appellant, v. MARRIETTA REINBERGER, Appellee. No. 2D2024-2657 September 18, 2026 Appeal from the Circuit Court for Pasco County; Kimberly Sharpe Byrd, Judge. Drew W. Peeler and Kevin D. Franz of Boyd & Jenerette, P.A., Boca Raton, for Appellant. Brian J. Lee of Morgan & Morgan, Jacksonville",
+ "has_dissent": true,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 24623,
+ "_tried": [
+  "2D2024-2657"
+ ],
+ "looked_up_at": "2026-09-19T07:05:16Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2495386/opinion/Opinion_2024-2657.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/september/18/2024-2657",
+ "ctrack_id": "ctrack_19591073",
+ "n_decision_records": 1
+}

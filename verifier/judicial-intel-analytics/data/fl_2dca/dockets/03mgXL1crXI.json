@@ -1,0 +1,30 @@
+{
+ "video_id": "03mgXL1crXI",
+ "title": "22 2606",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-2606"
+ ],
+ "case_number": "2D2022-2606",
+ "source": "flcourts",
+ "case_name": "RYAN GOLINSKI, GOLINSKI TAX ADVISORS, LLC, AND GOLINSKI TAX PREP, LLC, VS FLORIDA TAX ADVISORS, LLC",
+ "decided_date": "2023-11-03",
+ "disposition_text": "Affirmed - Per Curiam Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2394600/opinion/Opinion_2022-2606.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/November/03/2022-2606",
+ "ctrack_id": "ctrack_16494385",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:02:20Z",
+ "panel_judges": "Morris; Lucas; Smith",
+ "trial_judge": "Thomas M. Ramsberger",
+ "county": "Pinellas",
+ "appellant_counsel": "NDREW MONGELLUZZI; and CLEARWATER BUSINESS LAW, LLC, Appellants, v. FLORIDA TAX ADVISORS, LLC, Appellee. No. 2D22-2606 November 3, 2023 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Sean M. Wagner and Andrew J. Mongelluzzi of Clearwater Business Law, LLC, Clearwater",
+ "appellee_counsel": "m the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Sean M. Wagner and Andrew J. Mongelluzzi of Clearwater Business Law, LLC, Clearwater, for Appellants. Bradley A. Muhs, Marie Tomassi, and Shirin Vesely of Trenam, Kemker, Scharf, Barkin, Frye, O'Neil & Mullis, P.A., St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1057
+}

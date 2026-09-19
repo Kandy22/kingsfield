@@ -1,0 +1,30 @@
+{
+ "video_id": "6hXHY_AzP0c",
+ "title": "2D21 3878",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-3878"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:04:04Z",
+ "case_number": "2D2021-3878",
+ "case_name": "EDWARD J. DUNLEY  vs SAMUEL W. DUNLEY, TRUSTEE OF THE JAMES E. DUNLEY REVOCABLE LIVING TRUST, DATED JUNE 26, 1984",
+ "decided_date": "2023-01-27",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/858864/opinion/Opinion_21-3878.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2023/January/27/21-3878",
+ "ctrack_id": "4736202",
+ "n_decision_records": 1,
+ "author": "Labrit",
+ "panel_judges": "Labrit; Morris; Silberman",
+ "trial_judge": "Hunter W. Carroll",
+ "county": "Sarasota",
+ "appellant_counsel": "EY, as trustee for the James E. Dunley Revocable Living Trust, dated June 26, 1984, Appellee. No. 2D21-3878 January 27, 2023 Appeal from the Circuit Court for Sarasota County; Hunter W. Carroll, Judge. John R. Stump and Benjamin C. Iseman of Swann, Hadley, Stump, Dietrich & Spears, P.A., Winter Park",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 9517
+}

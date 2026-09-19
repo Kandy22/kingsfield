@@ -1,0 +1,30 @@
+{
+ "video_id": "-PAQefa78tI",
+ "title": "23 1000",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-1000"
+ ],
+ "case_number": "2D2023-1000",
+ "source": "flcourts",
+ "case_name": "FULLER v. STATE OF FLORIDA",
+ "decided_date": "2025-01-03",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2445498/opinion/Opinion_2023-1000.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/January/03/2023-1000",
+ "ctrack_id": "ctrack_18775588",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:02:08Z",
+ "panel_judges": "Villanti; Lucas; Atkinson",
+ "trial_judge": "Monique Scott",
+ "county": "Hillsborough",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT DOUGLAS DAVID FULLER, Appellant, v. STATE OF FLORIDA, Appellee. No. 2D2023-1000 January 3, 2025 Appeal from the County Court for Hillsborough County; Monique Scott, Judge. E. Michael Isaak, Tampa",
+ "appellee_counsel": "D FULLER, Appellant, v. STATE OF FLORIDA, Appellee. No. 2D2023-1000 January 3, 2025 Appeal from the County Court for Hillsborough County; Monique Scott, Judge. E. Michael Isaak, Tampa, for Appellant. Ashley Moody, Attorney General, Tallahassee, and Wendy Buffington, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 787
+}

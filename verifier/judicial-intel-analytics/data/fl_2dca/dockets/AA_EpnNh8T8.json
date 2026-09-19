@@ -1,0 +1,41 @@
+{
+ "video_id": "AA_EpnNh8T8",
+ "title": "24 2893",
+ "case_number": "2D2024-2893",
+ "case_numbers_all": [
+  "2D2024-2893"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2893",
+ "case_name": "Oliver v. Mez",
+ "decided_date": "2025-10-01",
+ "cl_cluster_id": 10751690,
+ "cl_opinion_id": 11218275,
+ "cl_url": "https://www.courtlistener.com/opinion/10751690/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed; remanded with directions.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Kelly; Khouzam",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "James Shelton Moody III",
+ "appellant_counsel": null,
+ "appellee_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT RYAN K. OLIVER, Appellant, v. CASIE MEZ, Appellee. No. 2D2024-2893 October 1, 2025 Appeal from the Circuit Court for Hillsborough County; James Shelton Moody III, Judge. Ryan K. Oliver, pro se. Allison M. Perry of Florida Appeals, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 1008,
+ "_tried": [
+  "2D2024-2893"
+ ],
+ "looked_up_at": "2026-09-19T07:04:59Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Opinion",
+ "flcourts_pdf": "/content/download/2482025/opinion/Opinion_2024-2893.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/october/01/2024-2893",
+ "ctrack_id": "ctrack_19117460",
+ "n_decision_records": 1
+}

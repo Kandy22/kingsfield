@@ -1,0 +1,34 @@
+{
+ "judge_id": "steve-d-berlin",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 3,
+   "affirmed": 1,
+   "reversed": 1,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.667,
+   "reversal_rate_ci95": {
+    "lo": 0.208,
+    "hi": 0.939,
+    "method": "wilson"
+   },
+   "county": "Pinellas",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2023-0645",
+    "2D2023-0117",
+    "2D2022-1962"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

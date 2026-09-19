@@ -1,0 +1,35 @@
+{
+ "video_id": "z7mY_NKucAU",
+ "title": "25 0618",
+ "case_number": "2D2025-0618",
+ "case_numbers_all": [
+  "2D2025-0618"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0618",
+ "case_name": "LAUREN KOHEN and JOSH KOHEN v. PROMISE TO JET ENTERPRISES, LLC, a Florida limited",
+ "decided_date": "2026-02-20",
+ "cl_cluster_id": 10796829,
+ "cl_opinion_id": 11263500,
+ "cl_url": "https://www.courtlistener.com/opinion/10796829/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Northcutt; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Michael F. Andrews",
+ "appellant_counsel": "OND DISTRICT LAUREN KOHEN and JOSH KOHEN, Appellants, v. PROMISE TO JET ENTERPRISES, LLC, a Florida limited liability company, Appellee. No. 2D2025-0618 February 20, 2026 Appeal from the Circuit Court for Pinellas County; Michael F. Andrews, Judge. Michael J. Park of Park Law Group, P.A., Clearwater",
+ "appellee_counsel": "mited liability company, Appellee. No. 2D2025-0618 February 20, 2026 Appeal from the Circuit Court for Pinellas County; Michael F. Andrews, Judge. Michael J. Park of Park Law Group, P.A., Clearwater, for Appellants. Dorothy DiFiore and Victoria Pineda of Quintairos, Prieto, Wood & Boyer, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 851,
+ "_tried": [
+  "2D2025-0618"
+ ],
+ "looked_up_at": "2026-09-19T08:20:11Z"
+}

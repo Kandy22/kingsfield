@@ -1,0 +1,29 @@
+{
+ "video_id": "4w8_7CWB2sU",
+ "title": "2D21 34",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0034"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:03:32Z",
+ "case_number": "2D2021-0034",
+ "case_name": "ROTOR HOLDINGS, INC.  vs FRIMARC VALCIN AND GARCENA VOLMY",
+ "decided_date": "2021-12-22",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/816704/opinion/Opinion_21-0034.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/December/22/21-0034",
+ "ctrack_id": "4638279",
+ "n_decision_records": 1,
+ "panel_judges": "Silberman; Villanti; Rothstein-Youakim",
+ "trial_judge": "Leigh Frizzell Hayes",
+ "county": "Lee",
+ "appellee_counsel": "ant, v. FRIMARC VALCIN and GARCENA VOLMY, Appellees. No. 2D21-34 December 22, 2021 Appeal from the Circuit Court for Lee County; Leigh Frizzell Hayes, Judge. P. Brandon Perkins of Campbell Conroy & O'Neil, Plantation, for Appellant. Annette Marie Lyn of Florida Rural Legal Services, Inc., Fort Myers",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 814
+}

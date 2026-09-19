@@ -1,0 +1,29 @@
+{
+ "video_id": "FDmfpWu-ZX4",
+ "title": "2D21 748",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0748"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:06:05Z",
+ "case_number": "2D2021-0748",
+ "case_name": "DERRICK J. HADLEY, ESTATE OF: THOM WILLIAM BROWN, JR., ET AL.,  vs MACKEY LAW GROUP, P. A.",
+ "decided_date": "2022-06-22",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/841274/opinion/Opinion_21-0748.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/June/22/21-0748",
+ "ctrack_id": "4681646",
+ "n_decision_records": 1,
+ "panel_judges": "Lucas; Atkinson; Stargel",
+ "trial_judge": "Kevin R. Bruning",
+ "county": "Manatee",
+ "appellee_counsel": "eghan O. Serrano of Shumaker, Loop & Kendrick, LLP, Sarasota, for Appellant Derrick J. Hadley. Appellant Ernest S. Marshall, Jr., pro se. Eileen H. Griffin of Griffin & Associates, P.A., Brandon, for Appellant Jamie Marie Brown. Peter J. Mackey and Jorge Martinez of Mackey Law Group, P.A., Bradenton",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1079
+}

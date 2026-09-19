@@ -1,0 +1,41 @@
+{
+ "video_id": "ABOVj_-99v4",
+ "title": "25 0110",
+ "case_number": "2D2025-0110",
+ "case_numbers_all": [
+  "2D2025-0110"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0110",
+ "case_name": "Rahall, Middletown Property Management, LLC v. INXS VI, LLC",
+ "decided_date": "2025-10-01",
+ "cl_cluster_id": 10751685,
+ "cl_opinion_id": 11218270,
+ "cl_url": "https://www.courtlistener.com/opinion/10751685/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Black; Atkinson",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Lindsay M. Alvarez",
+ "appellant_counsel": "ND TRUST UTD 4/1/21, RAJAX LAND TRUST UTD 4/1/21, NINETH STREET LAND TRUST UTD 4/1/21, and APPIAN LAND TRUST UTD 4/1/21, Appellees. No. 2D2025-0110 October 1, 2025 Appeal from the Circuit Court for Hillsborough County; Lindsay M. Alvarez, Judge. Jawdet I. Rubaii of Jawdet I. Rubaii, P.A., Clearwater",
+ "appellee_counsel": "or Hillsborough County; Lindsay M. Alvarez, Judge. Jawdet I. Rubaii of Jawdet I. Rubaii, P.A., Clearwater, for Appellants. Tracy S. Carlin of Brannock Berman & Seider, Tampa; and Jeffrey P. Lieser and William E. Roberts of Lieser Skaff Alexander, Tampa; and Patti W. Halloran of Gibbons Neuman, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1952,
+ "_tried": [
+  "2D2025-0110"
+ ],
+ "looked_up_at": "2026-09-19T07:04:59Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2461390/opinion/Opinion_2025-0110.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/october/01/2025-0110",
+ "ctrack_id": "ctrack_19117965",
+ "n_decision_records": 1
+}

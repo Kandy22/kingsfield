@@ -1,0 +1,35 @@
+{
+ "video_id": "cwPVWKqwg4A",
+ "title": "25 1111",
+ "case_number": "2D2025-1111",
+ "case_numbers_all": [
+  "2D2025-1111"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1111",
+ "case_name": "JESSICA STOUT v. LORETTA CASSITY, trustee for the Loretta Cassity Revocable",
+ "decided_date": "2026-08-28",
+ "cl_cluster_id": 10960846,
+ "cl_opinion_id": 11428451,
+ "cl_url": "https://www.courtlistener.com/opinion/10960846/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded for further proceedings.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Khouzam",
+ "panel_judges": "Khouzam; Morris; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Amy M. Williams",
+ "appellant_counsel": " JESSICA STOUT, Appellant, v. LORETTA CASSITY, trustee for the Loretta Cassity Revocable Trust, and LORETTA CASSITY, individually, Appellees. No. 2D2025-1111 August 28, 2026 Appeal from the Circuit Court for Pinellas County; Amy M. Williams, Judge. Jessie L. Harrell of The Harrell Firm, Jacksonville",
+ "appellee_counsel": "Loretta Cassity Revocable Trust, and LORETTA CASSITY, individually, Appellees. No. 2D2025-1111 August 28, 2026 Appeal from the Circuit Court for Pinellas County; Amy M. Williams, Judge. Jessie L. Harrell of The Harrell Firm, Jacksonville, for Appellant. Caryn L. Bellus of Kubicki Draper, P.A., Miami",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 34660,
+ "_tried": [
+  "2D2025-1111"
+ ],
+ "looked_up_at": "2026-09-19T07:36:09Z"
+}

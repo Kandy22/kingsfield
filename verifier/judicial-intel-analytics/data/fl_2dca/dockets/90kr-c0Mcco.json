@@ -1,0 +1,30 @@
+{
+ "video_id": "90kr-c0Mcco",
+ "title": "2D21 1455",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-1455"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:04:38Z",
+ "case_number": "2D2021-1455",
+ "case_name": "NATHAN T. WOOD  vs PORTFOLIO RECOVERY ASSOCIATES, LLC",
+ "decided_date": "2022-12-07",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/854695/opinion/Opinion_21-1455.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/December/07/21-1455",
+ "ctrack_id": "4722679",
+ "n_decision_records": 1,
+ "panel_judges": "Lucas; Rothstein-Youakim; Smith",
+ "trial_judge": "Chet A. Tharpe and Monique Scott",
+ "county": "Hillsborough",
+ "appellant_counsel": "ISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT NATHAN T. WOOD, Appellant, v. PORTFOLIO RECOVERY ASSOCIATES, LLC, Appellee. No. 2D21-1455 December 7, 2022 Appeal from the County Court for Hillsborough County; Chet A. Tharpe and Monique Scott, Judges. Ian R. Leavengood of LeavenLaw, St. Petersburg",
+ "appellee_counsel": "TES, LLC, Appellee. No. 2D21-1455 December 7, 2022 Appeal from the County Court for Hillsborough County; Chet A. Tharpe and Monique Scott, Judges. Ian R. Leavengood of LeavenLaw, St. Petersburg, for Appellant. Robert E. Sickles, Yesica S. Liposky, and Jason S. Lambert of Dinsmore & Shohl, LLP, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 807
+}

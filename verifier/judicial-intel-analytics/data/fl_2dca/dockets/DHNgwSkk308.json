@@ -1,0 +1,41 @@
+{
+ "video_id": "DHNgwSkk308",
+ "title": "25 0291",
+ "case_number": "2D2025-0291",
+ "case_numbers_all": [
+  "2D2025-0291"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0291",
+ "case_name": "Wilson v. Boehringer Ingelheim Pharmaceuticals, Inc., Boehringer Ingelheim Corporation, et al",
+ "decided_date": "2026-07-10",
+ "cl_cluster_id": 10925383,
+ "cl_opinion_id": 11392921,
+ "cl_url": "https://www.courtlistener.com/opinion/10925383/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Silberman; Atkinson; Guard",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Darren D. Farfante",
+ "appellant_counsel": "NC.; SANOFI-AVENTIS U.S. LLC; SANOFI US SERVICES, INC.; AND PUBLIX SUPER MARKETS, INC., Appellees. No. 2D2025-0291 July 10, 2026 Appeal from the Circuit Court for Hillsborough County; Darren D. Farfante, Judge. Justin Parafinczuk, John A. Bruegger and Jason Wolf of Parafinczuk Wolf, P.A., Boca Raton",
+ "appellee_counsel": "Court for Hillsborough County; Darren D. Farfante, Judge. Justin Parafinczuk, John A. Bruegger and Jason Wolf of Parafinczuk Wolf, P.A., Boca Raton, for Appellant. Valentin Leppert and Ursula M. Henninger of King & Spaulding LLP, Miami; and Corinne E. Nabors of King & Spaulding LLP, Atlanta, Georgia",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1732,
+ "_tried": [
+  "2D2025-0291"
+ ],
+ "looked_up_at": "2026-09-19T07:05:42Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2491318/opinion/Opinion_2025-0291.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/july/10/2025-0291",
+ "ctrack_id": "ctrack_19492239",
+ "n_decision_records": 1
+}

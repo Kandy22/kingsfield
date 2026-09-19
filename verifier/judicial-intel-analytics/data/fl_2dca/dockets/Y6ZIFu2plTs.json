@@ -1,0 +1,35 @@
+{
+ "video_id": "Y6ZIFu2plTs",
+ "title": "24 0010",
+ "case_number": "2D2024-0010",
+ "case_numbers_all": [
+  "2D2024-0010"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-0010",
+ "case_name": null,
+ "decided_date": "2025-09-24",
+ "cl_cluster_id": 10751635,
+ "cl_opinion_id": 11218220,
+ "cl_url": "https://www.courtlistener.com/opinion/10751635/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Villanti; Black; Rothstein-Youakim",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Thomas M. Ramsberger",
+ "appellant_counsel": null,
+ "appellee_counsel": "ida corporation, Appellees/Cross-Appellants. No. 2D2024-0010 September 24, 2025 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Samuel J. Heller of Older Lundy Koch & Martino, St. Petersburg, for Appellants/Cross-Appellees. Dineen Pashoukos Wasylik of DPW Legal, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1077,
+ "_tried": [
+  "2D2024-0010"
+ ],
+ "looked_up_at": "2026-09-19T07:29:18Z"
+}

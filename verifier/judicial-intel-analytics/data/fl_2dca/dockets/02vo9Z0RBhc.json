@@ -1,0 +1,41 @@
+{
+ "video_id": "02vo9Z0RBhc",
+ "title": "25 0645",
+ "case_number": "2D2025-0645",
+ "case_numbers_all": [
+  "2D2025-0645"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0645",
+ "case_name": "Hurst, Estate of Howard Mathews v. Bell",
+ "decided_date": "2026-07-29",
+ "cl_cluster_id": 10936075,
+ "cl_opinion_id": 11403649,
+ "cl_url": "https://www.courtlistener.com/opinion/10936075/hurst-estate-of-howard-mathews-v-bell/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": "Labrit",
+ "panel_judges": "Labrit; Black; Rothstein-Youakim",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Manatee",
+ "trial_judge": "Edward Nicholas",
+ "appellant_counsel": null,
+ "appellee_counsel": "No. 2D2025-0645 July 29, 2026 Appeal from the Circuit Court for Manatee County; Edward Nicholas, Judge. Brent Steinberg and Brenna Spinner of Swope, Rodante, P.A., Tampa, for Appellant. Carlos Gomez, Jordan Thompson, and Megan Alexander of Young, Bill, Palmer, Duke, Thompson & Alexander, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 16938,
+ "_tried": [
+  "2D2025-0645"
+ ],
+ "looked_up_at": "2026-09-19T07:02:20Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2492935/opinion/Opinion_2025-0645.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/july/29/2025-0645",
+ "ctrack_id": "ctrack_19519234",
+ "n_decision_records": 2
+}

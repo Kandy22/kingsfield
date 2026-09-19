@@ -1,0 +1,30 @@
+{
+ "video_id": "9HUVa_mLUYw",
+ "title": "23 1789",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-1789"
+ ],
+ "case_number": "2D2023-1789",
+ "source": "flcourts",
+ "case_name": "PROGRESSIVE SELECT INSURANCE COMPANY v. TRAN",
+ "decided_date": "2024-10-02",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2441532/opinion/Opinion_2023-1789.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/October/02/2023-1789",
+ "ctrack_id": "ctrack_18670833",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:04:46Z",
+ "panel_judges": "Morris; Atkinson; Smith",
+ "trial_judge": "Rex M. Barbas",
+ "county": "Hillsborough",
+ "appellant_counsel": "Appellant, v. JULIE TRAN Appellee. No. 2D2023-1789 October 2, 2024 Appeal from the Circuit Court for Hillsborough County; Rex M. Barbas, Judge, and J. Logan Murphy, Acting Circuit Judge. Kevin D. Franz of Boyd & Jenerette, P.A., Boca Raton, and Jennifer Aybar Karr of Boyd & Jenerette, P.A., Maitland",
+ "appellee_counsel": " Appeal from the Circuit Court for Hillsborough County; Rex M. Barbas, Judge, and J. Logan Murphy, Acting Circuit Judge. Kevin D. Franz of Boyd & Jenerette, P.A., Boca Raton, and Jennifer Aybar Karr of Boyd & Jenerette, P.A., Maitland, for Appellant. Jeffrey M. Byrd of Jeffrey M. Byrd, P.A., Orlando",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 871
+}

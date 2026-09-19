@@ -1,0 +1,35 @@
+{
+ "video_id": "qEUILrzfdvE",
+ "title": "25 0620",
+ "case_number": "2D2025-0620",
+ "case_numbers_all": [
+  "2D2025-0620"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0620",
+ "case_name": "BRIAN SCHILLING v. PROGRESSIVE EXPRESS INSURANCE COMPANY",
+ "decided_date": "2025-10-03",
+ "cl_cluster_id": 10751704,
+ "cl_opinion_id": 11218289,
+ "cl_url": "https://www.courtlistener.com/opinion/10751704/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Black; Atkinson",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pasco",
+ "trial_judge": "Susan G. Barthle",
+ "appellant_counsel": " COURT OF APPEAL OF FLORIDA SECOND DISTRICT BRIAN SCHILLING, Appellant, v. PROGRESSIVE EXPRESS INSURANCE COMPANY, a foreign profit company, Appellee. No. 2D2025-0620 October 3, 2025 Appeal from the Circuit Court for Pasco County; Susan G. Barthle, Judge. George A. Vaka of Vaka Law Group, P.L., Tampa",
+ "appellee_counsel": "NY, a foreign profit company, Appellee. No. 2D2025-0620 October 3, 2025 Appeal from the Circuit Court for Pasco County; Susan G. Barthle, Judge. George A. Vaka of Vaka Law Group, P.L., Tampa, for Appellant. Samantha Epstein, Robert O'Malley, and E. Holland Howanitz of Tyson Mendes, LLP, Jacksonville",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 861,
+ "_tried": [
+  "2D2025-0620"
+ ],
+ "looked_up_at": "2026-09-19T08:02:15Z"
+}

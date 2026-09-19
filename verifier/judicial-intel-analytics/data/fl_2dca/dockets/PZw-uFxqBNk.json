@@ -1,0 +1,35 @@
+{
+ "video_id": "PZw-uFxqBNk",
+ "title": "25 0557",
+ "case_number": "2D2025-0557",
+ "case_numbers_all": [
+  "2D2025-0557"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0557",
+ "case_name": "ELVIRA KAHRIMANOVIC v. THE ILLAS GROUP, INC., d.b.a. McDonald's Restaurants, a",
+ "decided_date": "2026-06-03",
+ "cl_cluster_id": 10869430,
+ "cl_opinion_id": 11336887,
+ "cl_url": "https://www.courtlistener.com/opinion/10869430/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Jennifer Gabbard",
+ "appellant_counsel": "Appellant, v. THE ILLAS GROUP, INC., d.b.a. McDonald's Restaurants, a Florida for profit corporation, Appellee. No. 2D2025-0557 June 3, 2026 Appeal from the Circuit Court for Hillsborough County; Jennifer Gabbard, Judge. David M. Caldevilla of de la Parte, Gilbert, McNamara & Caldevilla, P.A., Tampa",
+ "appellee_counsel": "ppellee. No. 2D2025-0557 June 3, 2026 Appeal from the Circuit Court for Hillsborough County; Jennifer Gabbard, Judge. David M. Caldevilla of de la Parte, Gilbert, McNamara & Caldevilla, P.A., Tampa, for Appellant. George M. Duncan and Chris I. Hall of Garrison, Yount, Forte, & Mulcahy, L.L.C., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 876,
+ "_tried": [
+  "2D2025-0557"
+ ],
+ "looked_up_at": "2026-09-19T07:18:43Z"
+}

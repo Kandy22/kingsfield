@@ -1,0 +1,31 @@
+{
+ "video_id": "j6qKWVUvBMA",
+ "title": "21 2833",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-2833"
+ ],
+ "case_number": "2D2021-2833",
+ "source": "flcourts",
+ "case_name": "GEICO GENERAL INSURANCE COMPANY v. DICK, SUPERIOR AUTO GLASS OF TAMPA BAY, INC.",
+ "decided_date": "2024-01-17",
+ "disposition_text": "Reversed - Authored Opinion ~ and remanded with instructions.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2390709/opinion/Opinion_2021-2833.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2024/January/17/2021-28332",
+ "ctrack_id": "ctrack_16685667",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:14:18Z",
+ "author": "Atkinson",
+ "panel_judges": "Atkinson; Khouzam; Casanueva",
+ "special_concurrence_judges": "Khouzam",
+ "trial_judge": "Joelle Ann Ober",
+ "county": "Hillsborough",
+ "appellee_counsel": "pellee. Raymond T. Elligett, Jr., and Amy S. Farrior of Buell & Elliget, P.A., Tampa; David M. Caldevilla of de la Parte & Gilbert, P.A., Tampa; Anthony T. Prieto of Morgan & Morgan, P.A., Tampa; and Christopher P. Calkin and Mike N. Koulianos of The Law Offices of Christopher P. Calkin, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": true,
+ "opinion_chars": 43668
+}

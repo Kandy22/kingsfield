@@ -1,0 +1,28 @@
+{
+ "video_id": "It7GQzoSQ98",
+ "title": "2D20 2370",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2370"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:07:13Z",
+ "case_number": "2D2020-2370",
+ "case_name": "ROBERT E. SCHMIDT, JR.  vs JOHN M. SABOW, ET AL",
+ "decided_date": "2021-08-18",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/816320/opinion/Opinion_20-2370.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2021/August/18/20-2370",
+ "ctrack_id": "4609103",
+ "n_decision_records": 1,
+ "author": "Stargel",
+ "panel_judges": "Stargel; Northcutt; Casanueva",
+ "appellee_counsel": ". Minkoff, Judge. Marion Hale and Sharon E. Krick of Johnson, Pope, Bokor, Ruppel & Burnes, LLP, Clearwater, for Appellant Robert E. Schmidt, Jr. Kelli A. Edson of Quarles & Brady, LLP, Tampa, for Appellant Kelly C. Schmidt. Samuel J. Heller and Marc Julius Wolfson of Heller Law PLLC, St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 25503
+}

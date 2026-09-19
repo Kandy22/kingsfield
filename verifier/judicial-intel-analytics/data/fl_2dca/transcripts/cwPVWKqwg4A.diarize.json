@@ -1,0 +1,528 @@
+{
+  "summary": "This audio recording captures a court hearing in the case of Jessica Stout, represented by attorney Jesse Herrold. The appellant argues for a reversal of the trial court's decision on two main grounds: the failure to allow a juror interview regarding a potential conflict of interest (Juror 15 failing to disclose her status as a landlord in a landlord-tenant case) and the exclusion of a critical causation witness. The judges and counsel engage in a detailed discussion regarding the 'De La Rosa' test for juror nondisclosure, the materiality of the concealed information, and technical compliance with court rules regarding motions for juror interviews.",
+  "chunk_count": 5,
+  "segments": [
+    {
+      "speaker": "Judge 1",
+      "timestamp": "00:00 - 00:03",
+      "content": "Whenever you're ready, we're ready to proceed.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Jesse Herrold",
+      "timestamp": "00:03 - 00:15",
+      "content": "Good morning your honors, may it please the court. My name is Jesse Herrold, I'm here on behalf of the appellant, Jessica Stout. I'd like to reserve five minutes of my time for rebuttal.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge 1",
+      "timestamp": "00:15 - 00:16",
+      "content": "Five minutes, very good.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Jesse Herrold",
+      "timestamp": "00:16 - 00:56",
+      "content": "I'm here today asking the court to reverse on two distinct and independent grounds. First, the trial court erred in failing to permit a juror interview after Juror number 15, Ms. Sepulveda, intentionally failed to disclose her history as a landlord in a case of a tenant against a landlord. Second, the trial court erred in excluding the critical testimony of the plaintiff's causation witness by limiting him to only what was contained in an informal and frankly unrequired compendium, and instead allowing the defense's failure to conduct discovery to punish the plaintiff.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge 2",
+      "timestamp": "00:56 - 03:04",
+      "content": "Let's talk about the jury issue. Okay. And looking at the case law, first of all, the standard is an abuse of discretion. But in this case we'll need to look at De La Rosa. The De La Rosa case, I think it indicates that there's actually three, the applicable test is three parts. Correct me if I'm wrong. The first one is that the complaining party, which is you, must establish that the information is relevant and material to jury service in the case, and we'll address that in a moment. Second, that the juror concealed that information. And third, that the failure to disclose the information was not attributable to the complaining party's lack of diligence. I think we could take care of the second prong based on my recollection of the case, that this is a landlord-tenant case. And during jury selection, during voir dire, the attorney was asking questions about is any landlords in the group? Several people responded, there's been some exchange, and very clearly this juror never raised her hand, never engaged in the discussion. It wasn't until the jury came back finding in favor of the landlord that she's the one that came forward and indicated, 'Oh, I just wanted to tell you I'm a landlord, I didn't say anything because I think I could be fair.' And so I think we could say that she did conceal that information. So at least the second prong has been taken care of. And the third prong clearly has been met. So let's talk about the very first prong in terms of it being relevant and material to the jury service in this case. This case is a case against a landlord. So with that segue, let's focus on that issue.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Jesse Herrold",
+      "timestamp": "03:04 - 04:13",
+      "content": "Yes, your honor. So materiality as defined by the case law means that the information would likely have influenced the exercise of a peremptory challenge. Now in this case when we went through, there were four members of the venire who disclosed that they had history as a landlord. Two of them were removed for cause. One was because the plaintiff exercised a peremptory strike on the one who had a more significant experience. The third person had simply rented his condo for one year before he sold it and said nothing about that would impact his ability to be fair. So contrast that with Juror 15's experience. We don't know Juror 15's landlord experience because she failed to disclose it. After the fact she said 'I've been a landlord,' but we don't know the details. That's why it's critical that we have the juror interview. And the judge never even held a hearing on it. She just signed an order before the defense even responded and denied everything.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge 3",
+      "timestamp": "04:13 - 04:50",
+      "content": "But the motion for the juror interview had problems with it, right? I mean Rule 1.431(h) has certain things that have to be in that motion, and not all of them were there, right? And could that be the reason that Judge Williams said you didn't make the right motion?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Jesse Herrold",
+      "timestamp": "04:50 - 05:40",
+      "content": "The only thing that was missing from the motion was the address of Juror Sepulveda. This isn't a case where an address would be important to verify the person in litigation history records because we already know who she is. I think substantial compliance, as cited in Ramirez vs State, should apply here. We're not talking about something in derogation of the common law.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge 2",
+      "timestamp": "05:40 - 07:44",
+      "content": "Is there any case law requiring strict compliance with this specific rule? Because in all the other cases, they've allowed juror interviews. It appears to me the whole purpose of the address is to verify that this is the juror they're requesting. But here there's no issue that this is the juror because she came forward. In those other cases involving litigation history, attorneys can check history right from the counsel table, so the diligence requirement is different. Am I correct?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Jesse Herrold",
+      "timestamp": "07:44 - 10:00",
+      "content": "I agree, your honor. They're different sorts of materiality. It's still juror concealment, and to the extent those cases are relevant, it's for the principle of disclosure.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "10:00 - 10:51",
+      "content": "The legal principle is that when you demonstrate reasonable grounds to believe that a juror has concealed material information, you're entitled to a juror interview. So yes, it's an abuse of discretion standard, but there were reasonable grounds to believe that she had concealed highly relevant material information, and the plaintiff was entitled to conduct a juror interview so that they could flesh that out and determine if it was appropriate to award a new trial based on her lack of candor. The Supreme Court has said in DeLaRosa that it's the duty of the juror to make a full and truthful answer and anyone who conceals relevant material fact is guilty of prejudicial misconduct.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "10:51 - 11:55",
+      "content": "Well, let's talk for a minute about the actual colloquy that was had with Juror 15. In your brief, you cite portions of the transcript between 160 and 174, and I read that colloquy and I didn't see it quite as sharply as you described it. It struck me that trial counsel asked the question, got a few answers, and started honing in on the follow-up to those answers from the other jurors as to their bias. And so it kind of went like a cocktail party conversation for a minute where he asked the question, two or three jurors had something to say, and by the time Juror 15 had had the opportunity to hear that colloquy, if she was ready to jump in, he had kind of moved on to bias. And so that kind of tripped me up a little bit. Help me out.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "11:55 - 13:41",
+      "content": "Okay, Your Honor. He did ask follow-up questions about bias. There's no question. But he asked three distinct times. First, he said anyone have experience in being a landlord or property management, that was on 166. The next question was, as you described, perhaps a coffee table type, anyone else have similar feelings? But then after a long discussion with Juror 17, on page 170 of the transcript, he gets back to the original question. Anyone else with property management experience? Miss Hatcher, tell me about that. He asked a very open-ended question. It wasn't, do you have bias in that experience? He asked open-ended question, I own rental properties, two or three. And then he said, let me ask you this, is one person, you know, are you going to have concerns? No. Okay, anybody else with property management experience? And he said just for a year, I had a condo that I rented out before selling. And then he said any issues that would tilt the scales. So the jurors were giving him the information that he needed about the length of time that they had been landlords, the type of circumstances, and then he asked his follow-up question about the bias. But I think there's case law that talks about what the other jurors are saying is just as important as perhaps the questions. And the fact that you have two jurors who professed no bias, who understood that they still had to answer the question about their landlord experience.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 3",
+      "timestamp": "13:41 - 13:52",
+      "content": "And do you think, I guess what flashed into my mind, the fact that she volunteered it after the trial evidence, that she knew she was being asked about it, correct?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "13:52 - 14:08",
+      "content": "I agree, Your Honor. I think that's the most reasonable interpretation of what she disclosed after the fact is almost like 'heh heh, I got away with it'. I know that my opposing counsel has said, well, she was disclosing she thought she only had to reveal if there was bias, but that would be another reason for the juror interview.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "14:08 - 15:04",
+      "content": "We've spent so much time on this issue, I'm afraid you're not going to get to your other issue, the exclusion of Koenig's causation testimony and whether or not the Binger analysis applies. I'm looking for the courtroom clock, I have it, believe it or not, this is the courtroom clock I have. So actually, and I agree with Judge Morris, if you could get into that. You're at about 14 minutes. Okay, you have one minute basically. Feel free to go into your rebuttal time too if you'd like. Let me get straight to the point. Does Binger apply or not? Must there be a finding of prejudice or not?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "15:04 - 15:15",
+      "content": "Yes. I think Binger still applies.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "15:15 - 16:10",
+      "content": "Okay, because there's a 6th DCA opinion, Rosetiano, that basically says Binger doesn't really apply anymore, the new rules of procedure that require cases to be moved allow courts to enforce a hard deadline for disclosure of type information. In this case, your witness, Koenig, gave a compendium report, didn't elaborate on other issues. And when his deposition was taken in the middle of the trial or during the trial or on a break from the trial, he went into causation issues and Judge Williams said that wasn't disclosed, I'm not going to allow it. So I go back to my question, does Binger apply? In other words, is there prejudice? Do we have to have a finding of prejudice?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "16:10 - 17:31",
+      "content": "I don't... okay, so under most situations I think you have to have a finding of prejudice, but in this... Binger, so the 6th DCA disagreed with the other courts' application of Binger to this set of facts. I think the reason that Binger does not change the analysis here, even though it should have been evaluated under the Binger prejudice factors, is because the prejudice in this case was entirely within the defense's control. Binger is designed to eliminate prejudice from things that the party who would benefit would do. But you all didn't depose this witness. The defense did not depose this witness. He was our witness. And so they didn't do discovery. The interrogatories that they asked exceeded the permissible scope. They knew about that back in October. They waited until 12 days before trial to try to get better answers. They didn't move to expand the number of interrogatories. They didn't take his deposition. They didn't say that our disclosures were insufficient under the pretrial order. And yet they came back and said well we had this report that was given to us before non-binding arbitration and you're not going to be able to say anything that wasn't in there.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 3",
+      "timestamp": "17:31 - 17:53",
+      "content": "And that report was not really a full, full report. It's basically the thoughts about the case and then leaving it pretty much, and it was pretty fluid that things could change based on whatever added information. And my understanding, you provided that way long ago, and then they did not, they chose not to do a deposition on that. And was this witness crucial to your defense? I mean to your presentation, not defense.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "17:53 - 18:15",
+      "content": "Absolutely, Your Honor, he was the main causation expert. And so he wasn't allowed to testify essentially to the actions of the landlord that were negligent, and not surprisingly the defense found no negligence. And so it was very prejudicial and harmful. But I think I'd like to save the remainder of my time.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 3",
+      "timestamp": "18:15 - 18:29",
+      "content": "Okay, what I'm going to do, because I peppered you a lot, I'm going to give you your full five minutes for rebuttal. All right, thank you, ma'am. Thank you.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 4",
+      "timestamp": "18:29 - 18:39",
+      "content": "All right. Good morning. May it please the court, Karen Bellis of Kubicki Draper for the appellees, Cassidy and the Cassidy Trust.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 3",
+      "timestamp": "18:39 - 20:00",
+      "content": "Ms. Bellis, I think you probably could see based on my questioning of counsel, my concerns are with the court's failure to allow the jury interview. And I know one of the things, if you look at the three prongs, and I know what you've indicated in your brief, but I'm troubled with the fact that here's this juror who knew, she's the one that volunteered, she's the one that came forward and said oh by the way, I'm a landlord. And so for her to come forward and then to say that, she concealed it from providing that information. That troubles me because as you know voir dire, that gives the attorneys an opportunity, that exchange back and forth. So help me out with that. Yes Your Honor, and it is our position that the unique facts here and the informal jury interview that actually happened with both parties after the trial demonstrates that there is no juror interview warranted here and that the three parts of the DeLaRosa test are not met. Okay when you say jury interview do we have a transcript of the exchange?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "20:00 - 20:10",
+      "content": "...interaction with your former tenants. You've been a landlord for how many times, how many years? Is there any- just to gather prejudice, bias, anything like that?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "20:10 - 20:16",
+      "content": "So what we have is this juror who voluntarily says she wasn't biased in her own answer.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "20:16 - 20:43",
+      "content": "Okay, and let me stop you right there. She said she cannot be biased, but she concealed. We already have a pattern of her not being forthcoming. So if she concealed that, after being placed under oath by the court, and for her to say, oh, I could be fair, I could be biased, I don't think you could take that for face value without having the opportunity to have that exchange back and forth.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "20:43 - 21:42",
+      "content": "So respectfully, I disagree. Because I think that the answers themselves, and what we do have are two affidavits from plaintiff's counsel's office, I believe a secretary and a paralegal, who say that they overheard the conversation and that she volunteered she was a landlord, but that she did not believe she had to say this because she could be unbiased, which I believe goes to the questions of concealment and diligence. The answer itself indicates, as Judge Silbret had indicated, that this colloquy of the questions and the cocktail party questioning under the circumstances here, the juror did not believe she had to come forward with the information because she believed that the question- and if we look at voir dire, the judge controlled day one and the judge was focused on biases and prejudices, biases and prejudices.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 4",
+      "timestamp": "21:42 - 22:11",
+      "content": "But we'll never know really what her rationale was because the juror interview didn't happen. And this brief exchange, the voluntary agreement of- of which the juror asked the lawyer, said, 'Can we talk to you about this?' I mean, it didn't flesh all these things out that you're saying. So you're telling us her rationale, but you're only assuming that's her rationale. She never explained what her rationale was. We don't know that.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "22:11 - 22:16",
+      "content": "She says, 'I'm not biased. I didn't- I wasn't- I didn't say anything.' That's what the- we have sworn affidavits.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 4",
+      "timestamp": "22:16 - 22:49",
+      "content": "But we- she was also clearly instructed by the trial judge that, you know, these lawyers are going to ask you questions, you need to answer their questions, your answers need to be truthful, you need to, you know, cooperate with them. I mean, she was instructed to do- it's really actually in a case like this, it's shocking, A, that she wasn't forthcoming with the information and then in the informal meeting after the trial she was like, 'Oh, well I was a landlord.' I mean, all of a sudden now she's, you know, got all this information about that she was a landlord. I mean, it's a head-scratcher to be honest with you.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "22:49 - 23:22",
+      "content": "The affidavits do say, 'I'm a landlord, but I didn't say anything because I believed I could be unbiased,' which- But you know, you and I both know that doesn't work. It's not up- it's not her opinion whether she can be biased or not. The lawyers have a right to question her and develop in their own minds whether they think she can be unbiased or not. So she's usurping the function of voir dire. She did not understand the questions with all due respect, which goes back to there being a lack of diligence.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "23:22 - 24:36",
+      "content": "But isn't that pure speculation on your part? Because the lawyer- when you said she didn't understand, you're telling us what the- you the juror thought without an interview. We don't know any of that. And that's the whole purpose of permitting that. You may well be correct once the judge grants a juror interview, maybe all that will come out. But right now her statement to come forward, oh, very- she admitted she concealed that. And so that's the part that really troubles me, especially when we conduct voir dire. Judge Morse was a former circuit judge. I was a former. We put the venires under oath. You need to respond to the question. Please volunteer anything in that free exchange. That's- isn't that the whole purpose of our system of justice? That's sacrosanct to have a juror that sits on a case to be unbiased and I agree with what Judge Morse said. It's up to the lawyers to flush that out. That's my concern.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "24:36 - 24:54",
+      "content": "Well, no juror interview should be granted unless there are grounds that would, if true, require a new trial. Can- Well, before we get too far into your time on this, I want to make sure I understand something from the briefing as far as your position.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 4",
+      "timestamp": "24:54 - 26:15",
+      "content": "You argued that I think ultimately that this just wasn't material, I don't know if it's under the materiality prong, but just looking at what you said in the brief. Whether the tenant exercised their last peremptory against Juror 6 or Juror 15, both of whom said they could be fair, it was inevitable that the jury was going to wind up with a prior landlord. And Juror 6 had a lot more hair on her, if you will, because she was a prior gymnast, she had a traumatic brain injury, she had more things in common with this plaintiff. Am I understanding your argument correctly on that? That you're basically saying it doesn't really matter in the end because as part of the plaintiff's burden they've said, we would have exercised a peremptory strike, but you're saying, oh, even if that happened, they would have then been stuck with Juror 6, which is far worse than Juror 15. That is part of our argument your honor, yes, because someone would have been on the jury, one of the jurors who had landlord experience and as we describe in the brief, Juror 6 was a gymnast, she knew what it took to- to do the type of job that this plaintiff did and therefore there were other- there were other reasons she was a gymnast and she had someone who was a friend who had recovered from a TBI and plaintiff here was claiming- So that is actually- our argument is four-fold. In the end it wouldn't have mattered because there was no peremptory strike to be had.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "26:15 - 27:18",
+      "content": "But if I may, you're assuming that- we don't know based on the exchange with this juror. What if- she would have admitted during voir dire? What if things came out that was really cause- to allow a cause challenge? We don't know that. We don't know what kind of question because all that was taken away, all that was deprived by her concealing, she did not allow that to develop. So we don't know what she could have said. Maybe she could have said, 'Oh, I've been a landlord, I've had lawsuits with my tenants, I think the tenants are always on the wrong side.' You don't know that exchange that maybe it could have- it could have risen to the level of cause that the court- we don't know that and I think that argument that it would not have made a difference, respectfully, I just don't see that.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "27:18 - 27:44",
+      "content": "So juror interviews, when granted, are very narrow. They are about 'were you biased?', 'were you a landlord?' What more could she have come forth with? Yes, it was afterward and it's unfortunate, but I don't think it makes a difference because, so what questions would have been asked? If we look at the questions, how many times, where and how long. If she was unbiased, they never would have led to a cause challenge because if you take a look at other portions of voir dire.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 3",
+      "timestamp": "27:44 - 28:35",
+      "content": "Let me put this in another way for you. And you're doing a fine job with the heat that you're getting, you're doing a good job. But let's, for example, say at the end of this case, you learn that your opposing counsel is my daughter-in-law, and I've never disclosed it. And you lose this case, and you now learn that she's my daughter-in-law. Which of course she's not, this is hypothetical. We've never met before, as far as I know. So you're not just going to go back to your office and say- and afterward if it's brought to my attention I say, well, I didn't disclose it because I could be unbiased, I could be fair. Well, you're not just going to say, 'Oh well, he said he could be fair, I guess that's good enough for me.' I don't think any lawyer is going to take that as good enough for them. They're going to be in here screaming bloody murder.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "28:35 - 30:00",
+      "content": "That's a very different circumstance with a familial relationship, it's usually a question asked in the form, asked by the court, there's no ambiguity in that one. And again, if we go back to the questions in the voir dire here and we outline them on page eight of our brief, the judge day one is very focused on bias and prejudice. The plaintiff starts out the voir dire on the second day asking about biases and prejudices and then asks a general question, does anyone have a landlord- does anyone have experience with being a landlord or in property management? The first juror launches into feelings about prejudice. Anybody who was biased because of their landlord experience was stricken for cause. Anybody who wasn't biased, which leads us to these jurors five and six who remained on the jury and then plaintiff exercised their peremptories, they weren't stricken for cause because there's no cause challenge if there's no bias. So because there's no bias and again going back to the questioning, starts out with general landlord. Then Juror Sinatra Gungolund talks about her bias and two jurors talk about their bias because they're a landlord. Juror 17 then says he has some bias because of property management and then plaintiff's counsel doesn't ask the general question again.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "30:00 - 30:22",
+      "content": "Speaker 1 discusses the questioning of jurors regarding potential bias, noting that Juror 6, despite their experience, explicitly stated they had no bias, which usually ends the investigation into the matter.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "30:23 - 31:13",
+      "content": "Speaker 2 counters by emphasizing that the juror remained silent during initial exchanges and only revealed their landlord status after a verdict was returned in favor of the landlord, creating a problem for the argument that no bias existed.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "31:14 - 32:12",
+      "content": "Speaker 1 acknowledges the time constraints and shifts the focus to the exclusion of expert witness Mr. Koning's testimony on causation, which was based on the fact that his detailed opinions were not present in his initial two-page report.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "32:13 - 33:17",
+      "content": "Speaker 2 questions the validity of claiming prejudice, describing the situation as a self-inflicted wound because the expert was not deposed until the last possible moment, leaving the opposing side unaware of his full testimony.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "33:18 - 35:33",
+      "content": "Speaker 1 clarifies that while a large portion of the expert's testimony was actually admitted, specific details regarding the incorrect method of repairing the roof\u2014specifically using a broomstick instead of a drill\u2014were excluded for not being in the report.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "35:34 - 37:12",
+      "content": "Speaker 2 expresses difficulty in understanding the exact basis of the judge's ruling, questioning whether it was founded on the Binger prejudice standard or strict new civil procedure rules regarding deadlines and expert disclosures.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "37:13 - 38:53",
+      "content": "Speaker 1 argues that the trial judge was enforcing her own trial order, which required expert reports to be produced and filed, and points out that the plaintiff themselves had repeatedly referred to the document in question as a report.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "38:54 - 40:04",
+      "content": "Speaker 2 concludes by asking if there is any legal authority that strictly requires a preliminary expert report to contain every single opinion the expert might eventually give at trial, especially when produced well in advance.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge",
+      "timestamp": "40:00 - 40:14",
+      "content": "to follow up with what Judge Morris said, it's a shame that you all did not take his deposition earlier on, all that could have been fleshed out.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Attorney 1",
+      "timestamp": "40:14 - 41:05",
+      "content": "Well, we would find in this case that once a report is produced, we're entitled to rely on it. And again, this is different because this isn't the exclusion of a crucial witness. There were further objections based on Daubert and other issues that were overruled and Mr. Koenig was able to testify to the gist of his opinions, his main points again: the double roof, the pooling of the water, the instant happening of the water. What he wasn't able to talk about was only that this was not the way to fix a double ceiling, poking a broom versus using a drill, which that didn't even happen at the deposition. Those were in-trial opinions that he was giving for the first time.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge",
+      "timestamp": "41:05 - 41:13",
+      "content": "And I'm just looking at the clock, if you could just wrap it up, I think we've exceeded your time.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Attorney 1",
+      "timestamp": "41:13 - 41:40",
+      "content": "With regard to Mr. Koenig, plaintiff was not deprived of any expert testimony, the main points came across, the double ceiling, and the failure because of apparent not replacing the roof earlier that perhaps had been promised. It is our position that the trial court properly exercised her discretion and we would ask the court to affirm.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge",
+      "timestamp": "41:40 - 41:50",
+      "content": "Thank you, Mr... Good job on your presentation. Okay, five minutes for rebuttal.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Happy"
+    },
+    {
+      "speaker": "Attorney 2",
+      "timestamp": "41:50 - 42:40",
+      "content": "Thank you, your honor, may it please the court. I'm going to go to the second issue because I think we've all discussed the first issue quite a bit. To address your questions, Judge Morris, about was the judge's decision to exclude based on a violation of the pretrial order, perhaps? There was no violation of the pretrial order. The plaintiff responded, identified Mr. Koenig as a causation witness. To the extent that the defense perhaps felt that it was too vague, the case of Santos versus Carlson says that you as the party thinking that this is too vague and doesn't give you the information is required to seek better responses.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge",
+      "timestamp": "42:40 - 42:59",
+      "content": "So I want to ask you a question about that. When the landlord served their interrogatories that exceeded the requisite number, you all just issued standard objections, no substantive response or subject to the objections to give any additional information, right?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Attorney 2",
+      "timestamp": "42:59 - 43:00",
+      "content": "Correct.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge",
+      "timestamp": "43:00 - 43:26",
+      "content": "It's been a while since I practiced in state court with respect to discovery, but I remember at least in federal court that that became nonpermissible somewhere along the line. And I was curious as to whether that is a fair response now with our case management rules and under these circumstances, not to give any information at that time, you know, you're close to trial.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Attorney 2",
+      "timestamp": "43:26 - 46:12",
+      "content": "Yes, your honor, because at that point, that was October 31st, the defense waited until February 12th, which was 12 days before trial, so there was a considerable gap where the defense could have looked at this and said, 'Oh, we exceeded the permissible number of interrogatories, we need to move for leave to ask more questions.' The Florida rules do not require litigants to answer questions forever. And so, yes, it was a permissible response to say you've exceeded the number, because they were not obligated to answer more questions than the defense was permitted to ask. Then it was four days before trial when the defense filed a Daubert motion asking to exclude opinions because they didn't have photographs, which they actually did have, and they had no basis to understand his calculation. If new opinions came out during trial, that's perhaps not surprising because the whole purpose of the deposition was to flesh out the Daubert issue. Again, they never asked for his causation opinions before trial. You don't get to sit back in blissful ignorance and then penalize the opposing party. So for both reasons, we would ask that this court reverse and remand.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Judge",
+      "timestamp": "46:12 - 46:34",
+      "content": "Thank you, and thank you both, and just to let you know, I let you both go over and you both had equal time, so no one side got more than the other. Thank you both, really well argued on both sides. Okay, so the second case that we'll be calling is the case involving Nimbus Apollo.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Happy"
+    }
+  ]
+}

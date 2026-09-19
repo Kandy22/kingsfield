@@ -1,0 +1,35 @@
+{
+ "video_id": "FNmoThBTPXk",
+ "title": "25 0529",
+ "case_number": "2D2025-0529",
+ "case_numbers_all": [
+  "2D2025-0529"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0529",
+ "case_name": "HOLDINGS JJJ, LLC v. JAMIE RAND and JULIE RAND, trustees of the",
+ "decided_date": "2026-09-18",
+ "cl_cluster_id": 10976651,
+ "cl_opinion_id": 11444293,
+ "cl_url": "https://www.courtlistener.com/opinion/10976651/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded with instructions.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Rothstein-Youakim",
+ "panel_judges": "Rothstein-Youakim; Kelly; Black",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": "September 18, 2026 Appeal pursuant to Fla. R. App. P. 9.130 from the Circuit Court for Hillsborough County; Jennifer X. Gabbard, Judge. Dean A. Morande and Jesse D. Dieterle of Carlton Fields, P.A., West Palm Beach; and Christopher W. Smart and Alicia R. Whiting Bozich of Carlton Fields, P.A., Tampa",
+ "appellee_counsel": "30 from the Circuit Court for Hillsborough County; Jennifer X. Gabbard, Judge. Dean A. Morande and Jesse D. Dieterle of Carlton Fields, P.A., West Palm Beach; and Christopher W. Smart and Alicia R. Whiting Bozich of Carlton Fields, P.A., Tampa, for Appellant. Bo Sellitti of Lieser Skaff, PLLC, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 28130,
+ "_tried": [
+  "2D2025-0529"
+ ],
+ "looked_up_at": "2026-09-19T07:06:54Z"
+}

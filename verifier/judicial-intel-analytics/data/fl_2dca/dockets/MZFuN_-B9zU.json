@@ -1,0 +1,35 @@
+{
+ "video_id": "MZFuN_-B9zU",
+ "title": "25 0037",
+ "case_number": "2D2025-0037",
+ "case_numbers_all": [
+  "2D2025-0037"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0037",
+ "case_name": "LINCOLNSHIRE MAXIMO LLC v. MARINA WALK, LLC",
+ "decided_date": "2026-03-25",
+ "cl_cluster_id": 10814628,
+ "cl_opinion_id": 11281382,
+ "cl_url": "https://www.courtlistener.com/opinion/10814628/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed in part, reversed in part, and remanded.",
+ "disposition": "mixed",
+ "per_curiam": false,
+ "author": "Black",
+ "panel_judges": "Black",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "W. Douglas Baird",
+ "appellant_counsel": "COURT OF APPEAL OF FLORIDA SECOND DISTRICT LINCOLNSHIRE MAXIMO LLC, Appellant, v. MARINA WALK, LLC, Appellee. No. 2D2025-0037 March 25, 2026 Appeal from the Circuit Court for Pinellas County; W. Douglas Baird, Judge. Stacy D. Blank, Jason H. Baruch, and Paul J. Punzone of Holland & Knight LLP, Tampa",
+ "appellee_counsel": "e. Stacy D. Blank, Jason H. Baruch, and Paul J. Punzone of Holland & Knight LLP, Tampa, for Appellant. Diran V. Seropian and Daniel S. Weinger of Luks, Santaniello, Petrillo, Cohen & Peterfriend, Fort Lauderdale; and Brian A. Bolves and Laura S. Olympio of Manson Bolves Donaldson Tanner, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 23025,
+ "_tried": [
+  "2D2025-0037"
+ ],
+ "looked_up_at": "2026-09-19T07:10:38Z"
+}

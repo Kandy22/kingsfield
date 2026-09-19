@@ -1,0 +1,30 @@
+{
+ "video_id": "Yz82VNO30og",
+ "title": "2D20 2575",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2575"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:11:40Z",
+ "case_number": "2D2020-2575",
+ "case_name": "CARLOS GUZMAN  vs SOUTHERN FIDELITY INSURANCE COMPANY",
+ "decided_date": "2021-12-10",
+ "disposition_text": "Reversed and remanded for further proceedings.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/816199/opinion/Opinion_20-2575.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2021/December/10/20-2575",
+ "ctrack_id": "4635213",
+ "n_decision_records": 1,
+ "author": "Rothstein-Youakim",
+ "panel_judges": "Rothstein-Youakim; Casanueva; Atkinson",
+ "trial_judge": "Martha J. Cook",
+ "county": "Hillsborough",
+ "appellee_counsel": " FIDELITY INSURANCE COMPANY, Appellee. No. 2D20-2575 December 10, 2021 Appeal from the Circuit Court for Hillsborough County; Martha J. Cook, Judge. Erin M. Berger and Melissa A. Giasi of Giasi Law, P.A., Tampa, for Appellant. Matthew B. Bernstein of Vernis & Bowling of Central Florida, P.A., DeLand",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 13608
+}

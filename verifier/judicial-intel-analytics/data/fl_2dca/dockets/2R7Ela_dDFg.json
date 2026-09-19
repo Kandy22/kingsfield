@@ -1,0 +1,41 @@
+{
+ "video_id": "2R7Ela_dDFg",
+ "title": "25 0214",
+ "case_number": "2D2025-0214",
+ "case_numbers_all": [
+  "2D2025-0214"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0214",
+ "case_name": "Watkins v. Corbett, Corbett, et al",
+ "decided_date": "2026-03-25",
+ "cl_cluster_id": 10814626,
+ "cl_opinion_id": 11281380,
+ "cl_url": "https://www.courtlistener.com/opinion/10814626/watkins-v-corbett-corbett/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": "Northcutt",
+ "panel_judges": "Northcutt",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Melissa M. Polo",
+ "appellant_counsel": "PASCO COUNTY, INC., Appellees. No. 2D2025-0214 March 25, 2026 Appeal from the Circuit Court for Hillsborough County; Melissa M. Polo, Judge. Raymond T. Elligett, Jr., and Amy S. Farrior of Buell Elligett Farrior & Faircloth, P.A., Tampa, and James C. Hauser of Attorney's Fees in Florida, PL, Orlando",
+ "appellee_counsel": " M. Polo, Judge. Raymond T. Elligett, Jr., and Amy S. Farrior of Buell Elligett Farrior & Faircloth, P.A., Tampa, and James C. Hauser of Attorney's Fees in Florida, PL, Orlando, for Appellant. Michael R. Carey and Randall P. Mueller of Carey, O'Malley, Whitaker, Mueller, Roberts & Smith, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 11713,
+ "_tried": [
+  "2D2025-0214"
+ ],
+ "looked_up_at": "2026-09-19T07:02:48Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2486502/opinion/Opinion_2025-0214.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/march/25/2025-0214",
+ "ctrack_id": "ctrack_19344947",
+ "n_decision_records": 1
+}

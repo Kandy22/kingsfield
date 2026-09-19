@@ -1,0 +1,26 @@
+{
+ "video_id": "zMyeg2DEO8k",
+ "title": "2D21 3647",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-3647"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:18:31Z",
+ "case_number": "2D2021-3647",
+ "case_name": "UNITED PROPERTY & CASUALTY INSURANCE COMPANY  vs ALAN MILLER AND LISA MILLER",
+ "decided_date": "2022-08-19",
+ "disposition_text": "Denied",
+ "disposition": "denied",
+ "opinion_type": "Denied",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/845838/opinion/Opinion_21-3647.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/August/19/21-3647",
+ "ctrack_id": "4696078",
+ "n_decision_records": 1,
+ "panel_judges": "Northcutt; Casanueva; Khouzam",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 809
+}

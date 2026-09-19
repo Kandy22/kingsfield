@@ -1,0 +1,599 @@
+{
+  "channel_id": "fl_general",
+  "channel_name": "FL courts (general scrape)",
+  "channel_url": null,
+  "video_count": 59,
+  "videos": [
+    {
+      "video_id": "z7RqwQt5rCw",
+      "title": "Trauma Responsive Parenting Coordination",
+      "url": "https://www.youtube.com/watch?v=z7RqwQt5rCw",
+      "upload_date": null,
+      "duration": 3685.0,
+      "views": "263 views",
+      "age_text": "2 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "zTuudL2QvnA",
+      "title": "Parenting Coordination Rules & Ethics",
+      "url": "https://www.youtube.com/watch?v=zTuudL2QvnA",
+      "upload_date": null,
+      "duration": 3950.0,
+      "views": "186 views",
+      "age_text": "2 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "XLBNtRoXWic",
+      "title": "File or Answer a Civil Complaint",
+      "url": "https://www.youtube.com/watch?v=XLBNtRoXWic",
+      "upload_date": null,
+      "duration": 233.0,
+      "views": "9.1K views",
+      "age_text": "3 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "zYq4fGKsQLo",
+      "title": "Intersection of Mediator Ethics and Interpersonal Violence",
+      "url": "https://www.youtube.com/watch?v=zYq4fGKsQLo",
+      "upload_date": null,
+      "duration": 3773.0,
+      "views": "5K views",
+      "age_text": "4 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "Gu7L0_uFqgY",
+      "title": "Mediator Ethics and Vulnerable Adults Abuse: Understanding Our Responsibilities",
+      "url": "https://www.youtube.com/watch?v=Gu7L0_uFqgY",
+      "upload_date": null,
+      "duration": 3629.0,
+      "views": "2.5K views",
+      "age_text": "4 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "h0CunjifLg0",
+      "title": "MEAC Overview 2021",
+      "url": "https://www.youtube.com/watch?v=h0CunjifLg0",
+      "upload_date": null,
+      "duration": 3511.0,
+      "views": "2K views",
+      "age_text": "4 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "uaNjEAj-2lw",
+      "title": "Making it Matter: Techniques for Becoming an Amazing Mediator, DRC Conference Ethics Plenary",
+      "url": "https://www.youtube.com/watch?v=uaNjEAj-2lw",
+      "upload_date": null,
+      "duration": 4007.0,
+      "views": "2.4K views",
+      "age_text": "4 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "06QslMM6Tdg",
+      "title": "Mediator Ethics: The Best of MEAC",
+      "url": "https://www.youtube.com/watch?v=06QslMM6Tdg",
+      "upload_date": null,
+      "duration": 3679.0,
+      "views": "3.4K views",
+      "age_text": "5 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "klOM84zB-8Q",
+      "title": "Dispute Resolution Center County Mediation Simulation",
+      "url": "https://www.youtube.com/watch?v=klOM84zB-8Q",
+      "upload_date": null,
+      "duration": 2737.0,
+      "views": "1.5K views",
+      "age_text": "5 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "lnKx3_-GI-E",
+      "title": "Mediation Confidentiality 101",
+      "url": "https://www.youtube.com/watch?v=lnKx3_-GI-E",
+      "upload_date": null,
+      "duration": 3530.0,
+      "views": "4.3K views",
+      "age_text": "5 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "D1RrSaEEZS8",
+      "title": "Afraid you'll miss a criminal court hearing? Get alerts from e-Notify",
+      "url": "https://www.youtube.com/watch?v=D1RrSaEEZS8",
+      "upload_date": null,
+      "duration": 37.0,
+      "views": "115 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "I19CfLUjP7Q",
+      "title": "How to Become a Certified County Court Mediator",
+      "url": "https://www.youtube.com/watch?v=I19CfLUjP7Q",
+      "upload_date": null,
+      "duration": 189.0,
+      "views": "2.5K views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "J9LpJrFecoQ",
+      "title": "An Overview of Florida Mediation",
+      "url": "https://www.youtube.com/watch?v=J9LpJrFecoQ",
+      "upload_date": null,
+      "duration": 211.0,
+      "views": "2.1K views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "mV2pH-7YkxU",
+      "title": "DJJ DRAI - Minnie Bishop",
+      "url": "https://www.youtube.com/watch?v=mV2pH-7YkxU",
+      "upload_date": null,
+      "duration": 204.0,
+      "views": "88 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "1d4pxUd9gJw",
+      "title": "DJJ Civil Citations - Minnie Bishop",
+      "url": "https://www.youtube.com/watch?v=1d4pxUd9gJw",
+      "upload_date": null,
+      "duration": 107.0,
+      "views": "166 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "CmK6g1EiV6I",
+      "title": "DJJ Residential Services - Ashley Schwab",
+      "url": "https://www.youtube.com/watch?v=CmK6g1EiV6I",
+      "upload_date": null,
+      "duration": 113.0,
+      "views": "119 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "5kCb811Ibx4",
+      "title": "2019 Domestic Violence Case Law Update",
+      "url": "https://www.youtube.com/watch?v=5kCb811Ibx4",
+      "upload_date": null,
+      "duration": 3552.0,
+      "views": "1.7K views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "O0IhrgBjkGg",
+      "title": "Mediator Ethics:  We Are Headed to a Disciplinary Hearing Panel",
+      "url": "https://www.youtube.com/watch?v=O0IhrgBjkGg",
+      "upload_date": null,
+      "duration": 3933.0,
+      "views": "3.9K views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "v6ayjuThiFY",
+      "title": "Why DJJ Doesn't Use Scare Tactics - Mark Greenwald",
+      "url": "https://www.youtube.com/watch?v=v6ayjuThiFY",
+      "upload_date": null,
+      "duration": 89.0,
+      "views": "145 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "M748o3rdC7A",
+      "title": "Boys Court - Judge Pierce",
+      "url": "https://www.youtube.com/watch?v=M748o3rdC7A",
+      "upload_date": null,
+      "duration": 171.0,
+      "views": "192 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "tg72McZoPl8",
+      "title": "Duty Judge Tips for Delinquency Judges - Judge Isom",
+      "url": "https://www.youtube.com/watch?v=tg72McZoPl8",
+      "upload_date": null,
+      "duration": 138.0,
+      "views": "84 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "dZWO2VRXpGg",
+      "title": "The New DRAI -  Minnie Bishop",
+      "url": "https://www.youtube.com/watch?v=dZWO2VRXpGg",
+      "upload_date": null,
+      "duration": 74.0,
+      "views": "133 views",
+      "age_text": "6 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "LV7m2k_tvBg",
+      "title": "Preparing for Your Day in Civil Court",
+      "url": "https://www.youtube.com/watch?v=LV7m2k_tvBg",
+      "upload_date": null,
+      "duration": 251.0,
+      "views": "10K views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "c0Gbr6sicTM",
+      "title": "Jack Tuter - RPO",
+      "url": "https://www.youtube.com/watch?v=c0Gbr6sicTM",
+      "upload_date": null,
+      "duration": 229.0,
+      "views": "331 views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "o07y8YB9rjg",
+      "title": "Judge Tepper - Trauma",
+      "url": "https://www.youtube.com/watch?v=o07y8YB9rjg",
+      "upload_date": null,
+      "duration": 330.0,
+      "views": "1.3K views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "CIUgbpRswsQ",
+      "title": "Judge Singhal DV Injunction Compliance",
+      "url": "https://www.youtube.com/watch?v=CIUgbpRswsQ",
+      "upload_date": null,
+      "duration": 218.0,
+      "views": "729 views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "AKgGeT5o-_U",
+      "title": "Judge Morley Talks about Elder Abuse - \"Will You Still Need Me...\"",
+      "url": "https://www.youtube.com/watch?v=AKgGeT5o-_U",
+      "upload_date": null,
+      "duration": 2759.0,
+      "views": "2.3K views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "RPkWC1WX4w8",
+      "title": "Domestic Violence Case Law Update",
+      "url": "https://www.youtube.com/watch?v=RPkWC1WX4w8",
+      "upload_date": null,
+      "duration": 3444.0,
+      "views": "2.3K views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "_x5L6b8ZL3w",
+      "title": "OSCA in a Minute at NACM",
+      "url": "https://www.youtube.com/watch?v=_x5L6b8ZL3w",
+      "upload_date": null,
+      "duration": 132.0,
+      "views": "77 views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "UJ5vFZotzok",
+      "title": "OSCA in a Minute - Hurricane Michael",
+      "url": "https://www.youtube.com/watch?v=UJ5vFZotzok",
+      "upload_date": null,
+      "duration": 186.0,
+      "views": "49 views",
+      "age_text": "7 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "6Q9mys8sTys",
+      "title": "Welcome to the Florida Supreme Court",
+      "url": "https://www.youtube.com/watch?v=6Q9mys8sTys",
+      "upload_date": null,
+      "duration": 339.0,
+      "views": "561 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "QgC4g3T6J88",
+      "title": "Budget July 1, 2018",
+      "url": "https://www.youtube.com/watch?v=QgC4g3T6J88",
+      "upload_date": null,
+      "duration": 96.0,
+      "views": "32 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "5NuNKt51_2c",
+      "title": "Text Alerts June 15, 2018",
+      "url": "https://www.youtube.com/watch?v=5NuNKt51_2c",
+      "upload_date": null,
+      "duration": 116.0,
+      "views": "21 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "M_nFa-ITC3Y",
+      "title": "Hurricane Season June 1, 2018",
+      "url": "https://www.youtube.com/watch?v=M_nFa-ITC3Y",
+      "upload_date": null,
+      "duration": 108.0,
+      "views": "13 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "u8r03O-2RBE",
+      "title": "Eliminating Cultural Bias in the Courtroom",
+      "url": "https://www.youtube.com/watch?v=u8r03O-2RBE",
+      "upload_date": null,
+      "duration": 2649.0,
+      "views": "3.1K views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "i-TPUTZ_QnE",
+      "title": "OSCA in a Minute May 1, 2018",
+      "url": "https://www.youtube.com/watch?v=i-TPUTZ_QnE",
+      "upload_date": null,
+      "duration": 76.0,
+      "views": "96 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "u6zJO_BDqOk",
+      "title": "Risk Protection Orders May 15, 2018",
+      "url": "https://www.youtube.com/watch?v=u6zJO_BDqOk",
+      "upload_date": null,
+      "duration": 85.0,
+      "views": "360 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "ezdSVD7935k",
+      "title": "An Introduction to Labor Trafficking",
+      "url": "https://www.youtube.com/watch?v=ezdSVD7935k",
+      "upload_date": null,
+      "duration": 431.0,
+      "views": "996 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "ZCqrmd0yfq8",
+      "title": "An Introduction to Sex Trafficking",
+      "url": "https://www.youtube.com/watch?v=ZCqrmd0yfq8",
+      "upload_date": null,
+      "duration": 427.0,
+      "views": "409 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "_5XLj1YOPh4",
+      "title": "Faces of Human Trafficking: An Introduction",
+      "url": "https://www.youtube.com/watch?v=_5XLj1YOPh4",
+      "upload_date": null,
+      "duration": 370.0,
+      "views": "2.7K views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "E9JiT-y5Jsk",
+      "title": "Divorce Filings by County",
+      "url": "https://www.youtube.com/watch?v=E9JiT-y5Jsk",
+      "upload_date": null,
+      "duration": 31.0,
+      "views": "859 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "SGUSWiL2lp8",
+      "title": "Orders for Protection by County",
+      "url": "https://www.youtube.com/watch?v=SGUSWiL2lp8",
+      "upload_date": null,
+      "duration": 31.0,
+      "views": "259 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "g6pM2rf4uwo",
+      "title": "Paternity Cases filed by County",
+      "url": "https://www.youtube.com/watch?v=g6pM2rf4uwo",
+      "upload_date": null,
+      "duration": 42.0,
+      "views": "335 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "eSRcOwjMGhg",
+      "title": "Beyond the Bench Podcast Series - Court Communication",
+      "url": "https://www.youtube.com/watch?v=eSRcOwjMGhg",
+      "upload_date": null,
+      "duration": 2105.0,
+      "views": "208 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "odIKBy5U8ZU",
+      "title": "ThomasREineman",
+      "url": "https://www.youtube.com/watch?v=odIKBy5U8ZU",
+      "upload_date": null,
+      "duration": 259.0,
+      "views": "168 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "F3bcezqKoWg",
+      "title": "Whitfield Window",
+      "url": "https://www.youtube.com/watch?v=F3bcezqKoWg",
+      "upload_date": null,
+      "duration": 96.0,
+      "views": "58 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "yEAY_5vu0Oc",
+      "title": "Second Circuit Veterans Court Graduation, August 2017",
+      "url": "https://www.youtube.com/watch?v=yEAY_5vu0Oc",
+      "upload_date": null,
+      "duration": 224.0,
+      "views": "116 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "iwGR5MM-sno",
+      "title": "Hurricane Irma Update 1, Florida State Courts",
+      "url": "https://www.youtube.com/watch?v=iwGR5MM-sno",
+      "upload_date": null,
+      "duration": 100.0,
+      "views": "263 views",
+      "age_text": "8 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "Ibf61rlO61Q",
+      "title": "Tales From Delinquency Court",
+      "url": "https://www.youtube.com/watch?v=Ibf61rlO61Q",
+      "upload_date": null,
+      "duration": 790.0,
+      "views": "2.2K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "H6K8HI-W9-Q",
+      "title": "Get Psych'd About Batterer Compliance",
+      "url": "https://www.youtube.com/watch?v=H6K8HI-W9-Q",
+      "upload_date": null,
+      "duration": 1554.0,
+      "views": "353 views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "K00GkudH5vY",
+      "title": "Mythbreakers: Chapter 39 Injunctions",
+      "url": "https://www.youtube.com/watch?v=K00GkudH5vY",
+      "upload_date": null,
+      "duration": 971.0,
+      "views": "1.8K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "jF5j42tngYg",
+      "title": "Florida Injunctions for Protection, An Overview",
+      "url": "https://www.youtube.com/watch?v=jF5j42tngYg",
+      "upload_date": null,
+      "duration": 840.0,
+      "views": "4.9K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "XbebHamarUs",
+      "title": "Florida Injunctions for Protection, the Hearing",
+      "url": "https://www.youtube.com/watch?v=XbebHamarUs",
+      "upload_date": null,
+      "duration": 902.0,
+      "views": "16K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "E9XcywvcQbY",
+      "title": "Judicial Branch Long Range Strategic Plan",
+      "url": "https://www.youtube.com/watch?v=E9XcywvcQbY",
+      "upload_date": null,
+      "duration": 383.0,
+      "views": "1.7K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "e_Vbqb6AQW4",
+      "title": "Make Your Voice Heard: A Guide to Dependency Court",
+      "url": "https://www.youtube.com/watch?v=e_Vbqb6AQW4",
+      "upload_date": null,
+      "duration": 914.0,
+      "views": "2.7K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "Kh6PhoZoVUs",
+      "title": "A Family Guide to Dependency Court",
+      "url": "https://www.youtube.com/watch?v=Kh6PhoZoVUs",
+      "upload_date": null,
+      "duration": 720.0,
+      "views": "4.3K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "GJD_e_ZAbQI",
+      "title": "A Crisis Carol",
+      "url": "https://www.youtube.com/watch?v=GJD_e_ZAbQI",
+      "upload_date": null,
+      "duration": 1022.0,
+      "views": "383 views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "jfQABlM4Ggw",
+      "title": "Public Service Announcement Regarding Jury Service",
+      "url": "https://www.youtube.com/watch?v=jfQABlM4Ggw",
+      "upload_date": null,
+      "duration": 38.0,
+      "views": "1.7K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    },
+    {
+      "video_id": "bGf7OHD-v54",
+      "title": "Jury Service Orientation - A Privilege and a Responsibility",
+      "url": "https://www.youtube.com/watch?v=bGf7OHD-v54",
+      "upload_date": null,
+      "duration": 645.0,
+      "views": "2K views",
+      "age_text": "9 years ago",
+      "source": "csv:youtube-59-videos.csv"
+    }
+  ],
+  "csv_import_at": "2026-07-08T03:49:21.895871+00:00"
+}

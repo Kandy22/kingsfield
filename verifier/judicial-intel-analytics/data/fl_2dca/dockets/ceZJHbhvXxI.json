@@ -1,0 +1,30 @@
+{
+ "video_id": "ceZJHbhvXxI",
+ "title": "24 1920",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-1920"
+ ],
+ "case_number": "2D2024-1920",
+ "source": "flcourts",
+ "case_name": "Chan v. State of Florida",
+ "decided_date": "2025-08-20",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2458474/opinion/Opinion_2024-1920.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/August/20/2024-1920",
+ "ctrack_id": "ctrack_19063044",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:12:52Z",
+ "panel_judges": "Kelly; Rothstein-Youakim; Smith",
+ "trial_judge": "Robin F. Fuson",
+ "county": "Hillsborough",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT ESWIN ROLANDO CHAN, Appellant, v. STATE OF FLORIDA, Appellee. No. 2D2024-1920 August 20, 2025 Appeal from the Circuit Court for Hillsborough County; Robin F. Fuson, Judge. William F. Sansone of Sansone Law, P.A., Tampa",
+ "appellee_counsel": "TATE OF FLORIDA, Appellee. No. 2D2024-1920 August 20, 2025 Appeal from the Circuit Court for Hillsborough County; Robin F. Fuson, Judge. William F. Sansone of Sansone Law, P.A., Tampa, for Appellant. James Uthmeier, Attorney General, Tallahassee, and Clara V. Murga, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 812
+}

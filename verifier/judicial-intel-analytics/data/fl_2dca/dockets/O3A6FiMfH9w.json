@@ -1,0 +1,30 @@
+{
+ "video_id": "O3A6FiMfH9w",
+ "title": "2D19-4789",
+ "found": true,
+ "case_numbers_all": [
+  "2D2019-4789"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:08:44Z",
+ "case_number": "2D2019-4789",
+ "case_name": "ZURICH AMERICAN INS. CO.  vs DESIREE SAMSON, ET AL.",
+ "decided_date": "2022-01-12",
+ "disposition_text": "Affirmed in Part/Reversed in Part and remanded.",
+ "disposition": "mixed",
+ "opinion_type": "Affirmed in Part/Reversed in Part",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/821203/opinion/Opinion_19-4789.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/January/12/19-4789",
+ "ctrack_id": "4642267",
+ "n_decision_records": 2,
+ "author": "Silberman",
+ "panel_judges": "Silberman; Atkinson; Smith",
+ "trial_judge": "Gregory P. Holder",
+ "county": "Hillsborough",
+ "appellee_counsel": "I, Appellees/Cross-Appellants. No. 2D19-4789 January 12, 2022 Appeal from the Circuit Court for Hillsborough County; Gregory P. Holder, Judge. Samuel B. Spinner and Hinda Klein of Conroy Simberg, Hollywood, for Appellant/Cross-Appellee. Daniel W. McKnight of William H. McKnight, Esquire, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 15240
+}

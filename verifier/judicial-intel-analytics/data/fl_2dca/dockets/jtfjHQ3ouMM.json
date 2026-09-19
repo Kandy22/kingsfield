@@ -1,0 +1,30 @@
+{
+ "video_id": "jtfjHQ3ouMM",
+ "title": "22 0553   23 1107",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-0553",
+  "2D2023-1107"
+ ],
+ "case_number": "2D2022-0553",
+ "source": "flcourts",
+ "case_name": "WHITE v. HUGHES INSURANCE SERVICES, INC., PROGRESSIVE SELECT INSURANCE COMPANY",
+ "decided_date": "2024-09-13",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2440406/opinion/Opinion_2022-0553.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/September/13/2022-0553",
+ "ctrack_id": "ctrack_18649096",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:14:30Z",
+ "trial_judge": "Edward Nicholas",
+ "county": "Manatee",
+ "appellant_counsel": "HES INSURANCE SERVICES, INC., Appellees. No. 2D2022-0553 September 13, 2024 Appeal from the Circuit Court for Manatee County; Edward Nicholas, Judge. George A. Vaka, Nancy A. Lauten, and Kurt Jairo Rosales of Vaka Law Group, P.L., Tampa; and Andrew Klymenko of Coleman & Klymenko, LLC, St. Petersburg",
+ "appellee_counsel": "ounty; Edward Nicholas, Judge. George A. Vaka, Nancy A. Lauten, and Kurt Jairo Rosales of Vaka Law Group, P.L., Tampa; and Andrew Klymenko of Coleman & Klymenko, LLC, St. Petersburg, for Appellant. Jennifer C. Worden, Emily K. Silver, and Daniel A. Martinez of Segundo Law Group, PLLC, St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1084
+}

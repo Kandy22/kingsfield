@@ -1,0 +1,41 @@
+{
+ "video_id": "6Ckt1EAGCJk",
+ "title": "25 0477",
+ "case_number": "2D2025-0477",
+ "case_numbers_all": [
+  "2D2025-0477"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0477",
+ "case_name": "Doe v. Federation Francaise Des Sports De Glace, d/b/a French Federation of Ice Sports, et al",
+ "decided_date": "2026-02-25",
+ "cl_cluster_id": 10800205,
+ "cl_opinion_id": 11266881,
+ "cl_url": "https://www.courtlistener.com/opinion/10800205/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pasco",
+ "trial_judge": "Susan Barthle",
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 951,
+ "_tried": [
+  "2D2025-0477"
+ ],
+ "looked_up_at": "2026-09-19T07:03:51Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2485389/opinion/Opinion_2025-0477.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/february/25/2025-0477",
+ "ctrack_id": "ctrack_19306897",
+ "n_decision_records": 1
+}

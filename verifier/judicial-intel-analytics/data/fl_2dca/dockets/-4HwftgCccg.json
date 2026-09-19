@@ -1,0 +1,28 @@
+{
+ "video_id": "-4HwftgCccg",
+ "title": "21 78",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0078"
+ ],
+ "case_number": "2D2021-0078",
+ "source": "flcourts",
+ "case_name": "PHILIP JACKSON VS CITY OF ST. PETERSBURG",
+ "decided_date": "2023-04-26",
+ "disposition_text": "Affirmed - Per Curiam Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2432286/opinion/Opinion_2021-0078.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/April/26/2021-0078",
+ "ctrack_id": "ctrack_16496099",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:02:04Z",
+ "panel_judges": "Casanueva; Silberman; Lucas",
+ "trial_judge": "Amy Williams",
+ "county": "Pinellas",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1171
+}

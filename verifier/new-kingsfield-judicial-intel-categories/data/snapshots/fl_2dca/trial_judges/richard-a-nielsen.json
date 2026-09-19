@@ -1,0 +1,37 @@
+{
+ "judge_id": "richard-a-nielsen",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 6,
+   "affirmed": 5,
+   "reversed": 1,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.167,
+   "reversal_rate_ci95": {
+    "lo": 0.03,
+    "hi": 0.564,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-1196",
+    "2D2020-1575",
+    "2D2020-1952",
+    "2D2021-0114",
+    "2D2019-1532",
+    "2D2020-2440"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

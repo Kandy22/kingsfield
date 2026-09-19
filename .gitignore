@@ -68,3 +68,36 @@ lcov.info
 # Heavy media — never in git (decisions.md 2026-07-03: data weight via gitignore)
 videos/
 *.zip
+
+# 2026-09-19: media and Keynote decks never go in git (GitHub hard limit 100 MB;
+# 14 untracked files were 50–512 MB). Regenerable data is ignored per-tool below.
+*.key
+*.mp4
+*.mov
+*.MOV
+*.m4a
+*.psd
+/final-ui-assets/Videos UI/
+/wp-legacy-plugin/Wordperfect, LibreOffice etc/Public file share - Files - The Document Foundation Nextcloud.pdf
+/Verifier/judicial-intel-analytics/ML-LJP video SIGIR-frp8635
+/verifier/judicial-intel-analytics/ML-LJP video SIGIR-frp8635
+/Verifier/judicial-court-videos/*.mp4
+/verifier/judicial-court-videos/*.mp4
+
+# nested git repositories — clone separately (or convert to submodules); never embed
+/Big-blue-marble/
+/Face-mood-tracker/face-mood-tracker-code/
+/Verifier/neuro-stack/THINGS-data/
+/Verifier/neuro-stack/THINGSvision/
+/Verifier/neuro-stack/eeg_encoding/
+/Verifier/neuro-stack/emg2qwerty/
+/Verifier/video-analyzer4/
+/verifier/neuro-stack/THINGS-data/
+/verifier/neuro-stack/THINGSvision/
+/verifier/neuro-stack/eeg_encoding/
+/verifier/neuro-stack/emg2qwerty/
+/verifier/video-analyzer4/
+/Wingman-in-your-ear/wingman-demo/
+/Yesinisusah-master/Vuemmerce/
+/hf_workspace/
+/.claude/worktrees/

@@ -1,0 +1,29 @@
+{
+ "video_id": "W6kRk1YbKGU",
+ "title": "23 1260",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-1260"
+ ],
+ "case_number": "2D2023-1260",
+ "source": "flcourts",
+ "case_name": "CASSELL v. LAWYERS' FUND FOR CLIENT PROTECTION OF THE STATE OF NEW YORK",
+ "decided_date": "2024-02-09",
+ "disposition_text": "Affirmed - Per Curiam Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2405560/opinion/Opinion_2023-1260.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/February/09/2023-1260",
+ "ctrack_id": "ctrack_16685407",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:10:57Z",
+ "panel_judges": "Rothstein-Youakim; Atkinson; Smith",
+ "trial_judge": "Stephen Matthew Walker",
+ "county": "Sarasota",
+ "appellee_counsel": "D DISTRICT STUART CASSELL, Appellant, v. LAWYERS' FUND FOR CLIENT PROTECTION OF THE STATE OF NEW YORK, Appellee. No. 2D23-1260 February 9, 2024 Appeal from the Circuit Court for Sarasota County; Stephen Matthew Walker, Judge. Stuart Cassell, pro se. Matthew J. Brown of Dinsmore & Shohl, LLP, Orlando",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 779
+}
