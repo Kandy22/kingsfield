@@ -1,0 +1,301 @@
+"""Build kingsfield_florida.db from CourtListener bulk CSVs (stdlib only).
+
+Constraint A: Gate 1 (pipeline/gate1.py, backend/src/verification/local_sqlite_gate.ts)
+answers existence for Florida state-court reporter keys from this file only.
+Constraint B: raw opinion text goes to caselaw_opinion; summaries and GoodLaw
+tags go to caselaw_analysis. The two tables are never joined or written together,
+and this script creates caselaw_analysis empty.
+
+Inputs (plain .csv or .csv.bz2, found by prefix in --corpus):
+    citations*.csv          id, volume, reporter, page, cluster_id
+    opinion-clusters*.csv   id, case_name, docket_id
+    dockets*.csv            id, court_id
+    page-bounds*.csv        OPTIONAL: cluster_id, first_page, last_page   (CAP-derived)
+    opinions*.csv           OPTIONAL: cluster_id, id, plain_text         (raw text only)
+
+No headnotes, syllabi, summaries, or key numbers are read from any column.
+
+Every file is streamed row by row; none is loaded whole. The citations file is read
+twice (once to find Fla. L. Weekly clusters, once to insert), which keeps memory
+proportional to the Florida subset rather than the corpus.
+
+The build writes <db>.tmp and renames it into place on success, so a failed build
+never leaves a half-written database at the real path. Never point this at the
+corpus volume without the lead's go-ahead; the volume holds the multi-GB inputs.
+"""
+
+from __future__ import annotations
+
+import argparse
+import bz2
+import csv
+import io
+import os
+import re
+import sqlite3
+import sys
+from pathlib import Path
+from typing import Dict, Iterator, Optional, Set, Tuple
+
+DEFAULT_CORPUS = "/Volumes/Kingsfield_Corpus"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_DB = REPO_ROOT / "kingsfield_florida.db"
+
+# CourtListener court ids for Florida state courts: Supreme Court and the
+# District Courts of Appeal (all six DCAs share one id).
+FLORIDA_COURT_IDS = frozenset({"fla", "fladistctapp"})
+
+SOUTHERN_KEYS = ("So.", "So. 2d", "So. 3d")
+WEEKLY_KEYS = ("Fla. L. Weekly", "Fla. L. Weekly Supp.")
+
+# loose key (lowercase alphanumerics) -> canonical reporters_db key. Stdlib only,
+# so this is the small closed set CourtListener actually emits for these reporters.
+_LOOSE_TO_CANON = {
+    "so": "So.",
+    "so2d": "So. 2d",
+    "so3d": "So. 3d",
+    "flalweekly": "Fla. L. Weekly",
+    "flalweeklysupp": "Fla. L. Weekly Supp.",
+}
+
+SCHEMA = """
+CREATE TABLE citation_index (
+    reporter    TEXT    NOT NULL,
+    volume      INTEGER NOT NULL,
+    page        INTEGER NOT NULL,
+    section     TEXT    NOT NULL DEFAULT '',
+    cluster_id  INTEGER NOT NULL,
+    case_name   TEXT,
+    court_id    TEXT,
+    first_page  INTEGER,
+    last_page   INTEGER
+);
+CREATE UNIQUE INDEX uq_citation_row ON citation_index(reporter, volume, page, section, cluster_id);
+CREATE TABLE caselaw_opinion (
+    cluster_id  INTEGER NOT NULL,
+    opinion_id  INTEGER,
+    plain_text  TEXT
+);
+CREATE TABLE caselaw_analysis (
+    cluster_id  INTEGER NOT NULL,
+    summary     TEXT,
+    goodlaw_tag TEXT,
+    source      TEXT
+);
+"""
+
+INDEXES = """
+CREATE INDEX idx_citation_rvp ON citation_index(reporter, volume, page, section);
+CREATE INDEX idx_opinion_cluster ON caselaw_opinion(cluster_id);
+CREATE INDEX idx_analysis_cluster ON caselaw_analysis(cluster_id);
+"""
+
+
+# CourtListener opinion rows hold whole opinions in one field; raise the csv cap.
+_limit = sys.maxsize
+while True:
+    try:
+        csv.field_size_limit(_limit)
+        break
+    except OverflowError:
+        _limit //= 10
+
+
+def canonical_reporter(raw: str) -> Optional[str]:
+    """Map a CourtListener reporter string to the canonical key, or None."""
+    loose = re.sub(r"[^a-z0-9]", "", (raw or "").lower())
+    return _LOOSE_TO_CANON.get(loose)
+
+
+def _find(corpus: Path, prefix: str) -> Optional[Path]:
+    """Locate '<prefix>*.csv' or '<prefix>*.csv.bz2' (first by sorted name)."""
+    hits = sorted(
+        p for p in corpus.iterdir()
+        if p.is_file() and p.name.startswith(prefix)
+        and (p.name.endswith(".csv") or p.name.endswith(".csv.bz2"))
+    )
+    return hits[0] if hits else None
+
+
+def _rows(path: Path) -> Iterator[Dict[str, str]]:
+    """Stream a CSV (optionally bz2) as dict rows."""
+    if path.name.endswith(".bz2"):
+        raw = bz2.open(path, "rb")
+    else:
+        raw = open(path, "rb")
+    with raw:
+        text = io.TextIOWrapper(raw, encoding="utf-8", errors="replace", newline="")
+        yield from csv.DictReader(text)
+
+
+def split_page(reporter: str, value: Optional[str]) -> Optional[Tuple[str, int]]:
+    """Return (section, page) or None. Fla. L. Weekly pages carry a division letter:
+    "D500" -> ("D", 500). Every other key takes digits only ("" section)."""
+    if value is None:
+        return None
+    value = value.strip()
+    if reporter == "Fla. L. Weekly":
+        m = re.fullmatch(r"([A-Z]?)([0-9]{1,9})", value)
+        return (m.group(1), int(m.group(2))) if m else None
+    n = _int(value)
+    return ("", n) if n is not None else None
+
+
+def _int(value: Optional[str]) -> Optional[int]:
+    """Strict base-10 ASCII integer; None for anything else (blank, 'D123', unicode digits)."""
+    if value is None:
+        return None
+    value = value.strip()
+    if not re.fullmatch(r"[0-9]{1,9}", value):
+        return None
+    return int(value)
+
+
+def build_index(
+    corpus_dir,
+    db_path,
+    florida_court_ids=FLORIDA_COURT_IDS,
+) -> dict:
+    corpus = Path(corpus_dir)
+    db_path = Path(db_path)
+
+    citations = _find(corpus, "citations")
+    clusters = _find(corpus, "opinion-clusters")
+    dockets = _find(corpus, "dockets")
+    bounds = _find(corpus, "page-bounds")
+    opinions = _find(corpus, "opinions")
+    missing = [n for n, p in (("citations", citations), ("opinion-clusters", clusters), ("dockets", dockets)) if p is None]
+    if missing:
+        raise FileNotFoundError(f"missing required CSV(s) in {corpus}: {', '.join(missing)}")
+
+    stats = {
+        "dockets_florida": 0,
+        "weekly_clusters": 0,
+        "clusters_kept": 0,
+        "citations_seen": 0,
+        "citations_inserted": 0,
+        "skipped_bad_page": 0,
+        "skipped_no_cluster": 0,
+        "bounds_rows": 0,
+        "opinions_inserted": 0,
+    }
+
+    # Pass 1: Florida docket ids.
+    docket_court: Dict[str, str] = {}
+    for row in _rows(dockets):
+        if row.get("court_id") in florida_court_ids:
+            docket_court[row["id"]] = row["court_id"]
+    stats["dockets_florida"] = len(docket_court)
+
+    # Pass 2: clusters named by Fla. L. Weekly citations (kept regardless of court).
+    weekly_clusters: Set[str] = set()
+    for row in _rows(citations):
+        if canonical_reporter(row.get("reporter", "")) in WEEKLY_KEYS:
+            weekly_clusters.add(row.get("cluster_id", ""))
+    stats["weekly_clusters"] = len(weekly_clusters)
+
+    # Pass 3: clusters. Only id, case_name, docket_id are read.
+    cluster_name: Dict[str, str] = {}
+    cluster_court: Dict[str, Optional[str]] = {}
+    for row in _rows(clusters):
+        cid = row.get("id", "")
+        court = docket_court.get(row.get("docket_id", ""))
+        if court is not None or cid in weekly_clusters:
+            cluster_name[cid] = row.get("case_name", "") or ""
+            cluster_court[cid] = court
+    stats["clusters_kept"] = len(cluster_name)
+
+    bounds_map: Dict[str, Tuple[Optional[int], Optional[int]]] = {}
+    if bounds is not None:
+        for row in _rows(bounds):
+            cid = row.get("cluster_id", "")
+            if cid in cluster_name:
+                bounds_map[cid] = (_int(row.get("first_page")), _int(row.get("last_page")))
+        stats["bounds_rows"] = len(bounds_map)
+
+    tmp = db_path.with_name(db_path.name + ".tmp")
+    if tmp.exists():
+        tmp.unlink()
+    conn = sqlite3.connect(str(tmp))
+    try:
+        conn.executescript(SCHEMA)
+
+        # Pass 4: insert citations.
+        batch = []
+        for row in _rows(citations):
+            stats["citations_seen"] += 1
+            reporter = canonical_reporter(row.get("reporter", ""))
+            if reporter is None:
+                continue
+            cid = row.get("cluster_id", "")
+            if cid not in cluster_name:
+                # So.* rows outside Florida courts land here by design.
+                if reporter in SOUTHERN_KEYS:
+                    continue
+                stats["skipped_no_cluster"] += 1
+                continue
+            if reporter in SOUTHERN_KEYS and cluster_court.get(cid) not in florida_court_ids:
+                continue
+            volume, sp = _int(row.get("volume")), split_page(reporter, row.get("page"))
+            if volume is None or sp is None:
+                stats["skipped_bad_page"] += 1
+                continue
+            section, page = sp
+            first, last = bounds_map.get(cid, (None, None))
+            batch.append((
+                reporter, volume, page, section, int(cid), cluster_name[cid],
+                cluster_court.get(cid), first if first is not None else page, last,
+            ))
+            if len(batch) >= 5000:
+                stats["citations_inserted"] += _flush(conn, batch)
+                batch = []
+        if batch:
+            stats["citations_inserted"] += _flush(conn, batch)
+
+        # Optional raw opinion text. plain_text only; no other column is read.
+        if opinions is not None:
+            obatch = []
+            for row in _rows(opinions):
+                cid = row.get("cluster_id", "")
+                if cid not in cluster_name or _int(cid) is None:
+                    continue
+                obatch.append((int(cid), _int(row.get("id")), row.get("plain_text", "") or ""))
+                if len(obatch) >= 500:
+                    conn.executemany("INSERT INTO caselaw_opinion VALUES (?,?,?)", obatch)
+                    stats["opinions_inserted"] += len(obatch)
+                    obatch = []
+            if obatch:
+                conn.executemany("INSERT INTO caselaw_opinion VALUES (?,?,?)", obatch)
+                stats["opinions_inserted"] += len(obatch)
+
+        conn.executescript(INDEXES)
+        conn.commit()
+    except BaseException:
+        conn.close()
+        if tmp.exists():
+            tmp.unlink()
+        raise
+    conn.close()
+    os.replace(tmp, db_path)
+    return stats
+
+
+def _flush(conn: sqlite3.Connection, batch: list) -> int:
+    before = conn.total_changes
+    conn.executemany("INSERT OR IGNORE INTO citation_index VALUES (?,?,?,?,?,?,?,?,?)", batch)
+    return conn.total_changes - before
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description="Build kingsfield_florida.db from CourtListener bulk CSVs.")
+    ap.add_argument("--corpus", default=DEFAULT_CORPUS)
+    ap.add_argument("--out", default=str(DEFAULT_DB))
+    args = ap.parse_args(argv)
+    stats = build_index(args.corpus, args.out)
+    for k, v in stats.items():
+        print(f"{k}: {v}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

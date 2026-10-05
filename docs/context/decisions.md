@@ -158,3 +158,21 @@ There is no formal tag, hashtag, or topic code for AI-hallucination cases in any
 - **Commit policy after the repo-deletion incident:** work goes up on a branch + PR; deletions are never staged without explicit review; media, Keynote decks, nested git repos and regenerable caption/transcript data are gitignored (see `.gitignore` and `verifier/.gitignore`, 2026-09-19 blocks).
 - **Mike upstream is not to be synced blind.** `Kandy22/mike` is a current standalone copy of upstream; merging its 600+ changes into Kingsfield is a planned migration, not a routine pull.
 
+## 2026-10-05 — Deterministic citation cascade: local SQLite Gate 1
+
+- **SQLite replaces Task 3.1's Postgres/pgvector for Gate 1.** `kingsfield_florida.db` (B-tree index on reporter, volume, page) serves single-user, local, deterministic lookups. Postgres/pgvector is reserved for multi-user deployment.
+- **Constraint A is Florida-scoped.** Florida keys (Southern Reporter with a Florida court parenthetical, `Fla. L. Weekly`, `Fla. L. Weekly Supp.`) must match locally or veto. Federal and other state keys fall through to CourtListener `citationLookup()`. Southern Reporter also covers other states, so the reporter alone does not make a citation Florida. A Southern Reporter citation with no court parenthetical is vetoed as malformed. `Fla. L. Weekly` stays in scope and fails closed until its data is loaded.
+- **Production integration is a pre-filter, not a replacement.** The 2026-07-27 rule stands: `citationLookup()` is not refactored. `backend/src/verification/local_sqlite_gate.ts` runs first; the lead wires it into `pipeline.ts` after adversary signoff and a separate review.
+- **The runtime check uses Node's built-in `node:sqlite`**, not `better-sqlite3`. Fallback: a synchronous Python SQLite child process.
+- **Von does not run on this Intel Mac.** The newest PyTorch with a macOS x86_64 wheel is 2.2.2 and Docker is not installed. The router ships with `direct_db` as the hardcoded fallback and a stub `/v1/systemone` client for a remote Von server.
+- **Python cascade code lives at the repo root** (`db/`, `pipeline/`, `router/`) and runs on `~/.venv-cascade` (Python 3.12, eyecite). Bulk CourtListener CSVs and CAP data go only to `/Volumes/Kingsfield_Corpus`.
+- **The adversary agent owns the bypass tests**, not the builder, so the builder cannot weaken the suite it must pass.
+
+
+## 2026-10-05 — Gate 1 scope rulings made while building the local gate
+
+- **Southern Reporter falls through only on positive identification.** A So./So. 2d/So. 3d cite falls through to CourtListener only when its parenthetical matches a closed list of known non-Florida courts (Ala./La./Miss. variants, federal). Anything unrecognized — `(citation omitted)`, OCR damage like `(F1a.)` — vetoes. Reason: "not Florida" by default was a fail-open hole the adversary found.
+- **Florida parenthetical + unrecognized or OCR-confusable reporter vetoes; a reporters_db-recognized reporter falls through.** `S0. 3d` and `FIa. L. Weekly` veto. `WL`, `Fla.` (Florida Reports), `Fla. Supp.` and `F.3d` fall through per Constraint A.
+- **Fla. L. Weekly division letters are part of the key.** `citation_index.section` exists, and D500, S500 and 500 never match each other.
+- **Court level is cross-checked; DCA district is not.** A `(Fla. YEAR)` cite against a stored `fladistctapp` record, or a DCA cite against a stored `fla` record, vetoes as `court_mismatch`. District numbers aren't compared, because CourtListener lumps all DCAs into one court id.
+- **Backend-wide bypass test is deferred to wiring, not dropped.** The adversary's check for `citationLookup()` calls outside the gate skips until `local_sqlite_gate` is imported into backend code, then goes live. `researcher.ts:123` is the known open bypass it will catch.
