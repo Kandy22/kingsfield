@@ -20,7 +20,7 @@
  * this file directly via type stripping. Not wired into pipeline.ts.
  */
 
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -40,6 +40,10 @@ export type LocalGate1Options = {
   dbPath?: string;
   /** Skip node:sqlite and use the Python child process (tests; also what a load failure does). */
   forcePythonFallback?: boolean;
+  /** localGate1Text only: child-process timeout in ms (tests; default 30000). */
+  textTimeoutMs?: number;
+  /** localGate1Text only: longest a call waits for a free child slot, in ms (default 30000). */
+  textQueueWaitMs?: number;
 };
 
 const MAX_CITATION_CHARS = 2000;
@@ -933,4 +937,221 @@ export function localGate1(citation: string, opts?: LocalGate1Options): Gate1Res
   } catch {
     return veto('internal_error');
   }
+}
+
+// ---------------------------------------------------------------------------
+// Draft mode. All parsing and resolution stays in pipeline/gate1.py check_text(); this is an
+// asynchronous child-process wrapper (draft on stdin, never in argv) that only validates the
+// JSON shape. There is deliberately no TypeScript citation parser here.
+// ---------------------------------------------------------------------------
+
+export type Gate1CiteKind = 'full' | 'short' | 'id' | 'supra' | 'unparsed';
+
+export type Gate1TextResult = Gate1Result & {
+  kind: Gate1CiteKind;
+  /** The citation as it appears in the CLEANED draft: text === cleaned.slice(start, end) in code points. */
+  text: string;
+  /** Full-citation window this resolves to: itself for a full cite, the antecedent's for short/Id./supra. */
+  fullCitation: string | null;
+  /**
+   * start/end are offsets (Python code points) into the CLEANED draft that gate1.py checked: the
+   * draft after HTML, markdown, entity and format/control-character removal and whitespace
+   * collapsing. They are NOT offsets into the original draft (and are code points, not UTF-16
+   * units). Never use them to slice, highlight or rewrite the original draft.
+   */
+  start: number;
+  end: number;
+};
+
+/** Largest draft sent to the gate; a longer one is a single `too_long` veto. */
+export const MAX_DRAFT_CHARS = 200_000;
+const PY_TEXT_TIMEOUT_MS = 30000;
+const PY_TEXT_MAX_BUFFER = 64 * 1024 * 1024;
+/** At most this many Python children run at once in this process; further calls queue. */
+export const MAX_TEXT_CHILDREN = 4;
+/** A call that cannot get a child slot within this long resolves to a `gate_busy` veto. */
+const TEXT_QUEUE_WAIT_MS = 30000;
+let activeTextChildren = 0;
+const textQueue: Array<() => void> = [];
+const NON_CASE_ANTECEDENT = 'non_case_antecedent';
+
+const CITE_KINDS: ReadonlySet<string> = new Set(['full', 'short', 'id', 'supra', 'unparsed']);
+
+function textVeto(reason: string): Gate1TextResult[] {
+  return [{ verdict: 'veto', reason, clusterId: null, kind: 'unparsed', text: '', fullCitation: null, start: 0, end: 0 }];
+}
+
+function isInt(v: unknown): v is number {
+  return typeof v === 'number' && Number.isSafeInteger(v);
+}
+
+function intOrNull(o: Record<string, unknown>, key: string): number | null | undefined {
+  if (!(key in o)) return undefined;
+  const v = o[key];
+  if (v === null) return null;
+  return isInt(v) ? v : undefined;
+}
+
+function strOrNull(o: Record<string, unknown>, key: string): string | null | undefined {
+  if (!(key in o)) return undefined;
+  const v = o[key];
+  if (v === null) return null;
+  return typeof v === 'string' ? v : undefined;
+}
+
+/** Shape check only. Returns null on anything the contract does not allow. */
+function parseTextResults(raw: string): Gate1TextResult[] | null {
+  const parsed: unknown = JSON.parse(raw);
+  if (!Array.isArray(parsed)) return null;
+  const out: Gate1TextResult[] = [];
+  for (const item of parsed as unknown[]) {
+    if (typeof item !== 'object' || item === null || Array.isArray(item)) return null;
+    const o = item as Record<string, unknown>;
+    const verdict = o.verdict;
+    if (verdict !== 'pass' && verdict !== 'veto' && verdict !== 'fall_through') return null;
+    if (typeof o.reason !== 'string' || o.reason === '') return null;
+    const kind = o.kind;
+    if (typeof kind !== 'string' || !CITE_KINDS.has(kind)) return null;
+    if (typeof o.text !== 'string') return null;
+    const reporter = strOrNull(o, 'reporter');
+    const volume = intOrNull(o, 'volume');
+    const page = intOrNull(o, 'page');
+    const clusterId = intOrNull(o, 'cluster_id');
+    const fullCitation = strOrNull(o, 'full_citation');
+    if (reporter === undefined || volume === undefined || page === undefined) return null;
+    if (clusterId === undefined || fullCitation === undefined) return null;
+    const start = o.start;
+    const end = o.end;
+    if (!isInt(start) || !isInt(end) || start < 0 || end < start) return null;
+    // Contract: a pass names its record and its full citation; a fall_through names the full
+    // citation to look up, except the non_case_antecedent skip.
+    if (verdict === 'pass' && (clusterId === null || fullCitation === null)) return null;
+    if (verdict === 'fall_through' && fullCitation === null && o.reason !== NON_CASE_ANTECEDENT) return null;
+    const r: Gate1TextResult = {
+      verdict,
+      reason: o.reason,
+      clusterId,
+      kind: kind as Gate1CiteKind,
+      text: o.text,
+      fullCitation,
+      start,
+      end,
+    };
+    if (reporter !== null) r.reporter = reporter;
+    if (volume !== null) r.volume = volume;
+    if (page !== null) r.page = page;
+    out.push(r);
+  }
+  return out;
+}
+
+/**
+ * Gate 1 over a whole draft: one result per case-citation occurrence (full, short-form, Id.,
+ * supra), ordered by position. [] means only "no case citations in the draft" (an empty or
+ * whitespace-only draft is []); every failure resolves to exactly one veto result.
+ *
+ * Asynchronous: the Python gate runs as a child process (draft on stdin, never in argv). The
+ * promise always resolves, never rejects, settles exactly once, and a timeout kills the child.
+ * At most MAX_TEXT_CHILDREN children run at once; further calls queue and resolve to a
+ * `gate_busy` veto if no slot frees up within the queue-wait bound.
+ */
+export function localGate1Text(draft: string, opts?: LocalGate1Options): Promise<Gate1TextResult[]> {
+  return new Promise<Gate1TextResult[]>((resolvePromise) => {
+    let settled = false;
+    let holdsSlot = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let queueTimer: ReturnType<typeof setTimeout> | undefined;
+    let waiter: (() => void) | undefined;
+    let child: ReturnType<typeof spawn> | undefined;
+    const releaseSlot = (): void => {
+      if (!holdsSlot) return;
+      holdsSlot = false;
+      activeTextChildren--;
+      const next = textQueue.shift();
+      if (next !== undefined) next();
+    };
+    const settle = (results: Gate1TextResult[]): void => {
+      if (settled) return;
+      settled = true;
+      if (timer !== undefined) clearTimeout(timer);
+      if (queueTimer !== undefined) clearTimeout(queueTimer);
+      if (waiter !== undefined) {
+        const i = textQueue.indexOf(waiter);
+        if (i >= 0) textQueue.splice(i, 1);
+      }
+      if (child !== undefined && child.exitCode === null && child.signalCode === null) {
+        try {
+          child.kill('SIGKILL');
+        } catch {
+          // already gone
+        }
+      }
+      // The slot is NOT released here: a killed child still occupies a process until its 'close'
+      // event, so releaseSlot() runs from the child's 'close' (or 'error' when it never spawned).
+      resolvePromise(results);
+    };
+    const run = (): void => {
+      try {
+        holdsSlot = true;
+        activeTextChildren++;
+        if (queueTimer !== undefined) clearTimeout(queueTimer);
+        const dbPath = opts?.dbPath ?? process.env.KINGSFIELD_FLORIDA_DB ?? join(repoRoot(), 'kingsfield_florida.db');
+        const py = join(homedir(), '.venv-cascade', 'bin', 'python');
+        const script = join(repoRoot(), 'pipeline', 'gate1.py');
+        spawnChild(py, script, dbPath);
+      } catch {
+        // Spawn threw synchronously: no child exists, so nothing will ever emit 'close'.
+        if (child === undefined || child.pid === undefined) releaseSlot();
+        settle(textVeto('internal_error'));
+      }
+    };
+    const spawnChild = (py: string, script: string, dbPath: string): void => {
+      const chunks: Buffer[] = [];
+      let total = 0;
+      child = spawn(py, [script, '--db', dbPath, '--text', '-'], { stdio: ['pipe', 'pipe', 'ignore'] });
+      timer = setTimeout(() => settle(textVeto('python_text_failed')), opts?.textTimeoutMs ?? PY_TEXT_TIMEOUT_MS);
+      child.on('error', () => {
+        // Spawn failure (ENOENT etc.): no pid, no 'close'. Otherwise 'close' releases the slot.
+        if (child !== undefined && child.pid === undefined) releaseSlot();
+        settle(textVeto('python_text_failed'));
+      });
+      child.stdin?.on('error', () => {
+        // EPIPE when the child exits early: the close/error handlers decide the verdict.
+      });
+      child.stdout?.on('data', (d: Buffer) => {
+        total += d.length;
+        if (total > PY_TEXT_MAX_BUFFER) {
+          chunks.length = 0;
+          settle(textVeto('python_text_failed'));
+          return;
+        }
+        chunks.push(d);
+      });
+      child.on('close', (code: number | null, signal: string | null) => {
+        releaseSlot(); // the child is reaped: exactly once (holdsSlot guards), even after a timeout kill
+        if (settled) return;
+        if (code !== 0 || signal !== null) return settle(textVeto('python_text_failed'));
+        let results: Gate1TextResult[] | null;
+        try {
+          results = parseTextResults(Buffer.concat(chunks).toString('utf8'));
+        } catch {
+          results = null;
+        }
+        settle(results ?? textVeto('python_text_bad_output'));
+      });
+      child.stdin?.end(draft, 'utf8');
+    };
+    try {
+      if (typeof draft !== 'string') return settle(textVeto('unparseable'));
+      if (draft.length > MAX_DRAFT_CHARS) return settle(textVeto('too_long'));
+      if (draft.trim() === '') return settle([]);
+      if (activeTextChildren < MAX_TEXT_CHILDREN) return run();
+      // All child slots are busy: wait in line, but never longer than the queue-wait bound.
+      waiter = run;
+      textQueue.push(waiter);
+      queueTimer = setTimeout(() => settle(textVeto('gate_busy')), opts?.textQueueWaitMs ?? TEXT_QUEUE_WAIT_MS);
+    } catch {
+      settle(textVeto('internal_error'));
+    }
+  });
 }

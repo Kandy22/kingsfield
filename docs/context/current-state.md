@@ -1,7 +1,50 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-09-19 (judicial-intel OA panel — full 2DCA run, catalog implemented)*
+*Last updated: 2026-10-06 (Gate 1 draft mode + backend wiring on `feature/local-sqlite-gate1` — adversary signoff verified; urgent auth issue on main)*
 
 ---
+
+## 🚨 URGENT, fix on `main` independently of any branch: unauthenticated model routes are live
+
+**`POST /api/crew/chat` is unauthenticated and live on `main` today.** `backend/src/routes/index.ts:349` (`r.post('/crew/chat', async (req, res) => …)`) has no `requireAuth`, and `backend/src/index.ts:127` mounts the router at `/api`. Anyone who can reach the backend can burn our model API keys and get Crew output whose citations never pass Gate 1. The header comment at `routes/index.ts:11-12` claims the hallucination guard is applied; it is not. The frontend does not call this route (decisions.md 2026-07-03), so removing it or adding `requireAuth` breaks nothing user-facing.
+
+Found while verifying, same file on `main`, also without `requireAuth`: `POST /api/council` (11 model calls per session across Claude + Gemini, output unverified), `GET /api/council/:id`, `/:id/html` and `/:id/markdown` (serve stored council sessions by id), and `GET /api/research/case-law` and `/research/courts` (proxy CourtListener with our token).
+
+**Fix:** remove the demo routes or put `requireAuth` on every one of them, in its own change on `main`. Do not wait for `feature/local-sqlite-gate1`; that branch is blocked on other things.
+
+## ⭐ 2026-10-06 — Gate 1 draft mode built and wired on `feature/local-sqlite-gate1`; adversary signoff VERIFIED
+
+Task `[module] Gate 1 draft mode` (id `gate1-draft-mode`). Nothing committed. Signoff `.claude/signoffs/gate1-draft-mode.signoff` = `dea18c05…` (tree digest now also covers `pipeline.ts` and `researcher.ts`). Verified 2026-10-06 by running `require_adversary_signoff.py` with the task payload: exit 0, 200 s. Adversary suite: 214 tests, 0 failures, 0 errors, 5 documented skips (W3 + findings 1-3), 189 s. Builder suite: 154 pass. Any edit to a digested file invalidates the signoff. Directional decisions: decisions.md 2026-10-05 "Gate 1 draft mode and backend wiring" and 2026-10-06.
+
+- **Built (backend_builder):** `localGate1Text()` in `local_sqlite_gate.ts`, an async child-process wrapper around `check_text()` in `pipeline/gate1.py` (draft on stdin, max 4 concurrent children, slot released on child `close`, `gate_busy` veto on queue wait, every failure resolves to one veto). Short cites / Id. / supra resolved via eyecite with name and pin checks; residue detector vetoes Florida-looking tokens no result covers. 145 builder tests pass.
+- **Wired (lead):** `verifyCitation`, `verifyDraft` and `confirmExistence()` in `pipeline.ts` run local Gate 1 before the cache and any CourtListener call; a local pass skips `citationLookup()`; only an explicit `fall_through` reaches CourtListener. `researcher.ts` uses `confirmExistence()`. `tsc --noEmit` clean. `tree_digest.py` now also covers `pipeline.ts` and `researcher.ts` (user edit).
+- **Resolved before signoff** (the adversary first blocked on these, 2026-10-06):
+  1. Finding 4, in-module, FIXED: `_clean_draft` in `gate1.py` discards HTML attribute values, comment text and markdown link/image titles, which the frontend renders (`react-markdown` + `rehype-raw`). They are now kept and scanned as extra segments.
+  2. The suite was too heavy for this Intel Mac (14-17 min, up to 16 Python processes). FIXED: concurrency/exact-cap tests use 6 cheap stub children with deterministic release points, the hostile drafts are about 10x smaller with the 10 s budget kept, and a scaling test was added. A full run is now about 190 s.
+  3. `require_adversary_signoff.py` runs the suite with a 240 s timeout (hook limit 300 s in settings.json). The suite now fits (200 s), but with little headroom.
+
+### Merge-to-main blockers for `feature/local-sqlite-gate1`
+1. `kingsfield_florida.db` built and populated (without it every Florida cite vetoes `db_unavailable`).
+2. Chat follow-up task: W2 (tokens streamed before Gate 1; stream-vs-buffer is the user's decision), W3 (verdicts not persisted with the chat message), W4 (aborted/errored streams saved unverified).
+3. Same follow-up: findings 1-3. `/api/crew/chat` and `/api/council` release model text with no Gate 1, and `runResearcher`'s holding/relevance notes are returned unchecked. The adversary's tests for these are skipped with the decisions.md reason, bodies intact. (The auth exposure of those routes is the separate URGENT item above.)
+
+### Known, accepted
+Abbreviated pin ranges (`790-91`) over-veto; `ambiguous_short_cite` over-veto; no per-user fairness in the draft-gate queue; a killed child that never emits `close` keeps its slot (fails closed as `gate_busy`); `verifyDraft` never runs Gate 2 for draft authorities (pre-existing); `/pro-se/url-suggestions` and `/manual-suggestions` return model text unchecked (low). The draft cleaner doesn't scan URL-type attributes (`href`, `src`, `srcset`) or inline `style`, so a citation rendered inside a `data:image/svg+xml` URI's `<text>` would go unscanned (low).
+
+## ⭐ 2026-10-05 — Local SQLite Gate 1 and System One router built; adversary signed off; NOT wired
+
+**`[module] Gate 1 and Local Router Setup` is done.** All of it is uncommitted and untracked (`db/`, `pipeline/`, `router/`, `backend/src/verification/local_sqlite_gate.ts`). Built by the cascade agents (backend_builder, decision_router, adversary) under the `.claude/hooks/` path guards.
+
+- `db/build_sqlite_index.py` ingests CourtListener bulk CSVs (citations, opinion-clusters, dockets, optional CAP page-bounds) into `kingsfield_florida.db`. It is **not run yet**: `/Volumes/Kingsfield_Corpus` isn't mounted and no DB exists. Florida court ids are `fla` and `fladistctapp` only.
+- **Schema:** `citation_index` has a `section` column for Fla. L. Weekly division letters, B-tree `idx_citation_rvp(reporter, volume, page, section)`. `caselaw_opinion` and `caselaw_analysis` are separate tables.
+- **Gates:** `pipeline/gate1.py` is the Python reference gate (eyecite). `local_sqlite_gate.ts` exports a synchronous `localGate1()` (`node:sqlite`, read-only, Python child-process fallback). The two have verdict parity: `pass` / `veto` / `fall_through`.
+- `router/system_one_client.py` is the Choice/Noul/Score stub client for `/v1/systemone`. `direct_db` is the fallback on no URL, any error, or confidence below 0.80. The Von wire format is assumed and stubbed, and the Noul cutoffs (0.20 / 0.80) are unvalidated.
+- **Tests:** the adversary's bypass suite `pipeline/tests/` has 105 tests, all OK, with 3 wiring-conditional skips. Builder tests are `pipeline/builder_tests/` (54) and router tests are `router/tests/` (27). `tsc --noEmit` is clean. The signoff is at `.claude/signoffs/gate1-local-router-setup.signoff` (digest `0abe54a2…`). Any edit to the reviewed files invalidates it.
+
+### Open, in priority order
+1. **Wire `localGate1` into `pipeline.ts` ahead of `citationLookup()`** (Constraint D), after a separate review. Then have the adversary re-run, which un-skips the 3 ordering tests.
+2. **`backend/src/crew/researcher.ts:123` is an open Gate 1 bypass.** LLM-proposed cites go straight to `citationLookup()` and become `VerifiedAuthority`. It must route through the local gate when wiring lands, or the bypass test fails. `caseIntelligence.ts:217` (cite counts only) is allowlisted. Open UX question: a non-null cite_count implies "resolved".
+3. Run the corpus build once the volume is mounted, then load-test lookup latency and the slow-DB timeout (only a locked DB is tested).
+4. **Untested:** exposure bias (no train/eval set exists), borderline caption abbreviations, a well-formed Von response, and other model-cite output flows (chat, council) beyond `citationLookup(` call sites.
 
 ## ⭐ 2026-09-19 — Judicial intel: FL 2DCA/6DCA oral arguments scored with Jev; offer catalog implemented
 

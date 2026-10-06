@@ -376,24 +376,36 @@ class Gate1Ordering(unittest.TestCase):
         self.assertEqual(offenders, [],
                          "legacy CourtListener lookup reachable without passing local Gate 1:\n" + "\n".join(offenders))
 
+    # Approved design (decisions.md 2026-10-05, task gate1-draft-mode): verifyCitation gates one citation with
+    # localGate1(); verifyDraft gates the whole draft with localGate1Text() (eyecite-backed, short forms included).
+    GATE_CALL = {"verifyCitation": "localGate1(", "verifyDraft": "localGate1Text("}
+
+    @staticmethod
+    def _code(src):
+        """Source without comments, so a commented-out or documented call cannot satisfy an ordering check."""
+        src = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+        return "\n".join(re.sub(r"(^|\s)//.*$", "", line) for line in src.splitlines())
+
     def test_local_gate_runs_before_any_courtlistener_call_when_wired(self):
-        src = PIPELINE_TS.read_text(encoding="utf-8")
+        src = self._code(PIPELINE_TS.read_text(encoding="utf-8"))
         if "local_sqlite_gate" not in src:
             self.skipTest("local_sqlite_gate not wired into verification/pipeline.ts yet (lead wires after signoff)")
-        self.assertRegex(src, r"import[^;]*localGate1[^;]*local_sqlite_gate")
-        for fn in ("verifyCitation", "verifyDraft"):
+        # \b keeps localGate1 from matching inside localGate1Text: both symbols must be imported by name
+        for sym in ("localGate1", "localGate1Text"):
+            self.assertRegex(src, r"import[^;]*\b%s\b[^;]*local_sqlite_gate" % sym, "%s not imported" % sym)
+        for fn, call in self.GATE_CALL.items():
             with self.subTest(fn=fn):
                 body = _fn_body(src, fn)
                 self.assertIsNotNone(body, "%s not found" % fn)
-                gate = body.find("localGate1(")
-                self.assertNotEqual(gate, -1, "%s never calls localGate1" % fn)
+                gate = body.find(call)
+                self.assertNotEqual(gate, -1, "%s never calls %s" % (fn, call))
                 early = [body.find(c) for c in CL_NETWORK_CALLS if body.find(c) != -1]
                 self.assertTrue(all(gate < e for e in early),
-                                "%s reaches a cache/CourtListener call before localGate1" % fn)
+                                "%s reaches a cache/CourtListener call before %s" % (fn, call))
                 self.assertRegex(body[gate:], r"['\"]veto['\"]", "%s never acts on a veto verdict" % fn)
 
     def test_veto_is_not_downgraded_when_wired(self):
-        src = PIPELINE_TS.read_text(encoding="utf-8")
+        src = self._code(PIPELINE_TS.read_text(encoding="utf-8"))
         if "local_sqlite_gate" not in src:
             self.skipTest("local_sqlite_gate not wired yet")
         body = _fn_body(src, "verifyCitation")
@@ -401,6 +413,193 @@ class Gate1Ordering(unittest.TestCase):
         veto_branch = re.search(r"['\"]veto['\"][\s\S]{0,300}?(status\s*=\s*'vetoed'|status:\s*'vetoed')", body[gate:])
         self.assertTrue(veto_branch, "a local veto must set status 'vetoed'")
         self.assertNotRegex(body[gate:gate + 600], r"catch\s*\([^)]*\)\s*\{\s*\}", "empty catch around Gate 1 fails open")
+        draft = _fn_body(src, "verifyDraft")
+        dgate = draft.find("localGate1Text(")
+        self.assertNotEqual(dgate, -1, "verifyDraft never calls localGate1Text")
+        self.assertRegex(draft[dgate:], r"['\"]veto['\"][\s\S]{0,400}?['\"]vetoed['\"]",
+                         "a local veto in verifyDraft must produce a 'vetoed' verdict")
+        self.assertNotRegex(draft[dgate:dgate + 600], r"catch\s*\([^)]*\)\s*\{\s*\}", "empty catch around Gate 1 fails open")
+
+    def test_verify_draft_acts_on_every_local_result_not_just_the_first(self):
+        src = self._code(PIPELINE_TS.read_text(encoding="utf-8"))
+        if "local_sqlite_gate" not in src:
+            self.skipTest("local_sqlite_gate not wired yet")
+        body = _fn_body(src, "verifyDraft")
+        gate = body.find("localGate1Text(")
+        self.assertNotEqual(gate, -1, "verifyDraft never calls localGate1Text")
+        self.assertNotRegex(body[gate:], r"localGate1Text\([^)]*\)\s*\[\s*0\s*\]",
+                            "verifyDraft indexes the first local result only")
+        self.assertRegex(body[gate:], r"\bfor\s*\(|\.(?:map|forEach|filter|some|every|reduce|flatMap)\s*\(",
+                         "verifyDraft never iterates the local results")
+
+    # ---- structure helpers for pipeline.ts ----
+
+    def _pipeline(self):
+        src = self._code(PIPELINE_TS.read_text(encoding="utf-8"))
+        if "local_sqlite_gate" not in src:
+            self.skipTest("local_sqlite_gate not wired yet")
+        return src
+
+    @staticmethod
+    def _functions(src):
+        ms = list(re.finditer(r"(?m)^(?:export\s+)?(?:async\s+)?function\s+(\w+)\s*\(", src))
+        out = {}
+        for i, m in enumerate(ms):
+            end = ms[i + 1].start() if i + 1 < len(ms) else len(src)
+            out[m.group(1)] = {"start": m.start(), "body": src[m.start():end],
+                               "exported": m.group(0).startswith("export")}
+        return out
+
+    @staticmethod
+    def _first_gate(body, before=None):
+        hits = [body.find(g) for g in ("localGate1(", "localGate1Text(") if body.find(g) != -1]
+        hits = [h for h in hits if before is None or h < before]
+        return min(hits) if hits else -1
+
+    @staticmethod
+    def _takes_gate_result(body):
+        m = re.match(r"[^(]*\(([\s\S]*?)\)\s*(?::[^{]*)?\{", body)
+        return bool(m and re.search(r"\b\w+\s*:\s*Gate1Result\b", m.group(1)))
+
+    def test_every_courtlistener_or_cache_call_in_pipeline_is_behind_a_local_gate_result(self):
+        # A function that reaches citationLookup/readCache/getCluster/getOpinion/checkCurrency must either run
+        # localGate1()/localGate1Text() itself before the call, or be a NON-exported helper that takes the gate's
+        # result as a typed parameter, with every call site gated (gate call earlier in the caller, veto handled
+        # between the gate and the call, or the caller itself takes a gate result). This covers helpers such as
+        # clusterAfterLocalGate1 and verifyPastLocalGate1.
+        src = self._pipeline()
+        fns = self._functions(src)
+        dependent = {n for n, f in fns.items() if self._takes_gate_result(f["body"])}
+        offenders = []
+        for name, f in fns.items():
+            body = f["body"]
+            calls = [m.start() for c in CL_NETWORK_CALLS for m in re.finditer(r"\b" + re.escape(c[:-1]) + r"\s*\(", body)
+                     if not (m.start() < body.find("{") and c[:-1] == name)]
+            calls = [p for p in calls if p > body.find("{")]
+            if not calls:
+                continue
+            first = min(calls)
+            if self._first_gate(body, first) != -1:
+                continue
+            if name in dependent and not f["exported"]:
+                continue
+            offenders.append(name)
+        self.assertEqual(offenders, [], "CourtListener/cache call reachable without a local Gate 1 result in: %r" % offenders)
+        for name in dependent:
+            f = fns[name]
+            self.assertFalse(f["exported"], "%s takes a Gate1Result but is exported: any module could forge one" % name)
+            for caller, cf in fns.items():
+                if caller == name:
+                    continue
+                for m in re.finditer(r"\b" + name + r"\s*\(", cf["body"]):
+                    gate = self._first_gate(cf["body"], m.start())
+                    if gate == -1 and caller in dependent:
+                        continue
+                    self.assertNotEqual(gate, -1, "%s calls %s without a local Gate 1 call earlier" % (caller, name))
+                    self.assertIn("'veto'", cf["body"][gate:m.start()],
+                                  "%s does not handle a local veto between Gate 1 and %s" % (caller, name))
+
+    def test_the_helper_that_calls_citation_lookup_opts_in_to_fall_through_not_out_of_veto(self):
+        # Defense in depth: clusterAfterLocalGate1 must go to CourtListener only for an explicit fall_through.
+        # "if pass ... else lookup" sends a veto (or any unexpected verdict) to CourtListener if a caller ever forgets.
+        src = self._pipeline()
+        fns = self._functions(src)
+        helpers = [n for n, f in fns.items() if re.search(r"\bcitationLookup\s*\(", f["body"][f["body"].find("{"):])
+                   and self._first_gate(f["body"]) == -1]
+        self.assertTrue(helpers, "expected a gate-result helper that calls citationLookup")
+        for n in helpers:
+            body = fns[n]["body"]
+            lookup = re.search(r"\bcitationLookup\s*\(", body[body.find("{"):]).start() + body.find("{")
+            guard = re.search(r"\.verdict\s*(?:===|!==)\s*'(?:fall_through|veto)'", body[:lookup])
+            self.assertTrue(guard, "%s reaches citationLookup for ANY non-pass verdict (a veto included); require "
+                                   "an explicit fall_through check and refuse veto" % n)
+
+    def test_verify_draft_handles_every_veto_before_it_deduplicates_authorities(self):
+        src = self._pipeline()
+        body = _fn_body(src, "verifyDraft")
+        gate = body.find("localGate1Text(")
+        veto = body.find("'veto'", gate)
+        dedupe = min([p for p in (body.find(".has(", gate), body.find(".add(", gate)) if p != -1], default=-1)
+        self.assertNotEqual(veto, -1)
+        self.assertNotEqual(dedupe, -1, "no deduplication found; test needs updating")
+        self.assertLess(veto, dedupe, "deduplication runs before vetoes are handled: an earlier pass of the same "
+                                      "authority could mask a later vetoed occurrence")
+        self.assertRegex(body[veto:dedupe], r"\bcontinue\b", "a vetoed occurrence must be recorded and skipped before dedupe")
+        # a vetoed occurrence must never be what populates the dedupe set
+        self.assertNotRegex(body[gate:veto], r"\.add\(")
+
+    def test_verify_draft_null_full_citation_is_skipped_only_for_non_case_antecedent(self):
+        src = self._pipeline()
+        body = _fn_body(src, "verifyDraft")
+        self.assertRegex(body, r"fullCitation\s*===\s*null[\s\S]{0,400}?non_case_antecedent[\s\S]{0,400}?continue"
+                                r"[\s\S]{0,500}?status\s*=\s*'vetoed'",
+                         "a null fullCitation must be skipped only for non_case_antecedent and vetoed otherwise")
+        self.assertEqual(len(re.findall(r"non_case_antecedent", body)), 1)
+
+    @staticmethod
+    def _cut(body):
+        """Trim an _fn_body slice at the next top-level (non-exported) declaration, so helpers below are excluded."""
+        m = re.search(r"\n(?:async\s+function|function|interface|type|const)\s", body[1:])
+        return body if not m else body[: m.start() + 1]
+
+    def test_confirm_existence_runs_the_local_gate_first_and_refuses_a_veto(self):
+        src = self._pipeline()
+        body = _fn_body(src, "confirmExistence")
+        self.assertIsNotNone(body, "confirmExistence not found")
+        body = self._cut(body)
+        gate = body.find("localGate1(")
+        self.assertNotEqual(gate, -1)
+        lookup = body.find("clusterAfterLocalGate1(")
+        self.assertNotEqual(lookup, -1)
+        self.assertLess(gate, lookup)
+        self.assertRegex(body[gate:lookup], r"'veto'[\s\S]{0,120}?vetoNote")
+        self.assertNotIn("citationLookup(", body)
+
+    def test_researcher_cannot_reach_courtlistener_search_around_confirm_existence(self):
+        path = BACKEND_SRC / "crew" / "researcher.ts"
+        if "confirmExistence" not in path.read_text(encoding="utf-8"):
+            self.skipTest("researcher.ts not wired yet")
+        code = self._code(path.read_text(encoding="utf-8"))
+        self.assertNotIn("citationLookup", code, "researcher.ts references citationLookup")
+        imports = re.findall(r"import\s*\{([^}]*)\}\s*from\s*'\.\./research/courtlistener\.js'", code)
+        names = {n.strip() for chunk in imports for n in chunk.split(",") if n.strip()}
+        self.assertTrue(names <= {"getCluster", "getOpinion"},
+                        "researcher.ts imports more than cluster/opinion fetch from courtlistener: %r" % names)
+        run = self._cut(_fn_body(code, "runResearcher"))
+        confirm = run.find("confirmExistence(")
+        mat = run.find("materializeAuthority(")
+        self.assertNotEqual(confirm, -1)
+        self.assertLess(confirm, mat, "an authority is materialized before confirmExistence ran")
+        self.assertRegex(run[confirm:mat], r"'vetoNote'\s+in\s+found[\s\S]{0,200}?gaps\.push",
+                         "a vetoed citation must become a gap, never an authority")
+        self.assertEqual(len(re.findall(r"materializeAuthority\(", run)), 1,
+                         "materializeAuthority is called from more than one place")
+
+    def test_guard_fails_closed_when_verification_throws(self):
+        path = BACKEND_SRC / "middleware" / "hallucination_guard.ts"
+        code = self._code(path.read_text(encoding="utf-8"))
+        sse = _fn_body(code, "verifyDraftForSse")
+        self.assertRegex(sse, r"catch[\s\S]{0,200}?hasVetoes\s*:\s*true", "verifyDraftForSse must fail closed")
+        self.assertRegex(code, r"\.catch\([\s\S]{0,400}?hasVetoes\s*:\s*true", "hallucinationGuard must fail closed")
+
+    def test_a_veto_survives_a_reload_of_the_chat(self):
+        # The verification verdicts are emitted once over SSE. If the stored assistant message does not carry them,
+        # reloading the chat (GET /chat/:id) shows a hallucinated citation with no veto flag.
+        self.skipTest("OPEN merge-to-main blocker (decisions.md 2026-10-05): chat verdicts not persisted (W3); "
+                      "W2 streaming-before-Gate-1 and W4 abort/error paths are tracked in the same follow-up task")
+        for fname in ("chat.ts", "projectChat.ts"):
+            path = BACKEND_SRC / "routes" / fname
+            if not path.exists():
+                continue
+            code = self._code(path.read_text(encoding="utf-8"))
+            at = code.find("verifyDraftForSse(")
+            if at == -1:
+                continue
+            m = re.search(r"from\(\s*[\"'](?:chat_messages|project_chat_messages)[\"']\s*\)\s*\.insert\(\{([\s\S]*?)\}\)",
+                          code[at:])
+            self.assertIsNotNone(m, "%s: no assistant message insert after verification" % fname)
+            self.assertRegex(m.group(1), r"verif|verdict|hasVetoes",
+                             "%s persists the assistant message without its verification verdicts" % fname)
 
 
 # ───── TS fallback path and CLI contract ─────

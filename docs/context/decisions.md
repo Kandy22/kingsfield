@@ -176,3 +176,29 @@ There is no formal tag, hashtag, or topic code for AI-hallucination cases in any
 - **Fla. L. Weekly division letters are part of the key.** `citation_index.section` exists, and D500, S500 and 500 never match each other.
 - **Court level is cross-checked; DCA district is not.** A `(Fla. YEAR)` cite against a stored `fladistctapp` record, or a DCA cite against a stored `fla` record, vetoes as `court_mismatch`. District numbers aren't compared, because CourtListener lumps all DCAs into one court id.
 - **Backend-wide bypass test is deferred to wiring, not dropped.** The adversary's check for `citationLookup()` calls outside the gate skips until `local_sqlite_gate` is imported into backend code, then goes live. `researcher.ts:123` is the known open bypass it will catch.
+
+
+## 2026-10-05 — Gate 1 draft mode and backend wiring
+
+- **Constraint A does not yet hold in chat — known exception, merge-to-main blocker.** `routes/chat.ts` (and `projectChat.ts`) stream model tokens to the user over SSE *before* `verifyDraftForSse` runs Gate 1, so a hallucinated citation is on screen before its veto arrives as an advisory flag (adversary finding W2). Stream-vs-buffer is the user's product decision for the follow-up task. The same follow-up covers W3 (verdicts are not persisted with the chat message, so a reload shows a vetoed cite unflagged) and W4 (aborted/errored streams are saved and shown unverified). The adversary's W3 reload test is skipped with this entry as its reason.
+- **Do not merge `feature/local-sqlite-gate1` to `main`** until `kingsfield_florida.db` is built and populated, and W2–W4 are resolved. Without the DB every Florida citation vetoes `db_unavailable`.
+- **Draft parsing lives only in Python.** `localGate1Text()` in `local_sqlite_gate.ts` runs `check_text()` in `pipeline/gate1.py` through an async child process (draft on stdin, max 4 concurrent children, bounded queue wait → `gate_busy` veto, every failure resolves to exactly one veto). No second citation parser in TypeScript.
+- **Short cites, Id. and supra resolve through eyecite** and inherit their antecedent's verdict, with their own pin checked; a short cite's name must match its antecedent. They are never vetoed as `malformed`. Unresolved or ambiguous short forms veto.
+- **A local Gate 1 pass skips `citationLookup()`.** The local index is built from CourtListener bulk data, so its cluster id fetches the opinion text directly; this preserves the CourtListener rate limit. Only an explicit `fall_through` reaches `citationLookup()`.
+- **Wiring:** `verifyCitation` (single cite), `verifyDraft` (whole draft) and the Researcher (via `confirmExistence()` in `pipeline.ts`) all run local Gate 1 before the cache and any CourtListener call. `researcher.ts` no longer calls `citationLookup()` directly.
+- **Path-guard identity:** cascade agents must be spawned as plain `backend_builder` / `adversary` subagents and must pass an identity probe (a write the hook must refuse) before writing. A team-spawned builder was not recognised by `enforce_agent_dirs.py` and wrote via Bash heredocs, which the hook does not path-check; the edits were reviewed and kept. The Bash gap in the hook is open.
+
+
+## 2026-10-06 — Gate 1 draft mode: signoff scope and test load
+
+- **Findings 1-3 from the signoff review go to the chat follow-up task as merge-to-main blockers**, alongside W2-W4: `/api/crew/chat` and `/api/council` release model text with no Gate 1, and `runResearcher`'s model-written notes are returned unchecked. Constraint A does not hold on those paths yet. The adversary's tests for them are skipped with this entry as the reason, bodies intact.
+- **The unauthenticated model routes on `main` are an urgent security fix, handled on `main` independently of this branch** (remove the routes or add `requireAuth`). Not done from the cascade session.
+- **Finding 4 is in scope for this module:** the draft cleaner must not discard user-visible text (HTML attribute values, comments, markdown link/image titles). Any of it can carry a citation.
+- **The test suite must respect this Intel Mac's heat/load limits.** Concurrency and exact-cap tests are deterministic and light: few Python children, no long sustained runs. Speed budgets are calibrated to this machine by making the work smaller, never by raising timeouts, and veto assertions are never weakened.
+
+
+## 2026-10-06 — System One routing moves from the Von stub to local llama.cpp
+
+- **Routing now runs locally on this Mac's CPU.** A quantized model loaded through llama.cpp (or ONNX) in `router/` answers the Choice/Noul/Score questions. A Von System One endpoint is still supported when one is configured. This replaces the 2026-10-05 position that no model runs on this Intel Mac and routing goes only to a remote Von stub. `router/jev_cpu_inference.py` (user-authored) is the foundation; wiring it is the next task.
+- **`direct_db` stays the fallback.** Any routing output that is not exactly one allowed option, any error or timeout, a missing model, or confidence below the threshold routes to `direct_db`. Routing never bypasses Gate 1.
+- **CLAUDE.md Constraints C and E rewritten** (C: Local Routing; E: Zero LLM APIs). Hosted LLM APIs stay forbidden for routing and Gates 1-4. CourtListener stays allowed for non-Florida Gate 1 and Gates 2-4 until the corpus is local. Each module needs a fast test target under 30 s; the full adversary signoff suite stays under 5 minutes with at most 4 concurrent processes.
