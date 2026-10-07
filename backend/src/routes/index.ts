@@ -183,7 +183,7 @@ export function buildRoutes(deps: RouteDeps): Router {
     }
   });
 
-  r.post('/council/detect', (req, res) => {
+  r.post('/council/detect', requireAuth, (req, res) => {
     const { message, source } = req.body ?? {};
     if (typeof message !== 'string') {
       return res.status(400).json({ error: 'message required' });
@@ -191,7 +191,7 @@ export function buildRoutes(deps: RouteDeps): Router {
     res.json(detectTrigger(message, source));
   });
 
-  r.post('/council', async (req, res) => {
+  r.post('/council', requireAuth, async (req, res) => {
     try {
       const { rawQuestion, context, projectId } = req.body ?? {};
       if (typeof rawQuestion !== 'string' || rawQuestion.length < 10) {
@@ -214,7 +214,7 @@ export function buildRoutes(deps: RouteDeps): Router {
     }
   });
 
-  r.get('/council/:id', async (req, res) => {
+  r.get('/council/:id', requireAuth, async (req, res) => {
     const { data, error } = await deps.supabase
       .from('llm_council_sessions')
       .select('*')
@@ -224,7 +224,7 @@ export function buildRoutes(deps: RouteDeps): Router {
     res.json(data);
   });
 
-  r.get('/council/:id/html', async (req, res) => {
+  r.get('/council/:id/html', requireAuth, async (req, res) => {
     const { data, error } = await deps.supabase
       .from('llm_council_sessions')
       .select('*')
@@ -240,7 +240,7 @@ export function buildRoutes(deps: RouteDeps): Router {
     res.type('html').send(html);
   });
 
-  r.get('/council/:id/markdown', async (req, res) => {
+  r.get('/council/:id/markdown', requireAuth, async (req, res) => {
     const { data, error } = await deps.supabase
       .from('llm_council_sessions')
       .select('*')
@@ -346,7 +346,7 @@ export function buildRoutes(deps: RouteDeps): Router {
     }
   });
 
-  r.post('/crew/chat', async (req, res) => {
+  r.post('/crew/chat', requireAuth, async (req, res) => {
     if (typeof req.body?.userMessage !== 'string' || !req.body.userMessage.trim()) {
       res.status(400).json({ error: 'userMessage (non-empty string) is required' });
       return;
