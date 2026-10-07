@@ -7,7 +7,11 @@ from pathlib import Path
 DIRS = ("db", "pipeline", "router")
 EXTRA_FILES = ("backend/src/verification/local_sqlite_gate.ts",
     "backend/src/verification/pipeline.ts",
-    "backend/src/crew/researcher.ts",)
+    "backend/src/crew/researcher.ts",
+    "backend/src/routes/chat.ts",
+    "backend/src/routes/projectChat.ts",
+    "backend/src/routes/index.ts",
+    "backend/src/middleware/hallucination_guard.ts",)
 SKIP_DIRS = {"__pycache__", ".pytest_cache", "node_modules"}
 SKIP_SUFFIXES = (".pyc", ".db", ".db-journal", ".db-wal", ".db-shm", ".sqlite")
 
