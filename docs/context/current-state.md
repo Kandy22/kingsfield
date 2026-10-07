@@ -1,15 +1,31 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-10-06 (Gate 1 draft mode + backend wiring on `feature/local-sqlite-gate1` — adversary signoff verified; urgent auth issue on main)*
+*Last updated: 2026-10-07 (route auth fixed on `feature/local-sqlite-gate1`, awaiting cherry-pick to main; project-ownership gap open)*
 
 ---
 
 ## 🚨 URGENT, fix on `main` independently of any branch: unauthenticated model routes are live
+
+**Status 2026-10-07: fixed on `feature/local-sqlite-gate1`, NOT yet on `main`.** Two standalone commits, meant to be cherry-picked to `main`:
+- `1aab2e4`: `requireAuth` on `/council/detect`, `/council`, `/council/:id`, `/:id/html`, `/:id/markdown` and `/crew/chat`.
+- `bbca61d`: `requireAuth` on `/research/case-law`, `/research/courts`, `/projects/:id/docket/watch`, `/projects/:id/docket/checks`, `/projects/:id/ip/renewal/check`, `/ip/renewal/checks` and `/ip/assets`. `/docket/sweep` and `/ip/renewal/sweep` now fail closed: they return 401 unless `SWEEP_SECRET` is set and `x-sweep-secret` matches it. `SWEEP_SECRET` is not in `backend/.env.example`, and any external cron job needs it.
+
+The frontend's `/research/courts` callers (`JurisdictionSelector.tsx`, `CourtPicker.tsx`) must send the Bearer token too, or they fall back to their small static court lists. That fix is a separate frontend change, and it must go to `main` with `bbca61d`.
+
+The original finding is kept below for the record.
 
 **`POST /api/crew/chat` is unauthenticated and live on `main` today.** `backend/src/routes/index.ts:349` (`r.post('/crew/chat', async (req, res) => …)`) has no `requireAuth`, and `backend/src/index.ts:127` mounts the router at `/api`. Anyone who can reach the backend can burn our model API keys and get Crew output whose citations never pass Gate 1. The header comment at `routes/index.ts:11-12` claims the hallucination guard is applied; it is not. The frontend does not call this route (decisions.md 2026-07-03), so removing it or adding `requireAuth` breaks nothing user-facing.
 
 Found while verifying, same file on `main`, also without `requireAuth`: `POST /api/council` (11 model calls per session across Claude + Gemini, output unverified), `GET /api/council/:id`, `/:id/html` and `/:id/markdown` (serve stored council sessions by id), and `GET /api/research/case-law` and `/research/courts` (proxy CourtListener with our token).
 
 **Fix:** remove the demo routes or put `requireAuth` on every one of them, in its own change on `main`. Do not wait for `feature/local-sqlite-gate1`; that branch is blocked on other things.
+
+## OPEN (found 2026-10-07, not fixed): project routes check login, not ownership
+
+`requireAuth` only proves the caller is logged in. In `backend/src/routes/index.ts`:
+- `POST /projects/:id/docket/watch`, `GET /projects/:id/docket/checks` and `POST /projects/:id/ip/renewal/check` load the project by `:id` with the service-role Supabase client (`createServerSupabase()`, which bypasses RLS), and never check that it belongs to the caller. Any logged-in user can read another user's docket checks, or run the watcher (CourtListener + LLM + email) on another user's matter.
+- `GET /ip/renewal/checks` returns the latest portfolio-wide runs, and `GET /ip/assets` returns every user's active IP assets (optionally filtered by any `?projectId=`). Neither is scoped to the caller.
+
+Fix it in its own task: scope each query to the caller's projects (or return 404 when they don't own the project), and scope or remove the two portfolio-wide reads.
 
 ## ⭐ 2026-10-06 — JEV CPU router wired (stub-tested); adversary signoff VERIFIED
 
