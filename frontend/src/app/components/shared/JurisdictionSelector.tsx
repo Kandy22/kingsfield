@@ -6,6 +6,13 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronDown, Loader2, Scale, Search, X } from "lucide-react";
 import { useJurisdiction } from "@/contexts/JurisdictionContext";
 import { FEDERAL, STATE_JURISDICTIONS } from "@/app/lib/jurisdictions";
+import { supabase } from "@/lib/supabase";
+
+async function getAuthHeader(): Promise<Record<string, string>> {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return {};
+    return { Authorization: `Bearer ${session.access_token}` };
+}
 
 /**
  * Google-Scholar-style jurisdiction control (Pass 2).
@@ -105,7 +112,9 @@ export function JurisdictionSelector({
         let cancelled = false;
         (async () => {
             try {
-                const res = await fetch(`${getApiBase()}/api/research/courts`);
+                const res = await fetch(`${getApiBase()}/api/research/courts`, {
+                    headers: await getAuthHeader(),
+                });
                 if (!res.ok) throw new Error(String(res.status));
                 const data = (await res.json()) as { courts: CourtRow[] };
                 if (!cancelled) {
