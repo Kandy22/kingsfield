@@ -264,7 +264,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * can display results without exposing the API token to the browser.
    * Returns { count, results[] } shaped for the Case Law page.
    */
-  r.get('/research/case-law', async (req: Request, res: Response) => {
+  r.get('/research/case-law', requireAuth, async (req: Request, res: Response) => {
     const q = req.query.q as string | undefined;
     if (!q?.trim()) return res.status(400).json({ error: 'q required' });
 
@@ -319,7 +319,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * hard-capped at page_size=20 and throttled ~5/min, so it cannot be crawled
    * at request time. Rebuild the snapshot with `node scripts/fetch-courts.mjs`.
    */
-  r.get('/research/courts', async (_req: Request, res: Response) => {
+  r.get('/research/courts', requireAuth, async (_req: Request, res: Response) => {
     try {
       if (!courtsCache) {
         const { readFile } = await import('node:fs/promises');
@@ -451,7 +451,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * Manual trigger: run the docket watcher for one matter now.
    * Body: { docket_id?, docket_number?, court?, since?, notify_email? }
    */
-  r.post('/projects/:id/docket/watch', async (req: Request, res: Response) => {
+  r.post('/projects/:id/docket/watch', requireAuth, async (req: Request, res: Response) => {
     try {
       const matter_id = req.params.id;
       const { data: project, error: pErr } = await deps.supabase
@@ -496,7 +496,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * GET /api/projects/:id/docket/checks
    * List recent docket check results for a matter (latest 10).
    */
-  r.get('/projects/:id/docket/checks', async (req: Request, res: Response) => {
+  r.get('/projects/:id/docket/checks', requireAuth, async (req: Request, res: Response) => {
     const { data, error } = await deps.supabase
       .from('docket_checks')
       .select('id, as_of, new_filings_count, critical_deadline_count, report_md, deadlines_json')
@@ -512,12 +512,13 @@ export function buildRoutes(deps: RouteDeps): Router {
    * POST /api/docket/sweep
    * Portfolio sweep: run the docket watcher for ALL active matters with
    * a docket configured. Intended to be called by a cron job or a scheduled
-   * internal ping. Should be protected by an internal secret header in prod.
+   * internal ping. Refuses all requests unless SWEEP_SECRET is set and the
+   * x-sweep-secret header matches it.
    */
   r.post('/docket/sweep', async (req: Request, res: Response) => {
-    const secret = req.headers['x-sweep-secret'];
-    if (process.env.SWEEP_SECRET && secret !== process.env.SWEEP_SECRET) {
-      return res.status(403).json({ error: 'Forbidden' });
+    const expected = process.env.SWEEP_SECRET;
+    if (!expected || req.headers['x-sweep-secret'] !== expected) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const model = req.body?.model ?? process.env.DEFAULT_CREW_MODEL ?? 'gemini-2.5-flash';
@@ -542,13 +543,14 @@ export function buildRoutes(deps: RouteDeps): Router {
   /**
    * POST /api/ip/renewal/sweep
    * Portfolio-wide IP renewal sweep. Checks all active assets with deadlines
-   * in the next 90 days. Protected by SWEEP_SECRET header in prod.
+   * in the next 90 days. Refuses all requests unless SWEEP_SECRET is set and the
+   * x-sweep-secret header matches it.
    * Body: { windowDays?, notifyEmail?, model? }
    */
   r.post('/ip/renewal/sweep', async (req: Request, res: Response) => {
-    const secret = req.headers['x-sweep-secret'];
-    if (process.env.SWEEP_SECRET && secret !== process.env.SWEEP_SECRET) {
-      return res.status(403).json({ error: 'Forbidden' });
+    const expected = process.env.SWEEP_SECRET;
+    if (!expected || req.headers['x-sweep-secret'] !== expected) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const body = req.body ?? {};
@@ -574,7 +576,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * Per-project IP renewal check. Scans assets for this project only.
    * Body: { windowDays?, notifyEmail?, model? }
    */
-  r.post('/projects/:id/ip/renewal/check', async (req: Request, res: Response) => {
+  r.post('/projects/:id/ip/renewal/check', requireAuth, async (req: Request, res: Response) => {
     try {
       const body = req.body ?? {};
       const model = body.model ?? process.env.DEFAULT_CREW_MODEL ?? 'gemini-2.5-flash';
@@ -609,7 +611,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * GET /api/ip/renewal/checks
    * Recent IP renewal check results (latest 10 portfolio-wide runs).
    */
-  r.get('/ip/renewal/checks', async (_req: Request, res: Response) => {
+  r.get('/ip/renewal/checks', requireAuth, async (_req: Request, res: Response) => {
     const { data, error } = await deps.supabase
       .from('ip_renewal_checks')
       .select('id, as_of, assets_checked, critical_count, deadlines_within_30, report_md')
@@ -625,7 +627,7 @@ export function buildRoutes(deps: RouteDeps): Router {
    * List active IP assets with upcoming deadlines (next 90 days).
    * Query params: ?projectId=, ?windowDays=
    */
-  r.get('/ip/assets', async (req: Request, res: Response) => {
+  r.get('/ip/assets', requireAuth, async (req: Request, res: Response) => {
     const windowDays = req.query.windowDays ? Number(req.query.windowDays) : 90;
     const today = new Date().toISOString().slice(0, 10);
     const windowEnd = new Date();
