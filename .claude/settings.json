@@ -8,6 +8,7 @@
       "Bash(curl -s http://localhost:3001*)",
       "Bash(curl -s http://localhost:3000*)",
       "Bash(npx tsc *)",
+      "Bash(backend/node_modules/.bin/tsc --noEmit -p backend)",
       "Bash(git add *)",
       "Bash(git commit *)",
       "mcp__Claude_Preview__preview_eval",

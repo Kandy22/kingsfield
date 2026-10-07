@@ -37,7 +37,8 @@ READ_ONLY = re.compile(r"(ls|cat|head|tail|wc|grep|pwd|git (status|diff|log|show
 BUILDER_BASH = {
     "backend_builder": re.compile(
         VENV_PY + r" -m unittest (discover pipeline/builder_tests|pipeline\.builder_tests\.[\w.]+)( -v)?"
-        r"|npx tsc --noEmit( -p backend)?"),
+        # The backend's own tsc. From the repo root, npx tsc fetches an unrelated npm package.
+        r"|backend/node_modules/\.bin/tsc --noEmit -p backend"),
     "decision_router": re.compile(
         VENV_PY + r" -m unittest (discover router/tests|router\.tests\.[\w.]+)( -v)?"),
 }
