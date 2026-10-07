@@ -20,7 +20,10 @@ import {
 } from "../lib/userSettings";
 import { checkProjectAccess } from "../lib/access";
 import { safeErrorLog, safeErrorMessage } from "../lib/safeError";
-import { verifyDraftForSse } from "../middleware/hallucination_guard";
+import {
+    createBufferingSseWriter,
+    verifyDraftForSse,
+} from "../middleware/hallucination_guard";
 
 const PROJECT_SYSTEM_PROMPT_EXTRA = `PROJECT CONTEXT:
 You are operating within a project folder that contains a collection of legal documents the user has organised for a single matter. The user's questions will usually refer to one or more documents in this project — your job is to find the relevant files to work on. Use list_documents to see what is available and fetch_documents / read_document to pull in any documents you need before answering.
@@ -165,6 +168,8 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
     res.flushHeaders();
 
     const write = (line: string) => res.write(line);
+    // Model-written output is held server-side until Gate 1 has run.
+    const buffered = createBufferingSseWriter(write);
     const streamAbort = new AbortController();
     let streamFinished = false;
     res.on("close", () => {
@@ -180,7 +185,7 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
             docIndex,
             userId,
             db,
-            write,
+            write: buffered.write,
             extraTools: PROJECT_EXTRA_TOOLS,
             workflowStore,
             includeResearchTools: legalResearchUs,
@@ -194,6 +199,7 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
             courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
             supabase: db,
         });
+        buffered.flush();
         write(
             `data: ${JSON.stringify({
                 type: "verification",

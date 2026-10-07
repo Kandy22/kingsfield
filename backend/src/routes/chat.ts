@@ -20,7 +20,10 @@ import {
 } from "../lib/userSettings";
 import { checkProjectAccess } from "../lib/access";
 import { safeErrorLog, safeErrorMessage } from "../lib/safeError";
-import { verifyDraftForSse } from "../middleware/hallucination_guard";
+import {
+    createBufferingSseWriter,
+    verifyDraftForSse,
+} from "../middleware/hallucination_guard";
 
 export const chatRouter = Router();
 
@@ -563,6 +566,8 @@ chatRouter.post("/", requireAuth, async (req, res) => {
     res.flushHeaders();
 
     const write = (line: string) => res.write(line);
+    // Model-written output is held server-side until Gate 1 has run.
+    const buffered = createBufferingSseWriter(write);
     const streamAbort = new AbortController();
     let streamFinished = false;
     res.on("close", () => {
@@ -578,7 +583,7 @@ chatRouter.post("/", requireAuth, async (req, res) => {
             docIndex,
             userId,
             db,
-            write,
+            write: buffered.write,
             workflowStore,
             includeResearchTools: legalResearchUs,
             model,
@@ -596,6 +601,7 @@ chatRouter.post("/", requireAuth, async (req, res) => {
             courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
             supabase: db,
         });
+        buffered.flush();
         write(
             `data: ${JSON.stringify({
                 type: "verification",
