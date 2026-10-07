@@ -22,6 +22,8 @@ import { checkProjectAccess } from "../lib/access";
 import { safeErrorLog, safeErrorMessage } from "../lib/safeError";
 import {
     createBufferingSseWriter,
+    finalizeHeldOutput,
+    startSseKeepalive,
     verifyDraftForSse,
 } from "../middleware/hallucination_guard";
 
@@ -570,7 +572,10 @@ chatRouter.post("/", requireAuth, async (req, res) => {
     const buffered = createBufferingSseWriter(write);
     const streamAbort = new AbortController();
     let streamFinished = false;
+    // Held output is invisible to the browser; ping until it is released.
+    const keepalive = startSseKeepalive(write);
     res.on("close", () => {
+        keepalive.stop();
         if (!streamFinished) streamAbort.abort();
     });
 
@@ -597,11 +602,22 @@ chatRouter.post("/", requireAuth, async (req, res) => {
             eventCount: events?.length ?? 0,
         });
 
-        const verification = await verifyDraftForSse(fullText, {
-            courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
-            supabase: db,
+        // Gate 1 over the whole reply decides what is released: unchanged,
+        // redacted, or withheld. The saved message is exactly what is sent.
+        const finalized = await finalizeHeldOutput({
+            held: buffered.takeHeld(),
+            events,
+            annotations,
+            fullText,
+            verify: (text) =>
+                verifyDraftForSse(text, {
+                    courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                    supabase: db,
+                }),
         });
-        buffered.flush();
+        keepalive.stop();
+        for (const line of finalized.linesToSend) write(line);
+        const verification = finalized.verification;
         write(
             `data: ${JSON.stringify({
                 type: "verification",
@@ -612,12 +628,13 @@ chatRouter.post("/", requireAuth, async (req, res) => {
             })}\n\n`,
         );
 
-        const persistedEvents = stripTransientAssistantEvents(events);
         await db.from("chat_messages").insert({
             chat_id: chatId,
             role: "assistant",
-            content: persistedEvents.length ? persistedEvents : null,
-            annotations: annotations.length ? annotations : null,
+            content: finalized.savedEvents.length ? finalized.savedEvents : null,
+            annotations: finalized.savedAnnotations.length
+                ? finalized.savedAnnotations
+                : null,
         });
 
         if (!chatTitle && lastUser?.content) {
@@ -627,6 +644,7 @@ chatRouter.post("/", requireAuth, async (req, res) => {
                 .eq("id", chatId);
         }
     } catch (err) {
+        keepalive.stop();
         if (isAbortError(err)) {
             devLog("[chat/stream] client aborted stream", { chatId });
             if (err instanceof AssistantStreamError) {
@@ -686,6 +704,7 @@ chatRouter.post("/", requireAuth, async (req, res) => {
             /* ignore */
         }
     } finally {
+        keepalive.stop();
         streamFinished = true;
         res.end();
     }
