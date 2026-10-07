@@ -27,6 +27,15 @@ Found while verifying, same file on `main`, also without `requireAuth`: `POST /a
 
 Fix it in its own task: scope each query to the caller's projects (or return 404 when they don't own the project), and scope or remove the two portfolio-wide reads.
 
+## OPEN (found 2026-10-07, not fixed): chat tools write model text into documents before Gate 1
+
+The chat-route buffering (W2, Step 1/1b) only governs what reaches the chat stream and `chat_messages`. Chat tools write model text into the user's documents *during* `runLLMStream`, before Gate 1 runs on anything, and nothing reverts them when the reply is later redacted or withheld. All in `backend/src/lib/chatTools.ts`:
+- **`generate_docx`** (tool def ~355; dispatch ~3531; `generateDocx()` ~866): builds a .docx from model-written content, `uploadFile()` to storage (~1298), inserts `documents` (~1311) and `document_versions` (~1327) rows. Filename comes from the model's `title`.
+- **`edit_document`** (tool def ~427; dispatch ~3111; `runEditDocument()` ~1392): applies model-written replacement text to the user's document, `uploadFile()` the new bytes (~1467/~1483), writes `document_versions` (~1473-1520), `document_edits` rows with the model's `replace`/`reason` text (~1552), and updates `documents` (~1563).
+- **`replicate_document`** (tool def ~213; dispatch ~3273): copies an existing user document under a model-chosen `new_filename`; inserts `documents` (~3361), `uploadFile()` (~3392/~3397), `document_versions` (~3418). Content is the user's own; only the filenames are model text.
+
+Effect: a vetoed or fabricated citation can be stored in a generated or edited .docx (and in `document_edits`) even when the chat reply that announced it was redacted or withheld. Fix in its own task: run Gate 1 over the content before the write (fail closed: refuse the tool call), or stage writes and commit them only after the reply passes. `chatTools.ts` is shared with `tabular.ts`, so check that path too.
+
 ## ⭐ 2026-10-06 — JEV CPU router wired (stub-tested); adversary signoff VERIFIED
 
 Task `[module] JEV CPU router` (id `jev-cpu-router`). Signoff `.claude/signoffs/jev-cpu-router.signoff` = `5e0d2e40…`, verified with `require_adversary_signoff.py` (exit 0, 193 s). Adversary suite: 369 tests, 0 failures, 0 errors, 5 documented skips, 192 s. Router suite: 169 tests, about 10 s. The digest is whole-tree, so it supersedes the `gate1-draft-mode` signoff (that file no longer matches, which is expected). All tests use a stub model; no real GGUF has been loaded. Suite headroom against the hook's 240 s timeout is about 45 s, and the Gate 1 tests (about 190 s) dominate.
