@@ -1,9 +1,16 @@
 "use client";
 
+import { getApiBase } from "@/app/lib/apiBase";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Loader2, Search, X } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+async function getAuthHeader(): Promise<Record<string, string>> {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) return {};
+    return { Authorization: `Bearer ${session.access_token}` };
+}
 
 export interface Court {
     id: string;
@@ -88,7 +95,9 @@ export function CourtPicker({
         let cancelled = false;
         (async () => {
             try {
-                const res = await fetch(`${API_BASE}/api/research/courts`);
+                const res = await fetch(`${getApiBase()}/api/research/courts`, {
+                    headers: await getAuthHeader(),
+                });
                 if (!res.ok) throw new Error(String(res.status));
                 const data = (await res.json()) as { courts: Court[] };
                 if (!cancelled) setCourts(data.courts ?? []);
