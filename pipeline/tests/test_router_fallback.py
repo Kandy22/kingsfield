@@ -22,6 +22,9 @@ QUERIES = (
 )
 
 
+NON_CITATION = QUERIES[1]   # reaches the client; citation queries are short-circuited by the pre-check
+
+
 def _route():
     from router import system_one_client
     return system_one_client
@@ -80,7 +83,10 @@ class RouterFallback(unittest.TestCase):
     def assertDirectDb(self, decision, ctx=""):
         self.assertEqual(decision.route, "direct_db", "%s: %r" % (ctx, decision))
         self.assertIs(decision.requires_gate1, True, "%s: %r" % (ctx, decision))
-        self.assertTrue(decision.fallback, "%s: fallback flag not set: %r" % (ctx, decision))
+        # Citation-shaped queries are answered by the deterministic pre-check (fallback=False, the
+        # client is never called, 2026-10-06 ruling). Every other path here is a failure fallback.
+        if "pre-check" not in decision.reason:
+            self.assertTrue(decision.fallback, "%s: fallback flag not set: %r" % (ctx, decision))
 
     def test_von_base_url_unset_routes_direct_db(self):
         env = {k: v for k, v in os.environ.items() if k != "VON_BASE_URL"}
@@ -93,7 +99,10 @@ class RouterFallback(unittest.TestCase):
     def test_von_base_url_empty_routes_direct_db(self):
         with mock.patch.dict(os.environ, {"VON_BASE_URL": ""}):
             sc = _route()
-            self.assertDirectDb(sc.route(QUERIES[0]), "empty")
+            d = sc.route(NON_CITATION)
+            self.assertDirectDb(d, "empty")
+            self.assertNotIn("pre-check", d.reason)
+            self.assertTrue(d.fallback)
 
     def test_unreachable_von_via_env_routes_direct_db(self):
         with mock.patch.dict(os.environ, {"VON_BASE_URL": "http://127.0.0.1:9"}):
@@ -114,14 +123,18 @@ class RouterFallback(unittest.TestCase):
     def test_unresolvable_host_routes_direct_db(self):
         sc = _route()
         client = sc.SystemOneClient(base_url="http://von.invalid", timeout=0.5)
-        self.assertDirectDb(sc.route(QUERIES[0], client=client), "dns failure")
+        d = sc.route(NON_CITATION, client=client)
+        self.assertDirectDb(d, "dns failure")
+        self.assertTrue(d.fallback)
 
     def test_malformed_scheme_routes_direct_db(self):
         sc = _route()
         for url in ("not a url", "ftp://127.0.0.1:9", "file:///etc/passwd", "http://"):
             with self.subTest(url=url):
                 client = sc.SystemOneClient(base_url=url, timeout=0.5)
-                self.assertDirectDb(sc.route(QUERIES[0], client=client), url)
+                d = sc.route(NON_CITATION, client=client)
+                self.assertDirectDb(d, url)
+                self.assertTrue(d.fallback)
 
     def test_bad_responses_route_direct_db(self):
         sc = _route()
@@ -130,13 +143,18 @@ class RouterFallback(unittest.TestCase):
                 client = sc.SystemOneClient(base_url=url, timeout=1.0)
                 for q in QUERIES[:3]:
                     self.assertDirectDb(sc.route(q, client=client), mode)
+                d = sc.route(NON_CITATION, client=client)       # the one that really reaches the client
+                self.assertDirectDb(d, mode)
+                self.assertTrue(d.fallback, mode)
 
     def test_timeout_routes_direct_db(self):
         sc = _route()
         with _Server("slow") as url:
             client = sc.SystemOneClient(base_url=url, timeout=0.3)
             started = time.monotonic()
-            self.assertDirectDb(sc.route(QUERIES[0], client=client), "timeout")
+            d = sc.route(NON_CITATION, client=client)
+            self.assertDirectDb(d, "timeout")
+            self.assertTrue(d.fallback)
             self.assertLess(time.monotonic() - started, 1.8, "client did not honour its timeout")
 
     def test_any_transport_exception_routes_direct_db(self):
@@ -147,7 +165,9 @@ class RouterFallback(unittest.TestCase):
                     OSError("o"), ValueError("v"), RuntimeError("boom"), MemoryError()):
             with self.subTest(exc=type(exc).__name__):
                 with mock.patch("urllib.request.urlopen", side_effect=exc):
-                    self.assertDirectDb(sc.route(QUERIES[0], client=client), type(exc).__name__)
+                    d = sc.route(NON_CITATION, client=client)
+                    self.assertDirectDb(d, type(exc).__name__)
+                    self.assertTrue(d.fallback)
 
     def test_requires_gate1_is_never_false(self):
         sc = _route()

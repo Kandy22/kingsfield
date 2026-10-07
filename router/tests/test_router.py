@@ -23,6 +23,33 @@ from router.system_one_client import (  # noqa: E402
     route,
 )
 
+_PATCHES = []
+
+
+def setUpModule():
+    # route() with no client now selects the local model when JEV_MODEL_PATH is
+    # set. Keep these tests independent of the developer's environment, and make
+    # a real model load impossible (BaseException so route() cannot swallow it).
+    from router import jev_cpu_inference as jev
+
+    class RealModelLoadForbidden(BaseException):
+        pass
+
+    def forbid(*a, **k):
+        raise RealModelLoadForbidden("router tests must never load a real model")
+
+    for p in (mock.patch.object(jev, "_import_llama_class", forbid),
+              mock.patch.dict(os.environ, {}, clear=False)):
+        p.start()
+        _PATCHES.append(p)
+    os.environ.pop("VON_BASE_URL", None)
+    os.environ.pop("JEV_MODEL_PATH", None)
+
+
+def tearDownModule():
+    for p in reversed(_PATCHES):
+        p.stop()
+
 CITE = re.compile(r"\d+\s+So\.\s*(2d|3d)?\s+\d+")
 
 
@@ -207,6 +234,30 @@ class FallbackCases(unittest.TestCase):
         for q in ("", "   ", "12345 §§", None, 42):
             with self.subTest(q=q):
                 self.assert_fallback(route(q, FakeClient(resp())))
+
+
+class ExactOptionAndRangeChecks(unittest.TestCase):
+    """route() re-checks a response even when it was built in-process."""
+
+    def assert_fallback(self, d):
+        self.assertEqual((d.route, d.fallback), ("direct_db", True))
+
+    def test_answer_must_be_exactly_an_allowed_route(self):
+        for answer in ("vector_search ", "Vector_Search", "vector", "vector_search,boolean_search",
+                       "", None, 3):
+            with self.subTest(answer=answer):
+                self.assert_fallback(route("q", FakeClient(resp(answer=answer))))
+
+    def test_nan_or_out_of_range_noul_raw_falls_back(self):
+        for raw in (float("nan"), float("inf"), -0.5, 1.5, True, None, "0.1"):
+            with self.subTest(noul_raw=raw):
+                self.assert_fallback(route("q", FakeClient(resp(noul_raw=raw))))
+
+    def test_calibrated_defaults_false(self):
+        d = route("q", FakeClient(resp()))
+        self.assertEqual((d.route, d.calibrated), ("vector_search", False))
+        self.assertFalse(resp().calibrated)
+        self.assertEqual(so.DEFAULT_THRESHOLD, 0.80)
 
 
 class GateOneAlwaysRequired(unittest.TestCase):

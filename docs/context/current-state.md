@@ -11,6 +11,32 @@ Found while verifying, same file on `main`, also without `requireAuth`: `POST /a
 
 **Fix:** remove the demo routes or put `requireAuth` on every one of them, in its own change on `main`. Do not wait for `feature/local-sqlite-gate1`; that branch is blocked on other things.
 
+## ⭐ 2026-10-06 — JEV CPU router wired (stub-tested); adversary signoff VERIFIED
+
+Task `[module] JEV CPU router` (id `jev-cpu-router`). Signoff `.claude/signoffs/jev-cpu-router.signoff` = `5e0d2e40…`, verified with `require_adversary_signoff.py` (exit 0, 193 s). Adversary suite: 369 tests, 0 failures, 0 errors, 5 documented skips, 192 s. Router suite: 169 tests, about 10 s. The digest is whole-tree, so it supersedes the `gate1-draft-mode` signoff (that file no longer matches, which is expected). All tests use a stub model; no real GGUF has been loaded. Suite headroom against the hook's 240 s timeout is about 45 s, and the Gate 1 tests (about 190 s) dominate.
+
+Built: exact-option full-sequence log-likelihood routing (no generation), absolute-mass floors, a tokenization boundary check, worker timeouts with a circuit breaker, a deterministic `pipeline.gate1.check_text` citation pre-check in `route()` (covers Von too), `calibrated` forced False (`CALIBRATION_RECORDED`), and a calibration harness that measures through `route()`.
+
+### Router task definition (kept for reference)
+
+Definition of done, per user instructions on 2026-10-06 (see decisions.md):
+- Routing runs on local llama.cpp under CLAUDE.md Constraint C. Any output that is not exactly one allowed option, any error or timeout, a missing model, or low confidence routes to `direct_db`. Today `choice()` substring-matches and defaults to `options[0]`, which violates C.
+- Confidence comes from llama.cpp token log-probabilities over the allowed options, not from a model-generated score. It is uncalibrated until measured on labeled (contrastive) pairs, and the threshold stays a placeholder until then.
+- The adversary reviews `router/jev_cpu_inference.py` before signoff. It is in the Gate 1 digest but was never reviewed.
+- A fast router test target under 30 s (stub model). The full signoff suite stays under 5 min with at most 4 processes (Constraint E).
+- The user provides `llama-cpp-python` and the GGUF model. The agents' hooks block installs and downloads.
+- Round 2 (2026-10-06): an absolute-mass floor (placeholder, uncalibrated) and a deterministic eyecite citation pre-check that routes to `direct_db`.
+- **Before production (REQUIRED): one-time real-GGUF smoke test.** Required checks:
+  - **F3 (KV-cache rewind):** each option score after `llm.n_tokens = n_prompt` equals a fresh `reset()` + `eval(prompt + option)` score, and the `logits_all=True` rows are the per-position log-prob rows the code assumes.
+  - **F4 (tokenization boundary):** the real tokenizer passes the boundary check (`tokenize(prompt + " " + opt)` == `tokenize(prompt)` + `tokenize(" " + opt, no BOS)`). A SentencePiece-style dummy prefix space would fail it on every query and silently turn the router into always-`direct_db`. If it fails, fix the boundary handling before production; don't disable the check.
+- **Known router risks, accepted and recorded (adversary review 2026-10-06; none bypasses Constraint C or Gate 1):**
+  - **F5:** the circuit breaker is permanent per process. One query past the 15 s deadline, or a cached failed load (e.g. OOM), disables local routing until `reset_shared_router()` or a restart. That fails closed, but it's an availability risk. A reset while a worker is truly hung leaves the old context alive (memory doubles), so restart instead.
+  - **F7:** the mass floors (`CHOICE_MASS_FLOOR=1e-2`, `NOUL_MASS_FLOOR=5e-2`) are placeholders. A 1% floor still admits a model with 99% of its mass elsewhere. Tune them from real-model mass distributions during calibration.
+  - **F8:** each `route()` is 2 prompts with 5 option evals plus the boundary-check tokenizations. Latency on this Intel Mac is unmeasured.
+  - **F9:** queries up to 2,000 chars are accepted, but with a ~110-token prompt in a 512-token `n_ctx`, long queries silently fail closed to `direct_db`.
+  - **F10:** the raw query is interpolated into the prompt, so text like newline + `Route:` can steer routing. That affects routing quality only; Gate 1 still runs.
+  - **F11:** calibration statistics use Wilson lower bounds over an 11-point grid with no multiple-comparison correction, and labels are author-written with no independent labeler. The set (~56 non-gated items) must grow about 4x past `MIN_RELIABLE_N=200` before any threshold can be suggested.
+
 ## ⭐ 2026-10-06 — Gate 1 draft mode built and wired on `feature/local-sqlite-gate1`; adversary signoff VERIFIED
 
 Task `[module] Gate 1 draft mode` (id `gate1-draft-mode`). Nothing committed. Signoff `.claude/signoffs/gate1-draft-mode.signoff` = `dea18c05…` (tree digest now also covers `pipeline.ts` and `researcher.ts`). Verified 2026-10-06 by running `require_adversary_signoff.py` with the task payload: exit 0, 200 s. Adversary suite: 214 tests, 0 failures, 0 errors, 5 documented skips (W3 + findings 1-3), 189 s. Builder suite: 154 pass. Any edit to a digested file invalidates the signoff. Directional decisions: decisions.md 2026-10-05 "Gate 1 draft mode and backend wiring" and 2026-10-06.

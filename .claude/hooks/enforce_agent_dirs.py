@@ -23,11 +23,16 @@ PROTECTED = ("db/", "pipeline/", "router/", GATE_TS, ".claude/signoffs/", ".clau
 VENV_PY = r"(?:~|" + re.escape(str(Path.home())) + r")/\.venv-cascade/bin/python"
 RUN_TESTS = re.compile(VENV_PY + r" -m unittest discover pipeline/tests( -v)?")
 RUN_DIGEST = re.compile(VENV_PY + r" \.claude/hooks/tree_digest\.py")
-BUILDER_BASH_DENY = re.compile(
-    r"\bgit\s+(commit|push|checkout|switch|reset|rebase|merge)\b|\binstall\b"
-    r"|\b(uv|bun)\s+add\b|\bdocker\b|\bvon\s+serve\b|\b(curl|wget)\b"
-    r"|\bhf\s+download\b|huggingface-cli|pipeline/tests|\.claude/"
-)
+# Builders get an allowlist, like the adversary: any other command could run a script that writes anywhere.
+SHELL_META = re.compile(r"[;&|<>`\n\r]|\$\(|--output")
+READ_ONLY = re.compile(r"(ls|cat|head|tail|wc|grep|pwd|git (status|diff|log|show))(\s.*)?")
+BUILDER_BASH = {
+    "backend_builder": re.compile(
+        VENV_PY + r" -m unittest (discover pipeline/builder_tests|pipeline\.builder_tests\.[\w.]+)( -v)?"
+        r"|npx tsc --noEmit( -p backend)?"),
+    "decision_router": re.compile(
+        VENV_PY + r" -m unittest (discover router/tests|router\.tests\.[\w.]+)( -v)?"),
+}
 
 
 def block(msg):
@@ -56,8 +61,11 @@ def main():
         cmd = (tool_input.get("command") or "").strip()
         if agent == "adversary" and not (RUN_TESTS.fullmatch(cmd) or RUN_DIGEST.fullmatch(cmd)):
             block(f"adversary may only run the bypass suite or tree_digest.py, not: {cmd}")
-        if agent in ("backend_builder", "decision_router") and not RUN_TESTS.fullmatch(cmd) and BUILDER_BASH_DENY.search(cmd.lower()):
-            block(f"{agent} may not commit, install, download, start servers, or touch tests or .claude/: {cmd}")
+        if agent in BUILDER_BASH and not (
+            BUILDER_BASH[agent].fullmatch(cmd) or RUN_TESTS.fullmatch(cmd)
+            or (not SHELL_META.search(cmd) and READ_ONLY.fullmatch(cmd))
+        ):
+            block(f"{agent} may run only its own tests, tsc, or read-only commands, not: {cmd}")
         sys.exit(0)
 
     path = tool_input.get("file_path") or tool_input.get("notebook_path")

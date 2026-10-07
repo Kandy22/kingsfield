@@ -1,14 +1,36 @@
-"""Stub Von System One client and the deterministic query router.
+"""Von System One client, client selection, and the deterministic query router.
 
-STATUS: STUB. No real Von server exists yet (Von does not run on this Intel
-Mac; see docs/context/decisions.md). The wire format below is an ASSUMPTION
-made by this module, to be reconciled with the real server when it is
-available. Until then every production call routes to `direct_db`.
+STATUS: the Von wire format below is an ASSUMPTION made by this module, to be
+reconciled with a real server when one exists (2026-10-06 decisions: routing
+now runs on a local llama.cpp model in router/jev_cpu_inference.py, and Von is
+an optional alternative when VON_BASE_URL is configured).
 
-Constraint C: routing decisions go only to a Von System One endpoint through
-this client, and `direct_db` is the hardcoded fallback. No hosted LLM APIs.
-This client is the only network call in router/. It is stdlib urllib only,
-talks only to VON_BASE_URL, and does not follow redirects.
+Client selection (select_client(), used by route() when no client is passed)
+    VON_BASE_URL set and non-empty  -> SystemOneClient (Von, the only network
+                                       call in router/, never redirected)
+    else JEV_MODEL_PATH set         -> LocalLlamaClient (in-process llama.cpp)
+    else                            -> a client that raises -> direct_db
+
+Pre-check (route(), before any client or model is consulted)
+    pipeline.gate1.check_text(query) runs first. ANY result (pass, veto or
+    fall_through, any kind) means the query holds something citation-shaped:
+    route is direct_db, the model is never called, fallback=False. A pre-check
+    exception is direct_db with fallback=True. Gate 1 still runs downstream on
+    every route.
+
+Response validation (route(), for every SystemOneResponse, not only parsed
+dicts): choice.confidence, score.value and noul_raw must be real finite
+numbers in [0, 1] (bool, str, None, NaN, inf are rejected); choice.options must
+be exactly the three allowed routes; choice.answer must equal one of them.
+
+Constraint C: `direct_db` is the hardcoded fallback and the model never
+decides a route in free text. No hosted LLM APIs. Von client is stdlib urllib
+only, talks only to VON_BASE_URL, and does not follow redirects.
+
+UNCALIBRATED: the default threshold of 0.80 is a PLACEHOLDER. Local-model
+confidence is a normalized log-likelihood over the allowed options, not a
+measured probability. Responses and decisions carry `calibrated=False` until
+router/calibration.py has measured the model on labeled contrastive pairs.
 
 Primitives (what Von is asked)
     Choice  "Which retrieval route fits this query?"
@@ -69,6 +91,13 @@ from typing import Optional
 ROUTES = ("boolean_search", "vector_search", "direct_db")
 FALLBACK_ROUTE = "direct_db"
 DEFAULT_THRESHOLD = 0.80
+# The ONLY place decision-level calibration could later be switched on. It
+# stays False. route() forces RouteDecision.calibrated to this constant and
+# never copies a client's own `calibrated` claim. Turning it on requires a
+# recorded measurement of the model on labeled contrastive pairs
+# (router/calibration.py), per docs/context/decisions.md 2026-10-06, and an
+# adversary review of that record.
+CALIBRATION_RECORDED = False
 DEFAULT_TIMEOUT = 2.0
 MAX_RESPONSE_BYTES = 64 * 1024
 ENDPOINT_PATH = "/v1/systemone"
@@ -84,6 +113,7 @@ class Choice:
     options: tuple
     answer: str
     confidence: float
+    mass: Optional[float] = None   # local model only: un-normalized option mass
 
 
 @dataclass(frozen=True)
@@ -91,6 +121,7 @@ class Noul:
     question: str
     noul_raw: float
     noul: str  # banded label; informational only, never gated on
+    mass: Optional[float] = None   # local model only: Yes/No un-normalized mass
 
 
 @dataclass(frozen=True)
@@ -104,6 +135,8 @@ class SystemOneResponse:
     choice: Choice
     noul: Noul
     score: Score
+    calibrated: bool = False   # a client's claim; route() IGNORES it (CALIBRATION_RECORDED)
+    source: str = "von"
 
 
 @dataclass(frozen=True)
@@ -114,6 +147,15 @@ class RouteDecision:
     noul: Optional[Noul]
     score: Optional[Score]
     fallback: bool
+    calibrated: bool = False   # always CALIBRATION_RECORDED (False); never the client's claim
+    # Why this route, as a stable machine-readable label (reason is free text):
+    #   model, noul_citation          the model was consulted and answered
+    #   citation_precheck             gate1 pre-check found something citation-shaped
+    #   english_gate, invalid_threshold, precheck_error, invalid_response,
+    #   below_threshold, noul_uncertain
+    #   mass_floor, timeout, breaker, unavailable, error   (client raised; the
+    #   exception's `cause` attribute, default "error")
+    cause: str = ""
 
     @property
     def requires_gate1(self) -> bool:
@@ -122,7 +164,11 @@ class RouteDecision:
 
 
 class SystemOneError(Exception):
-    """Any failure talking to, or parsing a reply from, Von."""
+    """Any failure talking to, or parsing a reply from, Von or the local model.
+
+    `cause` becomes RouteDecision.cause when route() catches it.
+    """
+    cause = "error"
 
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -215,8 +261,10 @@ class SystemOneClient:
         return parse_response(payload)
 
 
-def _fallback(reason: str, choice=None, noul=None, score=None) -> RouteDecision:
-    return RouteDecision(FALLBACK_ROUTE, reason, choice, noul, score, True)
+def _fallback(reason: str, choice=None, noul=None, score=None,
+              cause: str = "error") -> RouteDecision:
+    return RouteDecision(FALLBACK_ROUTE, reason, choice, noul, score, True,
+                         CALIBRATION_RECORDED, cause)
 
 
 def _is_english_scriptable(query: str) -> bool:
@@ -227,34 +275,134 @@ def _is_english_scriptable(query: str) -> bool:
     return all(unicodedata.name(ch, "").startswith("LATIN") for ch in letters)
 
 
-def route(query: str, client: Optional[SystemOneClient] = None,
+class _NoClient:
+    """Nothing configured: always raises, so route() falls back to direct_db."""
+
+    def query(self, query):
+        raise SystemOneError("no router configured (VON_BASE_URL, JEV_MODEL_PATH)")
+
+
+def select_client():
+    """Von if VON_BASE_URL is set, else the local model if JEV_MODEL_PATH is
+    set, else a client that raises. Never loads a model and never raises."""
+    von = (os.environ.get("VON_BASE_URL") or "").strip()
+    if von:
+        return SystemOneClient(von)
+    model = (os.environ.get("JEV_MODEL_PATH") or "").strip()
+    if model:
+        try:
+            from .jev_cpu_inference import LocalLlamaClient  # lazy: no llama_cpp here
+            return LocalLlamaClient(model)
+        except Exception:
+            return _NoClient()
+    return _NoClient()
+
+
+def _is_unit_number(x) -> bool:
+    """A real, finite number in [0, 1]. Rejects bool, str, None, NaN, inf."""
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        return False
+    return math.isfinite(x) and 0.0 <= x <= 1.0
+
+
+def _options_are_exactly_the_routes(options) -> bool:
+    """Exactly boolean_search / vector_search / direct_db: no subset, superset
+    or duplicate. Order does not matter."""
+    return (isinstance(options, (list, tuple))
+            and len(options) == len(ROUTES)
+            and all(isinstance(o, str) for o in options)
+            and set(options) == set(ROUTES))
+
+
+def _response_problem(resp) -> Optional[str]:
+    """Why a SystemOneResponse cannot be trusted, or None. Applies to every
+    response object (a Von parse, a local client, or a fake), not only dicts."""
+    choice, noul, score = resp.choice, resp.noul, resp.score
+    if not (isinstance(choice, Choice) and isinstance(noul, Noul)
+            and isinstance(score, Score)):
+        return "response parts have the wrong type"
+    if not _options_are_exactly_the_routes(choice.options):
+        return "choice options are not exactly the allowed routes"
+    if not isinstance(choice.answer, str) or choice.answer not in ROUTES:
+        return "choice answer is not an allowed option"
+    if not _is_unit_number(choice.confidence):
+        return "choice.confidence is not a finite number in [0, 1]"
+    if not _is_unit_number(score.value):
+        return "score.value is not a finite number in [0, 1]"
+    if not _is_unit_number(noul.noul_raw):
+        return "noul_raw is not a finite number in [0, 1]"
+    return None
+
+
+def citation_precheck(query: str) -> Optional[str]:
+    """Deterministic citation-shaped check, run before any model is consulted.
+
+    Reuses pipeline.gate1.check_text (no second parser; read-only; a missing
+    database is fine because non-citation text never touches it). ANY result
+    (pass, veto or fall_through, any kind) means the query contains something
+    citation-shaped. Returns a short description, or None when there is none.
+    Raises on any error; the caller turns that into direct_db.
+    """
+    from pipeline.gate1 import check_text  # lazy: eyecite loads only when routing
+    results = check_text(query)
+    if not results:
+        return None
+    first = results[0]
+    kind = getattr(first, "kind", "?")
+    verdict = getattr(first, "verdict", "?")
+    reason = getattr(first, "reason", "?")
+    return f"{kind}/{verdict}/{reason}"
+
+
+def route(query: str, client=None,
           threshold: float = DEFAULT_THRESHOLD) -> RouteDecision:
     """Pick a retrieval route; never raises, never leaves Gate 1."""
     try:
         if not isinstance(query, str) or not _is_english_scriptable(query):
-            return _fallback("fallback: query empty or not English-script")
+            return _fallback("fallback: query empty or not English-script",
+                             cause="english_gate")
+        if not _is_unit_number(threshold) or threshold <= 0.0:
+            return _fallback("fallback: invalid threshold", cause="invalid_threshold")
+        # Deterministic pre-check, before any model: anything citation-shaped
+        # goes to direct_db and no model is called. Gate 1 still runs downstream.
+        try:
+            found = citation_precheck(query)
+        except Exception as exc:
+            return _fallback(f"fallback: citation pre-check failed: {type(exc).__name__}",
+                             cause="precheck_error")
+        if found is not None:
+            return RouteDecision(
+                FALLBACK_ROUTE,
+                f"citation-shaped text found by gate1 pre-check ({found}); model not consulted",
+                None, None, None, False, CALIBRATION_RECORDED, "citation_precheck")
         if client is None:
-            client = SystemOneClient()
+            client = select_client()
         resp = client.query(query)
         if not isinstance(resp, SystemOneResponse):
             resp = parse_response(resp)  # tolerate a fake returning a raw dict
+        problem = _response_problem(resp)
+        if problem is not None:
+            return _fallback(f"fallback: {problem}", cause="invalid_response")
         choice, noul, score = resp.choice, resp.noul, resp.score
 
         confidence = min(score.value, choice.confidence)
         if not confidence >= threshold:
             return _fallback(
                 f"fallback: confidence {confidence:.2f} below {threshold:.2f}",
-                choice, noul, score)
+                choice, noul, score, cause="below_threshold")
 
-        # Gate on noul_raw only; the banded label is never consulted.
+        # Gate on noul_raw only; the banded label is never consulted. The
+        # decision's `calibrated` is CALIBRATION_RECORDED, never resp.calibrated.
         if noul.noul_raw >= threshold:
             return RouteDecision(
                 FALLBACK_ROUTE, "citation string present (noul_raw)",
-                choice, noul, score, False)
+                choice, noul, score, False, CALIBRATION_RECORDED, "noul_citation")
         if noul.noul_raw > 1.0 - threshold + 1e-9:
             return _fallback("fallback: citation presence uncertain (noul_raw)",
-                             choice, noul, score)
-        return RouteDecision(choice.answer, f"von choice: {choice.answer}",
-                             choice, noul, score, False)
+                             choice, noul, score, cause="noul_uncertain")
+        return RouteDecision(choice.answer, f"{resp.source} choice: {choice.answer}",
+                             choice, noul, score, False, CALIBRATION_RECORDED, "model")
     except Exception as exc:  # any error fails to the deterministic route
-        return _fallback(f"fallback: {type(exc).__name__}: {exc}")
+        cause = getattr(exc, "cause", "error")
+        return _fallback(f"fallback: {type(exc).__name__}: {exc}",
+                         cause=cause if isinstance(cause, str) else "error")
