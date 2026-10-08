@@ -106,13 +106,9 @@ class FabricatedCitations(GateCase):
     DCA_FORMS = ("Fla. 1st DCA", "Fla. 2d DCA", "Fla. 3d DCA", "Fla. 4th DCA", "Fla. 5th DCA",
                  "Fla. 6th DCA", "Fla. Dist. Ct. App.", "Fla. 1st Dist. Ct. App.")
 
-    def test_valid_dca_cite_passes_under_every_dca_form_and_any_district_number(self):
-        # Control: gate must not simply veto everything. JONES is stored as fladistctapp. CourtListener lumps
-        # all DCAs into one id, so a wrong district number must still pass.
-        for court in self.DCA_FORMS:
-            cite = "Jones v. Acme Insurance Co., 150 So. 3d 500 (%s 2014)" % court
-            with self.subTest(court=court):
-                self.assertBoth(cite, "pass", cluster=fx.JONES)
+    # test_valid_dca_cite_passes_under_every_dca_form_and_any_district_number: moved to
+    # pipeline/tests_extended/test_extended_variants.py (tier split; Jones under Fla. 1st DCA still passes in
+    # CaptionMismatch.test_correct_caption_passes_control).
 
     def test_valid_supreme_court_cite_passes(self):
         self.assertBoth("Smith v. State, 100 So. 3d 200 (Fla. 2012)", "pass", cluster=fx.SMITH)
@@ -124,15 +120,8 @@ class FabricatedCitations(GateCase):
         self.assertBoth("150 So. 3d 500 (Fla. 2014)", "veto")
         self.assertBoth("Garcia v. Miami-Dade County, 200 So. 3d 300 (Fla. 2016)", "veto")
 
-    def test_supreme_court_record_cited_as_a_dca_veto(self):
-        # court_mismatch: stored fla, parenthetical names a DCA.
-        for court in self.DCA_FORMS:
-            for cite in ("Smith v. State, 100 So. 3d 200 (%s 2012)" % court,
-                         "100 So. 3d 200 (%s 2012)" % court,
-                         "Brown v. Florida Power Corp., 400 So. 2d 100 (%s 1981)" % court,
-                         "State v. Williams, 150 So. 100 (%s 1933)" % court):
-                with self.subTest(cite=cite):
-                    self.assertBoth(cite, "veto")
+    # test_supreme_court_record_cited_as_a_dca_veto: moved to pipeline/tests_extended/test_extended_variants.py
+    # (tier split; the direction stays covered by test_court_mismatch_with_pin_or_wrong_caption_still_veto below).
 
     def test_court_mismatch_with_pin_or_wrong_caption_still_veto(self):
         self.assertBoth("Smith v. State, 100 So. 3d 200, 210 (Fla. 1st DCA 2012)", "veto")
@@ -537,10 +526,9 @@ class ObfuscatedCitations(GateCase):
             with self.subTest(variant=name):
                 self.assertBoth(cite, "veto")
 
-    def test_valid_cite_variants_never_fall_through_or_pass_wrong_record(self):
-        for name, cite in VALID_VARIANTS.items():
-            with self.subTest(variant=name):
-                self.assertSafe(cite, ok_cluster=fx.SMITH)
+    # test_valid_cite_variants_never_fall_through_or_pass_wrong_record: moved to
+    # pipeline/tests_extended/test_extended_variants.py (tier split; the same VALID_VARIANTS still run through the
+    # draft path in test_gate1_draft_mode.py).
 
     def test_unobfuscated_controls(self):
         self.assertBoth(VALID_BASE, "pass", cluster=fx.SMITH)

@@ -1,5 +1,5 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-10-08 (route auth fixed on `feature/local-sqlite-gate1`, awaiting cherry-pick to main; project-ownership gap open; tabular chat added to merge blockers)*
+*Last updated: 2026-10-08 (chat-route-verify signed off: W2-W4 and findings 1-3 resolved on `feature/local-sqlite-gate1`; route auth awaiting cherry-pick to main; tabular chat is merge blocker 4)*
 
 ---
 
@@ -24,6 +24,7 @@ Found while verifying, same file on `main`, also without `requireAuth`: `POST /a
 `requireAuth` only proves the caller is logged in. In `backend/src/routes/index.ts`:
 - `POST /projects/:id/docket/watch`, `GET /projects/:id/docket/checks` and `POST /projects/:id/ip/renewal/check` load the project by `:id` with the service-role Supabase client (`createServerSupabase()`, which bypasses RLS), and never check that it belongs to the caller. Any logged-in user can read another user's docket checks, or run the watcher (CourtListener + LLM + email) on another user's matter.
 - `GET /ip/renewal/checks` returns the latest portfolio-wide runs, and `GET /ip/assets` returns every user's active IP assets (optionally filtered by any `?projectId=`). Neither is scoped to the caller.
+- `GET /council/:id`, `/council/:id/html` and `/council/:id/markdown` (added 2026-10-08) load an `llm_council_sessions` row by `:id` with no filter on user or project membership. Any logged-in user can read any council session whose id they have.
 
 Fix it in its own task: scope each query to the caller's projects (or return 404 when they don't own the project), and scope or remove the two portfolio-wide reads.
 
@@ -36,6 +37,14 @@ The chat-route buffering (W2, Step 1/1b) only governs what reaches the chat stre
 
 Effect: a vetoed or fabricated citation can be stored in a generated or edited .docx (and in `document_edits`) even when the chat reply that announced it was withheld. Fix in its own task: run Gate 1 over the content before the write (fail closed: refuse the tool call), or stage writes and commit them only after the reply passes. `chatTools.ts` is shared with `tabular.ts`, so check that path too.
 
+## OPEN (found 2026-10-08, not fixed): /analytics/extract returns model-derived rows with no Gate 1
+
+`backend/src/routes/index.ts` (~163-184): the analytics extract route returns the rows produced by `runCaseExtraction()` (`backend/src/lib/caseIntelligence.ts`), which are model-derived, and none of it goes through Gate 1. Its catch also sends `err?.message` to the client. Fix in its own task: gate the returned text (fail closed) and send a fixed error message.
+
+## OPEN (found 2026-10-08, not fixed): /crew/chat does not cancel the crew on client disconnect
+
+`POST /api/crew/chat` stops the keepalive when the client closes the connection, but `runCrew()` (and the `completeText` fallback) keeps running to the end: every model and CourtListener call is still made and billed, and Gate 1 still runs, for a reply nobody receives. Nothing is sent or saved, so this is cost and load, not a leak. Fix: pass an AbortSignal through `runCrew`, like `chat.ts` does for `runLLMStream`.
+
 ## OPEN (found 2026-10-08, not fixed): model-written chat titles are saved with no Gate 1
 
 `POST /chat/:chatId/generate-title` in `backend/src/routes/chat.ts` (~397-415) asks the user's title model for a 3-6 word title from the first message (`completeText`, ~402), normalizes it, saves it to `chats.title` (~410) and returns it in the JSON. None of it goes through Gate 1, so a title like "Doe v. Roe, 999 So. 3d 999" would be stored and shown in the sidebar. The fallback title on the success path of `chat.ts`/`projectChat.ts` (`lastUser.content.slice(0, 120)`) is the user's own text, not model text. Fix in its own task: run the title through Gate 1 and fall back to the fixed title on any veto or error.
@@ -47,6 +56,22 @@ When a chat reply fails while streaming, the backend sends `{type:'error', messa
 ## OPEN (found 2026-10-08, low risk, not fixed): unspaced citation strings survive the chat guard's scrub
 
 In `backend/src/middleware/hallucination_guard.ts`, `scrubEvent()` (~499) keeps any string that matches `SSE_IDENT` (`/^[A-Za-z0-9_.:-]{1,64}$/`, ~81). It's applied to `courtlistener_verify_citations`, to `courtlistener_read_case` entries with no verified verdict, to `courtlistener_get_cases`, and to `mcp_tool_result`/`mcp_tool_call` when flagged (`scrubOnFlag`, ~693), including inside withheld replies. A model- or MCP-supplied unspaced string such as `999So.3d999` passes the scrub and reaches the client and `chat_messages`. Gate 1 likely wouldn't read it as a citation, and it needs a field the model or an MCP server controls, so the risk is low. Fix in its own task: run scrubbed strings through the reporter-cite check, or keep only numbers, booleans and known-format ids (UUIDs, cluster ids). Related, left as is by decision (B6, 2026-10-08): `tool_call_start`/`mcp_tool_start` send an identifier-shaped tool `name` live before Gate 1.
+
+## ⭐ 2026-10-08 — Chat route verification (`chat-route-verify`); adversary signoff written
+
+Task `[module] Chat route verification` (id `chat-route-verify`) on `feature/local-sqlite-gate1`. Signoff `.claude/signoffs/chat-route-verify.signoff` = `ecdaa041…` (whole-tree digest; supersedes the `jev-cpu-router` signoff, which no longer matches, as expected). Final signoff tier: `Ran 396 tests in 176.305s`, OK, 3 documented skips. `pipeline/tests_extended`: `Ran 6 tests in 30.471s`, OK. Commits: `1aab2e4`, `bbca61d`, `8684e19` (auth, Steps 0/0b + frontend), `681fed3`, `ae0877e` (W2 buffering, fail-closed flush), `a6c4375` (W3 + any-veto-withholds), `b1284a7` (W4), `619f0bb` (findings 1-3). The final test changes and the signoff are uncommitted at time of writing.
+
+What now holds (directional decisions in decisions.md 2026-10-08):
+- **W2, strict buffering.** `chat.ts` and `projectChat.ts` pass `runLLMStream` a buffering writer (`createBufferingSseWriter`). Only 7 status event types (tool names, counts, ids, workflow titles) go out live; a `: ping` keepalive runs every 15 s. `chatTools.ts` is unchanged.
+- **Release rule** (`finalizeHeldOutput` in `hallucination_guard.ts`). Gate 1 runs over `fullText` and over the exact text being sent. Any vetoed, pending or unknown-status verdict withholds the whole reply ("This answer was withheld because it cited a case that could not be verified."). Any gate error, mismatch or internal error withholds with "This answer could not be verified and was withheld." Sent text must equal `fullText` minus hidden `<CITATIONS>` stretches (bounded search, 10M work units). Other model-written event text (document, search and MCP families, now including `doc_read` filenames) is Gate-1 checked and dropped if flagged. Reasoning and raw opinion payloads are never sent. Saved equals sent.
+- **W3.** The client-safe verification record (verdicts with non-OK citation text stripped, scrubbed notes, error = "Verification failed.") is sent as the `verification` event and saved last in `chat_messages.annotations`. Withheld replies save it too. No schema change. Frontend annotation readers were checked; none breaks. The chat UI still doesn't display verdicts.
+- **W4.** Abort, error or timeout saves only a fixed marker (`failedReplyRecord`): no model text, reasoning, tool text or annotations. The browser gets a fixed generic error. Raw errors go only to `safeErrorLog`. The verified reply is saved before it is sent; a later failure only logs.
+- **Findings 1-3.** `/api/crew/chat` (`finalizeCrewReply`: the reply plus every chip's citation, URL and relevance text) and `/api/council` (`gateCouncilOutput`: every model-written field) fail closed the same way. Council sessions are saved by the route only after gating; `GET /council/:id`, `/html` and `/markdown` re-gate stored rows on read. Finding 3 (`runResearcher` returns ungated text) is covered at the route: its only path to a user is `runCrew` → `/crew/chat`, enforced by the adversary's caller-chain test.
+- **Real gate on fabricated Florida cites:** split across deltas, obfuscated, with a pin, in the `<CITATIONS>` block only, and period-less (`999 So 3d 999`, alone and in a full cite) all veto. The period-less forms veto locally, with no CourtListener call.
+- **Skips (3, documented):** the original in-function finding-3 test (superseded by the caller-chain test) and the two tabular tests (merge blocker 4).
+- **Tier split:** 6 redundant variants moved to `pipeline/tests_extended/test_extended_variants.py`. Bodies are unchanged, at least one test per attack class stays in `pipeline/tests`, and nothing was weakened or given a longer timeout. Headroom under 200 s is about 24 s on this machine; the 37.8 s `ContractHoldsEverywhere` batch build dominates.
+
+Not covered by a test that drives it: the GET `/council` re-gate on read (static checks only), and the real (non-mock) `/crew/chat` branch with citation chips (proved by the builder's `finalizeCrewReply` unit cases; `lib/llm` is not injectable).
 
 ## ⭐ 2026-10-06 — JEV CPU router wired (stub-tested); adversary signoff VERIFIED
 
@@ -87,9 +112,9 @@ Task `[module] Gate 1 draft mode` (id `gate1-draft-mode`). Nothing committed. Si
 
 ### Merge-to-main blockers for `feature/local-sqlite-gate1`
 1. `kingsfield_florida.db` built and populated (without it every Florida cite vetoes `db_unavailable`).
-2. Chat follow-up task: W2 (tokens streamed before Gate 1; stream-vs-buffer is the user's decision), W3 (verdicts not persisted with the chat message), W4 (aborted/errored streams saved unverified).
-3. Same follow-up: findings 1-3. `/api/crew/chat` and `/api/council` release model text with no Gate 1, and `runResearcher`'s holding/relevance notes are returned unchecked. The adversary's tests for these are skipped with the decisions.md reason, bodies intact. (The auth exposure of those routes is the separate URGENT item above.)
-   - **Step 4 to-do (logged 2026-10-08):** the adversary adds a real-gate test where a period-less reporter cite (e.g. `999 So 3d 999`) appears in the chat reply text, with CourtListener stubbed to "not found"; the reply must be withheld. Reason: in the 2026-10-08 signoff-tier run, a real-gate probe on the filename `Doe v Roe 999 So 3d 999 Fla 2015 Memo.docx` did not veto locally; it fell through toward the cache/CourtListener path (blocked by the harness, so it errored and failed closed). Production behaviour for that form is unverified.
+2. ~~Chat follow-up task: W2, W3, W4.~~ **RESOLVED 2026-10-08** by `chat-route-verify` (see the ⭐ 2026-10-08 section).
+3. ~~Same follow-up: findings 1-3.~~ **RESOLVED 2026-10-08** by `chat-route-verify` (finding 3 by route-level coverage, accepted by the user). Original text, for the record: findings 1-3. `/api/crew/chat` and `/api/council` release model text with no Gate 1, and `runResearcher`'s holding/relevance notes are returned unchecked. The adversary's tests for these are skipped with the decisions.md reason, bodies intact. (The auth exposure of those routes is the separate URGENT item above.)
+   - **Step 4 to-do (logged 2026-10-08), DONE:** the test exists and passes; all three period-less forms veto locally (see the ⭐ 2026-10-08 section). Original note: the adversary adds a real-gate test where a period-less reporter cite (e.g. `999 So 3d 999`) appears in the chat reply text, with CourtListener stubbed to "not found"; the reply must be withheld. Reason: in the 2026-10-08 signoff-tier run, a real-gate probe on the filename `Doe v Roe 999 So 3d 999 Fla 2015 Memo.docx` did not veto locally; it fell through toward the cache/CourtListener path (blocked by the harness, so it errored and failed closed). Production behaviour for that form is unverified.
 4. **Tabular review chat streams and saves unverified model text (found 2026-10-08 by the adversary, B2; its own task, not part of chat-route-verify).** `backend/src/routes/tabular.ts`:
    - The tabular chat route (~1348-1363) calls `runLLMStream` with the raw `res.write`: no buffering writer, no Gate 1, no `finalizeHeldOutput`. Tokens reach the browser as generated, and the reply is saved unverified (~1365-1374, ~1413-1422, ~1449-1456).
    - `POST /:reviewId/generate` (~933-952) streams generated cell content to the client raw, with no Gate 1.
@@ -97,6 +122,8 @@ Task `[module] Gate 1 draft mode` (id `gate1-draft-mode`). Nothing committed. Si
 
 ### Known, accepted
 Abbreviated pin ranges (`790-91`) over-veto; `ambiguous_short_cite` over-veto; no per-user fairness in the draft-gate queue; a killed child that never emits `close` keeps its slot (fails closed as `gate_busy`); `verifyDraft` never runs Gate 2 for draft authorities (pre-existing); `/pro-se/url-suggestions` and `/manual-suggestions` return model text unchecked (low). The draft cleaner doesn't scan URL-type attributes (`href`, `src`, `srcset`) or inline `style`, so a citation rendered inside a `data:image/svg+xml` URI's `<text>` would go unscanned (low).
+
+**Known behaviour, correct by decision (2026-10-08):** with `MOCK_LLM=true`, `/api/crew/chat` withholds its demo reply. `MOCK_CREW.reply` (`backend/src/lib/mock-llm.ts`) contains the fabricated federal cite `123 F.3d 456 (Mock Cir. 2024)`; federal keys fall through to CourtListener, which can't verify it (or can't be reached offline), so Gate 1 vetoes or errors and the user sees the withheld message. The mock council text has no citations and passes.
 
 ## ⭐ 2026-10-05 — Local SQLite Gate 1 and System One router built; adversary signed off; NOT wired
 

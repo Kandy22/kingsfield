@@ -30,12 +30,11 @@ BACKEND_SRC = fx.REPO / "backend" / "src"
 # Findings 1 and 2 (the /api/crew/chat route, the /api/council route) are live tests. Finding 3 (runResearcher's model
 # text) is fixed at the route, not inside researcher.ts; see SKIP_REASON and RunResearcherReachesOnlyAGate1Route below.
 SKIP_REASON = (
-    "OPEN, needs a user decision (finding 3): runResearcher returns ungated model text (the Phase 3 holding/relevance "
-    "notes and the raw searchPlan strings). The fix is at the route: runResearcher -> runCrew -> POST /crew/chat, which "
-    "runs Gate 1 over everything it sends from runCrew's output (enforced by "
-    "RunResearcherReachesOnlyAGate1Route.test_every_runresearcher_caller_chain_ends_in_a_gate1_route). researcher.ts is "
-    "outside the builder's write paths, so this in-function assertion cannot pass. The user must decide: accept the "
-    "route-level coverage (then retire this test) or change researcher.ts so runResearcher gates its own text."
+    "SUPERSEDED by RunResearcherReachesOnlyAGate1Route.test_every_runresearcher_caller_chain_ends_in_a_gate1_route "
+    "(route-level coverage accepted by the user 2026-10-08; runResearcher -> runCrew -> POST /crew/chat, which gates "
+    "everything it sends). runResearcher itself still returns ungated model text (the Phase 3 holding/relevance notes "
+    "and the raw searchPlan strings); this in-function assertion is kept, body intact, but the user chose route-level "
+    "coverage instead of changing researcher.ts."
 )
 
 
@@ -176,8 +175,8 @@ class RoutesThatReleaseModelTextMustRunGate1(unittest.TestCase):
             "IP-triage replies whose starred_cases and their_authority fields are model-written citations, the "
             "direct completeText fallback, and the LLM-written `relevance` on each citation chip) with no Gate 1 "
             "check at all. Run verifyDraftForSse() (or localGate1Text()) over the reply and emit the verdicts.")
-        self.assertRegex(h[gate.start():], r"['\"]verification['\"]|hasVetoes|vetoed",
-                         "/crew/chat computes a Gate 1 result but never sends it")
+        # That the verdict is acted on (withheld on a veto, record sent) is proved by running the handler:
+        # test_route_behavior.py (CrewChatRouteWithholds). A source regex here was satisfied by a console.warn line.
 
     def test_council_runs_gate1_over_the_text_it_returns(self):
         h =_handler(self._index(), r"r\.post\(\s*'/council'\s*,", [r"\n  r\.(?:post|get|put|delete)\("])
@@ -189,8 +188,8 @@ class RoutesThatReleaseModelTextMustRunGate1(unittest.TestCase):
             "POST /council returns advisor, reviewer and chairman text from five models (framedQuestion, "
             "advisors[].text, reviewers[].text, chairmanVerdict) with res.json(out) and no Gate 1 check. A "
             "fabricated citation in any of them is released, and persisted to llm_council_sessions, unverified.")
-        self.assertRegex(h[gate.start():], r"['\"]verification['\"]|hasVetoes|vetoed|__verification",
-                         "/council computes a Gate 1 result but never returns it")
+        # That the verdict is acted on (whole output withheld on a veto, nothing unverified saved) is proved by running
+        # the handler: test_route_behavior.py (CouncilRouteWithholds).
 
     def test_no_route_file_runs_a_model_pipeline_without_a_gate1_call(self):
         offenders = []

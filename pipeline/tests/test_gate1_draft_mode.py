@@ -857,15 +857,8 @@ class WrapperFailsClosed(unittest.TestCase):
         self.assertLess(ms, 15000, "a 3s timeout took %d ms to fire" % ms)
         self._assert_child_dead_soon(pid, "timeout")
 
-    def test_a_child_that_ignores_sigterm_is_still_killed_and_the_promise_still_settles(self):
-        # execFile-style timeouts send SIGTERM; a child that ignores it must not leave the promise pending
-        # (a caller awaiting it would hang) or the process orphaned.
-        r, ms, pid = self._run_with_pid(self.HANG_IGNORING_SIGTERM, {"textTimeoutMs": 3000}, 90)
-        self.assertEqual(dh.contract_problems(r), [], dh.compact(r))
-        self.assertEqual(len(r), 1, "expected exactly one veto, got " + dh.compact(r))
-        self.assertEqual(r[0]["verdict"], "veto", dh.compact(r))
-        self.assertLess(ms, 15000, "a 3s timeout took %d ms to settle" % ms)
-        self._assert_child_dead_soon(pid, "timeout with SIGTERM ignored")
+    # test_a_child_that_ignores_sigterm_is_still_killed_and_the_promise_still_settles: moved to
+    # pipeline/tests_extended/test_extended_variants.py (tier split; the plain hang above stays).
 
     def test_baseline_is_sane(self):
         self.assertEqual(dh.contract_problems(self.baseline), [], dh.compact(self.baseline))
@@ -1167,79 +1160,10 @@ class ConcurrencyCap(unittest.TestCase):
                 self.assertEqual(payload[0]["text"], cases[name], "result belongs to another call: " + name)
                 self.assertNotIn("gate_busy", [x["reason"] for x in payload], "a call was shed while queued: " + name)
 
-    def test_when_every_child_hangs_every_call_still_settles_as_exactly_one_veto_within_a_bound(self):
-        # Hanging children are killed at textTimeoutMs; calls waiting behind them either run and are killed in turn
-        # or hit the queue's overall wait bound. Either way each promise resolves, once, with a single veto.
-        code = ('import time\nd = os.environ["KF_ADV_LIVEDIR"]\nos.makedirs(d, exist_ok=True)\n'
-                'open(os.path.join(d, str(os.getpid())), "w").close()\ntime.sleep(600)')
-        env, marker = dh.make_sabotage(code)
-        live = Path(env["KF_ADV_MARKER"]).parent / "live"
-        env["KF_ADV_LIVEDIR"] = str(live)
-        cases = {"h%02d" % i: S + ". " + FAB + "." for i in range(self.N_CALLS)}
-        b = dh.Batch(cases, env_extra=env, timeout=420, concurrent=True, opts_extra={"textTimeoutMs": 3000})
-        if not marker.exists():
-            self.skipTest("the wrapper does not forward PYTHONPATH to its child; sabotage not applicable")
-        self.assertEqual(b.unhandled, [], "unhandled rejection or uncaught exception: %r" % (b.unhandled,))
-        reasons = set()
-        for name in cases:
-            with self.subTest(case=name):
-                status, payload = b.raw[name][:2]
-                self.assertEqual(status, "ok", "the promise rejected for %s: %s" % (name, payload))
-                self.assertEqual(dh.contract_problems(payload), [], dh.compact(payload))
-                self.assertEqual(len(payload), 1, "expected exactly one veto: " + dh.compact(payload))
-                self.assertEqual(payload[0]["verdict"], "veto", dh.compact(payload))
-                reasons.add(payload[0]["reason"])
-                self.assertLess(b.ms(name), 120000, "call %s took %d ms to settle" % (name, b.ms(name)))
-        # nothing left running: queued calls that never got a slot must not spawn later, killed ones must be gone
-        import time
-        pids = []
-        if live.exists():
-            pids = [int(p.name) for p in live.iterdir() if p.name.isdigit()]
-        deadline = time.monotonic() + 8
-        while time.monotonic() < deadline and any(_alive_pid(p) for p in pids):
-            time.sleep(0.2)
-        alive = [p for p in pids if _alive_pid(p)]
-        for p in alive:
-            try:
-                import os
-                import signal
-                os.kill(p, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-        self.assertEqual(alive, [], "orphaned Python children after every promise settled: %r (reasons seen: %r)" % (alive, reasons))
-
-    def test_the_cap_is_exact_while_children_are_being_killed_by_the_timeout(self):
-        # Every child hangs and is killed at textTimeoutMs, so slots turn over continuously. A killed child counts as
-        # alive to signal 0 until it is reaped, so releasing a slot before the child exits shows up here as cap+1.
-        env, marker, live, peaklog = self._env(600)
-        cases = {"k%02d" % i: S + ". " + FAB + "." for i in range(self.N_CALLS)}
-        b = dh.Batch(cases, env_extra=env, timeout=240, concurrent=True, opts_extra={"textTimeoutMs": 1500})
-        if not marker.exists():
-            self.skipTest("the wrapper does not forward PYTHONPATH to its child; sabotage not applicable")
-        self.assertEqual(b.unhandled, [], "unhandled rejection or uncaught exception: %r" % (b.unhandled,))
-        peak = self._peak(peaklog)
-        self.assertLessEqual(peak, MAX_CHILDREN,
-                             "%d interpreters were alive at once while children were being killed (cap %d)" % (peak, MAX_CHILDREN))
-        self.assertGreaterEqual(peak, 2, "no concurrency observed; the test would be vacuous")
-        for name in cases:
-            status, payload = b.raw[name][:2]
-            self.assertEqual(status, "ok", "%s: %s" % (name, payload))
-            self.assertEqual(len(payload), 1, dh.compact(payload))
-            self.assertEqual(payload[0]["verdict"], "veto", dh.compact(payload))
-        import time
-        pids = [int(p.name) for p in live.iterdir() if p.name.isdigit()] if live.exists() else []
-        deadline = time.monotonic() + 8
-        while time.monotonic() < deadline and any(_alive_pid(p) for p in pids):
-            time.sleep(0.2)
-        alive = [p for p in pids if _alive_pid(p)]
-        for p in alive:
-            import os
-            import signal
-            try:
-                os.kill(p, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-        self.assertEqual(alive, [], "orphaned children: %r" % alive)
+    # test_when_every_child_hangs_every_call_still_settles_as_exactly_one_veto_within_a_bound and
+    # test_the_cap_is_exact_while_children_are_being_killed_by_the_timeout: moved to
+    # pipeline/tests_extended/test_extended_variants.py (tier split; the cap, the queue bound, the flood and the plain
+    # hang-and-kill in WrapperFailsClosed stay).
 
     def test_the_queue_wait_bound_sheds_waiting_calls_as_one_gate_busy_veto_and_spawns_nothing_for_them(self):
         # The cap slots are held by stub children that block on release files (no kill timer involved). The two calls
