@@ -101,3 +101,7 @@ videos/
 /Yesinisusah-master/Vuemmerce/
 /hf_workspace/
 /.claude/worktrees/
+
+# Local Gate 1 index built from CourtListener bulk data (db/build_sqlite_index.py)
+kingsfield_florida.db
+kingsfield_florida.db-*
