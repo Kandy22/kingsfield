@@ -11,7 +11,9 @@ EXTRA_FILES = ("backend/src/verification/local_sqlite_gate.ts",
     "backend/src/routes/chat.ts",
     "backend/src/routes/projectChat.ts",
     "backend/src/routes/index.ts",
-    "backend/src/middleware/hallucination_guard.ts",)
+    "backend/src/middleware/hallucination_guard.ts",
+    "backend/src/routes/tabular.ts",
+    "backend/src/lib/chatTools.ts",)
 SKIP_DIRS = {"__pycache__", ".pytest_cache", "node_modules"}
 SKIP_SUFFIXES = (".pyc", ".db", ".db-journal", ".db-wal", ".db-shm", ".sqlite")
 

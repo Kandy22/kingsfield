@@ -14,6 +14,9 @@ ROUTE_FILES = (
     "backend/src/routes/projectchat.ts",
     "backend/src/routes/index.ts",
     "backend/src/middleware/hallucination_guard.ts",
+    # Tabular chat + document-write task.
+    "backend/src/routes/tabular.ts",
+    "backend/src/lib/chattools.ts",
 )
 
 WRITE_DIRS = {
