@@ -1,5 +1,5 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-10-07 (route auth fixed on `feature/local-sqlite-gate1`, awaiting cherry-pick to main; project-ownership gap open)*
+*Last updated: 2026-10-08 (route auth fixed on `feature/local-sqlite-gate1`, awaiting cherry-pick to main; project-ownership gap open; tabular chat added to merge blockers)*
 
 ---
 
@@ -29,12 +29,16 @@ Fix it in its own task: scope each query to the caller's projects (or return 404
 
 ## OPEN (found 2026-10-07, not fixed): chat tools write model text into documents before Gate 1
 
-The chat-route buffering (W2, Step 1/1b) only governs what reaches the chat stream and `chat_messages`. Chat tools write model text into the user's documents *during* `runLLMStream`, before Gate 1 runs on anything, and nothing reverts them when the reply is later redacted or withheld. All in `backend/src/lib/chatTools.ts`:
+The chat-route buffering (W2, Step 1/1b) only governs what reaches the chat stream and `chat_messages`. Chat tools write model text into the user's documents *during* `runLLMStream`, before Gate 1 runs on anything, and nothing reverts them when the reply is later withheld. All in `backend/src/lib/chatTools.ts`:
 - **`generate_docx`** (tool def ~355; dispatch ~3531; `generateDocx()` ~866): builds a .docx from model-written content, `uploadFile()` to storage (~1298), inserts `documents` (~1311) and `document_versions` (~1327) rows. Filename comes from the model's `title`.
 - **`edit_document`** (tool def ~427; dispatch ~3111; `runEditDocument()` ~1392): applies model-written replacement text to the user's document, `uploadFile()` the new bytes (~1467/~1483), writes `document_versions` (~1473-1520), `document_edits` rows with the model's `replace`/`reason` text (~1552), and updates `documents` (~1563).
 - **`replicate_document`** (tool def ~213; dispatch ~3273): copies an existing user document under a model-chosen `new_filename`; inserts `documents` (~3361), `uploadFile()` (~3392/~3397), `document_versions` (~3418). Content is the user's own; only the filenames are model text.
 
-Effect: a vetoed or fabricated citation can be stored in a generated or edited .docx (and in `document_edits`) even when the chat reply that announced it was redacted or withheld. Fix in its own task: run Gate 1 over the content before the write (fail closed: refuse the tool call), or stage writes and commit them only after the reply passes. `chatTools.ts` is shared with `tabular.ts`, so check that path too.
+Effect: a vetoed or fabricated citation can be stored in a generated or edited .docx (and in `document_edits`) even when the chat reply that announced it was withheld. Fix in its own task: run Gate 1 over the content before the write (fail closed: refuse the tool call), or stage writes and commit them only after the reply passes. `chatTools.ts` is shared with `tabular.ts`, so check that path too.
+
+## OPEN (found 2026-10-08, low risk, not fixed): unspaced citation strings survive the chat guard's scrub
+
+In `backend/src/middleware/hallucination_guard.ts`, `scrubEvent()` (~499) keeps any string that matches `SSE_IDENT` (`/^[A-Za-z0-9_.:-]{1,64}$/`, ~81). It's applied to `courtlistener_verify_citations`, to `courtlistener_read_case` entries with no verified verdict, to `courtlistener_get_cases`, and to `mcp_tool_result`/`mcp_tool_call` when flagged (`scrubOnFlag`, ~693), including inside withheld replies. A model- or MCP-supplied unspaced string such as `999So.3d999` passes the scrub and reaches the client and `chat_messages`. Gate 1 likely wouldn't read it as a citation, and it needs a field the model or an MCP server controls, so the risk is low. Fix in its own task: run scrubbed strings through the reporter-cite check, or keep only numbers, booleans and known-format ids (UUIDs, cluster ids). Related, left as is by decision (B6, 2026-10-08): `tool_call_start`/`mcp_tool_start` send an identifier-shaped tool `name` live before Gate 1.
 
 ## ⭐ 2026-10-06 — JEV CPU router wired (stub-tested); adversary signoff VERIFIED
 
@@ -77,6 +81,10 @@ Task `[module] Gate 1 draft mode` (id `gate1-draft-mode`). Nothing committed. Si
 1. `kingsfield_florida.db` built and populated (without it every Florida cite vetoes `db_unavailable`).
 2. Chat follow-up task: W2 (tokens streamed before Gate 1; stream-vs-buffer is the user's decision), W3 (verdicts not persisted with the chat message), W4 (aborted/errored streams saved unverified).
 3. Same follow-up: findings 1-3. `/api/crew/chat` and `/api/council` release model text with no Gate 1, and `runResearcher`'s holding/relevance notes are returned unchecked. The adversary's tests for these are skipped with the decisions.md reason, bodies intact. (The auth exposure of those routes is the separate URGENT item above.)
+4. **Tabular review chat streams and saves unverified model text (found 2026-10-08 by the adversary, B2; its own task, not part of chat-route-verify).** `backend/src/routes/tabular.ts`:
+   - The tabular chat route (~1348-1363) calls `runLLMStream` with the raw `res.write`: no buffering writer, no Gate 1, no `finalizeHeldOutput`. Tokens reach the browser as generated, and the reply is saved unverified (~1365-1374, ~1413-1422, ~1449-1456).
+   - `POST /:reviewId/generate` (~933-952) streams generated cell content to the client raw, with no Gate 1.
+   Fix the same way as `chat.ts`/`projectChat.ts` (buffering writer, `finalizeHeldOutput`, save what was sent). `tabular.ts` is outside the backend_builder's write paths today, so the task needs a hook change. The adversary's test for this is skipped with this reason, body intact.
 
 ### Known, accepted
 Abbreviated pin ranges (`790-91`) over-veto; `ambiguous_short_cite` over-veto; no per-user fairness in the draft-gate queue; a killed child that never emits `close` keeps its slot (fails closed as `gate_busy`); `verifyDraft` never runs Gate 2 for draft authorities (pre-existing); `/pro-se/url-suggestions` and `/manual-suggestions` return model text unchecked (low). The draft cleaner doesn't scan URL-type attributes (`href`, `src`, `srcset`) or inline `style`, so a citation rendered inside a `data:image/svg+xml` URI's `<text>` would go unscanned (low).

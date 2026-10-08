@@ -584,22 +584,74 @@ class Gate1Ordering(unittest.TestCase):
 
     def test_a_veto_survives_a_reload_of_the_chat(self):
         # The verification verdicts are emitted once over SSE. If the stored assistant message does not carry them,
-        # reloading the chat (GET /chat/:id) shows a hallucinated citation with no veto flag.
-        self.skipTest("OPEN merge-to-main blocker (decisions.md 2026-10-05): chat verdicts not persisted (W3); "
-                      "W2 streaming-before-Gate-1 and W4 abort/error paths are tracked in the same follow-up task")
+        # reloading the chat (GET /chat/:id) shows a hallucinated citation with no veto flag. Since Step 1b the routes
+        # call verifyDraftForSse inside the `verify:` lambda of finalizeHeldOutput, which returns the ONE thing that is
+        # both sent and saved: savedEvents / savedAnnotations (the last annotation is the verification record) and
+        # `verification` (the SSE event). So the property is: on the success path the assistant row is inserted from
+        # exactly those three values and nothing else, unconditionally, and the GET handler hands annotations back
+        # untouched. The behavioral half (a vetoed reply's record, field for field equal to the SSE event, survives a
+        # real hydrateEditStatuses round trip and carries no vetoed citation text) is in test_chat_veto_persistence.py.
+        route_dir = BACKEND_SRC / "routes"
         for fname in ("chat.ts", "projectChat.ts"):
-            path = BACKEND_SRC / "routes" / fname
-            if not path.exists():
-                continue
-            code = self._code(path.read_text(encoding="utf-8"))
-            at = code.find("verifyDraftForSse(")
-            if at == -1:
-                continue
-            m = re.search(r"from\(\s*[\"'](?:chat_messages|project_chat_messages)[\"']\s*\)\s*\.insert\(\{([\s\S]*?)\}\)",
-                          code[at:])
-            self.assertIsNotNone(m, "%s: no assistant message insert after verification" % fname)
-            self.assertRegex(m.group(1), r"verif|verdict|hasVetoes",
-                             "%s persists the assistant message without its verification verdicts" % fname)
+            with self.subTest(route=fname):
+                path = route_dir / fname
+                self.assertTrue(path.exists(), "%s is gone; the reload test needs updating" % fname)
+                code = self._code(path.read_text(encoding="utf-8"))
+                fin = code.find("await finalizeHeldOutput(")
+                self.assertNotEqual(fin, -1, "%s: the success path no longer calls finalizeHeldOutput" % fname)
+                catch = code.find("} catch (err) {", fin)
+                self.assertNotEqual(catch, -1, "%s: cannot find the end of the success path" % fname)
+                success = code[fin:catch]
+                self.assertIn("verifyDraftForSse(", success, "%s: the verify lambda no longer runs Gate 1" % fname)
+
+                # Nothing is saved for the assistant before the finalizer has run (no early raw save).
+                stream = code.find("runLLMStream(")
+                self.assertNotEqual(stream, -1)
+                self.assertNotRegex(code[stream:fin], r"role:\s*[\"']assistant[\"']",
+                                    "%s saves an assistant row before finalizeHeldOutput ran" % fname)
+
+                # The success-path insert: one assistant row, built only from the finalized values.
+                inserts = re.findall(r"from\(\s*[\"']chat_messages[\"']\s*\)\s*\.insert\(\{([^{}]*)\}\)", success)
+                assistant = [b for b in inserts if re.search(r"role:\s*[\"']assistant[\"']", b)]
+                self.assertEqual(len(assistant), 1, "%s: expected exactly one assistant insert on the success path, got %d"
+                                 % (fname, len(assistant)))
+                body = assistant[0]
+                self.assertRegex(body, r"\bcontent:\s*finalized\.savedEvents\b",
+                                 "%s saves something other than finalized.savedEvents as the message content" % fname)
+                self.assertRegex(body, r"\bannotations:\s*finalized\.savedAnnotations\s*,?\s*$",
+                                 "%s saves something other than finalized.savedAnnotations (the veto record rides there)" % fname)
+                self.assertNotRegex(body, r"(?<![\w.])(?:events|annotations|fullText|partial|errorEvents|held)\b(?!\s*:)",
+                                    "%s feeds raw runLLMStream output into the saved row" % fname)
+
+                # Unconditional: no veto-dependent branch between the finalizer and the insert.
+                before_insert = success[:success.find(body)]
+                self.assertNotRegex(before_insert, r"\bif\s*\([^)]*(?:hasVetoes|withheld|hasConditional|\.error|verdicts)",
+                                    "%s only saves the reply when the verification looks a certain way" % fname)
+
+                # The SSE event is built from the same finalized.verification the record was built from.
+                self.assertRegex(success, r"const verification = finalized\.verification;")
+                self.assertRegex(success, r"type:\s*[\"']verification[\"'][\s\S]{0,160}?verdicts:\s*verification\.verdicts"
+                                          r"[\s\S]{0,120}?hasVetoes:\s*verification\.hasVetoes"
+                                          r"[\s\S]{0,120}?hasConditional:\s*verification\.hasConditional")
+
+        # Reload path: GET /chat/:chatId reads the saved rows and passes annotations through hydrateEditStatuses,
+        # which patches edit status and version numbers and must not filter, reshape or drop a verification record.
+        chat = self._code((route_dir / "chat.ts").read_text(encoding="utf-8"))
+        start = chat.find('chatRouter.get("/:chatId"')
+        end = chat.find('chatRouter.patch("/:chatId"')
+        self.assertTrue(0 <= start < end, "cannot locate the GET /chat/:chatId handler and hydrateEditStatuses")
+        reload_path = chat[start:end]
+        self.assertRegex(reload_path, r"from\(\s*[\"']chat_messages[\"']\s*\)\s*\.select\(\s*[\"']\*[\"']\s*\)",
+                         "GET /chat/:chatId no longer selects every column (annotations included) of chat_messages")
+        self.assertRegex(reload_path, r"res\.json\(\{\s*chat\s*,\s*messages:\s*hydrated\s*\}\)")
+        self.assertNotIn(".filter(", reload_path, "the reload path filters messages or annotations")
+        self.assertNotRegex(reload_path, r"[\"']verification[\"']", "the reload path special-cases the verification record")
+        self.assertNotRegex(reload_path, r"\bdelete\s+\w+\.annotations|annotations\s*=\s*(?:null|undefined|\[\])",
+                            "the reload path clears annotations")
+        self.assertRegex(reload_path, r"patchAnnList\s*=[\s\S]{0,200}?\.map\(",
+                         "patchAnnList is no longer a per-element map")
+        self.assertNotRegex(reload_path, r"\.(?:slice|splice|reduce|flatMap|pop|shift)\(",
+                            "the reload path reshapes the annotation list")
 
 
 # ───── TS fallback path and CLI contract ─────

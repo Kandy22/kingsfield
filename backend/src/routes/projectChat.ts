@@ -201,7 +201,7 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
         });
 
         // Gate 1 over the whole reply decides what is released: unchanged,
-        // redacted, or withheld. The saved message is exactly what is sent.
+        // or withheld whole (never rewritten). The saved message is exactly what is sent.
         const finalized = await finalizeHeldOutput({
             held: buffered.takeHeld(),
             events,
@@ -230,9 +230,8 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
             chat_id: chatId,
             role: "assistant",
             content: finalized.savedEvents.length ? finalized.savedEvents : null,
-            annotations: finalized.savedAnnotations.length
-                ? finalized.savedAnnotations
-                : null,
+            // Sent citation entries plus the one client-safe verification record.
+            annotations: finalized.savedAnnotations,
         });
 
         if (!chatTitle && lastUser?.content) {

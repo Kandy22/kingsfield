@@ -1,4 +1,4 @@
-"""Chat-route verification (Step 1b): finalizeHeldOutput, redaction, keepalive.
+"""Chat-route verification: finalizeHeldOutput (withhold-whole on any veto), keepalive, sent-text check.
 
 No TS test runner exists, so this runs chat_guard_cases.ts once under backend's tsx and turns each
 named case into a subTest. The cases use stub verifiers only (no Supabase, CourtListener, LLM or
@@ -21,13 +21,29 @@ ROUTES = [
 ]
 
 EXPECTED_CASES = {
-    "citation_split_across_deltas_is_redacted",
-    "short_cite_after_removed_authority_withholds_via_reverify",
+    "veto_withholds_whole_reply_with_the_veto_message_sent_and_saved",
+    "veto_message_is_distinct_from_the_generic_withheld_message",
+    "veto_in_the_hidden_citations_block_withholds",
+    "veto_withholds_the_whole_reply_including_short_forms",
+    "visible_verify_error_or_throw_withholds_with_the_generic_message",
+    "pending_status_counts_as_vetoed",
+    "doc_read_with_a_flagged_filename_is_dropped_sent_and_saved",
+    "doc_read_with_a_clean_filename_passes_unchanged",
+    "doc_read_is_dropped_when_withholding",
+    "cite_only_in_the_sent_text_withholds",
+    "blank_full_text_with_non_blank_sent_text_withholds",
+    "sent_text_that_is_not_the_full_text_withholds_even_when_every_check_is_clean",
+    "normal_stream_with_a_trailing_citations_block_passes",
+    "multi_iteration_stream_with_hidden_blocks_passes",
+    "visible_matches_full_text_alignment",
+    "alignment_work_budget_is_bounded_and_exhaustion_is_never_a_match",
+    "honest_long_replies_stay_far_under_the_work_budget",
+    "veto_withhold_always_sends_and_saves_hasvetoes_true",
     "error_result_withholds_and_leaks_no_model_text",
     "throw_withholds",
     "draft_placeholder_veto_withholds",
     "conditional_and_verified_replay_unchanged",
-    "vetoed_and_unmatched_entries_dropped_from_citations_and_case_citation",
+    "unmatched_entries_dropped_from_citations_and_case_citation",
     "saved_events_equal_what_was_sent",
     "keepalive_pings_each_interval_and_stops_on_flush",
     "keepalive_stops_on_abort_error_and_close_paths",
@@ -35,8 +51,13 @@ EXPECTED_CASES = {
     "note_containing_the_cite_is_scrubbed",
     "verified_and_conditional_verdicts_are_unchanged_by_client_safe",
     "error_event_survives_in_replay_with_generic_message",
-    "error_event_survives_in_redact_with_generic_message",
+    "error_event_survives_in_veto_withhold_with_generic_message",
     "error_event_survives_in_withhold_with_generic_message",
+    "client_safe_replaces_any_error_with_generic_text",
+    "every_verification_failure_path_sends_and_saves_only_the_generic_error",
+    "saved_annotations_hold_exactly_one_verification_record_in_replay_veto_withhold",
+    "vetoed_verdict_in_the_saved_record_has_empty_citation_and_scrubbed_notes",
+    "raw_verification_error_goes_to_the_logger_once_per_failure",
 }
 
 
@@ -76,7 +97,10 @@ class RouteWiring(unittest.TestCase):
                 self.assertEqual(src.count("startSseKeepalive(write)"), 1)
                 # Persistence uses the finalized (sent) version, never the raw runLLMStream output.
                 self.assertIn("content: finalized.savedEvents.length ? finalized.savedEvents : null", src)
-                self.assertIn("finalized.savedAnnotations", src)
+                # The saved annotations already carry the one client-safe verification record,
+                # so the route saves them as they are (never null on the success path).
+                self.assertIn("annotations: finalized.savedAnnotations,", src)
+                self.assertNotIn("finalized.savedAnnotations.length", src)
                 # The verification event is built from the client-safe copy, never the raw gate result.
                 self.assertIn("= finalized.verification;", src)
                 self.assertNotIn("verifyDraftForSse(fullText", src)

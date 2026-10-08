@@ -20,6 +20,7 @@ import {
   type MatterContext,
   type GateVerdict,
 } from '../verification/pipeline.js';
+import { safeErrorLog } from '../lib/safeError';
 
 // Chat routes don't carry a matter/forum context the way project-scoped
 // crew work does, so jurisdiction-fit (Gate 4) falls back to "persuasive"
@@ -226,7 +227,11 @@ export function startSseKeepalive(
 // run over the whole reply. Pure apart from the injected `verify`.
 // ---------------------------------------------------------------------------
 
+/** Sent and saved when verification could not run or the checked text cannot be tied to what is sent. */
 export const WITHHELD_MESSAGE = 'This answer could not be verified and was withheld.';
+/** Sent and saved when Gate 1 vetoed (or left pending) any citation in the reply. */
+export const VETO_WITHHELD_MESSAGE = 'This answer was withheld because it cited a case that could not be verified.';
+/** In-notes placeholder only: clientSafeVerification() puts it where a scrubbed verdict note held citation text. Never used in reply text. */
 export const REDACTION_MARKER = '[citation removed: failed verification]';
 
 type Ev = Record<string, unknown>;
@@ -296,12 +301,12 @@ function buildVerdictIndex(verdicts: GateVerdict[]): Map<string, 'ok' | 'veto'> 
   return index;
 }
 
-// ----- redaction -------------------------------------------------------------
+// ----- note scrubbing patterns -----------------------------------------------
+// Used only by scrubNote() to remove citation text from verdict notes.
 
-// Characters that may sit between (or inside) the characters of a cite in the
-// ORIGINAL reply but not in the cleaned text the gate saw: whitespace and
-// newlines, markdown emphasis/code/escape marks, link brackets and targets, and
-// inline HTML tags.
+// Characters that may sit between (or inside) the characters of a cite as
+// written: whitespace and newlines, markdown emphasis/code/escape marks, link
+// brackets and targets, and inline HTML tags.
 const NOISE = String.raw`(?:\s|\]\([^)\s]{0,300}\)|[*_\x60\\\[\]]|<[^>\n]{0,60}>)*`;
 const LEAD = String.raw`[\[*_\x60]*`;
 const TRAIL = String.raw`(?:[*_\x60]{1,3})?(?:\]\([^)\s]{0,300}\))?`;
@@ -319,14 +324,8 @@ function charPattern(c: string): string {
   return escapeRe(c);
 }
 
-interface CitePattern {
-  /** Global, for replacement. */
-  g: RegExp;
-  /** Non-global, for tests (global regexes are stateful). */
-  t: RegExp;
-}
-
-function buildCitePattern(cite: string): CitePattern | null {
+/** A global, whitespace/markdown-tolerant pattern for one cite; null if none can be built. */
+function buildCitePattern(cite: string): RegExp | null {
   const chars = Array.from(cite).filter((c) => !/\s/u.test(c));
   if (!chars.length || chars.length > 800) return null;
   if (!chars.some((c) => /[\p{L}\p{N}]/u.test(c))) return null;
@@ -335,52 +334,7 @@ function buildCitePattern(cite: string): CitePattern | null {
   const lead = /[A-Za-z0-9]/.test(first) ? '(?<![A-Za-z0-9])' : '';
   const trail = /[A-Za-z0-9]/.test(last) ? '(?![A-Za-z0-9])' : '';
   const body = LEAD + lead + chars.map(charPattern).join(NOISE) + trail + TRAIL;
-  return { g: new RegExp(body, 'giu'), t: new RegExp(body, 'iu') };
-}
-
-const LINK_WITH_MARKER_RE = new RegExp(
-  String.raw`\[(?:[^\[\]]|${escapeRe(REDACTION_MARKER)})*\]\([^)\s]*\)`,
-  'g',
-);
-
-/**
- * Replace every occurrence of each cite with REDACTION_MARKER. Returns null if
- * any cite cannot be located in `text` (the caller must then withhold).
- * Overlapping matches are merged so one marker replaces the union.
- */
-export function redactCitations(text: string, cites: string[]): string | null {
-  const spans: Array<[number, number]> = [];
-  for (const cite of cites) {
-    const pat = buildCitePattern(cite);
-    if (!pat || !pat.t.test(text)) return null;
-    for (const m of text.matchAll(pat.g)) {
-      if (m.index === undefined || m[0].length === 0) continue;
-      spans.push([m.index, m.index + m[0].length]);
-    }
-  }
-  if (!spans.length) return null;
-  spans.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
-  let out = '';
-  let pos = 0;
-  let curStart = spans[0][0];
-  let curEnd = spans[0][1];
-  const emit = () => {
-    out += text.slice(pos, curStart) + REDACTION_MARKER;
-    pos = curEnd;
-  };
-  for (const [s, e] of spans.slice(1)) {
-    if (s < curEnd) {
-      curEnd = Math.max(curEnd, e);
-    } else {
-      emit();
-      curStart = s;
-      curEnd = e;
-    }
-  }
-  emit();
-  out += text.slice(pos);
-  // A link whose label held a removed cite must not survive pointing at the case.
-  return out.replace(LINK_WITH_MARKER_RE, (m) => (m.includes(REDACTION_MARKER) ? REDACTION_MARKER : m));
+  return new RegExp(body, 'giu');
 }
 
 // ----- client-facing verification ------------------------------------------------
@@ -406,13 +360,13 @@ function scrubNote(note: string, citation: string): string {
   const cite = citation.trim();
   // '[draft]' is the whole-draft placeholder, not citation text.
   if (cite && cite !== '[draft]') {
-    const patterns: CitePattern[] = [];
+    const patterns: RegExp[] = [];
     const full = buildCitePattern(cite);
     if (full) patterns.push(full);
     const cap = captionOf(cite);
     const capPat = cap ? buildCitePattern(cap) : null;
     if (capPat) patterns.push(capPat);
-    for (const p of patterns) out = out.replace(p.g, REDACTION_MARKER);
+    for (const p of patterns) out = out.replace(p, REDACTION_MARKER);
     // The raw string too, in case the tolerant pattern could not be built for it.
     if (cite.length >= 8) out = out.split(cite).join(REDACTION_MARKER);
   }
@@ -424,12 +378,18 @@ function scrubNote(note: string, citation: string): string {
  * `verification` event, and later saved annotations). Verified and conditional
  * verdicts pass through unchanged. Every other verdict (vetoed, pending,
  * unknown status) loses its citation string (`citation` becomes '') and has
- * citation text scrubbed out of its notes. Pure; never mutates its input.
+ * citation text scrubbed out of its notes. Any `error` becomes the fixed
+ * CLIENT_VERIFICATION_ERROR: no exception, SQLite, network or CourtListener
+ * text leaves the server. Only the four known fields are copied. Pure; never
+ * mutates its input.
  */
+export const CLIENT_VERIFICATION_ERROR = 'Verification failed.';
+
 export function clientSafeVerification(result: SseVerificationResult): SseVerificationResult {
   const verdicts = Array.isArray(result?.verdicts) ? result.verdicts : [];
-  return {
-    ...result,
+  const out: SseVerificationResult = {
+    hasVetoes: result?.hasVetoes,
+    hasConditional: result?.hasConditional,
     verdicts: verdicts.map((v): GateVerdict => {
       if (!v || typeof v !== 'object' || isOkStatus(v.status)) return v;
       const citation = typeof v.citation === 'string' ? v.citation : '';
@@ -439,6 +399,34 @@ export function clientSafeVerification(result: SseVerificationResult): SseVerifi
       return { ...v, citation: '', notes };
     }),
   };
+  if (result?.error) out.error = CLIENT_VERIFICATION_ERROR;
+  return out;
+}
+
+/**
+ * The verification record saved in chat_messages.annotations. It is the
+ * client-safe verification, shaped { type, verdicts, hasVetoes, hasConditional,
+ * error? }. It deliberately has NO ref / kind / filename / document_id, so the
+ * frontend's annotation matchers (a.ref === ref, a.kind !== "case" &&
+ * a.filename === ...) never pick it up. Pass only clientSafeVerification output.
+ */
+export interface VerificationAnnotation {
+  type: 'verification';
+  verdicts: GateVerdict[];
+  hasVetoes: boolean;
+  hasConditional: boolean;
+  error?: string;
+}
+
+export function buildVerificationAnnotation(clientSafe: SseVerificationResult): VerificationAnnotation {
+  const rec: VerificationAnnotation = {
+    type: 'verification',
+    verdicts: clientSafe.verdicts,
+    hasVetoes: clientSafe.hasVetoes,
+    hasConditional: clientSafe.hasConditional,
+  };
+  if (clientSafe.error) rec.error = clientSafe.error;
+  return rec;
 }
 
 // ----- event policy ------------------------------------------------------------
@@ -466,9 +454,7 @@ const checked = (family: string, scrubOnFlag = false): Policy => ({ kind: 'check
  * not listed is DROPPED (fail closed).
  */
 const POLICY: Record<string, Policy> = {
-  // Server-state names only (user's own uploaded documents) and workflow titles.
-  doc_read: { kind: 'pass' },
-  doc_read_start: { kind: 'pass' },
+  // Workflow titles read from the server-side workflow store.
   workflow_applied: { kind: 'pass' },
   // Stream failure notice: kept in place, message replaced by a fixed string.
   error: { kind: 'error' },
@@ -491,6 +477,9 @@ const POLICY: Record<string, Policy> = {
   // Model-chosen text, checked through Gate 1; family dropped if any string is flagged.
   courtlistener_search_case_law: checked('cl_search'),
   courtlistener_search_case_law_start: checked('cl_search'),
+  // The filename can be model-chosen (generate_docx titles), so doc_read is checked like the rest.
+  doc_read: checked('doc_read'),
+  doc_read_start: checked('doc_read'),
   doc_find: checked('doc_find'),
   doc_find_start: checked('doc_find'),
   doc_created: checked('doc_created'),
@@ -589,14 +578,31 @@ export interface FinalizeInput {
   /** runLLMStream's `fullText` (includes any <CITATIONS> block). */
   fullText: string;
   verify: VerifyFn;
+  /**
+   * Server-side sink for the RAW verification failure (exception, SQLite,
+   * network or CourtListener text). Called once per failed verification;
+   * `context` says which step failed. Defaults to console.error. The raw text
+   * never reaches the client: clientSafeVerification() replaces it.
+   */
+  logError?: VerificationErrorLogger;
 }
+
+export type VerificationErrorLogger = (context: string, error: ReturnType<typeof safeErrorLog>) => void;
+
+const defaultErrorLogger: VerificationErrorLogger = (context, error) => {
+  console.error(`[chat/verify] ${context}`, error);
+};
 
 export interface FinalizeOutput {
   /** Write these to the client, in order, then the verification event. */
   linesToSend: string[];
   /** Exactly what was sent, in persisted form, for chat_messages.content. */
   savedEvents: Ev[];
-  /** Sent citation entries, for chat_messages.annotations. */
+  /**
+   * For chat_messages.annotations: the sent citation entries followed by ONE
+   * VerificationAnnotation (the same client-safe record as `verification`).
+   * Never empty, in every outcome (replay or withheld).
+   */
   savedAnnotations: unknown[];
   /**
    * For the `verification` SSE event. Already passed through
@@ -605,7 +611,6 @@ export interface FinalizeOutput {
   verification: SseVerificationResult;
   withheld: boolean;
   withheldReason: string | null;
-  redactedCitations: number;
 }
 
 interface HeldItem {
@@ -633,7 +638,6 @@ const DONE_LINE = 'data: [DONE]\n\n';
 interface Ctx {
   withhold: boolean;
   verdictIndex: Map<string, 'ok' | 'veto'>;
-  vetoedPatterns: CitePattern[];
   flaggedFamilies: Set<string>;
 }
 
@@ -641,13 +645,6 @@ function caseEntryAllowed(entry: unknown, ctx: Ctx): boolean {
   if (ctx.withhold || !isRecord(entry)) return false;
   const key = citeKey(entry.citation);
   return !!key && ctx.verdictIndex.get(key) === 'ok';
-}
-
-function entryStrings(v: unknown, out: string[] = []): string[] {
-  if (typeof v === 'string') out.push(v);
-  else if (Array.isArray(v)) v.forEach((x) => entryStrings(x, out));
-  else if (isRecord(v)) Object.values(v).forEach((x) => entryStrings(x, out));
-  return out;
 }
 
 /**
@@ -661,15 +658,7 @@ function isDocumentEntry(entry: unknown): boolean {
 }
 
 function filterCitationEntries(entries: unknown[], ctx: Ctx): unknown[] {
-  return entries.filter((entry) => {
-    if (isDocumentEntry(entry)) {
-      // Defensive: a quote from the user's document may itself contain a removed cite.
-      if (!ctx.vetoedPatterns.length) return true;
-      const strings = entryStrings(entry);
-      return !ctx.vetoedPatterns.some((p) => strings.some((s) => p.t.test(s)));
-    }
-    return caseEntryAllowed(entry, ctx);
-  });
+  return entries.filter((entry) => isDocumentEntry(entry) || caseEntryAllowed(entry, ctx));
 }
 
 /** content / content_delta are handled by the caller. Returns null to drop. */
@@ -714,11 +703,11 @@ function withheldOutput(
   events: unknown[],
   verification: SseVerificationResult,
   reason: string,
+  message: string = WITHHELD_MESSAGE,
 ): FinalizeOutput {
   const ctx: Ctx = {
     withhold: true,
     verdictIndex: new Map(),
-    vetoedPatterns: [],
     flaggedFamilies: new Set(),
   };
   const linesToSend: string[] = [];
@@ -728,7 +717,7 @@ function withheldOutput(
     const out = transformEvent(item.ev, ctx);
     if (out) linesToSend.push(out === item.ev ? item.line : sseLine(out));
   }
-  linesToSend.push(sseLine({ type: 'content_delta', text: WITHHELD_MESSAGE }));
+  linesToSend.push(sseLine({ type: 'content_delta', text: message }));
   linesToSend.push(DONE_LINE);
 
   const savedEvents: Ev[] = [];
@@ -737,7 +726,7 @@ function withheldOutput(
     if (!isRecord(raw)) continue;
     if (raw.type === 'content') {
       if (!placed) {
-        savedEvents.push({ type: 'content', text: WITHHELD_MESSAGE });
+        savedEvents.push({ type: 'content', text: message });
         placed = true;
       }
       continue;
@@ -745,29 +734,33 @@ function withheldOutput(
     const out = transformEvent(raw, ctx);
     if (out) savedEvents.push(out);
   }
-  if (!placed) savedEvents.push({ type: 'content', text: WITHHELD_MESSAGE });
+  if (!placed) savedEvents.push({ type: 'content', text: message });
 
+  // A reply withheld for a veto always says so, whatever flag the gate result carried
+  // (a pending or unknown-status verdict can arrive with hasVetoes: false). The sent and
+  // the saved record come from this one object.
+  const vetoed = reason === 'veto' || reason === 'whole_draft_veto';
+  const safe = clientSafeVerification(vetoed ? { ...verification, hasVetoes: true } : verification);
   return {
     linesToSend,
     savedEvents,
-    savedAnnotations: [],
-    verification: clientSafeVerification(verification),
+    savedAnnotations: [buildVerificationAnnotation(safe)],
+    verification: safe,
     withheld: true,
     withheldReason: reason,
-    redactedCitations: 0,
   };
 }
 
 /** Last-resort output that depends on nothing it was handed. */
 function minimalWithheld(verification: SseVerificationResult, reason: string): FinalizeOutput {
+  const safe = clientSafeVerification(verification);
   return {
     linesToSend: [sseLine({ type: 'content_delta', text: WITHHELD_MESSAGE }), DONE_LINE],
     savedEvents: [{ type: 'content', text: WITHHELD_MESSAGE }],
-    savedAnnotations: [],
-    verification: clientSafeVerification(verification),
+    savedAnnotations: [buildVerificationAnnotation(safe)],
+    verification: safe,
     withheld: true,
     withheldReason: reason,
-    redactedCitations: 0,
   };
 }
 
@@ -776,76 +769,253 @@ function failedVerification(first: SseVerificationResult, message: string): SseV
   return { ...first, hasVetoes: true, error: first.error ?? `Reply withheld: ${message}` };
 }
 
+// ----- visible text vs. full text ---------------------------------------------
+
+/** The tag runLLMStream hides from the stream (chatTools.ts CITATIONS_OPEN_TAG). */
+const CITATIONS_OPEN_TAG = '<CITATIONS>';
 /**
- * Decide what the user receives after Gate 1 ran over the full reply.
+ * Work budget for the alignment search below, in "units". Every unit is one
+ * character comparison, one loop iteration, one character of the one-time tag
+ * scan, or ALIGN_WALK_COST for a walk() call (its binary search and memo lookup).
+ * Nothing the search does is free, so the total work is at most
+ * ALIGN_WORK_BUDGET units plus one bounded step, whatever the input size or
+ * shape. Reaching the budget fails closed (see alignVisibleToFullText).
  *
- *  - gate error / throw / whole-draft ('[draft]') veto  -> withhold everything
- *  - no vetoes                                         -> replay held output unchanged
- *                                                         (rule-4 text still checked)
- *  - vetoes                                            -> redact in the assembled text,
- *                                                         re-verify the redacted text,
- *                                                         withhold if anything is left
+ * Sizing: an honest reply costs about len(visible) + len(hidden blocks) units
+ * (one comparison pass plus the one-time scan), so a 100 KB reply with one
+ * trailing block is ~0.2M units and the multi-iteration replies in the tests are
+ * below 0.5M. 10M is 20x or more above those, and still only tens of
+ * milliseconds of synchronous work in the worst case.
+ */
+export const ALIGN_WORK_BUDGET = 10_000_000;
+/** Units charged per walk() call: a binary search over the tag positions plus a Set lookup/insert. */
+const ALIGN_WALK_COST = 32;
+
+export interface AlignmentResult {
+  /** True only when a complete alignment was found within the budget. */
+  matched: boolean;
+  /** Units charged. Work actually performed never exceeds ALIGN_WORK_BUDGET (the charge that tips over is refused). */
+  work: number;
+  /** True when the budget ran out. Always accompanied by matched === false. */
+  exhausted: boolean;
+}
+
+/**
+ * The search behind visibleMatchesFullText, with its accounting exposed so the
+ * budget can be measured. Deterministic, never throws on string input.
+ * Budget exhaustion returns { matched: false, exhausted: true }: a search that
+ * ran out of budget is indistinguishable from "no alignment" to the caller, and
+ * the final result is forced to false whenever `exhausted` is set.
+ */
+export function alignVisibleToFullText(visible: string, fullText: string): AlignmentResult {
+  if (visible === fullText) return { matched: true, work: 0, exhausted: false };
+  const tag = CITATIONS_OPEN_TAG;
+  // The shown text is fullText with stretches removed: it can never be longer.
+  if (visible.length > fullText.length) return { matched: false, work: 0, exhausted: false };
+
+  let work = 0;
+  let exhausted = false;
+  /** Charge `n` units; false (and `exhausted`) once the budget is gone. */
+  const spend = (n: number): boolean => {
+    work += n;
+    if (work > ALIGN_WORK_BUDGET) {
+      exhausted = true;
+      return false;
+    }
+    return true;
+  };
+
+  // One pass: every tag position. Charged by length (indexOf scans the whole string).
+  if (!spend(fullText.length)) return { matched: false, work, exhausted };
+  const tags: number[] = [];
+  for (let i = fullText.indexOf(tag); i >= 0; i = fullText.indexOf(tag, i + tag.length)) tags.push(i);
+  if (!tags.length) return { matched: false, work, exhausted };
+  const tagStarts = new Set<number>(tags);
+  /** First tag position at or after `fp`, or -1. */
+  const nextTag = (fp: number): number => {
+    let lo = 0;
+    let hi = tags.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >>> 1;
+      if (tags[mid] < fp) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo < tags.length ? tags[lo] : -1;
+  };
+
+  const failedStates = new Set<number>();
+  /** fullText[fp .. fp+len) equals visible[vp .. vp+len). Every comparison is charged. */
+  const runMatches = (fp: number, vp: number, len: number): boolean => {
+    if (vp + len > visible.length) return false;
+    const room = ALIGN_WORK_BUDGET - work;
+    const n = len < room ? len : room;
+    for (let i = 0; i < n; i++) {
+      if (fullText.charCodeAt(fp + i) !== visible.charCodeAt(vp + i)) {
+        work += i + 1;
+        return false;
+      }
+    }
+    work += n;
+    if (n < len) {
+      // The run could not be finished inside the budget: not a match, not a mismatch.
+      work += 1;
+      exhausted = true;
+      return false;
+    }
+    return true;
+  };
+  // An iteration starts at fullText[fp]; visible[0..vp) has been accounted for so far.
+  const walk = (fp: number, vp: number): boolean => {
+    if (exhausted || !spend(ALIGN_WALK_COST)) return false;
+    const stateKey = fp * (visible.length + 1) + vp;
+    if (failedStates.has(stateKey)) return false;
+    const tagIdx = nextTag(fp);
+    let ok = false;
+    if (tagIdx < 0) {
+      // No tag left: every remaining iteration is shown whole.
+      ok = fullText.length - fp === visible.length - vp && runMatches(fp, vp, fullText.length - fp);
+    } else if (runMatches(fp, vp, tagIdx - fp)) {
+      // This iteration shows fullText[fp, tagIdx) and hides from the tag to its own end.
+      // The next iteration starts at some q at or after the end of the tag (or fullText ends).
+      const nextVp = vp + (tagIdx - fp);
+      const first = tagIdx + tag.length;
+      ok = walk(fullText.length, nextVp);
+      for (let q = first; q < fullText.length && !ok && !exhausted; q++) {
+        if (!spend(1)) break;
+        // The next iteration shows its first character or, if it starts with the tag, nothing.
+        if (!tagStarts.has(q) && fullText.charCodeAt(q) !== visible.charCodeAt(nextVp)) continue;
+        ok = walk(q, nextVp);
+      }
+    }
+    if (!ok && !exhausted) failedStates.add(stateKey);
+    return ok;
+  };
+  const matched = walk(0, 0) && !exhausted;
+  return { matched, work, exhausted };
+}
+
+/**
+ * True only when `visible` (the joined content_delta texts) is exactly what
+ * runLLMStream shows of `fullText` (the joined model text of every iteration).
+ * runLLMStream streams each iteration up to its first <CITATIONS> tag and hides
+ * everything after the tag to the end of that iteration; iteration boundaries
+ * are not recorded in fullText. So `visible` must be fullText with zero or more
+ * hidden stretches removed, each stretch starting exactly at a <CITATIONS> tag.
+ * Identical strings match. Anything else (extra text, missing text, text moved,
+ * a blank fullText with non-blank visible, a hidden stretch not at a tag) does
+ * not. Deterministic. Total work, character comparisons included, is bounded by
+ * ALIGN_WORK_BUDGET; running out of budget returns false (fail closed), so
+ * finalizeHeldOutput withholds with 'fulltext_mismatch'.
+ */
+export function visibleMatchesFullText(visible: string, fullText: string): boolean {
+  return alignVisibleToFullText(visible, fullText).matched;
+}
+
+/**
+ * Decide what the user receives after Gate 1 ran over the reply.
  *
+ * Gate 1 runs over `fullText` (its verdicts feed the citations/case events) and
+ * over the exact text that will be sent (the joined held content_delta texts),
+ * unless the two are identical.
+ *
+ *  - any vetoed or pending verdict, or a '[draft]' whole-draft veto
+ *                                                -> withhold everything, VETO_WITHHELD_MESSAGE
+ *  - gate error / throw / inconsistent result, malformed content, sent text that is not
+ *    fullText with its hidden <CITATIONS> parts removed, sent vs saved text differing,
+ *    internal error                             -> withhold everything, WITHHELD_MESSAGE
+ *  - otherwise (verified / conditional only)    -> replay held output unchanged
+ *                                                  (rule-4 text still checked)
+ *
+ * No part of a model reply is ever rewritten: it is sent whole or not at all.
  * Never throws. Never sends held text it has not accounted for.
  */
 export async function finalizeHeldOutput(input: FinalizeInput): Promise<FinalizeOutput> {
   let first: SseVerificationResult = errorResult('not run');
   let items: HeldItem[] = [];
+
+  // The raw error stays on the server: every failed verification is logged once, here.
+  const sink = input.logError ?? defaultErrorLogger;
+  const logFailure = (context: string, raw: unknown) => {
+    try {
+      sink(context, safeErrorLog(raw));
+    } catch {
+      /* logging must never change the outcome */
+    }
+  };
+  const verifyAs = (context: string): VerifyFn => async (text) => {
+    const r = await safeVerify(input.verify, text);
+    if (r.error) logFailure(context, r.error);
+    return r;
+  };
+  // A failure that is not the gate's own (mismatch, internal error): log what the client is told, in full.
+  const failed = (prev: SseVerificationResult, message: string): SseVerificationResult => {
+    const v = failedVerification(prev, message);
+    if (!prev.error) logFailure('withheld', v.error);
+    return v;
+  };
+
   try {
     items = (Array.isArray(input.held) ? input.held : []).map(parseHeldLine);
     const events = Array.isArray(input.events) ? input.events : [];
     const annotations = Array.isArray(input.annotations) ? input.annotations : [];
 
-    first = await safeVerify(input.verify, input.fullText);
+    if (typeof input.fullText !== 'string') throw new Error('fullText is not a string');
+    const fullText = input.fullText;
 
-    // 1. The gate itself failed, or vetoed the draft as a whole.
-    if (first.error) return withheldOutput(items, events, first, 'verification_error');
-    if (hasDraftPlaceholder(first)) return withheldOutput(items, events, first, 'whole_draft_veto');
-
-    const vetoed = first.verdicts.filter(isVetoedVerdict);
-    // hasVetoes with no vetoed verdict to locate is an inconsistent result.
-    if (vetoed.length === 0 && first.hasVetoes) {
-      return withheldOutput(items, events, first, 'veto_without_verdict');
-    }
-
-    // 2. Assemble the visible reply from the held deltas and check it against what is saved.
+    // The exact text that will be sent: the joined held content_delta texts.
+    let malformedContent = false;
     const deltaTexts: string[] = [];
     for (const item of items) {
       if (item.kind === 'event' && item.ev?.type === 'content_delta') {
         const t = extractContentText(item.ev);
-        if (t === null) {
-          return withheldOutput(items, events, failedVerification(first, 'malformed content event'), 'malformed_content');
-        }
-        deltaTexts.push(t);
+        if (t === null) malformedContent = true;
+        else deltaTexts.push(t);
       }
     }
     const visible = deltaTexts.join('');
+
+    // Any non-clean result withholds: a veto (or pending) with the veto message, the rest with the generic one.
+    const withholdIfNotClean = (r: SseVerificationResult): FinalizeOutput | null => {
+      if (r.error) return withheldOutput(items, events, r, 'verification_error');
+      if (hasDraftPlaceholder(r)) return withheldOutput(items, events, r, 'whole_draft_veto', VETO_WITHHELD_MESSAGE);
+      if (r.verdicts.some(isVetoedVerdict)) return withheldOutput(items, events, r, 'veto', VETO_WITHHELD_MESSAGE);
+      // hasVetoes with no vetoed verdict is an inconsistent result.
+      if (r.hasVetoes) return withheldOutput(items, events, r, 'veto_without_verdict');
+      return null;
+    };
+
+    // 1. Gate 1 over the full reply. Its verdicts feed the citations / case events.
+    first = await verifyAs('first_verify')(fullText);
+    const firstBlock = withholdIfNotClean(first);
+    if (firstBlock) return firstBlock;
+
+    if (malformedContent) {
+      return withheldOutput(items, events, failed(first, 'malformed content event'), 'malformed_content');
+    }
+
+    // 2. Gate 1 over exactly the text that will be sent, unless it is the same string.
+    if (visible !== fullText) {
+      const sentResult = await verifyAs('visible_verify')(visible);
+      const sentBlock = withholdIfNotClean(sentResult);
+      if (sentBlock) return sentBlock;
+      // 3. The sent text must be the full text with only the hidden <CITATIONS> parts removed.
+      if (!visibleMatchesFullText(visible, fullText)) {
+        return withheldOutput(
+          items, events, failed(first, 'sent text does not match the verified text'), 'fulltext_mismatch',
+        );
+      }
+    }
+
+    // 4. The sent text must be the text that is saved.
     const savedContent = events
       .filter((e): e is Ev => isRecord(e) && e.type === 'content')
       .map((e) => (typeof e.text === 'string' ? e.text : ''))
       .join('');
     if (visible !== savedContent) {
-      return withheldOutput(items, events, failedVerification(first, 'streamed and saved text differ'), 'content_mismatch');
+      return withheldOutput(items, events, failed(first, 'streamed and saved text differ'), 'content_mismatch');
     }
 
-    // 3. Redact vetoed citations and re-verify exactly what will be sent.
-    let sentText = visible;
-    let vetoedPatterns: CitePattern[] = [];
-    if (vetoed.length > 0) {
-      const cites = vetoed.map((v) => String(v.citation ?? ''));
-      const redacted = redactCitations(visible, cites);
-      if (redacted === null) {
-        return withheldOutput(items, events, first, 'veto_not_located');
-      }
-      const second = await safeVerify(input.verify, redacted);
-      if (!isClean(second)) {
-        return withheldOutput(items, events, first, 'reverify_failed');
-      }
-      sentText = redacted;
-      vetoedPatterns = cites.map(buildCitePattern).filter((p): p is CitePattern => p !== null);
-    }
-
-    // 4. Gate 1 over the other model-written text that would be sent.
+    // 5. Gate 1 over the other model-written text that would be sent.
     const familyStrings = new Map<string, string[]>();
     const collect = (ev: Ev) => {
       const policy = POLICY[String(ev.type)];
@@ -858,7 +1028,7 @@ export async function finalizeHeldOutput(input: FinalizeInput): Promise<Finalize
     for (const e of events) if (isRecord(e)) collect(e);
     const allStrings = [...familyStrings.values()].flat();
     const flaggedStrings = allStrings.length
-      ? await findFlaggedStrings(allStrings, input.verify)
+      ? await findFlaggedStrings(allStrings, verifyAs('tool_text'))
       : new Set<string>();
     const flaggedFamilies = new Set<string>();
     for (const [family, list] of familyStrings) {
@@ -867,15 +1037,13 @@ export async function finalizeHeldOutput(input: FinalizeInput): Promise<Finalize
 
     const ctx: Ctx = {
       withhold: false,
+      // Built only from the clean full-text result: every verdict in it is verified or conditional.
       verdictIndex: buildVerdictIndex(first.verdicts),
-      vetoedPatterns,
       flaggedFamilies,
     };
 
-    // 5. Build what is sent, in held order.
-    const redacting = vetoed.length > 0;
+    // 6. Build what is sent, in held order. Model text goes out unchanged.
     const linesToSend: string[] = [];
-    let contentPlaced = false;
     for (const item of items) {
       if (item.kind === 'junk') continue;
       if (item.kind === 'done') {
@@ -884,45 +1052,36 @@ export async function finalizeHeldOutput(input: FinalizeInput): Promise<Finalize
       }
       const ev = item.ev as Ev;
       if (ev.type === 'content_delta') {
-        if (!redacting) {
-          linesToSend.push(item.line);
-        } else if (!contentPlaced) {
-          linesToSend.push(sseLine({ type: 'content_delta', text: sentText }));
-          contentPlaced = true;
-        }
+        linesToSend.push(item.line);
         continue;
       }
       const out = transformEvent(ev, ctx);
       if (out) linesToSend.push(out === ev ? item.line : sseLine(out));
     }
 
-    // 6. The same decisions applied to the persisted form.
+    // 7. The same decisions applied to the persisted form.
     const savedEvents: Ev[] = [];
-    let savedPlaced = false;
     for (const raw of events) {
       if (!isRecord(raw)) continue;
       if (raw.type === 'content') {
-        if (!redacting) savedEvents.push(raw);
-        else if (!savedPlaced) {
-          savedEvents.push({ ...raw, text: sentText });
-          savedPlaced = true;
-        }
+        savedEvents.push(raw);
         continue;
       }
       const out = transformEvent(raw, ctx);
       if (out) savedEvents.push(out);
     }
 
+    const safe = clientSafeVerification(first);
     return {
       linesToSend,
       savedEvents,
-      savedAnnotations: filterCitationEntries(annotations, ctx),
-      verification: clientSafeVerification(first),
+      savedAnnotations: [...filterCitationEntries(annotations, ctx), buildVerificationAnnotation(safe)],
+      verification: safe,
       withheld: false,
       withheldReason: null,
-      redactedCitations: vetoed.length,
     };
   } catch (err: any) {
+    logFailure('internal_error', err);
     const verification = failedVerification(first, `internal error (${err?.message ?? 'unknown'})`);
     try {
       return withheldOutput(items, Array.isArray(input.events) ? input.events : [], verification, 'internal_error');
