@@ -4,7 +4,9 @@
 
 import assert from 'node:assert/strict';
 import {
+  ABORTED_MESSAGE,
   ALIGN_WORK_BUDGET,
+  failedReplyRecord,
   alignVisibleToFullText,
   GENERIC_ERROR_MESSAGE,
   KEEPALIVE_LINE,
@@ -1351,6 +1353,61 @@ cases.keepalive_real_timers_fire_then_stop_cleanly = async () => {
   const n = raw.length;
   await new Promise((r) => setTimeout(r, 60));
   assert.equal(raw.length, n, 'no ping after stop');
+};
+
+// ---------- failed / aborted reply marker ----------
+
+cases.failed_reply_record_aborted_is_one_fixed_content_event_and_sends_nothing = async () => {
+  const r = failedReplyRecord('aborted');
+  assert.deepEqual(r.events, [{ type: 'content', text: ABORTED_MESSAGE }]);
+  assert.equal(r.annotations, null);
+  assert.deepEqual(r.sseLines, []);
+  assert.equal(ABORTED_MESSAGE, 'This reply was stopped before it was completed.');
+  assert.notEqual(ABORTED_MESSAGE, GENERIC_ERROR_MESSAGE);
+};
+
+cases.failed_reply_record_failed_saves_fixed_strings_and_sends_generic_error_then_done = async () => {
+  const r = failedReplyRecord('failed');
+  assert.deepEqual(r.events, [
+    { type: 'content', text: GENERIC_ERROR_MESSAGE },
+    { type: 'error', message: GENERIC_ERROR_MESSAGE },
+  ]);
+  assert.equal(r.annotations, null);
+  assert.deepEqual(r.sseLines, [line({ type: 'error', message: GENERIC_ERROR_MESSAGE }), DONE]);
+  assert.equal(GENERIC_ERROR_MESSAGE, 'The reply failed before it could be completed.');
+};
+
+cases.failed_reply_record_takes_no_input_and_carries_only_the_fixed_strings = async () => {
+  assert.equal(failedReplyRecord.length, 1, 'only the kind parameter');
+  const allowed = new Set([ABORTED_MESSAGE, GENERIC_ERROR_MESSAGE, 'content', 'error']);
+  const strings = (v: unknown, out: string[] = []): string[] => {
+    if (typeof v === 'string') out.push(v);
+    else if (Array.isArray(v)) v.forEach((x) => strings(x, out));
+    else if (v && typeof v === 'object') Object.values(v).forEach((x) => strings(x, out));
+    return out;
+  };
+  for (const kind of ['aborted', 'failed'] as const) {
+    const r = failedReplyRecord(kind);
+    // Every string in the saved record is one of the fixed strings or an event type.
+    for (const s of strings([r.events, r.annotations])) assert.ok(allowed.has(s), `${kind}: unexpected string ${s}`);
+    // Every sent line is the generic error event or [DONE].
+    for (const l of r.sseLines) {
+      assert.ok(l === DONE || l === line({ type: 'error', message: GENERIC_ERROR_MESSAGE }), `${kind}: unexpected line ${l}`);
+    }
+  }
+  // Extra arguments (a model error, partial text) are ignored; an unknown kind fails closed to 'failed'.
+  const sneaky = (failedReplyRecord as any)('aborted', new Error('provider said: secret'), 'partial model text');
+  assert.ok(!JSON.stringify(sneaky).includes('secret') && !JSON.stringify(sneaky).includes('partial'));
+  assert.deepEqual((failedReplyRecord as any)('weird'), failedReplyRecord('failed'));
+};
+
+cases.failed_reply_record_returns_fresh_objects = async () => {
+  const a = failedReplyRecord('failed');
+  a.events.push({ type: 'content', text: 'tampered' });
+  a.sseLines.push('x');
+  const b = failedReplyRecord('failed');
+  assert.equal(b.events.length, 2);
+  assert.equal(b.sseLines.length, 2);
 };
 
 // ---------- run ----------

@@ -1091,6 +1091,48 @@ export async function finalizeHeldOutput(input: FinalizeInput): Promise<Finalize
   }
 }
 
+// ----- failed / aborted replies -------------------------------------------------
+
+/** Saved as the whole assistant message when a reply was aborted (client left, stream cancelled). */
+export const ABORTED_MESSAGE = 'This reply was stopped before it was completed.';
+
+export type FailedReplyKind = 'aborted' | 'failed';
+
+export interface FailedReplyRecord {
+  /** For chat_messages.content: fixed strings only. */
+  events: Ev[];
+  /** For chat_messages.annotations: always null (a marker has no citations and no verification record). */
+  annotations: null;
+  /** SSE lines for the browser. Empty for 'aborted' (the client is gone). Generic error event then [DONE] for 'failed'. */
+  sseLines: string[];
+}
+
+/**
+ * What a route saves (and, for a failure, sends) when a reply did not complete.
+ * It takes no model text, no error and no events, so nothing from the stream,
+ * a tool or a provider can appear in it. Anything other than 'aborted' is
+ * treated as 'failed'. Every call returns fresh objects.
+ *
+ * Saved shape: a `content` event carrying the fixed text (this is what the
+ * frontend renders as the message body after a reload: getChat() joins the
+ * `content` events, and AssistantMessage never prints `error` event text), plus,
+ * for 'failed', the `error` event with the generic message so the message
+ * keeps the red error icon on reload.
+ */
+export function failedReplyRecord(kind: FailedReplyKind): FailedReplyRecord {
+  if (kind === 'aborted') {
+    return { events: [{ type: 'content', text: ABORTED_MESSAGE }], annotations: null, sseLines: [] };
+  }
+  return {
+    events: [
+      { type: 'content', text: GENERIC_ERROR_MESSAGE },
+      { type: 'error', message: GENERIC_ERROR_MESSAGE },
+    ],
+    annotations: null,
+    sseLines: [sseLine({ type: 'error', message: GENERIC_ERROR_MESSAGE }), DONE_LINE],
+  };
+}
+
 export interface HallucinationGuardOptions {
   /** Paths or regexes that should be guarded. Others pass through. */
   guardedPaths: Array<string | RegExp>;
