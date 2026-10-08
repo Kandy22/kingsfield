@@ -36,6 +36,14 @@ The chat-route buffering (W2, Step 1/1b) only governs what reaches the chat stre
 
 Effect: a vetoed or fabricated citation can be stored in a generated or edited .docx (and in `document_edits`) even when the chat reply that announced it was withheld. Fix in its own task: run Gate 1 over the content before the write (fail closed: refuse the tool call), or stage writes and commit them only after the reply passes. `chatTools.ts` is shared with `tabular.ts`, so check that path too.
 
+## OPEN (found 2026-10-08, not fixed): model-written chat titles are saved with no Gate 1
+
+`POST /chat/:chatId/generate-title` in `backend/src/routes/chat.ts` (~397-415) asks the user's title model for a 3-6 word title from the first message (`completeText`, ~402), normalizes it, saves it to `chats.title` (~410) and returns it in the JSON. None of it goes through Gate 1, so a title like "Doe v. Roe, 999 So. 3d 999" would be stored and shown in the sidebar. The fallback title on the success path of `chat.ts`/`projectChat.ts` (`lastUser.content.slice(0, 120)`) is the user's own text, not model text. Fix in its own task: run the title through Gate 1 and fall back to the fixed title on any veto or error.
+
+## OPEN (found 2026-10-08, not fixed): the frontend shows no words for a live failed reply
+
+When a chat reply fails while streaming, the backend sends `{type:'error', message: GENERIC_ERROR_MESSAGE}` and `[DONE]`. `useAssistantChat.ts` (~401-420) stores it as an `error` event, but `AssistantMessage.tsx:1707` (`isRenderableEvent`) never renders `error` events: the message only turns the status icon red, with no text. After a reload the saved marker's `content` event ("The reply failed before it could be completed.") does show. Fix in the frontend: render the error event's fixed message as body text (it's always the generic string now).
+
 ## OPEN (found 2026-10-08, low risk, not fixed): unspaced citation strings survive the chat guard's scrub
 
 In `backend/src/middleware/hallucination_guard.ts`, `scrubEvent()` (~499) keeps any string that matches `SSE_IDENT` (`/^[A-Za-z0-9_.:-]{1,64}$/`, ~81). It's applied to `courtlistener_verify_citations`, to `courtlistener_read_case` entries with no verified verdict, to `courtlistener_get_cases`, and to `mcp_tool_result`/`mcp_tool_call` when flagged (`scrubOnFlag`, ~693), including inside withheld replies. A model- or MCP-supplied unspaced string such as `999So.3d999` passes the scrub and reaches the client and `chat_messages`. Gate 1 likely wouldn't read it as a citation, and it needs a field the model or an MCP server controls, so the risk is low. Fix in its own task: run scrubbed strings through the reporter-cite check, or keep only numbers, booleans and known-format ids (UUIDs, cluster ids). Related, left as is by decision (B6, 2026-10-08): `tool_call_start`/`mcp_tool_start` send an identifier-shaped tool `name` live before Gate 1.

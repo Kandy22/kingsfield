@@ -108,6 +108,19 @@ class ChatReplyCases(unittest.TestCase):
     def test_real_gate_cite_only_inside_the_citations_block_does_not_leak(self):
         self._case("real_gate_cite_only_in_the_citations_block")
 
+    # ----- merge blocker 3: period-less reporter cites through the real gate (CourtListener stubbed to not-found,
+    # Supabase cache lookup answers "no row"). The case also asserts the veto was the gate's own, not a caught error;
+    # the info dump on stderr records which it was (info.real_gate_period_less_*.how). -----
+
+    def test_real_gate_period_less_cites_in_one_reply_withhold_it_by_a_real_veto_not_an_error(self):
+        self._case("real_gate_period_less_cites_combined")
+
+    def test_real_gate_period_less_full_cite_alone_withholds_the_reply(self):
+        self._case("real_gate_period_less_full_cite_alone")
+
+    def test_real_gate_period_less_bare_cite_alone_withholds_the_reply(self):
+        self._case("real_gate_period_less_bare_cite_alone")
+
 
 # ───── static: who calls runLLMStream, and does the route save what finalizeHeldOutput returned ─────
 

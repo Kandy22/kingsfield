@@ -8,8 +8,10 @@
  * - POST /api/crew/chat        — chat endpoint that runs the Crew silently
  * - GET  /api/research/case-law — proxy CourtListener opinion search
  *
- * The hallucination guard middleware is applied to /api/crew/chat so any
- * cite the Crew produces gets verified before it leaves the server.
+ * /api/crew/chat and /api/council hold all model text until Gate 1 has run over
+ * it (hallucination_guard.ts finalizeCrewReply / gateCouncilOutput). Any veto,
+ * pending verdict or gate error withholds the whole reply; stored council
+ * sessions are gated again on read.
  */
 
 import { Router } from 'express';
@@ -19,6 +21,7 @@ import type Anthropic from '@anthropic-ai/sdk';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { GeminiClient } from '../llm-council/providers.js';
 import { runLLMCouncil } from '../llm-council/orchestrator.js';
+import type { CouncilOutput } from '../llm-council/orchestrator.js';
 import { detectTrigger } from '../llm-council/triggers.js';
 import { renderCouncilHTML, renderCouncilMarkdown } from '../llm-council/report.js';
 import { runCrew } from '../crew/coordinator.js';
@@ -31,6 +34,15 @@ import { extractPdfText } from '../lib/chatTools.js';
 import { requireAuth } from '../middleware/auth.js';
 import { getUserModelSettings } from '../lib/userSettings.js';
 import { runCaseExtraction } from '../lib/caseIntelligence.js';
+import { safeErrorLog } from '../lib/safeError.js';
+import {
+  failedReplyRecord,
+  finalizeCrewReply,
+  gateCouncilOutput,
+  GENERIC_ERROR_MESSAGE,
+  startSseKeepalive,
+  verifyDraftForSse,
+} from '../middleware/hallucination_guard.js';
 
 /** In-memory copy of the court-list snapshot (loaded once per process;
  *  restart the server after re-running scripts/fetch-courts.mjs). */
@@ -85,7 +97,7 @@ async function fetchDocumentTexts(
         results.push({ name: filename, text: text.slice(0, 40000) }); // cap at 40k chars
       }
     } catch (err: any) {
-      console.error(`[crew/chat] Failed to extract text from document ${docId}:`, err?.message);
+      console.error(`[crew/chat] Failed to extract text from document ${docId}:`, safeErrorLog(err));
     }
   }
   return results;
@@ -191,68 +203,124 @@ export function buildRoutes(deps: RouteDeps): Router {
     res.json(detectTrigger(message, source));
   });
 
+  // Sessions saved before Gate 1 covered /council hold unverified model text, so
+  // every stored row is gated again on read. Fails closed: any veto, pending
+  // verdict, gate error or malformed row yields the withheld version.
+  const gateStoredCouncilRow = (row: any) =>
+    gateCouncilOutput(
+      {
+        framedQuestion: row?.framed_question,
+        advisors: row?.advisors,
+        reviewers: row?.reviewers,
+        chairmanVerdict: row?.chairman_verdict,
+      },
+      {
+        verify: (text) =>
+          verifyDraftForSse(text, {
+            courtListenerToken: deps.courtListenerToken,
+            supabase: deps.supabase,
+          }),
+      },
+    );
+  const COUNCIL_ROW_COLUMNS =
+    'id, project_id, framed_question, advisors, reviewers, chairman_verdict, created_at';
+
   r.post('/council', requireAuth, async (req, res) => {
     try {
       const { rawQuestion, context, projectId } = req.body ?? {};
       if (typeof rawQuestion !== 'string' || rawQuestion.length < 10) {
         return res.status(400).json({ error: 'rawQuestion required' });
       }
-      if (MOCK_ENABLED) {
-        console.log('[council] MOCK_LLM=true — returning stub response');
-        return res.json(MOCK_COUNCIL);
+      if (MOCK_ENABLED) console.log('[council] MOCK_LLM=true — using stub response');
+      // No supabase / projectId here: runLLMCouncil would save the session
+      // before Gate 1 has seen it. This route saves it after the gate, below.
+      const out = MOCK_ENABLED
+        ? MOCK_COUNCIL
+        : await runLLMCouncil(
+            { rawQuestion, context },
+            { anthropic: deps.anthropic, gemini: deps.gemini, deepseek: deps.deepseek, kimi: deps.kimi },
+          );
+
+      // Gate 1 over every model-written field. Any veto / pending / error
+      // withholds the whole output (same shape, fixed message in every text field).
+      const gated = await gateCouncilOutput(out, {
+        verify: (text) =>
+          verifyDraftForSse(text, {
+            courtListenerToken: deps.courtListenerToken,
+            supabase: deps.supabase,
+          }),
+      });
+
+      if (gated.withheld) {
+        console.warn('[council] output withheld:', gated.withheldReason, 'hasVetoes', gated.verification.hasVetoes);
       }
-      const out = await runLLMCouncil(
-        { rawQuestion, context },
-        { anthropic: deps.anthropic, gemini: deps.gemini, deepseek: deps.deepseek, kimi: deps.kimi },
-        deps.supabase,
-        projectId,
-      );
-      res.json(out);
-    } catch (err: any) {
-      console.error('[council] error', err);
-      res.status(500).json({ error: err.message });
+
+      // Saved only now, and exactly what is sent (the withheld version if withheld).
+      if (!MOCK_ENABLED && typeof projectId === 'string' && projectId) {
+        try {
+          const { error: saveError } = await deps.supabase.from('llm_council_sessions').insert({
+            project_id: projectId,
+            framed_question: gated.output.framedQuestion,
+            advisors: gated.output.advisors,
+            reviewers: gated.output.reviewers,
+            chairman_verdict: gated.output.chairmanVerdict,
+            created_at: new Date().toISOString(),
+          });
+          if (saveError) console.error('[council] failed to save session', safeErrorLog(saveError));
+        } catch (saveErr) {
+          console.error('[council] failed to save session', safeErrorLog(saveErr));
+        }
+      }
+
+      res.json({ ...gated.output, verification: gated.verification, withheld: gated.withheld });
+    } catch (err) {
+      console.error('[council] error', safeErrorLog(err));
+      res.status(500).json({ error: GENERIC_ERROR_MESSAGE });
     }
   });
 
   r.get('/council/:id', requireAuth, async (req, res) => {
     const { data, error } = await deps.supabase
       .from('llm_council_sessions')
-      .select('*')
+      .select(COUNCIL_ROW_COLUMNS)
       .eq('id', req.params.id)
       .single();
     if (error || !data) return res.status(404).json({ error: 'not found' });
-    res.json(data);
+    const gated = await gateStoredCouncilRow(data);
+    res.json({
+      id: (data as any).id,
+      project_id: (data as any).project_id,
+      created_at: (data as any).created_at,
+      framed_question: gated.output.framedQuestion,
+      advisors: gated.output.advisors,
+      reviewers: gated.output.reviewers,
+      chairman_verdict: gated.output.chairmanVerdict,
+      verification: gated.verification,
+      withheld: gated.withheld,
+    });
   });
 
   r.get('/council/:id/html', requireAuth, async (req, res) => {
     const { data, error } = await deps.supabase
       .from('llm_council_sessions')
-      .select('*')
+      .select(COUNCIL_ROW_COLUMNS)
       .eq('id', req.params.id)
       .single();
     if (error || !data) return res.status(404).send('not found');
-    const html = renderCouncilHTML({
-      framedQuestion: data.framed_question,
-      advisors: data.advisors,
-      reviewers: data.reviewers,
-      chairmanVerdict: data.chairman_verdict,
-    });
+    const gated = await gateStoredCouncilRow(data);
+    const html = renderCouncilHTML(gated.output as CouncilOutput);
     res.type('html').send(html);
   });
 
   r.get('/council/:id/markdown', requireAuth, async (req, res) => {
     const { data, error } = await deps.supabase
       .from('llm_council_sessions')
-      .select('*')
+      .select(COUNCIL_ROW_COLUMNS)
       .eq('id', req.params.id)
       .single();
     if (error || !data) return res.status(404).send('not found');
-    const md = renderCouncilMarkdown({
-      framedQuestion: data.framed_question,
-      advisors: data.advisors,
-      reviewers: data.reviewers,
-      chairmanVerdict: data.chairman_verdict,
-    });
+    const gated = await gateStoredCouncilRow(data);
+    const md = renderCouncilMarkdown(gated.output as CouncilOutput);
     res.type('text/markdown').send(md);
   });
 
@@ -352,94 +420,105 @@ export function buildRoutes(deps: RouteDeps): Router {
       return;
     }
     // The frontend hook (useAssistantChat) reads a Server-Sent Events stream.
-    // We open the SSE connection immediately, run the crew (which blocks while
-    // hitting CourtListener + LLM), then flush the full reply as SSE events.
+    // We open the SSE connection immediately and run the crew (which blocks
+    // while hitting CourtListener + LLM). Nothing the crew or a model wrote is
+    // written to the client until Gate 1 has run over all of it: the reply and
+    // every authority's citation, url and relevance text go through
+    // finalizeCrewReply, which sends them unchanged or withholds the whole reply.
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no');
     res.flushHeaders();
 
-    const sse = (obj: Record<string, unknown>) =>
-      res.write(`data: ${JSON.stringify(obj)}\n\n`);
-
-    if (MOCK_ENABLED) {
-      console.log('[crew/chat] MOCK_LLM=true — returning stub response');
-      const CHUNK = 80;
-      const reply = MOCK_CREW.reply;
-      for (let i = 0; i < reply.length; i += CHUNK) {
-        sse({ type: 'content_delta', text: reply.slice(i, i + CHUNK) });
-      }
-      sse({ type: 'citations', citations: [] });
-      res.write('data: [DONE]\n\n');
-      res.end();
-      return;
-    }
+    const write = (line: string) => res.write(line);
+    // Nothing is visible while the crew runs and Gate 1 checks; ping until the reply is released.
+    const keepalive = startSseKeepalive(write);
+    res.on('close', () => keepalive.stop());
 
     try {
-      const { userMessage, matterContext, documentName, documentText, documentIds, jurisdiction } =
-        req.body ?? {};
-      // Use the model from the request body, falling back to Gemini Flash.
-      const model = req.body?.model ?? process.env.DEFAULT_CREW_MODEL ?? 'gemini-2.5-flash';
+      let reply: string;
+      let authorities: { citation: string; sourceUrl: string; relevanceNote: string }[];
 
-      // Fetch and extract text from any attached documents.
-      let resolvedDocText = documentText as string | undefined;
-      let resolvedDocName = documentName as string | undefined;
-      if (Array.isArray(documentIds) && documentIds.length > 0) {
-        const docs = await fetchDocumentTexts(documentIds, deps.supabase);
-        if (docs.length > 0) {
-          resolvedDocName = docs.map((d) => d.name).join(', ');
-          resolvedDocText = docs
-            .map((d) => `=== ${d.name} ===\n${d.text}`)
-            .join('\n\n');
+      if (MOCK_ENABLED) {
+        console.log('[crew/chat] MOCK_LLM=true — using stub response');
+        reply = MOCK_CREW.reply;
+        authorities = [];
+      } else {
+        const { userMessage, matterContext, documentName, documentText, documentIds, jurisdiction } =
+          req.body ?? {};
+        // Use the model from the request body, falling back to Gemini Flash.
+        const model = req.body?.model ?? process.env.DEFAULT_CREW_MODEL ?? 'gemini-2.5-flash';
+
+        // Fetch and extract text from any attached documents.
+        let resolvedDocText = documentText as string | undefined;
+        let resolvedDocName = documentName as string | undefined;
+        if (Array.isArray(documentIds) && documentIds.length > 0) {
+          const docs = await fetchDocumentTexts(documentIds, deps.supabase);
+          if (docs.length > 0) {
+            resolvedDocName = docs.map((d) => d.name).join(', ');
+            resolvedDocText = docs
+              .map((d) => `=== ${d.name} ===\n${d.text}`)
+              .join('\n\n');
+          }
         }
+
+        // Simple mode: if the crew decides not to spawn (short/casual message),
+        // fall back to a single direct LLM call so the user still gets a reply.
+        const out = await runCrew(
+          { userMessage, matterContext, documentName: resolvedDocName, documentText: resolvedDocText, jurisdiction },
+          {
+            model,
+            supabase: deps.supabase,
+            courtListenerToken: deps.courtListenerToken,
+          },
+        );
+
+        reply = out.reply;
+
+        // If the Coordinator decided to skip the crew, produce a simple answer.
+        if (!reply) {
+          const { completeText } = await import('../lib/llm/index.js');
+          reply = await completeText({
+            model,
+            systemPrompt: 'You are Kingsfield, a plain-English legal AI. Answer concisely.',
+            user: userMessage ?? '',
+            maxTokens: 1024,
+          });
+        }
+        authorities = out.authorities;
       }
 
-      // Simple mode: if the crew decides not to spawn (short/casual message),
-      // fall back to a single direct LLM call so the user still gets a reply.
-      const out = await runCrew(
-        { userMessage, matterContext, documentName: resolvedDocName, documentText: resolvedDocText, jurisdiction },
-        {
-          model,
-          supabase: deps.supabase,
-          courtListenerToken: deps.courtListenerToken,
-        },
-      );
-
-      let reply = out.reply;
-
-      // If the Coordinator decided to skip the crew, produce a simple answer.
-      if (!reply) {
-        const { completeText } = await import('../lib/llm/index.js');
-        reply = await completeText({
-          model,
-          systemPrompt: 'You are Kingsfield, a plain-English legal AI. Answer concisely.',
-          user: userMessage ?? '',
-          maxTokens: 1024,
-        });
+      // Gate 1 over the reply and every string the citations event carries
+      // (citation, url, model-written relevance). Veto, pending, gate error or
+      // malformed input withholds the whole reply: VETO_WITHHELD_MESSAGE or
+      // WITHHELD_MESSAGE, no citation chips. The lines end with the client-safe
+      // verification event, then [DONE].
+      const finalized = await finalizeCrewReply({
+        reply,
+        authorities,
+        verify: (text) =>
+          verifyDraftForSse(text, {
+            courtListenerToken: deps.courtListenerToken,
+            supabase: deps.supabase,
+          }),
+      });
+      if (finalized.withheld) {
+        console.warn('[crew/chat] reply withheld:', finalized.withheldReason, 'hasVetoes', finalized.verification.hasVetoes);
       }
-
-      // Stream the reply as content_delta events (one chunk per 80 chars so
-      // the drip animation in the UI has something to animate).
-      const CHUNK = 80;
-      for (let i = 0; i < reply.length; i += CHUNK) {
-        sse({ type: 'content_delta', text: reply.slice(i, i + CHUNK) });
+      keepalive.stop();
+      for (const line of finalized.linesToSend) write(line);
+    } catch (err) {
+      keepalive.stop();
+      // The raw error stays in the server log; the client gets the fixed error event, then [DONE].
+      console.error('[crew/chat] error', safeErrorLog(err));
+      try {
+        for (const line of failedReplyRecord('failed').sseLines) write(line);
+      } catch {
+        /* the socket is already gone */
       }
-
-      // Send authority citations so the UI can render citation chips.
-      const citations = out.authorities.map((a) => ({
-        type: 'legal_authority',
-        citation: a.citation,
-        url: a.sourceUrl,
-        relevance: a.relevanceNote,
-      }));
-      sse({ type: 'citations', citations });
-
-      res.write('data: [DONE]\n\n');
-      res.end();
-    } catch (err: any) {
-      console.error('[crew/chat] error', err);
-      sse({ type: 'error', error: err.message });
-      res.write('data: [DONE]\n\n');
+    } finally {
+      keepalive.stop();
       res.end();
     }
   });

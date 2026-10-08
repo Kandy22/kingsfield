@@ -27,9 +27,16 @@ import draft_harness as dh  # noqa: E402
 FAB = "Doe v. Roe, 999 So. 3d 999 (Fla. 2015)"
 BACKEND_SRC = fx.REPO / "backend" / "src"
 
-# Findings 1-3 (the /api/crew/chat route, the /api/council route, runResearcher's model text) are ruled merge-to-main
-# blockers belonging to the chat follow-up task. The bodies below are intact and go live when that task lands.
-SKIP_REASON = ("OPEN merge-to-main blocker (decisions.md 2026-10-06): findings 1-3 moved to the chat follow-up task")
+# Findings 1 and 2 (the /api/crew/chat route, the /api/council route) are live tests. Finding 3 (runResearcher's model
+# text) is fixed at the route, not inside researcher.ts; see SKIP_REASON and RunResearcherReachesOnlyAGate1Route below.
+SKIP_REASON = (
+    "OPEN, needs a user decision (finding 3): runResearcher returns ungated model text (the Phase 3 holding/relevance "
+    "notes and the raw searchPlan strings). The fix is at the route: runResearcher -> runCrew -> POST /crew/chat, which "
+    "runs Gate 1 over everything it sends from runCrew's output (enforced by "
+    "RunResearcherReachesOnlyAGate1Route.test_every_runresearcher_caller_chain_ends_in_a_gate1_route). researcher.ts is "
+    "outside the builder's write paths, so this in-function assertion cannot pass. The user must decide: accept the "
+    "route-level coverage (then retire this test) or change researcher.ts so runResearcher gates its own text."
+)
 
 
 def py_text(draft):
@@ -109,7 +116,7 @@ class ResearcherModelText(unittest.TestCase):
     GATES = r"\b(?:localGate1Text|verifyDraft|verifyDraftForSse)\s*\("
 
     def test_model_written_text_is_gated_before_runresearcher_returns_it(self):
-        self.skipTest(SKIP_REASON + " (finding 3: runResearcher returns ungated model text)")
+        self.skipTest(SKIP_REASON)
         path = BACKEND_SRC / "crew" / "researcher.ts"
         code = _code(path.read_text(encoding="utf-8"))
         body = _run_researcher_body(code)
@@ -159,7 +166,6 @@ class RoutesThatReleaseModelTextMustRunGate1(unittest.TestCase):
         return _code((ROUTES / "index.ts").read_text(encoding="utf-8"))
 
     def test_crew_chat_runs_gate1_over_the_reply_it_streams(self):
-        self.skipTest(SKIP_REASON + " (finding 1: /api/crew/chat streams ungated model text)")
         h =_handler(self._index(), r"r\.post\(\s*'/crew/chat'", [r"\n  // ──", r"\n  r\.(?:post|get|put|delete)\("])
         self.assertIsNotNone(h, "POST /crew/chat handler not found")
         self.assertRegex(h, r"\brunCrew\s*\(|\bcompleteText\s*\(", "test needs updating: /crew/chat no longer calls a model")
@@ -174,7 +180,6 @@ class RoutesThatReleaseModelTextMustRunGate1(unittest.TestCase):
                          "/crew/chat computes a Gate 1 result but never sends it")
 
     def test_council_runs_gate1_over_the_text_it_returns(self):
-        self.skipTest(SKIP_REASON + " (finding 2: /api/council returns ungated model text)")
         h =_handler(self._index(), r"r\.post\(\s*'/council'\s*,", [r"\n  r\.(?:post|get|put|delete)\("])
         self.assertIsNotNone(h, "POST /council handler not found")
         self.assertRegex(h, r"\brunLLMCouncil\s*\(", "test needs updating: /council no longer runs the council")
@@ -188,7 +193,6 @@ class RoutesThatReleaseModelTextMustRunGate1(unittest.TestCase):
                          "/council computes a Gate 1 result but never returns it")
 
     def test_no_route_file_runs_a_model_pipeline_without_a_gate1_call(self):
-        self.skipTest(SKIP_REASON + " (findings 1-2: routes/index.ts runs Crew/Council with no Gate 1 call)")
         offenders = []
         for p in sorted(ROUTES.rglob("*.ts")):
             code = _code(p.read_text(encoding="utf-8"))
@@ -198,6 +202,177 @@ class RoutesThatReleaseModelTextMustRunGate1(unittest.TestCase):
             offenders, [],
             "route files that run the Crew / Council / Researcher and never call verifyDraft, verifyDraftForSse or "
             "localGate1Text: %r" % offenders)
+
+
+# ───── Finding 3, route-level coverage: runResearcher -> runCrew -> a route that gates before it writes ─────
+#
+# researcher.ts is not changed. runResearcher returns ungated model prose (Phase 3 holding/relevance notes, raw
+# searchPlan strings), so the only thing standing between it and a user is the route that sends runCrew's output.
+# This test fails the moment that chain gets a new link, or a link stops gating:
+#   1. runResearcher is mentioned only in crew/coordinator.ts (and defined in crew/researcher.ts), and every call to it
+#      sits inside runCrew.
+#   2. runCrew is called outside crew/ only from route handlers (r./router./app. get/post/...) that run a Gate 1 call
+#      (verifyDraftForSse / verifyDraft / localGate1Text, or an export of middleware/hallucination_guard.ts that calls
+#      one) after the runCrew call and before anything is written to the response, with no further model call after it.
+# It is a static check: it cannot prove the string that was gated is the string that is sent. The behavioral proof is
+# the chat real-gate cases and whatever route-level test the builder adds.
+
+GUARD_FILE = BACKEND_SRC / "middleware" / "hallucination_guard.ts"
+GATE_NAMES = ("verifyDraftForSse", "verifyDraft", "localGate1Text")
+ROUTE_REGISTRATION = re.compile(r"(?<![\w.])(?:r|router|app)\.(?:get|post|put|patch|delete|all|use)\s*\(")
+WRITE_TO_RES = re.compile(
+    r"(?<![\w.])(?:sse|write|writeSse|sendEvent|send|emit)\s*\(|\bres\.(?:write|json|send|end|status|sendFile|type|redirect)\s*\(")
+MODEL_CALL = re.compile(r"\b(?:runCrew|runLLMCouncil|runLLMStream|completeText)\s*\(")
+
+
+def _code_keep_lines(src):
+    """Like _code, but block comments keep their newlines so reported line numbers are the file's."""
+    src = re.sub(r"/\*.*?\*/", lambda m: "\n" * m.group(0).count("\n"), src, flags=re.S)
+    return "\n".join(re.sub(r"(^|\s)//.*$", "", line) for line in src.splitlines())
+
+
+def _strip_imports(code):
+    return re.sub(r"^[ \t]*import\b[\s\S]*?\bfrom\s*['\"][^'\"]+['\"][ \t]*;?",
+                  lambda m: "\n" * m.group(0).count("\n"), code, flags=re.M)
+
+
+def _prod_ts_files():
+    for p in sorted(BACKEND_SRC.rglob("*.ts")):
+        rel = p.relative_to(BACKEND_SRC)
+        if "node_modules" in p.parts or "__tests__" in rel.parts or p.name.endswith((".test.ts", ".spec.ts", ".d.ts")):
+            continue
+        yield p, rel.as_posix()
+
+
+def _line_of(code, pos):
+    return code.count("\n", 0, pos) + 1
+
+
+def _function_span(code, name):
+    m = re.search(r"\bfunction\s+%s\b" % re.escape(name), code)
+    if not m:
+        return None
+    end = code.find("\n}\n", m.end())  # closing brace in column 0
+    return (m.start(), len(code) if end == -1 else end)
+
+
+def _guard_helper_names():
+    """Exports of hallucination_guard.ts that (transitively) call a Gate 1 entry point."""
+    code = _code_keep_lines(GUARD_FILE.read_text(encoding="utf-8"))
+    bodies = {}
+    for m in re.finditer(r"\bexport\s+(?:async\s+)?function\s+(\w+)", code):
+        end = code.find("\n}\n", m.end())
+        bodies[m.group(1)] = code[m.end(): len(code) if end == -1 else end]
+    gates = set(GATE_NAMES)
+    changed = True
+    while changed:
+        changed = False
+        for name, body in bodies.items():
+            if name not in gates and any(re.search(r"\b%s\s*\(" % g, body) for g in gates):
+                gates.add(name)
+                changed = True
+    # hallucinationGuard() is res.json() middleware: it never sees SSE writes, so naming it in a handler gates nothing.
+    return gates - set(GATE_NAMES) - {"hallucinationGuard"}
+
+
+def _researcher_chain_problems():
+    problems = []
+    coordinator_calls = 0
+    for p, rel in _prod_ts_files():
+        if rel == "crew/researcher.ts":
+            continue  # the definition
+        code = _strip_imports(_code_keep_lines(p.read_text(encoding="utf-8", errors="replace")))
+        mentions = [m.start() for m in re.finditer(r"\brunResearcher\b", code)]
+        reexport = re.search(r"\bexport\s*\*\s*(?:as\s+\w+\s*)?from\s*['\"][^'\"]*/researcher(?:\.[jt]s)?['\"]",
+                             p.read_text(encoding="utf-8", errors="replace"))
+        if rel != "crew/coordinator.ts":
+            if mentions:
+                problems.append("%s:%d uses runResearcher. Only crew/coordinator.ts (inside runCrew) may; this is a new "
+                                "caller whose output is not covered by the /crew/chat Gate 1." % (rel, _line_of(code, mentions[0])))
+            if reexport:
+                problems.append("%s re-exports crew/researcher.ts, which makes runResearcher reachable from outside "
+                                "coordinator.ts." % rel)
+            continue
+        span = _function_span(code, "runCrew")
+        if span is None:
+            problems.append("crew/coordinator.ts has no runCrew function; the test needs updating")
+        for pos in mentions:
+            where = "crew/coordinator.ts:%d" % _line_of(code, pos)
+            if not re.match(r"runResearcher\s*\(", code[pos:]):
+                problems.append("%s references runResearcher other than as a direct call (alias / callback)" % where)
+                continue
+            coordinator_calls += 1
+            if span is None or not (span[0] <= pos < span[1]):
+                problems.append("%s calls runResearcher outside runCrew, a path whose output no route gates" % where)
+    if coordinator_calls == 0:
+        problems.append("found no runResearcher( call in crew/coordinator.ts; the test needs updating")
+    return problems
+
+
+def _runcrew_caller_problems():
+    problems = []
+    callers = 0
+    gate_names = sorted(set(GATE_NAMES) | _guard_helper_names())
+    gate_re = re.compile(r"\b(?:%s)\s*\(" % "|".join(gate_names))
+    for p, rel in _prod_ts_files():
+        if rel.startswith("crew/"):
+            continue
+        code = _strip_imports(_code_keep_lines(p.read_text(encoding="utf-8", errors="replace")))
+        refs = list(re.finditer(r"\brunCrew\b", code))
+        if not refs:
+            continue
+        regs = [m.start() for m in ROUTE_REGISTRATION.finditer(code)]
+        for m in refs:
+            where = "%s:%d" % (rel, _line_of(code, m.start()))
+            if not re.match(r"runCrew\s*\(", code[m.start():]):
+                problems.append("%s references runCrew other than as a direct call (alias, re-export or callback); the "
+                                "route-level Gate 1 cannot be checked" % where)
+                continue
+            callers += 1
+            starts = [s for s in regs if s <= m.start()]
+            if not starts:
+                problems.append("%s: runCrew is called outside any route handler (new caller; its output reaches "
+                                "runResearcher's model text with no Gate 1 route above it). Gate it like POST /crew/chat "
+                                "and extend this test." % where)
+                continue
+            later = [s for s in regs if s > starts[-1]]
+            handler_end = later[0] if later else len(code)
+            after = code[m.start() + len("runCrew"): handler_end]
+            gate = gate_re.search(after)
+            if not gate:
+                problems.append("%s: the route handler never runs Gate 1 (%s) after runCrew; everything it sends from "
+                                "runCrew's output (reply, authority citation and relevance text, and runResearcher's "
+                                "notes inside them) is ungated" % (where, "/".join(gate_names)))
+                continue
+            write = WRITE_TO_RES.search(after)
+            if write and write.start() < gate.start():
+                problems.append("%s: the handler writes to the response (%s) before Gate 1 runs (%s at +%d chars)"
+                                % (where, write.group(0).strip(), gate.group(0).strip(), gate.start()))
+            late_model = MODEL_CALL.search(after, gate.end())
+            if late_model:
+                problems.append("%s: model call %s after the Gate 1 call; its text is not covered by the gate"
+                                % (where, late_model.group(0).strip()))
+            sends_authorities = re.search(r"relevanceNote|\.authorities\b", after)
+            before_write = after[: write.start()] if write else after[: gate.end()]
+            if sends_authorities and not re.search(r"relevanceNote|\bauthorities\b", before_write):
+                problems.append("%s: the handler sends authority citation/relevance text but the code between runCrew and "
+                                "the first write never touches authorities/relevanceNote, so that text is not in the "
+                                "gated draft. Gate it with the reply before anything is written." % where)
+    if callers == 0:
+        problems.append("found no runCrew( call outside crew/; the test needs updating (POST /crew/chat moved?)")
+    return problems
+
+
+class RunResearcherReachesOnlyAGate1Route(unittest.TestCase):
+    def test_every_runresearcher_caller_chain_ends_in_a_gate1_route(self):
+        with self.subTest(link="runResearcher is called only from runCrew in crew/coordinator.ts"):
+            problems = _researcher_chain_problems()
+            self.assertEqual(problems, [], "runResearcher's ungated model text can reach a caller no route gates "
+                             "(finding 3 is covered only at the route):\n" + "\n".join(problems))
+        with self.subTest(link="every runCrew caller outside crew/ is a route handler that gates before it writes"):
+            problems = _runcrew_caller_problems()
+            self.assertEqual(problems, [], "a runCrew caller can send ungated model text (runResearcher's notes "
+                             "included):\n" + "\n".join(problems))
 
 
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
 // Adversary cases for the chat route: what a reload shows after a veto, and what can still reach the client
 // or the saved row on the SUCCESS path.
 //
-// Run once by test_chat_veto_persistence.py under backend's tsx. Stub verifiers, except the "real_gate_*" cases,
+// Run once by test_chat_veto_persistence.py under backend's tsx. The "real_gate_period_less_*" cases additionally stub
+// global fetch (CourtListener: not found) and answer the Supabase cache lookup with "no row"; see their comment block.
+// Stub verifiers, except the "real_gate_*" cases,
 // which run the production verify closure (verifyDraftForSse -> verifyDraft -> localGate1Text -> pipeline/gate1.py)
 // against the fixture database named by KINGSFIELD_FLORIDA_DB. Supabase and CourtListener are unreachable by
 // construction (a Proxy that throws), and every draft used with the real gate holds only fabricated Florida cites,
@@ -571,6 +573,130 @@ cases.real_gate_cite_only_in_the_citations_block = async () => {
   });
   noteReal('real_citations_block_only', out);
   assertNoFabricatedCite(out, 'cite only in the CITATIONS block');
+};
+
+// ---------- the real gate, period-less reporter cites, CourtListener stubbed to "not found" ----------
+//
+// Logged merge blocker 3 (docs/context/current-state.md, Step 4 to-do). Unlike the cases above these do NOT use the
+// throwing Supabase proxy: the cache lookup (sources.select.eq.maybeSingle) is answered with "no row", and global fetch
+// is replaced so CourtListener's citation-lookup answers 404 / no clusters for everything. Any other URL is recorded as a
+// stray fetch (and answered 404). No network is reachable either way.
+//
+// The test must not pass merely because the harness broke something and the guard failed closed on an error. So it
+// captures every raw verification result (before the guard scrubs it) and asserts: no result carries an `error`, the
+// reply is withheld with the VETO message (not the generic one), and the veto is the gate's own, either a local Florida
+// index veto or a CourtListener "not found" veto with the stub actually called.
+
+function noRowSupabase() {
+  const calls: string[] = [];
+  const noRow = { data: null, error: null };
+  const builder = (table: string): any =>
+    new Proxy(function () {}, {
+      get: (_t, prop) => {
+        // `await builder` resolves to "no row"; every other property is a chainable method.
+        if (prop === 'then') return (res: any, rej: any) => Promise.resolve(noRow).then(res, rej);
+        return () => {
+          calls.push(`${table}.${String(prop)}`);
+          return builder(table);
+        };
+      },
+    });
+  return { client: { from: (t: string) => { calls.push(`from:${t}`); return builder(t); } } as any, calls };
+}
+
+async function runRealGateWithStubs(full: string, label: string, absent: string[]) {
+  requireRealGate();
+  const sb = noRowSupabase();
+  const clCalls: string[] = [];
+  const strayFetches: string[] = [];
+  const raw: any[] = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (input: any, init?: any) => {
+    const url = String(typeof input === 'string' ? input : (input?.url ?? input));
+    if (/\/citation-lookup\/?(?:\?.*)?$/.test(url)) {
+      let text = '';
+      try { text = String(JSON.parse(init?.body ?? '{}').text ?? ''); } catch { /* keep '' */ }
+      clCalls.push(text);
+      return new Response(JSON.stringify([{ citation: text, status: 404, clusters: [] }]), {
+        status: 200, headers: { 'content-type': 'application/json' },
+      });
+    }
+    strayFetches.push(url);
+    return new Response('not found', { status: 404 });
+  }) as typeof fetch;
+  let out: any;
+  try {
+    out = await finalizeHeldOutput({
+      held: [delta(full), DONE], events: [{ type: 'content', text: full }], annotations: [], fullText: full, logError: silent,
+      verify: async (t: string) => {
+        const r = await verifyDraftForSse(t, { courtListenerToken: '', supabase: sb.client });
+        raw.push(r);
+        return r;
+      },
+    });
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+
+  const errors = raw.map((r) => r?.error).filter(Boolean);
+  const vetoed = raw.flatMap((r) => r?.verdicts ?? []).filter((v: any) => v.status !== 'verified' && v.status !== 'conditional');
+  const noteText = (v: any) => (Array.isArray(v.notes) ? v.notes.join(' ') : '');
+  const localVetoes = vetoed.filter((v: any) => /local Florida index/i.test(noteText(v))).length;
+  const clNotFound = vetoed.filter((v: any) => /NOT FOUND in CourtListener/i.test(noteText(v))).length;
+  const how = errors.length
+    ? 'error'
+    : localVetoes && clNotFound ? 'local_veto+cl_not_found'
+    : localVetoes ? 'local_veto'
+    : clNotFound ? 'cl_not_found'
+    : 'none';
+  info[`real_gate_period_less_${label}`] = {
+    how, rawResults: raw.length, vetoedVerdicts: vetoed.length, localVetoes, clNotFound,
+    courtListenerStubCalls: clCalls, strayFetches, supabaseCalls: sb.calls,
+    errors: errors.map((e) => String(e).slice(0, 200)),
+    withheld: out.withheld, reason: out.withheldReason, sent: sentContent(out).slice(0, 200),
+  };
+
+  assert.equal(raw.length > 0, true, `${label}: the verify closure was never called`);
+  assert.deepEqual(
+    errors, [],
+    `${label}: verification ERRORED (the guard failed closed on an error, not on a Gate 1 veto, so this is not a pass): ${errors.join(' | ')}`,
+  );
+  assert.deepEqual(strayFetches, [], `${label}: unexpected fetch beyond citation-lookup: ${strayFetches.join(', ')}`);
+  assert.equal(
+    out.withheld, true,
+    `${label}: the reply was RELEASED (how=${how}; raw verdicts=${JSON.stringify(raw.flatMap((r) => r?.verdicts ?? []).map((v: any) => v.status))}; CL stub calls=${clCalls.length})`,
+  );
+  assert.equal(out.withheldReason, 'veto', `${label}: withheld for ${out.withheldReason}, not for a Gate 1 veto`);
+  assertWholeReplyWithheld(out, VETO_WITHHELD_MESSAGE, label);
+  assert.equal(out.verification.hasVetoes, true, `${label}: the verification event must report the veto`);
+  assert.ok(
+    localVetoes > 0 || (clCalls.length > 0 && clNotFound > 0),
+    `${label}: withheld, but neither a local Gate 1 veto nor a CourtListener not-found veto (with the stub called) explains it; ` +
+      `how=${how}, local=${localVetoes}, clNotFound=${clNotFound}, stubCalls=${clCalls.length}`,
+  );
+  const leaked = leakedCites(everything(out));
+  assert.deepEqual(leaked, [], `${label}: fabricated cite(s) reached the client or the saved row: ${leaked.join('; ')}`);
+  const blob = everything(out);
+  for (const s of absent) assert.ok(!blob.includes(s), `${label}: "${s}" (case name or holding) survived a vetoed reply`);
+}
+
+cases.real_gate_period_less_cites_combined = async () => {
+  await runRealGateWithStubs(
+    'See Doe v Roe, 999 So 3d 999 (Fla. 2015), where the court held the claim fails. The same rule appears at 999 So 3d 999.',
+    'combined', ['Doe v Roe', 'the court held', 'claim fails', 'same rule'],
+  );
+};
+
+// Each form alone, so one cite's veto cannot hide the other form's leak.
+cases.real_gate_period_less_full_cite_alone = async () => {
+  await runRealGateWithStubs(
+    'See Doe v Roe, 999 So 3d 999 (Fla. 2015), where the court held the claim fails.',
+    'full_cite_alone', ['Doe v Roe', 'the court held', 'claim fails'],
+  );
+};
+
+cases.real_gate_period_less_bare_cite_alone = async () => {
+  await runRealGateWithStubs('The rule is settled. 999 So 3d 999.', 'bare_cite_alone', ['rule is settled']);
 };
 
 // Information for the report, not an assertion: does the production gate flag the generated-document filename above?

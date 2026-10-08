@@ -1133,6 +1133,304 @@ export function failedReplyRecord(kind: FailedReplyKind): FailedReplyRecord {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Routes that are not the chat stream (/crew/chat, /council): the same Gate 1,
+// the same withhold-whole rule, the same client-safe verification record.
+// ---------------------------------------------------------------------------
+
+function makeFailureLogger(sink?: VerificationErrorLogger) {
+  const out = sink ?? defaultErrorLogger;
+  return (context: string, raw: unknown) => {
+    try {
+      out(context, safeErrorLog(raw));
+    } catch {
+      /* logging must never change the outcome */
+    }
+  };
+}
+
+/** One result out of several: every verdict, any veto, any conditional, the first error. */
+function mergeResults(results: SseVerificationResult[]): SseVerificationResult {
+  const merged: SseVerificationResult = {
+    verdicts: results.flatMap((r) => r.verdicts),
+    hasVetoes: results.some((r) => r.hasVetoes),
+    hasConditional: results.some((r) => r.hasConditional),
+  };
+  const error = results.find((r) => r.error)?.error;
+  if (error) merged.error = error;
+  return merged;
+}
+
+/** The reason and the fixed message for a non-clean result; null when the result is clean. */
+function uncleanOutcome(r: SseVerificationResult): { reason: string; message: string } | null {
+  if (r.error) return { reason: 'verification_error', message: WITHHELD_MESSAGE };
+  if (hasDraftPlaceholder(r)) return { reason: 'whole_draft_veto', message: VETO_WITHHELD_MESSAGE };
+  if (r.verdicts.some(isVetoedVerdict)) return { reason: 'veto', message: VETO_WITHHELD_MESSAGE };
+  if (r.hasVetoes) return { reason: 'veto_without_verdict', message: WITHHELD_MESSAGE };
+  return null;
+}
+
+/** The `verification` SSE event line, built from a client-safe result only. */
+export function verificationSseLine(safe: SseVerificationResult): string {
+  return sseLine({
+    type: 'verification',
+    verdicts: safe.verdicts,
+    hasVetoes: safe.hasVetoes,
+    hasConditional: safe.hasConditional,
+    error: safe.error,
+  });
+}
+
+// ----- /crew/chat ---------------------------------------------------------------
+
+/** One streamed content_delta carries at most this many characters (the drip animation in the UI). */
+export const CREW_CHUNK_SIZE = 80;
+
+export interface CrewAuthorityLike {
+  citation: string;
+  sourceUrl: string;
+  /** Model-written by the Researcher. */
+  relevanceNote: string;
+}
+
+export interface FinalizeCrewInput {
+  /** The Team Lead / specialist reply (or the direct completeText fallback). */
+  reply: string;
+  authorities: CrewAuthorityLike[];
+  verify: VerifyFn;
+  logError?: VerificationErrorLogger;
+}
+
+/**
+ * Gate 1 for everything /crew/chat sends, through finalizeHeldOutput so the
+ * veto / withhold / verification-record rules are the chat ones, unchanged.
+ *
+ * Held output = the reply as content_delta chunks, one `citations` event
+ * (type 'legal_authority': citation, url, relevance) and [DONE]. The checked
+ * full text is the reply, then a hidden <CITATIONS> stretch holding every string
+ * the citations event carries (citation, url, relevance), so a cite hidden in a
+ * relevance note is vetoed like one in the reply, and the sent reply is checked
+ * on its own as well (no antecedent can be borrowed from the hidden part).
+ * Short-form strings in the hidden part (Id., supra, "at 5") are also checked
+ * alone, so a neighbour cannot supply their antecedent.
+ *
+ * Citation chips are kept only when their citation matches a verified or
+ * conditional verdict (the chat rule); the rest are dropped from a clean reply.
+ * A veto, pending verdict, gate error or malformed input withholds the whole
+ * reply (VETO_WITHHELD_MESSAGE / WITHHELD_MESSAGE) with no citations event.
+ *
+ * linesToSend ends with the client-safe `verification` event and then [DONE].
+ * Never throws.
+ */
+export async function finalizeCrewReply(input: FinalizeCrewInput): Promise<FinalizeOutput> {
+  const log = makeFailureLogger(input.logError);
+  let held: string[] = [];
+  let events: unknown[] = [];
+  let fullText: string | undefined;
+  const hidden: string[] = [];
+
+  try {
+    const { reply, authorities } = input;
+    if (typeof reply !== 'string') throw new Error('crew reply is not a string');
+    if (!Array.isArray(authorities)) throw new Error('crew authorities is not an array');
+
+    const entries: Ev[] = [];
+    for (const a of authorities) {
+      if (!isRecord(a) || typeof a.citation !== 'string' || typeof a.sourceUrl !== 'string') {
+        throw new Error('malformed crew authority');
+      }
+      const relevance = a.relevanceNote ?? '';
+      if (typeof relevance !== 'string') throw new Error('malformed crew authority relevance');
+      entries.push({ type: 'legal_authority', citation: a.citation, url: a.sourceUrl, relevance });
+      hidden.push(a.citation, a.sourceUrl, relevance);
+    }
+
+    for (let i = 0; i < reply.length; i += CREW_CHUNK_SIZE) {
+      held.push(sseLine({ type: 'content_delta', text: reply.slice(i, i + CREW_CHUNK_SIZE) }));
+    }
+    held.push(sseLine({ type: 'citations', citations: entries }));
+    held.push(DONE_LINE);
+    events = [{ type: 'content', text: reply }];
+    fullText = hidden.length ? `${reply}${CITATIONS_OPEN_TAG}${hidden.join('\n')}` : reply;
+  } catch (err: any) {
+    // Anything malformed: hand finalizeHeldOutput a non-string fullText so it withholds (fail closed).
+    log('crew_input', err);
+    held = [];
+    events = [];
+    fullText = undefined;
+  }
+
+  const full = fullText;
+  const verify: VerifyFn = async (text) => {
+    const main = await safeVerify(input.verify, text);
+    if (text !== full) return main;
+    const solo = [...new Set(hidden)].filter((s) => SHORT_FORM_RE.test(s));
+    if (solo.length > MAX_SOLO_CHECKS) return errorResult('too many short-form authority strings');
+    const results = [main];
+    for (const s of solo) results.push(await safeVerify(input.verify, s));
+    return mergeResults(results);
+  };
+
+  const out = await finalizeHeldOutput({
+    held,
+    events,
+    annotations: [],
+    fullText: full as string,
+    verify,
+    logError: input.logError,
+  });
+
+  // The verification event goes out before [DONE].
+  const lines = out.linesToSend.slice();
+  if (lines[lines.length - 1] === DONE_LINE) lines.pop();
+  lines.push(verificationSseLine(out.verification), DONE_LINE);
+  return { ...out, linesToSend: lines };
+}
+
+// ----- /council -----------------------------------------------------------------
+
+export const COUNCIL_ROLES = ['contrarian', 'first_principles', 'expansionist', 'outsider', 'executor'] as const;
+const COUNCIL_LETTERS = ['A', 'B', 'C', 'D', 'E'] as const;
+const COUNCIL_NAME = /^[A-Za-z0-9_.:/-]{1,80}$/;
+
+/** What /council returns (and llm_council_sessions stores): the shape council/page.tsx reads. */
+export interface CouncilTextOutput {
+  framedQuestion: string;
+  advisors: Array<{
+    role: (typeof COUNCIL_ROLES)[number];
+    model: { provider: string; model: string };
+    text: string;
+    letter: (typeof COUNCIL_LETTERS)[number];
+  }>;
+  reviewers: Array<{ reviewerRole: (typeof COUNCIL_ROLES)[number]; text: string }>;
+  chairmanVerdict: string;
+}
+
+export interface GatedCouncil {
+  /** What may be sent, saved and rendered: the checked text, or the fixed withheld version. */
+  output: CouncilTextOutput;
+  /** Client-safe (clientSafeVerification): no citation text on a non-OK verdict, no raw error. */
+  verification: SseVerificationResult;
+  withheld: boolean;
+  withheldReason: string | null;
+}
+
+/**
+ * Same shape as a real council output, every text field the fixed message: five
+ * advisors (so each seat in the UI has a response), five reviewers, no model text.
+ */
+export function withheldCouncilOutput(message: string = WITHHELD_MESSAGE): CouncilTextOutput {
+  return {
+    framedQuestion: message,
+    advisors: COUNCIL_ROLES.map((role, i) => ({
+      role,
+      model: { provider: 'withheld', model: 'withheld' },
+      text: message,
+      letter: COUNCIL_LETTERS[i],
+    })),
+    reviewers: COUNCIL_ROLES.map((reviewerRole) => ({ reviewerRole, text: message })),
+    chairmanVerdict: message,
+  };
+}
+
+const isOneOf = <T extends string>(list: readonly T[], v: unknown): v is T =>
+  typeof v === 'string' && (list as readonly string[]).includes(v);
+
+/** Rebuild with only the known keys (no extra field can carry unchecked text); null if malformed. */
+function normalizeCouncil(raw: unknown): CouncilTextOutput | null {
+  if (!isRecord(raw)) return null;
+  if (typeof raw.framedQuestion !== 'string' || typeof raw.chairmanVerdict !== 'string') return null;
+  if (!Array.isArray(raw.advisors) || !Array.isArray(raw.reviewers)) return null;
+  const advisors: CouncilTextOutput['advisors'] = [];
+  for (const a of raw.advisors) {
+    if (!isRecord(a) || !isOneOf(COUNCIL_ROLES, a.role) || !isOneOf(COUNCIL_LETTERS, a.letter)) return null;
+    if (typeof a.text !== 'string' || !isRecord(a.model)) return null;
+    const { provider, model } = a.model;
+    if (typeof provider !== 'string' || typeof model !== 'string') return null;
+    if (!COUNCIL_NAME.test(provider) || !COUNCIL_NAME.test(model)) return null;
+    advisors.push({ role: a.role, model: { provider, model }, text: a.text, letter: a.letter });
+  }
+  const reviewers: CouncilTextOutput['reviewers'] = [];
+  for (const r of raw.reviewers) {
+    if (!isRecord(r) || !isOneOf(COUNCIL_ROLES, r.reviewerRole) || typeof r.text !== 'string') return null;
+    reviewers.push({ reviewerRole: r.reviewerRole, text: r.text });
+  }
+  return { framedQuestion: raw.framedQuestion, advisors, reviewers, chairmanVerdict: raw.chairmanVerdict };
+}
+
+/**
+ * Gate 1 over every model-written string in a council output (framedQuestion,
+ * each advisor and reviewer text, chairmanVerdict). Strings with a short-form
+ * marker (Id., supra, "at 5") are checked one at a time so a neighbour cannot
+ * supply their antecedent; the rest go in one batch. The first non-clean result
+ * stops the run.
+ *
+ * Any veto, pending verdict, gate error, throw or malformed output withholds the
+ * WHOLE output (withheldCouncilOutput): nothing is rewritten, nothing partial is
+ * released. The caller sends, saves and renders `output` only. Never throws.
+ */
+export async function gateCouncilOutput(
+  raw: unknown,
+  opts: { verify: VerifyFn; logError?: VerificationErrorLogger },
+): Promise<GatedCouncil> {
+  const log = makeFailureLogger(opts.logError);
+  const withheld = (reason: string, message: string, verification: SseVerificationResult): GatedCouncil => {
+    const vetoed = reason === 'veto' || reason === 'whole_draft_veto';
+    return {
+      output: withheldCouncilOutput(message),
+      verification: clientSafeVerification(vetoed ? { ...verification, hasVetoes: true } : verification),
+      withheld: true,
+      withheldReason: reason,
+    };
+  };
+
+  try {
+    const council = normalizeCouncil(raw);
+    if (!council) {
+      const v = errorResult('malformed council output');
+      log('council_malformed', v.error);
+      return withheld('malformed_output', WITHHELD_MESSAGE, v);
+    }
+
+    const parts = [
+      council.framedQuestion,
+      ...council.advisors.map((a) => a.text),
+      ...council.reviewers.map((r) => r.text),
+      council.chairmanVerdict,
+    ];
+    const unique = [...new Set(parts)];
+    const solo = unique.filter((s) => SHORT_FORM_RE.test(s));
+    const batch = unique.filter((s) => !SHORT_FORM_RE.test(s));
+    if (solo.length > MAX_SOLO_CHECKS) {
+      const v = errorResult('too many short-form fields');
+      log('council_verify', v.error);
+      return withheld('verification_error', WITHHELD_MESSAGE, v);
+    }
+
+    const results: SseVerificationResult[] = [];
+    const checks = [...solo, ...(batch.length ? [batch.join('\n\n')] : [])];
+    for (const text of checks) {
+      const r = await safeVerify(opts.verify, text);
+      if (r.error) log('council_verify', r.error);
+      results.push(r);
+      if (uncleanOutcome(r)) break;
+    }
+
+    const merged = mergeResults(results);
+    const bad = uncleanOutcome(merged);
+    if (bad) return withheld(bad.reason, bad.message, merged);
+    return {
+      output: council,
+      verification: clientSafeVerification(merged),
+      withheld: false,
+      withheldReason: null,
+    };
+  } catch (err: any) {
+    log('council_internal_error', err);
+    return withheld('internal_error', WITHHELD_MESSAGE, errorResult('internal error'));
+  }
+}
+
 export interface HallucinationGuardOptions {
   /** Paths or regexes that should be guarded. Others pass through. */
   guardedPaths: Array<string | RegExp>;
