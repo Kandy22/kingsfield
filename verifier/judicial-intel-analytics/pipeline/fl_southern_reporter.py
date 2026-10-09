@@ -170,7 +170,8 @@ def stage_cites(out: Path):
             src = t.stem
             if src in seen:
                 continue
-            for c in get_citations(t.read_text(encoding="utf-8", errors="ignore")):
+            text = t.read_text(encoding="utf-8", errors="ignore")
+            for c in get_citations(text):
                 if not isinstance(c, FullCaseCitation):
                     continue
                 rep = c.corrected_reporter()
@@ -181,6 +182,7 @@ def stage_cites(out: Path):
                     "source": src, "volume": c.groups.get("volume"), "reporter": rep, "page": c.groups.get("page"),
                     "plaintiff": md.plaintiff, "defendant": md.defendant, "year": c.year, "court_paren": md.court,
                     "court": court_key(md.court),
+                    "context": " ".join(text[max(0, c.span()[0] - 260): c.span()[1] + 260].split()),
                 }) + "\n")
                 n += 1
             seen.add(src)
@@ -212,8 +214,11 @@ def stage_match(out: Path):
             g["scores"].append(scored[0][0])
         else:
             review.write(json.dumps({"cite": cite, "as_written": name, "year": c["year"], "court": c["court"],
-                                     "source": c["source"],
-                                     "candidates": [(s, r["case_style"], r["case_number_raw"], r["decided_date"])
+                                     "source": c["source"], "context": c.get("context", ""),
+                                     "candidates": [{"score": s, "case_style": r["case_style"],
+                                                     "case_number": r["case_number_raw"],
+                                                     "decided_date": r["decided_date"], "court": r["court"],
+                                                     "pdf_uri": r.get("pdf_uri")}
                                                     for s, r in scored[:3]]}) + "\n")
     review.close()
     with (out / "fl_southern_citations.csv").open("w", newline="", encoding="utf-8") as f:

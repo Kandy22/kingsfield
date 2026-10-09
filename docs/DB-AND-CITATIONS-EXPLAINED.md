@@ -97,7 +97,7 @@ Any verification **error** also withholds the answer ("could not be verified and
 | Correct | 1 | the citation really refers to this decision |
 | Incorrect | 2 | the citation points to the wrong decision, or does not exist |
 | N/A | 3 | not defined anywhere in your instruction file. Proposed definition, to confirm: the row cannot be judged (citation cut off, source unreadable, or not a case citation). Decide this before anyone labels, because the benchmark card says the labeling protocol is missing. |
-Jev pre-labels each row (yes/no plus confidence) to sort the lowest-confidence rows first. The tool records who labeled, whether Jev's answer was shown, and the date. The review tool itself (`Verifier/sandbox.html`) has **not** been rebuilt yet; only the June version exists.
+Jev pre-labels each row (yes/no plus confidence) to sort the lowest-confidence rows first. The tool records who labeled, whether Jev's answer was shown, and the date. The review tool is **rebuilt (2026-10-09)**: `Verifier/sandbox.html` (page), `prepare_review_rows.py` (builds the rows), `jev_prelabel.py` (Jev pre-labels, dry run by default) and `merge_human_labels.py --labels` (merges exported labels back; idempotent). Labels use the benchmark's existing vocabulary: Correct = `yes`, Incorrect = `no`, N/A = `unsure`.
 
 ## 6. The second dataset: Florida decisions matched to their So. 2d / So. 3d citation (Task 1)
 

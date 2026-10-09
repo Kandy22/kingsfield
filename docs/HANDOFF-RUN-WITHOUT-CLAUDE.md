@@ -197,7 +197,7 @@ The exact point-by-point instructions you demanded on Oct 3 are in **`~/kingsfie
 | Task | Status |
 |---|---|
 | 1. Florida Southern Reporter citations (flcourts API -> PDFs -> eyecite -> match, LawDiver cross-check) | **NOT built.** `Verifier/judicial-intel-analytics/pipeline/fl_southern_reporter.py` does not exist. (The Florida database built 10-08 is a different thing: CourtListener bulk data for Gate 1.) |
-| 2. Review tool (`Verifier/sandbox.html`, Jev pre-labels, merge script) | **NOT rebuilt.** `sandbox.html` and `merge_human_labels.py` are the old June 9 versions. |
+| 2. Review tool (`Verifier/sandbox.html`, Jev pre-labels, merge script) | **REBUILT 2026-10-09 and browser-tested.** Page, row builder, Jev pre-labeler and merge script are in `Verifier/`. Use: `python3 Verifier/prepare_review_rows.py` then open `sandbox.html` (see its header and the explainer). Not yet run on the Task 1 review queue because that queue does not exist until Task 1's text stage finishes. |
 | 3. Gates, confidence score, on-prem database | **Partly.** Gate 1 + SQLite DB + chat guard are built (needs `main-verify` signoff). The 8-gate stack and the calibrated "Kingsfield score" are NOT built. |
 | 4. Family-law transcripts (Rule 2.515 trade proposal, sandbox, Michigan) | **Not started.** |
 | 5. Wingman (folder fixes, Objection cues, diarization, latency, offline) | **Files restored (163, 2026-10-09). The work itself is not started.** |
