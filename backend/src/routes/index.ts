@@ -115,6 +115,27 @@ export interface RouteDeps {
 export function buildRoutes(deps: RouteDeps): Router {
   const r = Router();
 
+  const ownedProject = async (userId: string, projectId: string) => {
+    const { data, error } = await deps.supabase
+      .from("projects")
+      .select("id, name, docket_id, docket_number, court_code, notify_email, user_id")
+      .eq("id", projectId)
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data;
+  };
+
+  const ownedProjectIds = async (userId: string): Promise<string[]> => {
+    const { data, error } = await deps.supabase
+      .from("projects")
+      .select("id")
+      .eq("user_id", userId);
+    if (error || !data) return [];
+    return data.map((row: { id: string }) => row.id);
+  };
+
+
   // Media — audio/video assets served with range-request support.
   // No auth required so the player works on public-facing pages.
   r.use('/media', mediaRouter);
@@ -286,6 +307,8 @@ export function buildRoutes(deps: RouteDeps): Router {
       .eq('id', req.params.id)
       .single();
     if (error || !data) return res.status(404).json({ error: 'not found' });
+    const owner = await ownedProject(res.locals.userId as string, (data as any).project_id);
+    if (!owner) return res.status(404).json({ error: 'not found' });
     const gated = await gateStoredCouncilRow(data);
     res.json({
       id: (data as any).id,
@@ -307,6 +330,8 @@ export function buildRoutes(deps: RouteDeps): Router {
       .eq('id', req.params.id)
       .single();
     if (error || !data) return res.status(404).send('not found');
+    const owner = await ownedProject(res.locals.userId as string, (data as any).project_id);
+    if (!owner) return res.status(404).send('not found');
     const gated = await gateStoredCouncilRow(data);
     const html = renderCouncilHTML(gated.output as CouncilOutput);
     res.type('html').send(html);
@@ -319,6 +344,8 @@ export function buildRoutes(deps: RouteDeps): Router {
       .eq('id', req.params.id)
       .single();
     if (error || !data) return res.status(404).send('not found');
+    const owner = await ownedProject(res.locals.userId as string, (data as any).project_id);
+    if (!owner) return res.status(404).send('not found');
     const gated = await gateStoredCouncilRow(data);
     const md = renderCouncilMarkdown(gated.output as CouncilOutput);
     res.type('text/markdown').send(md);
@@ -532,16 +559,10 @@ export function buildRoutes(deps: RouteDeps): Router {
    */
   r.post('/projects/:id/docket/watch', requireAuth, async (req: Request, res: Response) => {
     try {
-      const matter_id = req.params.id;
-      const { data: project, error: pErr } = await deps.supabase
-        .from('projects')
-        .select('id, name, docket_id, docket_number, court_code, notify_email')
-        .eq('id', matter_id)
-        .single();
-
-      if (pErr || !project) {
-        return res.status(404).json({ error: 'Matter not found' });
-      }
+      const userId = res.locals.userId as string;
+      const project = await ownedProject(userId, req.params.id);
+      if (!project) return res.status(404).json({ error: 'Matter not found' });
+      const matter_id = project.id;
 
       const body = req.body ?? {};
       const model = body.model ?? process.env.DEFAULT_CREW_MODEL ?? 'gemini-2.5-flash';
@@ -576,6 +597,10 @@ export function buildRoutes(deps: RouteDeps): Router {
    * List recent docket check results for a matter (latest 10).
    */
   r.get('/projects/:id/docket/checks', requireAuth, async (req: Request, res: Response) => {
+    const userId = res.locals.userId as string;
+    if (!(await ownedProject(userId, req.params.id))) {
+      return res.status(404).json({ error: 'Matter not found' });
+    }
     const { data, error } = await deps.supabase
       .from('docket_checks')
       .select('id, as_of, new_filings_count, critical_deadline_count, report_md, deadlines_json')
@@ -662,9 +687,10 @@ export function buildRoutes(deps: RouteDeps): Router {
 
       const { data: project, error: pErr } = await deps.supabase
         .from('projects')
-        .select('id, name, notify_email')
+        .select('id, name, notify_email, user_id')
         .eq('id', req.params.id)
-        .single();
+        .eq('user_id', res.locals.userId as string)
+        .maybeSingle();
 
       if (pErr || !project) {
         return res.status(404).json({ error: 'Project not found' });
@@ -691,9 +717,12 @@ export function buildRoutes(deps: RouteDeps): Router {
    * Recent IP renewal check results (latest 10 portfolio-wide runs).
    */
   r.get('/ip/renewal/checks', requireAuth, async (_req: Request, res: Response) => {
+    const projectIds = await ownedProjectIds(res.locals.userId as string);
+    if (projectIds.length === 0) return res.json([]);
     const { data, error } = await deps.supabase
       .from('ip_renewal_checks')
-      .select('id, as_of, assets_checked, critical_count, deadlines_within_30, report_md')
+      .select('id, as_of, assets_checked, critical_count, deadlines_within_30, report_md, project_id')
+      .in('project_id', projectIds)
       .order('as_of', { ascending: false })
       .limit(10);
 
@@ -725,8 +754,15 @@ export function buildRoutes(deps: RouteDeps): Router {
       .gte('next_deadline_date', today)
       .order('next_deadline_date', { ascending: true });
 
+    const projectIds = await ownedProjectIds(res.locals.userId as string);
     if (req.query.projectId) {
-      query = query.eq('project_id', req.query.projectId as string);
+      const requested = req.query.projectId as string;
+      if (!projectIds.includes(requested)) return res.status(404).json({ error: 'Project not found' });
+      query = query.eq('project_id', requested);
+    } else if (projectIds.length === 0) {
+      return res.json([]);
+    } else {
+      query = query.in('project_id', projectIds);
     }
 
     const { data, error } = await query;
