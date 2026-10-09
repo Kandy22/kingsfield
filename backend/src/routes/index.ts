@@ -159,7 +159,35 @@ export function buildRoutes(deps: RouteDeps): Router {
     if (documentId) q = q.eq('document_id', documentId);
     const { data, error } = await q;
     if (error) return void res.status(500).json({ detail: error.message });
-    res.json({ extractions: data ?? [] });
+    const rows = data ?? [];
+    const extractions = await Promise.all(rows.map(async (row) => {
+      const blob = JSON.stringify({
+        caption: row.caption,
+        entities: row.entities,
+        allegations: row.allegations,
+        defenses: row.defenses,
+        authorities: row.authorities,
+        rarity: row.rarity,
+        defense_summary: row.defense_summary,
+      });
+      const checked = await verifyDraftForSse(blob, {
+        courtListenerToken: deps.courtListenerToken,
+        supabase: deps.supabase,
+      });
+      if (!checked.hasVetoes && !checked.error) return row;
+      // analytics stored row withheld
+      return {
+        ...row,
+        caption: null,
+        entities: [],
+        allegations: [],
+        defenses: [],
+        authorities: [],
+        rarity: null,
+        defense_summary: "This extraction was withheld because it could not be verified.",
+      };
+    }));
+    res.json({ extractions });
   });
 
   // GET /api/analytics/documents — ready documents the user can analyze
@@ -510,6 +538,7 @@ export function buildRoutes(deps: RouteDeps): Router {
             model,
             supabase: deps.supabase,
             courtListenerToken: deps.courtListenerToken,
+            signal: crewAbort.signal,
           },
         );
 

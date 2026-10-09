@@ -1,4 +1,13 @@
 # Kingsfield Lawfare — Current State
+*Last updated: 2026-10-09. The items below supersede the 2026-10-08 open list.*
+
+## 2026-10-09 gate follow-ups on main
+
+Closed on `main` after `29efac5`: tabular chat, document writes, chat titles (including read-time replacement of a stored title that fails Gate 1), inferred Florida bounds, MCP connector refusal, owner checks on project/council/IP routes, analytics extract gated before save, jammed `So. 2d` / `So. 3d` identifier scrub, crew fallback skipped on disconnect, live failed-reply text.
+
+Still open: a crew model call already in flight is not cancelled; `GET /analytics` re-checks stored rows on read but does not rewrite them.
+
+# Kingsfield Lawfare — Current State
 *Last updated: 2026-10-08 (chat-route-verify signed off: W2-W4 and findings 1-3 resolved on `feature/local-sqlite-gate1`; route auth awaiting cherry-pick to main; tabular chat is merge blocker 4)*
 
 ---

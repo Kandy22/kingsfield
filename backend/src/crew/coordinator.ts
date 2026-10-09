@@ -163,6 +163,11 @@ export interface CrewDeps {
   model: string;
   supabase: SupabaseClient;
   courtListenerToken: string;
+  signal?: AbortSignal;
+}
+
+function abortedCrew(taskType: CrewTaskType): CrewOutput {
+  return { reply: "", trace: { decision: "crew", taskType, rolesSpawned: [] }, authorities: [] };
 }
 
 export interface CrewOutput {
@@ -273,6 +278,7 @@ export function shouldSpawnCrew(input: CrewInput): boolean {
 
 export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOutput> {
   const taskType = detectTaskType(input);
+  if (deps.signal?.aborted) return abortedCrew(taskType);
 
   if (taskType === 'simple') {
     return {
