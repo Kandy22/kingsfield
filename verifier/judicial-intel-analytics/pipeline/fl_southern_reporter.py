@@ -107,7 +107,7 @@ def stage_text(out: Path, courts, limit: int, kinds, workers: int):
         if rec["court"] not in courts or rec["listing_type"] not in kinds or not rec.get("pdf_uri"):
             continue
         dest = out / "text" / rec["court"] / (doc_id(rec) + ".txt")
-        if not dest.exists():
+        if not dest.exists() or dest.stat().st_size == 0:   # empty = a crash leftover or an image-only PDF: retry
             todo.append((rec, dest))
     if limit:
         todo = todo[:limit]
@@ -127,7 +127,9 @@ def stage_text(out: Path, courts, limit: int, kinds, workers: int):
                 fails.flush()
             return
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(txt, encoding="utf-8")
+        tmp = dest.with_suffix(".txt.part")
+        tmp.write_text(txt, encoding="utf-8")
+        tmp.replace(dest)                                    # atomic on the same volume
         with lock:
             counter["done"] += 1
             if counter["done"] % 500 == 0:
