@@ -1182,7 +1182,12 @@ tabularRouter.get("/:reviewId/chats", requireAuth, async (req, res) => {
         .eq("review_id", reviewId)
         .order("updated_at", { ascending: false });
 
-    res.json(chats ?? []);
+    const gatedChats = await Promise.all((chats ?? []).map(async (chat) => {
+        if (typeof chat.title !== "string" || !chat.title) return chat;
+        const gated = await gateTitleText(chat.title, "Misc. Query", cellGateOptions(db, "tabular/chats"));
+        return { ...chat, title: gated.title };
+    }));
+    res.json(gatedChats);
 });
 
 // DELETE /tabular-review/:reviewId/chats/:chatId — delete a single chat

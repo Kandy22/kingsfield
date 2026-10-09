@@ -14,6 +14,7 @@ import {
 } from "../lib/storage";
 import { docxToPdf, convertedPdfKey } from "../lib/convert";
 import { checkProjectAccess } from "../lib/access";
+import { gateTitleText, verifyDraftForSse } from "../middleware/hallucination_guard";
 import { singleFileUpload } from "../lib/upload";
 import { deleteUserProjects } from "../lib/userDataCleanup";
 
@@ -777,7 +778,18 @@ projectsRouter.get("/:projectId/chats", requireAuth, async (req, res) => {
   if (error) return void res.status(500).json({ detail: error.message });
   const chats = data ?? [];
   await attachChatCreatorLabels(db, chats);
-  res.json(chats);
+  const gatedChats = await Promise.all(chats.map(async (chat) => {
+    if (typeof chat.title !== "string" || !chat.title) return chat;
+    const gated = await gateTitleText(chat.title, "Misc. Query", {
+      verify: (value) => verifyDraftForSse(value, {
+        courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+        supabase: db,
+      }),
+      logError: (context, error) => console.error(`[project-chats] ${context}`, error),
+    });
+    return { ...chat, title: gated.title };
+  }));
+  res.json(gatedChats);
 });
 
 // ── Folder routes ─────────────────────────────────────────────────────────────
