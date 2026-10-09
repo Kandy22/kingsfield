@@ -184,3 +184,25 @@ Ideas you described in conversation but that were never written into a file live
 grep -il jev ~/.claude/projects/-Users-aaronray-kingsfield/*.jsonl ~/.claude/projects/-Users-aaronray-Library-CloudStorage-GoogleDrive-aray-aaron-gmail-com-My-Drive/*.jsonl
 ```
 The session "Judicial signals with Jev model" (started 2026-09-21) is the main one for part A.
+
+## 9. Your 2026-10-03 instruction set ("the 5 tasks") and what actually happened
+
+The exact point-by-point instructions you demanded on Oct 3 are in **`~/kingsfield/INSTRUCTIONS_5_TASKS_2026-10-03.md`** (13 KB, written 2026-10-03 00:28). It is **untracked in git** on purpose (it was never committed; back it up yourself if you want it kept). Status as verified 2026-10-09:
+
+| Task | Status |
+|---|---|
+| 1. Florida Southern Reporter citations (flcourts API -> PDFs -> eyecite -> match, LawDiver cross-check) | **NOT built.** `Verifier/judicial-intel-analytics/pipeline/fl_southern_reporter.py` does not exist. (The Florida database built 10-08 is a different thing: CourtListener bulk data for Gate 1.) |
+| 2. Review tool (`Verifier/sandbox.html`, Jev pre-labels, merge script) | **NOT rebuilt.** `sandbox.html` and `merge_human_labels.py` are the old June 9 versions. |
+| 3. Gates, confidence score, on-prem database | **Partly.** Gate 1 + SQLite DB + chat guard are built (needs `main-verify` signoff). The 8-gate stack and the calibrated "Kingsfield score" are NOT built. |
+| 4. Family-law transcripts (Rule 2.515 trade proposal, sandbox, Michigan) | **Not started.** |
+| 5. Wingman (folder fixes, Objection cues, diarization, latency, offline) | **Files restored (163, 2026-10-09). The work itself is not started.** |
+
+Leftovers listed at the end of that file:
+| Leftover | Status |
+|---|---|
+| Upload the corrected benchmark card to Hugging Face | **NOT done.** Hugging Face last modified 2026-07-27. The corrected file is `Verifier/hf_release_v0.2/README_v0.2.1_corrected.md`. Commands: `hf auth login`, then `hf upload Kingsfield-Lawfare/legal-citation-benchmark ~/kingsfield/Verifier/hf_release_v0.2/README_v0.2.1_corrected.md README.md --repo-type dataset` |
+| Restore the 502 deleted transcripts in `hf_workspace` | **DONE 2026-10-09.** A stale 0-byte `hf_workspace/.git/index.lock` from Aug 25 (a crashed git run) had blocked git there. Removed it, ran `git checkout -- .`; 0 deleted, 2,879 files present. |
+| Two Mike fixes (upstream `171d6f9` output limit, `d666189` OpenRouter reasoning) | **NOT done.** Upstream put them in `backend/src/lib/llm/aiSdk.ts`; Kingsfield has no `aiSdk.ts`, so they must be rewritten into `claude.ts`, `gemini.ts`, `openai.ts` (+ `openaiCompat.ts`). |
+| Push main's July commits (code only) | **DONE** (main == origin/main on 2026-10-09). |
+
+Mike overall (2026-10-09): upstream is `open-legal-products/mike` (latest `20d30e5`, 2026-10-09). Your mirror `Kandy22/mike` is 171 commits behind it. Kingsfield has had one port (`62778fb`, LibreOffice path, from upstream `03e8acf`); 199 upstream commits since. The rule in `decisions.md` still stands: do not sync blind; port deliberately.
