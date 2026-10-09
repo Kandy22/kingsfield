@@ -468,7 +468,11 @@ export function buildRoutes(deps: RouteDeps): Router {
     const write = (line: string) => res.write(line);
     // Nothing is visible while the crew runs and Gate 1 checks; ping until the reply is released.
     const keepalive = startSseKeepalive(write);
-    res.on('close', () => keepalive.stop());
+    const crewAbort = new AbortController();
+    res.on('close', () => {
+      keepalive.stop();
+      crewAbort.abort();
+    });
 
     try {
       let reply: string;
@@ -499,6 +503,7 @@ export function buildRoutes(deps: RouteDeps): Router {
 
         // Simple mode: if the crew decides not to spawn (short/casual message),
         // fall back to a single direct LLM call so the user still gets a reply.
+        if (crewAbort.signal.aborted) return;
         const out = await runCrew(
           { userMessage, matterContext, documentName: resolvedDocName, documentText: resolvedDocText, jurisdiction },
           {
@@ -508,10 +513,12 @@ export function buildRoutes(deps: RouteDeps): Router {
           },
         );
 
+        if (crewAbort.signal.aborted) return;
         reply = out.reply;
 
         // If the Coordinator decided to skip the crew, produce a simple answer.
         if (!reply) {
+          if (crewAbort.signal.aborted) return;
           const { completeText } = await import('../lib/llm/index.js');
           reply = await completeText({
             model,
