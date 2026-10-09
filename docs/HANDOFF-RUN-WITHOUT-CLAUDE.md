@@ -239,3 +239,15 @@ $PY fl_southern_reporter.py --stage match --out $O                              
 ```
 
 **Everything else is already committed** (`git log --oneline -15`), and `main` plus the handoff docs describe the rest. Unpushed commits: `git fetch && git log --oneline origin/main..main`; push with `git push origin main`.
+
+## 11. Who made which commits on `main` (read from git, 2026-10-09)
+
+The 56 commits between `2caafa1` and `565a0c0` split three ways. Reproduce with `git log --format='%h %an | %s' 2caafa1..565a0c0` and look for `Co-Authored-By` trailers.
+
+| Group | Count | What it is | Reviewed by the adversary? |
+|---|---|---|---|
+| Author **Aaron Ray**, with a **Claude** co-author trailer | 16 | The cascade work done in Claude Code sessions: auth fixes, hook changes, chat-route verification Steps 1-4, the signoff `d06dec2`, the .gitignore, the Mike LibreOffice port | **Yes** up to `d06dec2` (signoff `chat-route-verify`) |
+| Author **Kandy22** (the GitHub identity), **no Claude trailer** | 20 | The patch work: document-write gate (Part B), MCP gate, title read/list gates, ownership checks, analytics gate, jammed-cite scrub, crew abort (`apply_*.py` one-shot patch scripts were created in these commits) | **No.** These were not made by Claude Code. You say they came from Gemini; git cannot tell which outside tool, only that they came through the GitHub identity. |
+| Author **Aaron Ray**, no trailer | 20 | Your own commits and merges (for example the Oct 8 merge `29efac5`, the WIP commit `540e748`) | Not applicable |
+
+The adversary's 2026-10-09 run of the signoff tier found **11 failures** (526 tests) in the second group's code: crew abort not reaching every role, a stored analytics row with a split cite passing the read check, a council session saved under a project the caller does not own, a document-write bypass, a JSON-escaped-newline cite bypass, a name Gate 1 reads as a citation passing the identifier allowlist, and a disconnected tabular client still starting the model.
