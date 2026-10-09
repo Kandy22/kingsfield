@@ -209,3 +209,33 @@ Leftovers listed at the end of that file:
 | Push main's July commits (code only) | **DONE** (main == origin/main on 2026-10-09). |
 
 Mike overall (2026-10-09): upstream is `open-legal-products/mike` (latest `20d30e5`, 2026-10-09). Your mirror `Kandy22/mike` is 171 commits behind it. Kingsfield has had one port (`62778fb`, LibreOffice path, from upstream `03e8acf`); 199 upstream commits since. The rule in `decisions.md` still stands: do not sync blind; port deliberately.
+
+## 10. If Claude (or your token allowance) stops mid-task: what keeps running and how to resume by hand
+
+**Keeps running with no Claude at all:** the Task 1 jobs (listing, and the 1st DCA text run). They are detached background processes with the Mac kept awake (`caffeinate`), and every stage skips work already on disk, so they survive a Claude cutoff. They stop only if the Mac restarts or sleeps for long; then simply run the commands below again.
+
+**Pauses until your allowance resets:** the `main-verify` lead and its adversary (they are Claude sessions). Everything they already wrote is on disk and the lead's conversation is saved. Resume with:
+```bash
+cd ~/kingsfield && claude --model sonnet --resume 3afaba8f-4a0c-473d-856e-276519909cbf
+```
+
+**Check Task 1 progress (no Claude needed):**
+```bash
+O=~/Kingsfield_Corpus/flcourts
+wc -l $O/decisions.jsonl                      # decisions listed so far
+find $O/text -name '*.txt' | wc -l            # opinion texts extracted so far
+tail -2 $O/run.log $O/run_text_1dca.log       # latest lines
+pgrep -fl fl_southern_reporter                # is it running?
+```
+
+**Restart or continue Task 1 by hand (safe to repeat; it skips what exists). Order: list, text, cites, match.**
+```bash
+cd ~/kingsfield/Verifier/judicial-intel-analytics/pipeline
+PY=~/.venv-flsr/bin/python; O=~/Kingsfield_Corpus/flcourts
+nice -n 10 caffeinate -i $PY fl_southern_reporter.py --stage list  --out $O     # all courts, 2008 to today
+nice -n 10 caffeinate -i $PY fl_southern_reporter.py --stage text  --out $O     # opinions only, 3 workers; add --courts 2dca for one court
+$PY fl_southern_reporter.py --stage cites --out $O                              # when text is done
+$PY fl_southern_reporter.py --stage match --out $O                              # writes fl_southern_citations.csv + review_queue.jsonl
+```
+
+**Everything else is already committed** (`git log --oneline -15`), and `main` plus the handoff docs describe the rest. Unpushed commits: `git fetch && git log --oneline origin/main..main`; push with `git push origin main`.
