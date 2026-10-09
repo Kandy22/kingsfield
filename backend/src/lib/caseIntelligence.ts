@@ -10,6 +10,7 @@ import { createServerSupabase } from "./supabase.js";
 import { completeText } from "./llm/index.js";
 import { loadCurrentVersionBytes, extractPdfText } from "./chatTools.js";
 import { citationLookup } from "../research/courtlistener.js";
+import { gateTitleText, verifyDraftForSse } from "../middleware/hallucination_guard.js";
 import type { UserApiKeys } from "./llm/types.js";
 
 export type EntityRole =
@@ -269,6 +270,19 @@ export async function runCaseExtraction(params: {
   }
 
   intel.authorities = await enrichAuthorityCiteCounts(intel.authorities);
+
+  // extraction withheld: Gate 1 over the model JSON before the row is saved.
+  const extracted = JSON.stringify(intel);
+  const gated = await gateTitleText(extracted, "", {
+    verify: (value) => verifyDraftForSse(value, {
+      courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+      supabase: db,
+    }),
+    logError: (context, error) => console.error(`[analytics/extract] ${context}`, error),
+  });
+  if (gated.title !== extracted) {
+    return { ok: false, error: "The extraction was withheld because it could not be verified." };
+  }
 
   const { data, error } = await db
     .from("case_intelligence")

@@ -208,11 +208,18 @@ export function buildRoutes(deps: RouteDeps): Router {
         apiKeys: settings.api_keys,
         db: deps.supabase as any,
       });
-      if (!result.ok) return void res.status(422).json({ detail: result.error });
+      if (!result.ok) {
+        const detail = result.error.startsWith("The extraction was withheld")
+          || result.error.startsWith("Document")
+          || result.error.startsWith("This PDF")
+          ? result.error
+          : "Extraction failed.";
+        return void res.status(422).json({ detail });
+      }
       res.json({ extraction: result.row });
-    } catch (err: any) {
-      console.error('[analytics/extract] error', err);
-      res.status(500).json({ detail: err?.message ?? 'Extraction failed' });
+    } catch (err) {
+      console.error('[analytics/extract] error', safeErrorLog(err));
+      res.status(500).json({ detail: "Extraction failed." });
     }
   });
 
