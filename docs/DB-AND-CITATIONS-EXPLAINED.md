@@ -4,7 +4,7 @@ Written 2026-10-09. Plain English first, then exact names. Facts here were read 
 
 ## 1. What this is, in one paragraph
 
-Kingsfield checks every Florida case citation an AI writes **against a local database before the user sees it**. If a Florida citation is not in the database (or anything goes wrong), the check says **veto**, and the app withholds the whole answer. The database is a 46 MB SQLite file, `~/kingsfield/kingsfield_florida.db`, built from CourtListener's free bulk data. It lives only on your Mac right now (not on any server, not in git).
+Kingsfield checks every Florida case citation an AI writes **against a local database before the user sees it**. If a Florida citation is not in the database (or anything goes wrong), the check says **veto**, and the app withholds the whole answer. The database is a 52 MB SQLite file, `~/kingsfield/kingsfield_florida.db`, built from CourtListener's free bulk data. It lives only on your Mac right now (not on any server, not in git).
 
 ## 2. How the database was built
 

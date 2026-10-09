@@ -25,7 +25,7 @@ Everything below is a normal shell command. Nothing here needs Claude, an agent,
 | Tests, builder's | `pipeline/builder_tests/` |
 | Tests, adversary's (the ones that count for signoff) | `pipeline/tests/` (must finish < 200 s) and `pipeline/tests_extended/` (slow variants, run separately) |
 | Signoff files | `.claude/signoffs/*.signoff` (a fingerprint of the reviewed code) |
-| Florida citation database | `~/kingsfield/kingsfield_florida.db` (46 MB, **local only, git-ignored, not on any server**) |
+| Florida citation database | `~/kingsfield/kingsfield_florida.db` (52 MB, **local only, git-ignored, not on any server**) |
 | Source data for that database | `~/Kingsfield_Corpus/` (3 CourtListener `.bz2` files, 7.2 GB; build log `build-2026-10-08.log`) |
 | JEV / System One router | `router/` (Python, with a local `.gguf` model) |
 | Wingman | `wingman-in-your-ear/` (start with `RUN_wingman.command`; spec files `WINGMAN_*.md`) |
