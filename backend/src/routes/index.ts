@@ -554,6 +554,7 @@ export function buildRoutes(deps: RouteDeps): Router {
             systemPrompt: 'You are Kingsfield, a plain-English legal AI. Answer concisely.',
             user: userMessage ?? '',
             maxTokens: 1024,
+            signal: crewAbort.signal,
           });
         }
         authorities = out.authorities;

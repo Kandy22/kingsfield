@@ -22,6 +22,7 @@ export async function completeText(params: {
     user: string;
     maxTokens?: number;
     apiKeys?: UserApiKeys;
+    signal?: AbortSignal;
 }): Promise<string> {
     const provider = providerForModel(params.model);
     if (provider === "claude") return completeClaudeText(params);
