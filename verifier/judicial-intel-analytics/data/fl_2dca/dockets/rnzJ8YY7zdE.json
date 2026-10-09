@@ -1,0 +1,31 @@
+{
+ "video_id": "rnzJ8YY7zdE",
+ "title": "23 0493",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0493"
+ ],
+ "case_number": "2D2023-0493",
+ "source": "flcourts",
+ "case_name": "Hart v. State of Florida",
+ "decided_date": "2025-11-07",
+ "disposition_text": "Reversed and remanded with directions; conflict certified.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2482053/opinion/Opinion_2023-0493.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/november/07/2023-0493",
+ "ctrack_id": "ctrack_19166581",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:16:23Z",
+ "author": "Northcutt",
+ "panel_judges": "Northcutt",
+ "trial_judge": "Laura E. Ward",
+ "county": "Hillsborough",
+ "appellant_counsel": "OURT OF APPEAL OF FLORIDA SECOND DISTRICT NATHAN SHIRL HART, Appellant, v. STATE OF FLORIDA, Appellee. No. 2D2023-0493 November 7, 2025 Appeal from the Circuit Court for Hillsborough County; Laura E. Ward, Judge. Lisa B. McLean, Public Defender, and Richard N. Asfar, Assistant Public Defender, Tampa",
+ "appellee_counsel": "ames Uthmeier, Attorney General; Henry C. Whitaker, Solicitor General (withdrew after briefing); Alison Elena Preston, Deputy Solicitor General (withdrew after briefing); and Jeffrey Paul DeSousa, Chief Deputy Solicitor General, Tallahassee; and William C. Shelhart, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 45673
+}

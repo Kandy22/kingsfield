@@ -1,0 +1,26 @@
+{
+ "video_id": "k51SBL9GdPQ",
+ "title": "24 2631",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-2631"
+ ],
+ "case_number": "2D2024-2631",
+ "source": "flcourts",
+ "case_name": "Manhattan Avenue, LLC v. The City of Tampa",
+ "decided_date": "2025-05-02",
+ "disposition_text": "Dismissed",
+ "disposition": "dismissed",
+ "opinion_type": "Petition - PC Denied",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2451398/opinion/Opinion_2024-2631.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/May/02/2024-26312",
+ "ctrack_id": "ctrack_18921822",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:14:32Z",
+ "panel_judges": "Kelly; Lucas; Labrit",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 958
+}

@@ -14,6 +14,8 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   callModel,
   DEFAULT_ROUTING,
+  FRAMER_ROUTING,
+  REVIEWER_ROUTING,
   type AdvisorRole,
   type LLMClients,
   type ModelChoice,
@@ -100,7 +102,7 @@ export async function runLLMCouncil(
   // reviews the others.)
   const reviewers = await Promise.all(
     ROLES.map((reviewerRole) =>
-      callModel(routing[reviewerRole], {
+      callModel(REVIEWER_ROUTING, {
         system: REVIEWER_PROMPT,
         user: `
 QUESTION:
@@ -162,7 +164,7 @@ question. No preamble.
   `.trim();
 
   return callModel(
-    DEFAULT_ROUTING.chairman,
+    FRAMER_ROUTING,
     {
       system: framerPrompt,
       user: `

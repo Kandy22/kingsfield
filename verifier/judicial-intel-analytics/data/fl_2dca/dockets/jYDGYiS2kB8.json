@@ -1,0 +1,35 @@
+{
+ "video_id": "jYDGYiS2kB8",
+ "title": "25 0053",
+ "case_number": "2D2025-0053",
+ "case_numbers_all": [
+  "2D2025-0053"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0053",
+ "case_name": "In re Guardianship of Joan B. Maxwell, a partially v. MARY HOWARD-WINTERS, as guardian of Joan B. Maxwell, a",
+ "decided_date": "2026-02-04",
+ "cl_cluster_id": 10783935,
+ "cl_opinion_id": 11250573,
+ "cl_url": "https://www.courtlistener.com/opinion/10783935/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Khouzam; Sleet; Smith",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Sarasota",
+ "trial_judge": "Charles E. Williams",
+ "appellant_counsel": "RD-WINTERS, as guardian of Joan B. Maxwell, a partially incapacitated person, Appellee. No. 2D2025-0053 February 4, 2026 Appeal from the Circuit Court for Sarasota County; Charles E. Williams, Judge. J. Ronald Denman, Lawrence O. Held, and Richard W. Ervin, IV, of Bleakley Bavol Denman & Grace, P.A.",
+ "appellee_counsel": ". No. 2D2025-0053 February 4, 2026 Appeal from the Circuit Court for Sarasota County; Charles E. Williams, Judge. J. Ronald Denman, Lawrence O. Held, and Richard W. Ervin, IV, of Bleakley Bavol Denman & Grace, P.A., for Appellant. James L. Essenson and Barbara J. Welch of Essenson Law Firm, Sarasota",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1008,
+ "_tried": [
+  "2D2025-0053"
+ ],
+ "looked_up_at": "2026-09-19T07:49:51Z"
+}

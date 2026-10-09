@@ -1,0 +1,43 @@
+{
+ "judge_id": "george-m-jirotka",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 12,
+   "affirmed": 10,
+   "reversed": 2,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.167,
+   "reversal_rate_ci95": {
+    "lo": 0.047,
+    "hi": 0.448,
+    "method": "wilson"
+   },
+   "county": "Pinellas",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-2703",
+    "2D2022-0548",
+    "2D2022-2707",
+    "2D2021-3714",
+    "2D2024-0889",
+    "2D2022-2700",
+    "2D2022-0410",
+    "2D2023-2630",
+    "2D2021-1410",
+    "2D2023-2182",
+    "2D2021-1910",
+    "2D2024-0003"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

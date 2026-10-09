@@ -1,0 +1,26 @@
+{
+ "video_id": "hSmqJOnbehY",
+ "title": "2D22 2124",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-2124"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:14:01Z",
+ "case_number": "2D2022-2124",
+ "case_name": "PUBLIX SUPER MARKETS, INC.  vs COLIN ROTH",
+ "decided_date": "2023-02-17",
+ "disposition_text": "Granted in Part/Denied in Part ; order quashed.",
+ "disposition": "granted",
+ "opinion_type": "Granted in Part/Denied in Part",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/860329/opinion/Opinion_22-2124.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2023/February/17/22-2124",
+ "ctrack_id": "4740123",
+ "n_decision_records": 1,
+ "panel_judges": "Silberman; Labrit",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 15864
+}

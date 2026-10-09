@@ -1,0 +1,35 @@
+{
+ "video_id": "yyPKc1wxMsc",
+ "title": "24 1964",
+ "case_number": "2D2024-1964",
+ "case_numbers_all": [
+  "2D2024-1964"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1964",
+ "case_name": "HAROLD GREENAKER and LISA GREENAKER v. UNIVERSAL PROPERTY & CASUALTY INSURANCE",
+ "decided_date": "2026-05-08",
+ "cl_cluster_id": 10856215,
+ "cl_opinion_id": 11323612,
+ "cl_url": "https://www.courtlistener.com/opinion/10856215/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Atkinson",
+ "panel_judges": "Atkinson; Lucas; Black",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Emily Ann Peacock",
+ "appellant_counsel": "PPEAL OF FLORIDA SECOND DISTRICT HAROLD GREENAKER and LISA GREENAKER, Appellants, v. UNIVERSAL PROPERTY & CASUALTY INSURANCE COMPANY, Appellee. No. 2D2024-1964 May 8, 2026 Appeal from the Circuit Court for Hillsborough County; Emily Ann Peacock, Judge. Mark A. Nation of The Nation Law Firm, Longwood",
+ "appellee_counsel": "PERTY & CASUALTY INSURANCE COMPANY, Appellee. No. 2D2024-1964 May 8, 2026 Appeal from the Circuit Court for Hillsborough County; Emily Ann Peacock, Judge. Mark A. Nation of The Nation Law Firm, Longwood, for Appellants. David A. Noel and Kara Rockenbach Link of Link & Rockenbach, PA, West Palm Beach",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 37418,
+ "_tried": [
+  "2D2024-1964"
+ ],
+ "looked_up_at": "2026-09-19T08:19:34Z"
+}

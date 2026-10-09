@@ -1,0 +1,35 @@
+{
+ "video_id": "cwW4F9vS6YY",
+ "title": "24 2401",
+ "case_number": "2D2024-2401",
+ "case_numbers_all": [
+  "2D2024-2401"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2401",
+ "case_name": "LISA McWHORTER v. EVENT SERVICES AMERICA, INC. d/b/a",
+ "decided_date": "2026-01-14",
+ "cl_cluster_id": 10774276,
+ "cl_opinion_id": 11240861,
+ "cl_url": "https://www.courtlistener.com/opinion/10774276/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed in part; reversed in part; remanded.",
+ "disposition": "mixed",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Amy M. Williams",
+ "appellant_counsel": "d/b/a CONTEMPORARY SERVICES COMPANY, Appellee. No. 2D2024-2401 January 14, 2026 Appeal from the Circuit Court for Pinellas County; Amy M. Williams, Judge. Thomas J. Seider of Brannock Berman & Seider, Tampa; and William H. Winters, Marc E. Yonker, and Patrick Brannon of Winters & Yonker, P.A., Tampa",
+ "appellee_counsel": "the Circuit Court for Pinellas County; Amy M. Williams, Judge. Thomas J. Seider of Brannock Berman & Seider, Tampa; and William H. Winters, Marc E. Yonker, and Patrick Brannon of Winters & Yonker, P.A., Tampa, for Appellant. Allysa M. Reiter of Wicker Smith O’Hara McCoy & Ford, P.A., Fort Lauderdale",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 26349,
+ "_tried": [
+  "2D2024-2401"
+ ],
+ "looked_up_at": "2026-09-19T07:36:47Z"
+}

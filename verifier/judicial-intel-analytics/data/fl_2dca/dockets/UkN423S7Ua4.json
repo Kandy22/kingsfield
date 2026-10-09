@@ -1,0 +1,31 @@
+{
+ "video_id": "UkN423S7Ua4",
+ "title": "2D21 337 & 341",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0337"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:10:38Z",
+ "case_number": "2D2021-0337",
+ "case_name": "LANCE LOGAN AND KENT LOGAN  vs MORGAN, LEWIS & BOCKIUS, L L P",
+ "decided_date": "2022-10-21",
+ "disposition_text": "Reversed and remanded for further proceedings.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/851398/opinion/Opinion_21-0337.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/October/21/21-0337",
+ "ctrack_id": "4711377",
+ "n_decision_records": 1,
+ "author": "Rothstein-Youakim",
+ "panel_judges": "Rothstein-Youakim; Northcutt; Casanueva",
+ "trial_judge": "Steven Scott Stephens",
+ "county": "Hillsborough",
+ "appellant_counsel": "7 October 21, 2022 Appeal from the Circuit Court for Hillsborough County; Steven Scott Stephens, Judge. Scott F. Hessell of Sperling & Slater, P.C., Chicago, Illinois; Adam P. Merrill of Watershed Law LLC, Chicago, Illinois; and Scott C. Ilgenfritz of Johnson, Pope, Bokor, Ruppel & Burns, LLP, Tampa",
+ "appellee_counsel": " Chicago, Illinois; and Scott C. Ilgenfritz of Johnson, Pope, Bokor, Ruppel & Burns, LLP, Tampa, for Appellants. Ceci C. Berman of Brannock Humphries & Berman, Tampa; James P. Fogelman and Shannon Mader of Gibson, Dunn & Crutcher LLP, Los Angeles, California; and Jennifer K. Bracht, Denver, Colorado",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 32093
+}

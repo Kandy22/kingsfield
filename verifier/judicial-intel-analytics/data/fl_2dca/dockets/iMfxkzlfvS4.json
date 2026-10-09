@@ -1,0 +1,26 @@
+{
+ "video_id": "iMfxkzlfvS4",
+ "title": "2D19-4508",
+ "found": true,
+ "case_numbers_all": [
+  "2D2019-4508"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:14:08Z",
+ "case_number": "2D2019-4508",
+ "case_name": "JAMES ARMAND WILSON  vs OLENA WILSON",
+ "decided_date": "2021-02-03",
+ "disposition_text": "Denied",
+ "disposition": "denied",
+ "opinion_type": "Denied",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/776180/opinion/Opinion_19-4508.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/February/03/19-4508",
+ "ctrack_id": "4557989",
+ "n_decision_records": 1,
+ "panel_judges": "Casanueva; Black; Atkinson",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1150
+}

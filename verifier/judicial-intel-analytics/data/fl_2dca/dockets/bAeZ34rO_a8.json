@@ -1,0 +1,29 @@
+{
+ "video_id": "bAeZ34rO_a8",
+ "title": "2D20 1339",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-1339"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:12:33Z",
+ "case_number": "2D2020-1339",
+ "case_name": "MARIO L. PILOTO  vs M S INDUSTRIAL, LLC, ET AL.",
+ "decided_date": "2021-12-22",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/816695/opinion/Opinion_20-1339.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/December/22/20-1339",
+ "ctrack_id": "4638252",
+ "n_decision_records": 1,
+ "panel_judges": "Morris; Kelly; Labrit",
+ "trial_judge": "Steven L. Selph",
+ "county": "Polk",
+ "appellee_counsel": "lbrough of Billbrough & Marks, P.A., Coral Gables and Robert N. Pelier of Law Office of Robert N. Pelier, Coral Gables, for Appellant. Kathryn L. Ender and Todd R. Ehrenreich of Lewis Brisbois Bisgaard & Smith LLP, Coral Gables; Esteban F. Scornik and Gary D. Vazquez of Vasquez & Tosko, LLP, Orlando",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1028
+}

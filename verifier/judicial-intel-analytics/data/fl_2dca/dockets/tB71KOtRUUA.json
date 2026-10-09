@@ -1,0 +1,29 @@
+{
+ "video_id": "tB71KOtRUUA",
+ "title": "2D20 2332",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2332"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:16:43Z",
+ "case_number": "2D2020-2332",
+ "case_name": "CRITICAL INTERVENTION SERVICES, INC.  vs TAMPA ELECTRIC CO., ET AL",
+ "decided_date": "2021-12-03",
+ "disposition_text": "Dismissed",
+ "disposition": "dismissed",
+ "opinion_type": "Dismissed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/812443/opinion/Opinion_20-2332.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/December/03/20-2332",
+ "ctrack_id": "4633323",
+ "n_decision_records": 1,
+ "trial_judge": "Richard A. Nielsen",
+ "county": "Hillsborough",
+ "appellant_counsel": "ES, INC., Appellant, v. TAMPA ELECTRIC COMPANY; TECO ENERGY, INC.; and TAMPA BAY PIPELINE CORPORATION, Appellees. No. 2D20-2332 December 3, 2021 Appeal from the Circuit Court for Hillsborough County; Richard A. Nielsen, Judge. Mark D. Tinker and Rhianna L. Busch of Cole, Scott & Kissane, P.A., Tampa",
+ "appellee_counsel": "ber 3, 2021 Appeal from the Circuit Court for Hillsborough County; Richard A. Nielsen, Judge. Mark D. Tinker and Rhianna L. Busch of Cole, Scott & Kissane, P.A., Tampa, for Appellant. Elbert L. Martin, IV, Charles C. Lane, and Geneva K. Hernandez of Lau, Lane, Pieper, Conley & McCreadie, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 981
+}

@@ -1,0 +1,41 @@
+{
+ "video_id": "B8mD17j-0YQ",
+ "title": "24 1384",
+ "case_number": "2D2024-1384",
+ "case_numbers_all": [
+  "2D2024-1384"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1384",
+ "case_name": "Brown v. Florida Health Sciences Center, Inc.",
+ "decided_date": "2026-02-04",
+ "cl_cluster_id": 10783948,
+ "cl_opinion_id": 11250586,
+ "cl_url": "https://www.courtlistener.com/opinion/10783948/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed\r\n**CORRECTED**",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": "Northcutt; Kelly",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Anne-Leigh Gaylord Moe",
+ "appellant_counsel": "ENCES CENTER, INC., d/b/a TAMPA GENERAL HOSPITAL, Appellee. No. 2D2024-1384 February 4, 2026 Appeal from the Circuit Court for Hillsborough County; Anne-Leigh Gaylord Moe, Judge. Maegen Peek Luka of Newsome Melton, Orlando; and James W. Holliday and Ted Karatinos of Holliday Karatinos Law Firm, Lutz",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 16062,
+ "_tried": [
+  "2D2024-1384"
+ ],
+ "looked_up_at": "2026-09-19T07:05:14Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2484611/opinion/Opinion_2024-1384.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/february/04/2024-13842",
+ "ctrack_id": "ctrack_19280045",
+ "n_decision_records": 1
+}

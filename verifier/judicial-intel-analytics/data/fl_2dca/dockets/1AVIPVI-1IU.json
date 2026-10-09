@@ -1,0 +1,30 @@
+{
+ "video_id": "1AVIPVI-1IU",
+ "title": "2D20 2704",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2704"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:02:34Z",
+ "case_number": "2D2020-2704",
+ "case_name": "ADVANTA IRA SERVICES, LLC  vs FTE PROPERTIES, LLC, AND WORLDWIDE TRUSTEE SERVICES, LLC",
+ "decided_date": "2021-09-10",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/816335/opinion/Opinion_20-2704.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2021/September/10/20-2704",
+ "ctrack_id": "4614344",
+ "n_decision_records": 1,
+ "panel_judges": "Lucas; Atkinson",
+ "trial_judge": "Paul L. Huey",
+ "county": "Hillsborough",
+ "appellant_counsel": "ND DISTRICT ADVANTA IRA SERVICES, LLC, Appellant, v. FTE PROPERTIES, LLC, and WORLDWIDE TRUSTEE SERVICES, LLC, Appellees. No. 2D20-2704 September 10, 2021 Appeal from the Circuit Court for Hillsborough County; Paul L. Huey, Judge. Felix G. Montanez of The Law Office of Felix G. Montanez, P.A., Tampa",
+ "appellee_counsel": "LLC, and WORLDWIDE TRUSTEE SERVICES, LLC, Appellees. No. 2D20-2704 September 10, 2021 Appeal from the Circuit Court for Hillsborough County; Paul L. Huey, Judge. Felix G. Montanez of The Law Office of Felix G. Montanez, P.A., Tampa, for Appellant. Erin P. Newell of Denali Law Group, P.A., Fort Myers",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 9524
+}

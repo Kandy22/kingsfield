@@ -1,0 +1,82 @@
+{
+ "judge_id": "northcutt",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "appellate_judge_panels",
+   "n": 183,
+   "affirmed": 132,
+   "reversed": 40,
+   "mixed": 11,
+   "other": 0,
+   "reversal_rate": 0.279,
+   "reversal_rate_ci95": {
+    "lo": 0.219,
+    "hi": 0.348,
+    "method": "wilson"
+   },
+   "note": "cases argued on video where this judge sat; reversal is a panel outcome, not an individual vote"
+  },
+  "F12": [
+   {
+    "name": "affirm",
+    "count": 132,
+    "share": 0.721
+   },
+   {
+    "name": "reverse",
+    "count": 40,
+    "share": 0.219
+   },
+   {
+    "name": "mixed",
+    "count": 11,
+    "share": 0.06
+   }
+  ],
+  "F13": {
+   "n": 182,
+   "median": 41.0,
+   "mean": 75.7,
+   "p10": 6,
+   "p90": 180,
+   "from_event": "oral_argument",
+   "to_event": "decision"
+  },
+  "F22": {
+   "target": "affirm",
+   "fit_on": "panel-level skepticism gap on this judge's panels",
+   "n": 183,
+   "root": {
+    "leaf": true,
+    "n": 183,
+    "p_affirm": null,
+    "label": "see court F22"
+   },
+   "rules_text": [
+    "share of panels with gap>=+1: 0.17",
+    "share with gap<=-1: 0.03",
+    "authored: 20 of 183"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F12": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F13": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F22": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

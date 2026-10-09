@@ -1,0 +1,41 @@
+{
+ "video_id": "9bGJAhUJ_jQ",
+ "title": "25 2866",
+ "case_number": "2D2025-2866",
+ "case_numbers_all": [
+  "2D2025-2866"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-2866",
+ "case_name": "Citizens Property Insurance Corporation v. Nekouee",
+ "decided_date": "2026-08-14",
+ "cl_cluster_id": 10948474,
+ "cl_opinion_id": 11416061,
+ "cl_url": "https://www.courtlistener.com/opinion/10948474/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Petition granted; order quashed.",
+ "disposition": "granted",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": "Morris; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 20776,
+ "_tried": [
+  "2D2025-2866"
+ ],
+ "looked_up_at": "2026-09-19T07:04:49Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Petition - Authored Opinion",
+ "flcourts_pdf": "/content/download/2493869/opinion/Opinion_2025-2866.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/august/14/2025-2866",
+ "ctrack_id": "ctrack_19542685",
+ "n_decision_records": 1
+}

@@ -1,5 +1,215 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-07-13 (evening handoff — user switched projects)*
+*Last updated: 2026-10-08 (chat-route-verify signed off: W2-W4 and findings 1-3 resolved on `feature/local-sqlite-gate1`; route auth awaiting cherry-pick to main; tabular chat is merge blocker 4)*
+
+---
+
+## 🚨 URGENT, fix on `main` independently of any branch: unauthenticated model routes are live
+
+**Status 2026-10-07: fixed on `feature/local-sqlite-gate1`, NOT yet on `main`.** Two standalone commits, meant to be cherry-picked to `main`:
+- `1aab2e4`: `requireAuth` on `/council/detect`, `/council`, `/council/:id`, `/:id/html`, `/:id/markdown` and `/crew/chat`.
+- `bbca61d`: `requireAuth` on `/research/case-law`, `/research/courts`, `/projects/:id/docket/watch`, `/projects/:id/docket/checks`, `/projects/:id/ip/renewal/check`, `/ip/renewal/checks` and `/ip/assets`. `/docket/sweep` and `/ip/renewal/sweep` now fail closed: they return 401 unless `SWEEP_SECRET` is set and `x-sweep-secret` matches it. `SWEEP_SECRET` is not in `backend/.env.example`, and any external cron job needs it.
+
+The frontend's `/research/courts` callers (`JurisdictionSelector.tsx`, `CourtPicker.tsx`) must send the Bearer token too, or they fall back to their small static court lists. That fix is a separate frontend change, and it must go to `main` with `bbca61d`.
+
+The original finding is kept below for the record.
+
+**`POST /api/crew/chat` is unauthenticated and live on `main` today.** `backend/src/routes/index.ts:349` (`r.post('/crew/chat', async (req, res) => …)`) has no `requireAuth`, and `backend/src/index.ts:127` mounts the router at `/api`. Anyone who can reach the backend can burn our model API keys and get Crew output whose citations never pass Gate 1. The header comment at `routes/index.ts:11-12` claims the hallucination guard is applied; it is not. The frontend does not call this route (decisions.md 2026-07-03), so removing it or adding `requireAuth` breaks nothing user-facing.
+
+Found while verifying, same file on `main`, also without `requireAuth`: `POST /api/council` (11 model calls per session across Claude + Gemini, output unverified), `GET /api/council/:id`, `/:id/html` and `/:id/markdown` (serve stored council sessions by id), and `GET /api/research/case-law` and `/research/courts` (proxy CourtListener with our token).
+
+**Fix:** remove the demo routes or put `requireAuth` on every one of them, in its own change on `main`. Do not wait for `feature/local-sqlite-gate1`; that branch is blocked on other things.
+
+## OPEN (found 2026-10-07, not fixed): project routes check login, not ownership
+
+`requireAuth` only proves the caller is logged in. In `backend/src/routes/index.ts`:
+- `POST /projects/:id/docket/watch`, `GET /projects/:id/docket/checks` and `POST /projects/:id/ip/renewal/check` load the project by `:id` with the service-role Supabase client (`createServerSupabase()`, which bypasses RLS), and never check that it belongs to the caller. Any logged-in user can read another user's docket checks, or run the watcher (CourtListener + LLM + email) on another user's matter.
+- `GET /ip/renewal/checks` returns the latest portfolio-wide runs, and `GET /ip/assets` returns every user's active IP assets (optionally filtered by any `?projectId=`). Neither is scoped to the caller.
+- `GET /council/:id`, `/council/:id/html` and `/council/:id/markdown` (added 2026-10-08) load an `llm_council_sessions` row by `:id` with no filter on user or project membership. Any logged-in user can read any council session whose id they have.
+
+Fix it in its own task: scope each query to the caller's projects (or return 404 when they don't own the project), and scope or remove the two portfolio-wide reads.
+
+## OPEN (found 2026-10-07, not fixed): chat tools write model text into documents before Gate 1
+
+The chat-route buffering (W2, Step 1/1b) only governs what reaches the chat stream and `chat_messages`. Chat tools write model text into the user's documents *during* `runLLMStream`, before Gate 1 runs on anything, and nothing reverts them when the reply is later withheld. All in `backend/src/lib/chatTools.ts`:
+- **`generate_docx`** (tool def ~355; dispatch ~3531; `generateDocx()` ~866): builds a .docx from model-written content, `uploadFile()` to storage (~1298), inserts `documents` (~1311) and `document_versions` (~1327) rows. Filename comes from the model's `title`.
+- **`edit_document`** (tool def ~427; dispatch ~3111; `runEditDocument()` ~1392): applies model-written replacement text to the user's document, `uploadFile()` the new bytes (~1467/~1483), writes `document_versions` (~1473-1520), `document_edits` rows with the model's `replace`/`reason` text (~1552), and updates `documents` (~1563).
+- **`replicate_document`** (tool def ~213; dispatch ~3273): copies an existing user document under a model-chosen `new_filename`; inserts `documents` (~3361), `uploadFile()` (~3392/~3397), `document_versions` (~3418). Content is the user's own; only the filenames are model text.
+
+Effect: a vetoed or fabricated citation can be stored in a generated or edited .docx (and in `document_edits`) even when the chat reply that announced it was withheld. Fix in its own task: run Gate 1 over the content before the write (fail closed: refuse the tool call), or stage writes and commit them only after the reply passes. `chatTools.ts` is shared with `tabular.ts`, so check that path too.
+
+## OPEN (found 2026-10-08, not fixed): /analytics/extract returns model-derived rows with no Gate 1
+
+`backend/src/routes/index.ts` (~163-184): the analytics extract route returns the rows produced by `runCaseExtraction()` (`backend/src/lib/caseIntelligence.ts`), which are model-derived, and none of it goes through Gate 1. Its catch also sends `err?.message` to the client. Fix in its own task: gate the returned text (fail closed) and send a fixed error message.
+
+## OPEN (found 2026-10-08, not fixed): /crew/chat does not cancel the crew on client disconnect
+
+`POST /api/crew/chat` stops the keepalive when the client closes the connection, but `runCrew()` (and the `completeText` fallback) keeps running to the end: every model and CourtListener call is still made and billed, and Gate 1 still runs, for a reply nobody receives. Nothing is sent or saved, so this is cost and load, not a leak. Fix: pass an AbortSignal through `runCrew`, like `chat.ts` does for `runLLMStream`.
+
+## OPEN (found 2026-10-08, not fixed): model-written chat titles are saved with no Gate 1
+
+`POST /chat/:chatId/generate-title` in `backend/src/routes/chat.ts` (~397-415) asks the user's title model for a 3-6 word title from the first message (`completeText`, ~402), normalizes it, saves it to `chats.title` (~410) and returns it in the JSON. None of it goes through Gate 1, so a title like "Doe v. Roe, 999 So. 3d 999" would be stored and shown in the sidebar. The fallback title on the success path of `chat.ts`/`projectChat.ts` (`lastUser.content.slice(0, 120)`) is the user's own text, not model text. Fix in its own task: run the title through Gate 1 and fall back to the fixed title on any veto or error.
+
+## OPEN (found 2026-10-08, not fixed): the frontend shows no words for a live failed reply
+
+When a chat reply fails while streaming, the backend sends `{type:'error', message: GENERIC_ERROR_MESSAGE}` and `[DONE]`. `useAssistantChat.ts` (~401-420) stores it as an `error` event, but `AssistantMessage.tsx:1707` (`isRenderableEvent`) never renders `error` events: the message only turns the status icon red, with no text. After a reload the saved marker's `content` event ("The reply failed before it could be completed.") does show. Fix in the frontend: render the error event's fixed message as body text (it's always the generic string now).
+
+## OPEN (found 2026-10-08, low risk, not fixed): unspaced citation strings survive the chat guard's scrub
+
+In `backend/src/middleware/hallucination_guard.ts`, `scrubEvent()` (~499) keeps any string that matches `SSE_IDENT` (`/^[A-Za-z0-9_.:-]{1,64}$/`, ~81). It's applied to `courtlistener_verify_citations`, to `courtlistener_read_case` entries with no verified verdict, to `courtlistener_get_cases`, and to `mcp_tool_result`/`mcp_tool_call` when flagged (`scrubOnFlag`, ~693), including inside withheld replies. A model- or MCP-supplied unspaced string such as `999So.3d999` passes the scrub and reaches the client and `chat_messages`. Gate 1 likely wouldn't read it as a citation, and it needs a field the model or an MCP server controls, so the risk is low. Fix in its own task: run scrubbed strings through the reporter-cite check, or keep only numbers, booleans and known-format ids (UUIDs, cluster ids). Related, left as is by decision (B6, 2026-10-08): `tool_call_start`/`mcp_tool_start` send an identifier-shaped tool `name` live before Gate 1.
+
+## ⭐ 2026-10-08 — Chat route verification (`chat-route-verify`); adversary signoff written
+
+Task `[module] Chat route verification` (id `chat-route-verify`) on `feature/local-sqlite-gate1`. Signoff `.claude/signoffs/chat-route-verify.signoff` = `ecdaa041…` (whole-tree digest; supersedes the `jev-cpu-router` signoff, which no longer matches, as expected). Final signoff tier: `Ran 396 tests in 176.305s`, OK, 3 documented skips. `pipeline/tests_extended`: `Ran 6 tests in 30.471s`, OK. Commits: `1aab2e4`, `bbca61d`, `8684e19` (auth, Steps 0/0b + frontend), `681fed3`, `ae0877e` (W2 buffering, fail-closed flush), `a6c4375` (W3 + any-veto-withholds), `b1284a7` (W4), `619f0bb` (findings 1-3). The final test changes and the signoff are uncommitted at time of writing.
+
+What now holds (directional decisions in decisions.md 2026-10-08):
+- **W2, strict buffering.** `chat.ts` and `projectChat.ts` pass `runLLMStream` a buffering writer (`createBufferingSseWriter`). Only 7 status event types (tool names, counts, ids, workflow titles) go out live; a `: ping` keepalive runs every 15 s. `chatTools.ts` is unchanged.
+- **Release rule** (`finalizeHeldOutput` in `hallucination_guard.ts`). Gate 1 runs over `fullText` and over the exact text being sent. Any vetoed, pending or unknown-status verdict withholds the whole reply ("This answer was withheld because it cited a case that could not be verified."). Any gate error, mismatch or internal error withholds with "This answer could not be verified and was withheld." Sent text must equal `fullText` minus hidden `<CITATIONS>` stretches (bounded search, 10M work units). Other model-written event text (document, search and MCP families, now including `doc_read` filenames) is Gate-1 checked and dropped if flagged. Reasoning and raw opinion payloads are never sent. Saved equals sent.
+- **W3.** The client-safe verification record (verdicts with non-OK citation text stripped, scrubbed notes, error = "Verification failed.") is sent as the `verification` event and saved last in `chat_messages.annotations`. Withheld replies save it too. No schema change. Frontend annotation readers were checked; none breaks. The chat UI still doesn't display verdicts.
+- **W4.** Abort, error or timeout saves only a fixed marker (`failedReplyRecord`): no model text, reasoning, tool text or annotations. The browser gets a fixed generic error. Raw errors go only to `safeErrorLog`. The verified reply is saved before it is sent; a later failure only logs.
+- **Findings 1-3.** `/api/crew/chat` (`finalizeCrewReply`: the reply plus every chip's citation, URL and relevance text) and `/api/council` (`gateCouncilOutput`: every model-written field) fail closed the same way. Council sessions are saved by the route only after gating; `GET /council/:id`, `/html` and `/markdown` re-gate stored rows on read. Finding 3 (`runResearcher` returns ungated text) is covered at the route: its only path to a user is `runCrew` → `/crew/chat`, enforced by the adversary's caller-chain test.
+- **Real gate on fabricated Florida cites:** split across deltas, obfuscated, with a pin, in the `<CITATIONS>` block only, and period-less (`999 So 3d 999`, alone and in a full cite) all veto. The period-less forms veto locally, with no CourtListener call.
+- **Skips (3, documented):** the original in-function finding-3 test (superseded by the caller-chain test) and the two tabular tests (merge blocker 4).
+- **Tier split:** 6 redundant variants moved to `pipeline/tests_extended/test_extended_variants.py`. Bodies are unchanged, at least one test per attack class stays in `pipeline/tests`, and nothing was weakened or given a longer timeout. Headroom under 200 s is about 24 s on this machine; the 37.8 s `ContractHoldsEverywhere` batch build dominates.
+
+Not covered by a test that drives it: the GET `/council` re-gate on read (static checks only), and the real (non-mock) `/crew/chat` branch with citation chips (proved by the builder's `finalizeCrewReply` unit cases; `lib/llm` is not injectable).
+
+## ⭐ 2026-10-06 — JEV CPU router wired (stub-tested); adversary signoff VERIFIED
+
+Task `[module] JEV CPU router` (id `jev-cpu-router`). Signoff `.claude/signoffs/jev-cpu-router.signoff` = `5e0d2e40…`, verified with `require_adversary_signoff.py` (exit 0, 193 s). Adversary suite: 369 tests, 0 failures, 0 errors, 5 documented skips, 192 s. Router suite: 169 tests, about 10 s. The digest is whole-tree, so it supersedes the `gate1-draft-mode` signoff (that file no longer matches, which is expected). All tests use a stub model; no real GGUF has been loaded. Suite headroom against the hook's 240 s timeout is about 45 s, and the Gate 1 tests (about 190 s) dominate.
+
+Built: exact-option full-sequence log-likelihood routing (no generation), absolute-mass floors, a tokenization boundary check, worker timeouts with a circuit breaker, a deterministic `pipeline.gate1.check_text` citation pre-check in `route()` (covers Von too), `calibrated` forced False (`CALIBRATION_RECORDED`), and a calibration harness that measures through `route()`.
+
+### Router task definition (kept for reference)
+
+Definition of done, per user instructions on 2026-10-06 (see decisions.md):
+- Routing runs on local llama.cpp under CLAUDE.md Constraint C. Any output that is not exactly one allowed option, any error or timeout, a missing model, or low confidence routes to `direct_db`. Today `choice()` substring-matches and defaults to `options[0]`, which violates C.
+- Confidence comes from llama.cpp token log-probabilities over the allowed options, not from a model-generated score. It is uncalibrated until measured on labeled (contrastive) pairs, and the threshold stays a placeholder until then.
+- The adversary reviews `router/jev_cpu_inference.py` before signoff. It is in the Gate 1 digest but was never reviewed.
+- A fast router test target under 30 s (stub model). The full signoff suite stays under 5 min with at most 4 processes (Constraint E).
+- The user provides `llama-cpp-python` and the GGUF model. The agents' hooks block installs and downloads.
+- Round 2 (2026-10-06): an absolute-mass floor (placeholder, uncalibrated) and a deterministic eyecite citation pre-check that routes to `direct_db`.
+- **Before production (REQUIRED): one-time real-GGUF smoke test.** Required checks:
+  - **F3 (KV-cache rewind):** each option score after `llm.n_tokens = n_prompt` equals a fresh `reset()` + `eval(prompt + option)` score, and the `logits_all=True` rows are the per-position log-prob rows the code assumes.
+  - **F4 (tokenization boundary):** the real tokenizer passes the boundary check (`tokenize(prompt + " " + opt)` == `tokenize(prompt)` + `tokenize(" " + opt, no BOS)`). A SentencePiece-style dummy prefix space would fail it on every query and silently turn the router into always-`direct_db`. If it fails, fix the boundary handling before production; don't disable the check.
+- **Known router risks, accepted and recorded (adversary review 2026-10-06; none bypasses Constraint C or Gate 1):**
+  - **F5:** the circuit breaker is permanent per process. One query past the 15 s deadline, or a cached failed load (e.g. OOM), disables local routing until `reset_shared_router()` or a restart. That fails closed, but it's an availability risk. A reset while a worker is truly hung leaves the old context alive (memory doubles), so restart instead.
+  - **F7:** the mass floors (`CHOICE_MASS_FLOOR=1e-2`, `NOUL_MASS_FLOOR=5e-2`) are placeholders. A 1% floor still admits a model with 99% of its mass elsewhere. Tune them from real-model mass distributions during calibration.
+  - **F8:** each `route()` is 2 prompts with 5 option evals plus the boundary-check tokenizations. Latency on this Intel Mac is unmeasured.
+  - **F9:** queries up to 2,000 chars are accepted, but with a ~110-token prompt in a 512-token `n_ctx`, long queries silently fail closed to `direct_db`.
+  - **F10:** the raw query is interpolated into the prompt, so text like newline + `Route:` can steer routing. That affects routing quality only; Gate 1 still runs.
+  - **F11:** calibration statistics use Wilson lower bounds over an 11-point grid with no multiple-comparison correction, and labels are author-written with no independent labeler. The set (~56 non-gated items) must grow about 4x past `MIN_RELIABLE_N=200` before any threshold can be suggested.
+
+## ⭐ 2026-10-06 — Gate 1 draft mode built and wired on `feature/local-sqlite-gate1`; adversary signoff VERIFIED
+
+Task `[module] Gate 1 draft mode` (id `gate1-draft-mode`). Nothing committed. Signoff `.claude/signoffs/gate1-draft-mode.signoff` = `dea18c05…` (tree digest now also covers `pipeline.ts` and `researcher.ts`). Verified 2026-10-06 by running `require_adversary_signoff.py` with the task payload: exit 0, 200 s. Adversary suite: 214 tests, 0 failures, 0 errors, 5 documented skips (W3 + findings 1-3), 189 s. Builder suite: 154 pass. Any edit to a digested file invalidates the signoff. Directional decisions: decisions.md 2026-10-05 "Gate 1 draft mode and backend wiring" and 2026-10-06.
+
+- **Built (backend_builder):** `localGate1Text()` in `local_sqlite_gate.ts`, an async child-process wrapper around `check_text()` in `pipeline/gate1.py` (draft on stdin, max 4 concurrent children, slot released on child `close`, `gate_busy` veto on queue wait, every failure resolves to one veto). Short cites / Id. / supra resolved via eyecite with name and pin checks; residue detector vetoes Florida-looking tokens no result covers. 145 builder tests pass.
+- **Wired (lead):** `verifyCitation`, `verifyDraft` and `confirmExistence()` in `pipeline.ts` run local Gate 1 before the cache and any CourtListener call; a local pass skips `citationLookup()`; only an explicit `fall_through` reaches CourtListener. `researcher.ts` uses `confirmExistence()`. `tsc --noEmit` clean. `tree_digest.py` now also covers `pipeline.ts` and `researcher.ts` (user edit).
+- **Resolved before signoff** (the adversary first blocked on these, 2026-10-06):
+  1. Finding 4, in-module, FIXED: `_clean_draft` in `gate1.py` discards HTML attribute values, comment text and markdown link/image titles, which the frontend renders (`react-markdown` + `rehype-raw`). They are now kept and scanned as extra segments.
+  2. The suite was too heavy for this Intel Mac (14-17 min, up to 16 Python processes). FIXED: concurrency/exact-cap tests use 6 cheap stub children with deterministic release points, the hostile drafts are about 10x smaller with the 10 s budget kept, and a scaling test was added. A full run is now about 190 s.
+  3. `require_adversary_signoff.py` runs the suite with a 240 s timeout (hook limit 300 s in settings.json). The suite now fits (200 s), but with little headroom.
+
+### Merge-to-main blockers for `feature/local-sqlite-gate1`
+1. `kingsfield_florida.db` built and populated (without it every Florida cite vetoes `db_unavailable`).
+2. ~~Chat follow-up task: W2, W3, W4.~~ **RESOLVED 2026-10-08** by `chat-route-verify` (see the ⭐ 2026-10-08 section).
+3. ~~Same follow-up: findings 1-3.~~ **RESOLVED 2026-10-08** by `chat-route-verify` (finding 3 by route-level coverage, accepted by the user). Original text, for the record: findings 1-3. `/api/crew/chat` and `/api/council` release model text with no Gate 1, and `runResearcher`'s holding/relevance notes are returned unchecked. The adversary's tests for these are skipped with the decisions.md reason, bodies intact. (The auth exposure of those routes is the separate URGENT item above.)
+   - **Step 4 to-do (logged 2026-10-08), DONE:** the test exists and passes; all three period-less forms veto locally (see the ⭐ 2026-10-08 section). Original note: the adversary adds a real-gate test where a period-less reporter cite (e.g. `999 So 3d 999`) appears in the chat reply text, with CourtListener stubbed to "not found"; the reply must be withheld. Reason: in the 2026-10-08 signoff-tier run, a real-gate probe on the filename `Doe v Roe 999 So 3d 999 Fla 2015 Memo.docx` did not veto locally; it fell through toward the cache/CourtListener path (blocked by the harness, so it errored and failed closed). Production behaviour for that form is unverified.
+4. **Tabular review chat streams and saves unverified model text (found 2026-10-08 by the adversary, B2; its own task, not part of chat-route-verify).** `backend/src/routes/tabular.ts`:
+   - The tabular chat route (~1348-1363) calls `runLLMStream` with the raw `res.write`: no buffering writer, no Gate 1, no `finalizeHeldOutput`. Tokens reach the browser as generated, and the reply is saved unverified (~1365-1374, ~1413-1422, ~1449-1456).
+   - `POST /:reviewId/generate` (~933-952) streams generated cell content to the client raw, with no Gate 1.
+   Fix the same way as `chat.ts`/`projectChat.ts` (buffering writer, `finalizeHeldOutput`, save what was sent). `tabular.ts` is outside the backend_builder's write paths today, so the task needs a hook change. The adversary's test for this is skipped with this reason, body intact.
+
+### Known, accepted
+Abbreviated pin ranges (`790-91`) over-veto; `ambiguous_short_cite` over-veto; no per-user fairness in the draft-gate queue; a killed child that never emits `close` keeps its slot (fails closed as `gate_busy`); `verifyDraft` never runs Gate 2 for draft authorities (pre-existing); `/pro-se/url-suggestions` and `/manual-suggestions` return model text unchecked (low). The draft cleaner doesn't scan URL-type attributes (`href`, `src`, `srcset`) or inline `style`, so a citation rendered inside a `data:image/svg+xml` URI's `<text>` would go unscanned (low).
+
+**Known behaviour, correct by decision (2026-10-08):** with `MOCK_LLM=true`, `/api/crew/chat` withholds its demo reply. `MOCK_CREW.reply` (`backend/src/lib/mock-llm.ts`) contains the fabricated federal cite `123 F.3d 456 (Mock Cir. 2024)`; federal keys fall through to CourtListener, which can't verify it (or can't be reached offline), so Gate 1 vetoes or errors and the user sees the withheld message. The mock council text has no citations and passes.
+
+## ⭐ 2026-10-05 — Local SQLite Gate 1 and System One router built; adversary signed off; NOT wired
+
+**`[module] Gate 1 and Local Router Setup` is done.** All of it is uncommitted and untracked (`db/`, `pipeline/`, `router/`, `backend/src/verification/local_sqlite_gate.ts`). Built by the cascade agents (backend_builder, decision_router, adversary) under the `.claude/hooks/` path guards.
+
+- `db/build_sqlite_index.py` ingests CourtListener bulk CSVs (citations, opinion-clusters, dockets, optional CAP page-bounds) into `kingsfield_florida.db`. It is **not run yet**: `/Volumes/Kingsfield_Corpus` isn't mounted and no DB exists. Florida court ids are `fla` and `fladistctapp` only.
+- **Schema:** `citation_index` has a `section` column for Fla. L. Weekly division letters, B-tree `idx_citation_rvp(reporter, volume, page, section)`. `caselaw_opinion` and `caselaw_analysis` are separate tables.
+- **Gates:** `pipeline/gate1.py` is the Python reference gate (eyecite). `local_sqlite_gate.ts` exports a synchronous `localGate1()` (`node:sqlite`, read-only, Python child-process fallback). The two have verdict parity: `pass` / `veto` / `fall_through`.
+- `router/system_one_client.py` is the Choice/Noul/Score stub client for `/v1/systemone`. `direct_db` is the fallback on no URL, any error, or confidence below 0.80. The Von wire format is assumed and stubbed, and the Noul cutoffs (0.20 / 0.80) are unvalidated.
+- **Tests:** the adversary's bypass suite `pipeline/tests/` has 105 tests, all OK, with 3 wiring-conditional skips. Builder tests are `pipeline/builder_tests/` (54) and router tests are `router/tests/` (27). `tsc --noEmit` is clean. The signoff is at `.claude/signoffs/gate1-local-router-setup.signoff` (digest `0abe54a2…`). Any edit to the reviewed files invalidates it.
+
+### Open, in priority order
+1. **Wire `localGate1` into `pipeline.ts` ahead of `citationLookup()`** (Constraint D), after a separate review. Then have the adversary re-run, which un-skips the 3 ordering tests.
+2. **`backend/src/crew/researcher.ts:123` is an open Gate 1 bypass.** LLM-proposed cites go straight to `citationLookup()` and become `VerifiedAuthority`. It must route through the local gate when wiring lands, or the bypass test fails. `caseIntelligence.ts:217` (cite counts only) is allowlisted. Open UX question: a non-null cite_count implies "resolved".
+3. Run the corpus build once the volume is mounted, then load-test lookup latency and the slow-DB timeout (only a locked DB is tested).
+4. **Untested:** exposure bias (no train/eval set exists), borderline caption abbreviations, a well-formed Von response, and other model-cite output flows (chat, council) beyond `citationLookup(` call sites.
+
+## ⭐ 2026-09-19 — Judicial intel: FL 2DCA/6DCA oral arguments scored with Jev; offer catalog implemented
+
+**Nothing is on fire.** This session's work is on branch `judicial-intel-oa-panel-2026-09-19` (PR to `main`); it stages additions and modifications only — the 345 working-tree deletions (wingman data-info, business/, old `verifier/judicial-intel` path) were deliberately NOT committed and need the user's eyes.
+
+### NEW: captions-track pipeline in `verifier/judicial-intel-analytics/pipeline/`
+
+`pull_captions.py` → `build_transcripts.py` → `run_oa_panel.py` → `enrich_flcourts.py` (+ `enrich_dockets.py` secondary, `validate_roles.py`). Full docs in that folder's `README.md`; sources in `DATA-SOURCES.md`.
+
+- **1,438 2DCA clips** with captions + metadata (5 have no captions), **98 6DCA** clips. Live-stream tabs excluded (multi-case, exceed Jev's state budget).
+- **1,428 transcripts scored** by `typesafe/jev-1.13` via OpenRouter, 15-question panel, **$0.465**, 4 s at 12 threads. 9-video hand-checked validation first.
+- **Ground truth from the Florida courts' own opinion JSON API** (`flcourts-media.flcourts.gov/_search/opinions/`, the endpoint Juriscraper wraps): 23,659 2DCA decisions 2016–2026 incl. PCAs; **1,236/1,438 videos matched**; 1,204 opinion PDFs parsed for panel / trial judge / counsel. CourtListener demoted to secondary — the token is throttled to **100 req/hour**.
+- **Findings (n=1,097 argued cases with decisions):** argued cases affirm 74% (court-wide 86%). `ruling_lean` raw 64% — below baseline — but confidence is monotonic (≥0.7 → 90%) and the Python-composed **skepticism gap** is the signal: ≥+1 → 95% affirmed (n=208), ≤−1 → 44%; inside gap 0 a confident `reverse` lean is right 77% (n=22). Two-thirds of cases fall in the abstain bin. Behavioral nouls describe, don't predict. 13–21% of score rows are bimodal. Replicates on 6DCA.
+- **Pass-1 speaker roles** are heuristic (fuzzy intro anchors + Viterbi): 86.8% BENCH/COUNSEL on a hand-labeled video. The existing Gemini `diarize.py` output is chunk-local and **not usable as ground truth**.
+
+### NEW: offer catalog implemented — `verifier/new-kingsfield-judicial-intel-categories/`
+
+`src/value_types.py`, `src/sources.py`, `src/build_snapshots.py`, `src/voting.py`. **9 of 29 facts populated** for 2DCA (F12 F13 F17 F19 F21 F22 F25 F26 F29): court snapshot, 17 appellate judges, 81 trial-judge appellate trails, 22 counsel rows (floor n=5), 1,416 F26 cards. `taxonomy/COVERAGE-fl_2dca.md`. Producers are arithmetic only.
+
+### Cleanup done
+Mock `Case_*` stub folders (iCloud, 250) trashed; GDrive `Florida_Court_Archive` (1,780 stubs) trashed by user. Stale `verifier/judicial-intel` paths fixed in config/manifest/README/HANDOFF. `index_channel.py` no longer drops video ids starting with `UC`.
+
+### Open, in priority order
+1. **Review the 345 unstaged deletions** and commit or restore them (this PR does not touch them).
+2. **Mike upstream sync** — `Kandy22/mike` is a current copy of upstream (pushed 2026-09-19); Kingsfield forked from a much older Mike. 600+ upstream changes need a deliberate merge, not a sync.
+3. **Gemini pass 2 for roles** — rewrite `diarize.py` for whole-file audio with a role-constrained schema; validate against `data/fl_2dca/transcripts/_truth_eLU5je2C12I.json`.
+4. Whisper for the 5 caption-less videos; Phase-2 per-turn rolling scorer + biometric join (`mike` / `video-analyzer4` lineage).
+5. Colorado OA video is on `cojudicial.ompnetwork.org`, not YouTube — separate ingestion.
+6. CourtListener membership if the API is needed above 100/hour; otherwise flcourts covers Florida.
+
+---
+
+## ⭐ 2026-07-27 — Hallucination registry built; published benchmark corrected
+
+**Nothing is on fire.** Production Gate 1 was checked and is sound (see below). All work this session is **uncommitted** on `main` — 216 changed files in the root repo, of which the relevant ones are `verifier/` (23) and the new `hallucination-registry/`. Nothing pushed.
+
+### NEW: `hallucination-registry/` — normalization layer over the Charlotin AI-hallucination case database
+
+Turns his flat 18-column CSV into two queryable tables. Stdlib only, deterministic, source SHA-256 in `manifest.json`.
+
+- `normalize.py` → `out/incidents.csv` (**1,810 cases, 1,251 US**) + `out/incident_items.csv` (**5,406 items, 3,869 US**) + `qa_unmapped.csv` + `report.md`
+- `schema.sql` — Postgres/Supabase DDL, with enrichment columns stubbed and NULL (`judge_name`, `docket_number`, `case_citation`, `cl_opinion_id`, `order_sha256`, `sanctioning_authority`, `bar_referral_disposition`, `appellate_history`)
+- Coverage: court mapping **95.8% high confidence** (2 unmapped of 1,251), **875 CourtListener court IDs resolved**, outcomes **1,052/1,216 recorded mapped (86.5%)**
+- Traps handled and unit-tested (20/20): `CA California` = state Court of Appeal vs `CA 5th Cir.` = federal circuit; `D.C. New Jersey` = *District Court*, not DC; **New York's "Supreme Court" is a TRIAL court** and is classified `state_trial` — getting this wrong inverts any NY analysis
+- `monetary_is_placeholder` flags the 22 rows where upstream uses a bare `1` to mean "sanctioned, amount unknown". Guarded, real US figures are n=160, **median $2,000, max $110,204**
+- Three AI-specific remedy codes coined that upstream has no field for: `authority_production_ordered`, `ai_certification_ordered`, `client_notification_ordered` (18 US cases — small but the seed of the standing-order product)
+
+**NOT done:** nothing loaded into Supabase (the MCP is connected and could), no enrichment run, no intake pipeline, `kingsfield_network_v2.html` still shows stale static numbers.
+
+### FIXED: `verifier/` benchmark had 87 groundings scored against the wrong opinion
+
+The old direct-REST resolver mapped historical citations to 2025–26 CourtListener clusters. Quarantined via new `quarantine_bad_grounding.py` (reversible; backup + `quarantine_report.json`). **Real grounding is 55/1,979 (2.8%), of which 49 (89.1%) verified** — not the 139 (7.0%) previously claimed. `CITATION_BENCHMARK.md` and `benchmark_summary.md` rewritten as v0.2 with the correction visible. Also corrected: "3-way unanimous 33%" (wrong denominator; 37.1% of the 1,780 actually scored), "200 human labels" (only 139 usable — 61 are `unsure`), and a **backwards Gemini verdict row** that had led to the opposite conclusion.
+
+**✅ Production is NOT affected.** `backend/src/verification/pipeline.ts` uses `citationLookup()` (CourtListener's Citation Lookup API — parses volume/reporter/page, filters `status === 'matched'`, fails closed). Different and correct mechanism. Do not refactor it.
+
+### PUBLISHED: HF dataset corrected in place
+
+`Kingsfield-Lawfare/legal-citation-benchmark` (public, CC BY 4.0, 146 downloads) had **every row duplicated** — both JSON files sat in the repo root and the loader concatenated them (~3,958 rows for 1,979 entries). Fixed with an explicit `configs:`/`data_files:` block pinning the split to `results_full.json`. Card rewritten as v0.2, leading with the correction, and now carries a **verified worked example**: entry `idx: 1`'s Claude rationale cites two fabricated cases ("Los Alamos Grazing" returns zero results in 8.2M opinions; 526 U.S. 434 is *203 North LaSalle*, not *Dewsnup*). Staged at `verifier/hf_release_v0.2/`.
+
+### Open, in priority order
+
+1. **Commit and push** — today's work exists only on this machine
+2. Re-ground the 87 quarantined + 803 queued citations via the MCP route; add the **date-consistency guard** (reject any cluster whose date can't match the cited reporter volume) — free, background, ~890 fetches
+3. Load `hallucination-registry` into Supabase; write `enrich.py` (judge / docket / CL opinion ID / sanctioning authority)
+4. Audit all 1,780 `agent_verdicts.reason` fields for fabricated citations → measured per-model fabrication rate
+5. Standing-order + bar-opinion registry (greenfield; the compliance product)
+
+---
+
+*Previous update: 2026-07-13 (evening handoff — user switched projects)*
 
 > ⭐ **START HERE:** `docs/context/SESSION-2026-07-13-assistant-casemap-handoff.md`  
 > Full notes from the Assistant / Case Map / LAN / extract session.  

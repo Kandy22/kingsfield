@@ -1,0 +1,35 @@
+{
+ "judge_id": "thane-b-covert",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 4,
+   "affirmed": 3,
+   "reversed": 1,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.25,
+   "reversal_rate_ci95": {
+    "lo": 0.046,
+    "hi": 0.699,
+    "method": "wilson"
+   },
+   "county": "Pinellas",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2021-0072",
+    "2D2020-3012",
+    "2D2020-3507",
+    "2D2021-0271"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

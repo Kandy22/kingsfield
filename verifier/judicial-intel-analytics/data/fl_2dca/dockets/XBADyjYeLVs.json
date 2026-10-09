@@ -1,0 +1,31 @@
+{
+ "video_id": "XBADyjYeLVs",
+ "title": "2D21 321",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0321"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:11:13Z",
+ "case_number": "2D2021-0321",
+ "case_name": "THE KIDWELL GROUP, LLC D/ B/ A AIR QUALITY ASSESSORS OF FLORIDA, A/ A/ O LUCY COLLIER vs FLORIDA FARM BUREAU CASUALTY INSURANCE COMPANY",
+ "decided_date": "2022-10-19",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/851204/opinion/Opinion_21-0321.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/October/19/21-0321",
+ "ctrack_id": "4710677",
+ "n_decision_records": 1,
+ "author": "Kelly",
+ "panel_judges": "Kelly; Lucas; Atkinson",
+ "trial_judge": "Hope M. Pattey",
+ "county": "Polk",
+ "appellant_counsel": "LC d/b/a AIR QUALITY ASSESSORS of FLORIDA a/a/o LUCY COLLIER, Appellant, v. FLORIDA FARM BUREAU CASUALTY INSURANCE COMPANY, Appellee. No. 2D21-321 October 19, 2022 Appeal from the County Court for Polk County; Hope M. Pattey, Judge. Chad A. Barr and Dalton L. Gray of Chad Barr Law, Altamonte Springs",
+ "appellee_counsel": "COMPANY, Appellee. No. 2D21-321 October 19, 2022 Appeal from the County Court for Polk County; Hope M. Pattey, Judge. Chad A. Barr and Dalton L. Gray of Chad Barr Law, Altamonte Springs, for Appellant. Robert T. Schulte, Matthew C. Scarborough, and Shiela Burke of Scarborough Attorneys at Law, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 5612
+}

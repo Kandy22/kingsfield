@@ -1,0 +1,31 @@
+{
+ "video_id": "OjqA7cA1GG0",
+ "title": "23 2239",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-2239"
+ ],
+ "case_number": "2D2023-2239",
+ "source": "flcourts",
+ "case_name": "U.S. BANK HOME MORTGAGE, U.S. BANK NATIONAL ASSOCIATION v. BOIVIN, VANDERBURG, et al",
+ "decided_date": "2025-02-14",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2482038/opinion/Opinion_2023-2239.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/February/14/2023-2239",
+ "ctrack_id": "ctrack_18824792",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:09:03Z",
+ "author": "Morris",
+ "panel_judges": "Morris; Kelly; Lucas",
+ "trial_judge": "Amy Williams",
+ "county": "Pinellas",
+ "appellant_counsel": "; THERESA L. BOIVIN; WILLIAM O. VANDERBURG; TIFFANY L. VANDERBURG; MR. LOWE LLC; and CITY OF LARGO, Appellees. No. 2D2023-2239 February 14, 2025 Appeal from the Circuit Court for Pinellas County; Amy Williams, Judge. David Rosenberg of Robertson, Anschutz, Schneid, Crane & Partners, PLLC, Boca Raton",
+ "appellee_counsel": "OWE LLC; and CITY OF LARGO, Appellees. No. 2D2023-2239 February 14, 2025 Appeal from the Circuit Court for Pinellas County; Amy Williams, Judge. David Rosenberg of Robertson, Anschutz, Schneid, Crane & Partners, PLLC, Boca Raton, for Appellant. Thomas O. Michaels of Thomas O. Michaels, P.A., Dunedin",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 23036
+}

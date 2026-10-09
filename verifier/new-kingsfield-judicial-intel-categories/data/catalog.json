@@ -1,0 +1,424 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-19",
+  "product": "Kingsfield Judicial Intelligence",
+  "disclaimer": "Category model for data Kingsfield will offer. Inspired by public product surfaces of Trellis, Lex Machina, Wolfram Demonstrations, Pre/Dicta, and Premonition. Not a scrape or affiliate of those vendors. Not legal advice. Predictive fields are forecasts, not holdings.",
+  "counts": { "top": 3, "main": 6, "factual": 29 },
+  "top": [
+    {
+      "id": "T1",
+      "slug": "state-trial-court",
+      "name": "State Trial Court Intelligence",
+      "modeled_on": "Trellis Research docket surfaces",
+      "blurb": "Judge-level intelligence mined from raw state trial-court dockets: biography, docket mix, motions, dispositions, and milestone clocks."
+    },
+    {
+      "id": "T2",
+      "slug": "enterprise-federal",
+      "name": "Enterprise and Federal Court Analytics",
+      "modeled_on": "Lex Machina",
+      "blurb": "Structured federal and select-state analytics: motion metrics, timing models, legal findings, appeals, class actions, and entity histories."
+    },
+    {
+      "id": "T3",
+      "slug": "computational-predictive",
+      "name": "Computational and Predictive Modeling",
+      "modeled_on": "Wolfram Demonstrations Project, Pre/Dicta, Premonition",
+      "blurb": "Mathematical and predictive layers: decision-tree judge approximations, precedent graphs, settlement zones, panel voting models, and counsel/forum forecasts."
+    }
+  ],
+  "main": [
+    {
+      "id": "M1",
+      "slug": "subjective-professional-history",
+      "name": "Subjective and Professional History",
+      "top": "T1",
+      "blurb": "Who the judge is on paper: career path, schools, affiliations, and how to reach chambers."
+    },
+    {
+      "id": "M2",
+      "slug": "high-level-metrics",
+      "name": "High-Level Metrics",
+      "top": "T1",
+      "blurb": "Current docket load, case length, bench-verdict mix, and practice-area composition."
+    },
+    {
+      "id": "M3",
+      "slug": "granular-motion-practice",
+      "name": "Granular Motion Practice",
+      "top": ["T1", "T2"],
+      "blurb": "Grant, deny, and partial-grant rates by motion type, with county and state comparators."
+    },
+    {
+      "id": "M4",
+      "slug": "case-dispositions",
+      "name": "Case Dispositions",
+      "top": ["T1", "T2"],
+      "blurb": "How matters actually end: dismissal, settlement, verdict, consolidation, removal, class-action money, mapped holdings."
+    },
+    {
+      "id": "M5",
+      "slug": "timing-analytics",
+      "name": "Timing Analytics",
+      "top": ["T1", "T2"],
+      "blurb": "Clocks from filing to first dismissal, trial, and final disposition, plus forecasted milestone dates."
+    },
+    {
+      "id": "M6",
+      "slug": "outcome-performance-forecasting",
+      "name": "Outcome and Performance Forecasting",
+      "top": ["T2", "T3"],
+      "blurb": "Forward-looking scores: early-motion odds, forum and counsel selection, settlement bands, panel math, precedent distance."
+    }
+  ],
+  "factual": [
+    {
+      "id": "F01",
+      "code": "career_employment_history",
+      "name": "Career and Employment History",
+      "top": "T1",
+      "main": "M1",
+      "source_pattern": "trellis.bio",
+      "kind": "profile",
+      "sentence": "Tracks the judge’s prior legal roles and practice environments (prosecutor, defender, firm, bench) as a path, not a slogan.",
+      "value_type": "employment_event[]",
+      "jev": { "role": "none", "note": "Structured facts; do not ask Jev to invent a bio." }
+    },
+    {
+      "id": "F02",
+      "code": "educational_background",
+      "name": "Educational Background",
+      "top": "T1",
+      "main": "M1",
+      "source_pattern": "trellis.bio",
+      "kind": "profile",
+      "sentence": "Identifies law school, undergraduate, and clerkship ties that often predict local procedural culture.",
+      "value_type": "education_event[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F03",
+      "code": "affiliations",
+      "name": "Professional and Political Affiliations",
+      "top": "T1",
+      "main": "M1",
+      "source_pattern": "trellis.bio",
+      "kind": "profile",
+      "sentence": "Lists bar sections, Inns of Court, policy groups, and partisan offices the judge has publicly associated with.",
+      "value_type": "affiliation[]",
+      "jev": { "role": "none", "note": "Public-record affiliations only; no inferred ideology score as a fact." }
+    },
+    {
+      "id": "F04",
+      "code": "practical_chambers_data",
+      "name": "Practical Chambers Data",
+      "top": "T1",
+      "main": "M1",
+      "source_pattern": "trellis.bio",
+      "kind": "profile",
+      "sentence": "Publishes clerk phone, department, standing orders, and courtroom rules a filer actually needs.",
+      "value_type": "chambers_card",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F05",
+      "code": "active_cases",
+      "name": "Active Cases",
+      "top": "T1",
+      "main": "M2",
+      "source_pattern": "trellis.at_a_glance",
+      "kind": "metric",
+      "sentence": "Counts matters currently pending on the judge’s docket at the snapshot date.",
+      "value_type": "int",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F06",
+      "code": "average_case_length",
+      "name": "Average Case Length",
+      "top": "T1",
+      "main": "M2",
+      "source_pattern": "trellis.at_a_glance",
+      "kind": "metric",
+      "sentence": "Reports the typical time a case sits before this judge from filing to close.",
+      "value_type": "duration_days",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F07",
+      "code": "verdict_breakdown",
+      "name": "Verdict Breakdown",
+      "top": "T1",
+      "main": "M2",
+      "source_pattern": "trellis.at_a_glance",
+      "kind": "distribution",
+      "sentence": "Shows the statistical mix of bench-trial outcomes (plaintiff, defense, mixed, directed) for this judge.",
+      "value_type": "named_share[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F08",
+      "code": "practice_area_breakdown",
+      "name": "Case Practice Area Breakdown",
+      "top": "T1",
+      "main": "M2",
+      "source_pattern": "trellis.at_a_glance",
+      "kind": "distribution",
+      "sentence": "Splits the docket by broad practice area such as torts, commercial, property, or labor and employment.",
+      "value_type": "named_share[]",
+      "jev": { "role": "classify_incoming", "question_type": "choice" }
+    },
+    {
+      "id": "F09",
+      "code": "matter_type_breakdown",
+      "name": "Matter Type Breakdown",
+      "top": "T1",
+      "main": "M2",
+      "source_pattern": "trellis.at_a_glance",
+      "kind": "distribution",
+      "sentence": "Splits the same docket into granular matter types such as eminent domain or wrongful termination.",
+      "value_type": "named_share[]",
+      "jev": { "role": "classify_incoming", "question_type": "choice" }
+    },
+    {
+      "id": "F10",
+      "code": "motion_success_rates",
+      "name": "Motion-by-Motion Success Rates",
+      "top": "T1",
+      "main": "M3",
+      "source_pattern": "trellis.motions",
+      "kind": "rate_table",
+      "sentence": "Gives grant, denial, and partial-grant rates across 40-plus motion types (demurrer, summary judgment, in limine, and the rest).",
+      "value_type": "motion_rate_row[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F11",
+      "code": "comparative_motion_benchmarks",
+      "name": "Comparative Motion Benchmarks",
+      "top": "T1",
+      "main": "M3",
+      "source_pattern": "trellis.motions",
+      "kind": "rate_table",
+      "sentence": "Sets the judge’s motion rates next to county and state averages so outliers are visible.",
+      "value_type": "benchmark_row[]",
+      "jev": { "role": "score_outlier", "question_type": "noul" }
+    },
+    {
+      "id": "F12",
+      "code": "disposition_breakdown",
+      "name": "Disposition Breakdown",
+      "top": "T1",
+      "main": "M4",
+      "source_pattern": "trellis.outcomes",
+      "kind": "distribution",
+      "sentence": "Tracks how this judge’s cases end: dismissal, settlement, jury verdict, consolidation, or removal.",
+      "value_type": "named_share[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F13",
+      "code": "average_case_duration",
+      "name": "Average Case Duration",
+      "top": "T1",
+      "main": "M5",
+      "source_pattern": "trellis.milestones",
+      "kind": "metric",
+      "sentence": "Average days from filing to disposition, ignoring how the case ended.",
+      "value_type": "duration_days",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F14",
+      "code": "average_time_to_trial",
+      "name": "Average Time to Trial",
+      "top": "T1",
+      "main": "M5",
+      "source_pattern": "trellis.milestones",
+      "kind": "metric",
+      "sentence": "Average days from filing to the first day of trial before this judge.",
+      "value_type": "duration_days",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F15",
+      "code": "average_time_to_first_dismissal",
+      "name": "Average Time to First Dismissal Order",
+      "top": "T1",
+      "main": "M5",
+      "source_pattern": "trellis.milestones",
+      "kind": "metric",
+      "sentence": "Average days to the first dismissal order, used as a rough statistical proxy for settlement timing.",
+      "value_type": "duration_days",
+      "jev": { "role": "none", "note": "Proxy only; dismissal is not settlement." }
+    },
+    {
+      "id": "F16",
+      "code": "state_court_motion_metrics",
+      "name": "State Court Motion Metrics",
+      "top": "T2",
+      "main": "M3",
+      "source_pattern": "lex_machina.motions",
+      "kind": "rate_table",
+      "sentence": "Document-driven motion-practice and timing stats for 40-plus motion types on state dockets, keyed by judge.",
+      "value_type": "motion_rate_row[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F17",
+      "code": "timing_events",
+      "name": "Timing Events",
+      "top": "T2",
+      "main": "M5",
+      "source_pattern": "lex_machina.timing",
+      "kind": "forecast",
+      "sentence": "Algorithmic forecasts of when a matter is likely to hit key litigation milestones in this forum.",
+      "value_type": "milestone_forecast[]",
+      "jev": { "role": "none", "note": "Keep the model in stats code; Jev can only gate whether a forecast is in-family." }
+    },
+    {
+      "id": "F18",
+      "code": "legal_findings",
+      "name": "Legal Findings",
+      "top": "T2",
+      "main": "M4",
+      "source_pattern": "lex_machina.findings",
+      "kind": "holding_index",
+      "sentence": "Practice-specific holdings mapped onto the judgment events that produced them.",
+      "value_type": "finding_event[]",
+      "jev": { "role": "verify_against_opinion", "question_type": "noul" }
+    },
+    {
+      "id": "F19",
+      "code": "appeals_analytics",
+      "name": "Appeals Analytics",
+      "top": "T2",
+      "main": "M6",
+      "source_pattern": "lex_machina.appeals",
+      "kind": "rate_table",
+      "sentence": "Reversal rates, rehearing outcomes, and Supreme Court history for this judge’s or this court’s appellate trail.",
+      "value_type": "appeals_row",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F20",
+      "code": "class_action_analytics",
+      "name": "Class Action Analytics",
+      "top": "T2",
+      "main": "M4",
+      "source_pattern": "lex_machina.class_action",
+      "kind": "money_table",
+      "sentence": "Summarizes settlement dollars, fee awards, and class-representative awards to bound a litigation budget.",
+      "value_type": "class_action_row[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F21",
+      "code": "entity_profiling",
+      "name": "Entity Profiling",
+      "top": "T2",
+      "main": "M6",
+      "source_pattern": "lex_machina.entities",
+      "kind": "profile",
+      "sentence": "Comparative case histories for opposing counsel, firms, parties, experts, and courts against this judge.",
+      "value_type": "entity_dossier",
+      "jev": { "role": "match_entity", "question_type": "choice" }
+    },
+    {
+      "id": "F22",
+      "code": "approximating_a_judge",
+      "name": "Approximating a Judge",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "wolfram.judge_approx",
+      "kind": "model",
+      "sentence": "Fits binary decision trees and if-then rules that approximate the splits this judge appears to apply to stated facts.",
+      "value_type": "decision_tree",
+      "jev": { "role": "score_rule_fit", "question_type": "score" }
+    },
+    {
+      "id": "F23",
+      "code": "synthetic_precedent_structures",
+      "name": "Synthetic Legal Precedent Structures",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "wolfram.precedent_graph",
+      "kind": "model",
+      "sentence": "Builds layered citation graphs from feature distance and Lévy-flight-style jumps among like-featured prior cases.",
+      "value_type": "precedent_graph",
+      "jev": { "role": "rank_neighbor", "question_type": "noul" }
+    },
+    {
+      "id": "F24",
+      "code": "duty_to_settle",
+      "name": "The Duty to Settle",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "wolfram.settle",
+      "kind": "model",
+      "sentence": "Computes a reasonable settlement zone from policy limits, coverage probability, costs, and attachable assets.",
+      "value_type": "settlement_zone",
+      "jev": { "role": "none", "note": "Arithmetic lives in code; Jev does not invent numbers." }
+    },
+    {
+      "id": "F25",
+      "code": "jury_voting_models",
+      "name": "Jury and Voting Models",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "wolfram.voting",
+      "kind": "model",
+      "sentence": "Runs panel-probability math (Condorcet jury theorem, Banzhaf index) for multi-member courts and juries.",
+      "value_type": "voting_model_result",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F26",
+      "code": "judicial_outcome_prediction",
+      "name": "Judicial Outcome Prediction",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "predicta.outcome",
+      "kind": "forecast",
+      "sentence": "Estimates odds of early rulings such as motions to dismiss and summary judgment; vendor-claimed accuracy is not Kingsfield’s claim.",
+      "value_type": "probability_card",
+      "jev": { "role": "calibrate_or_abstain", "question_type": "score" }
+    },
+    {
+      "id": "F27",
+      "code": "litigation_timelines",
+      "name": "Litigation Timelines",
+      "top": "T3",
+      "main": "M5",
+      "source_pattern": "predicta.timeline",
+      "kind": "forecast",
+      "sentence": "Projects duration bands for pre-discovery, discovery, and trial phases in this forum before this judge.",
+      "value_type": "phase_forecast[]",
+      "jev": { "role": "none" }
+    },
+    {
+      "id": "F28",
+      "code": "forum_strategy_optimization",
+      "name": "Forum and Strategy Optimization",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "predicta.strategy",
+      "kind": "forecast",
+      "sentence": "Surfaces data on motion timing, forum choice, and expert selection given comparable past matters.",
+      "value_type": "strategy_card",
+      "jev": { "role": "choose_forum", "question_type": "choice" }
+    },
+    {
+      "id": "F29",
+      "code": "counsel_performance_analytics",
+      "name": "Counsel-Performance Analytics",
+      "top": "T3",
+      "main": "M6",
+      "source_pattern": "premonition.counsel",
+      "kind": "forecast",
+      "sentence": "Benchmarks how named attorneys fare, how long they take, and how they finish in front of this specific judge.",
+      "value_type": "counsel_judge_row[]",
+      "jev": { "role": "none", "note": "Selection aid only; never a competence smear presented as fact." }
+    }
+  ]
+}

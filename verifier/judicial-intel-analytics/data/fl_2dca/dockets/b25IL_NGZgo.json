@@ -1,0 +1,35 @@
+{
+ "video_id": "b25IL_NGZgo",
+ "title": "25 0787",
+ "case_number": "2D2025-0787",
+ "case_numbers_all": [
+  "2D2025-0787"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0787",
+ "case_name": "JOSHUA P. MILLER v. HOLLY BENTLEY",
+ "decided_date": "2026-07-01",
+ "cl_cluster_id": 10883342,
+ "cl_opinion_id": 11350870,
+ "cl_url": "https://www.courtlistener.com/opinion/10883342/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Michael Williams",
+ "appellant_counsel": null,
+ "appellee_counsel": "llant, v. HOLLY BENTLEY, Appellee. No. 2D2025-0787 July 1, 2026 Appeal from the Circuit Court for Hillsborough County; Michael Williams, Judge. Nicole Deese Newlon of Johnson, Newlon & Decort, P.A., Tampa, for Appellant. Charles A. Carlson and Courtney L. Fernald of Older Lundy Koch & Martino, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 802,
+ "_tried": [
+  "2D2025-0787"
+ ],
+ "looked_up_at": "2026-09-19T07:33:39Z"
+}

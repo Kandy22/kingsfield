@@ -1,0 +1,41 @@
+{
+ "video_id": "5rIS1rkHJ2I",
+ "title": "25 0588",
+ "case_number": "2D2025-0588",
+ "case_numbers_all": [
+  "2D2025-0588"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0588",
+ "case_name": "Sea World Parks & Entertainment, LLC, d/b/a Busch Gardens Tampa Bay v. Abougamal, M.",
+ "decided_date": "2026-09-09",
+ "cl_cluster_id": 10969848,
+ "cl_opinion_id": 11437468,
+ "cl_url": "https://www.courtlistener.com/opinion/10969848/sea-world-parks-entertainment-llc-dba-busch-gardens-tampa-bay-v/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Black",
+ "panel_judges": "Black; Northcutt; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Melissa M. Polo",
+ "appellant_counsel": " ASMAA ABOUGAMAL, as parent and legal guardian of A.M., a minor, Appellee. No. 2D2025-0588, 2D2025-1220 CONSOLIDATED September 9, 2026 Appeal from the Circuit Court for Hillsborough County; Melissa M. Polo, Judge. David B. Shelton and Candy L. Messersmith of Rumberger, Kirk & Caldwell, P.A., Orlando",
+ "appellee_counsel": "r, Appellee. No. 2D2025-0588, 2D2025-1220 CONSOLIDATED September 9, 2026 Appeal from the Circuit Court for Hillsborough County; Melissa M. Polo, Judge. David B. Shelton and Candy L. Messersmith of Rumberger, Kirk & Caldwell, P.A., Orlando, for Appellant. Brian J. Lee of Morgan & Morgan, Jacksonville",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 39727,
+ "_tried": [
+  "2D2025-0588"
+ ],
+ "looked_up_at": "2026-09-19T07:03:46Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2494940/opinion/Opinion_2025-0588.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/september/09/2025-0588",
+ "ctrack_id": "ctrack_19576999",
+ "n_decision_records": 1
+}

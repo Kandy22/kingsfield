@@ -1,0 +1,77 @@
+{
+ "judge_id": "moe",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "appellate_judge_panels",
+   "n": 15,
+   "affirmed": 12,
+   "reversed": 3,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.2,
+   "reversal_rate_ci95": {
+    "lo": 0.07,
+    "hi": 0.452,
+    "method": "wilson"
+   },
+   "note": "cases argued on video where this judge sat; reversal is a panel outcome, not an individual vote"
+  },
+  "F12": [
+   {
+    "name": "affirm",
+    "count": 12,
+    "share": 0.8
+   },
+   {
+    "name": "reverse",
+    "count": 3,
+    "share": 0.2
+   }
+  ],
+  "F13": {
+   "n": 15,
+   "median": 28,
+   "mean": 69.5,
+   "p10": 6,
+   "p90": 175,
+   "from_event": "oral_argument",
+   "to_event": "decision"
+  },
+  "F22": {
+   "target": "affirm",
+   "fit_on": "panel-level skepticism gap on this judge's panels",
+   "n": 15,
+   "root": {
+    "leaf": true,
+    "n": 15,
+    "p_affirm": null,
+    "label": "see court F22"
+   },
+   "rules_text": [
+    "share of panels with gap>=+1: 0.27",
+    "share with gap<=-1: 0.13",
+    "authored: 1 of 15"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F12": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F13": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F22": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "video_id": "lR8qMIfLjWo",
+ "title": "23 2625",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-2625"
+ ],
+ "case_number": "2D2023-2625",
+ "source": "flcourts",
+ "case_name": "Zoble v. Kensington Estates Homeowners",
+ "decided_date": "2025-09-19",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2482112/opinion/Opinion_2023-2625.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/september/19/2023-2625",
+ "ctrack_id": "ctrack_19102451",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:14:51Z",
+ "author": "Kelly",
+ "panel_judges": "Kelly; Villanti; Rothstein-Youakim",
+ "trial_judge": "Marc S. Makholm",
+ "county": "Hillsborough",
+ "appellant_counsel": "T ROBERT G. ZOBLE, Appellant, v. KENSINGTON ESTATES HOMEOWNERS' ASSOCIATION OF HILLSBOROUGH, INC., Appellee. No. 2D2023-2625 September 19, 2025 Appeal from the Circuit Court for Hillsborough County; Marc S. Makholm, Judge. Raymond T. Elligett, Jr., and Amy S. Farrior of Buell & Elligett, P.A., Tampa",
+ "appellee_counsel": "23-2625 September 19, 2025 Appeal from the Circuit Court for Hillsborough County; Marc S. Makholm, Judge. Raymond T. Elligett, Jr., and Amy S. Farrior of Buell & Elligett, P.A., Tampa, for Appellant. Duane A. Daiker, Jonathan J. Ellis, and Jessica S. Sheikhet of Shumaker, Loop & Kendrick, LLP, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 5405
+}

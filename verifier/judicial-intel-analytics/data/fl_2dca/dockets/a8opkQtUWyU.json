@@ -1,0 +1,26 @@
+{
+ "video_id": "a8opkQtUWyU",
+ "title": "2D20 840",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-0840"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:12:16Z",
+ "case_number": "2D2020-0840",
+ "case_name": "MILES CHRISTIAN - HART AND BARBARA CHRISTIAN - HART  vs WELLS FARGO BANK, N. A.",
+ "decided_date": "2021-05-19",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/776620/opinion/Opinion_20-0840.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/May/19/20-0840",
+ "ctrack_id": "4581705",
+ "n_decision_records": 1,
+ "panel_judges": "Black; Rothstein-Youakim; Stargel",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1326
+}

@@ -1,0 +1,27 @@
+{
+ "video_id": "ZlzsTM26zsk",
+ "title": "24 0649",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-0649"
+ ],
+ "case_number": "2D2024-0649",
+ "source": "flcourts",
+ "case_name": "State of Florida v. Kilburn",
+ "decided_date": "2025-08-15",
+ "disposition_text": "Denied",
+ "disposition": "denied",
+ "opinion_type": "Petition - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2482109/opinion/Opinion_2024-0649.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/August/15/2024-0649",
+ "ctrack_id": "ctrack_19056999",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:11:59Z",
+ "author": "Black",
+ "panel_judges": "Black",
+ "has_dissent": true,
+ "has_special_concurrence": false,
+ "opinion_chars": 12764
+}

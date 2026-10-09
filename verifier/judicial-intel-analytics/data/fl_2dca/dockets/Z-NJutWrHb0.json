@@ -1,0 +1,35 @@
+{
+ "video_id": "Z-NJutWrHb0",
+ "title": "24 0937",
+ "case_number": "2D2024-0937",
+ "case_numbers_all": [
+  "2D2024-0937"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-0937",
+ "case_name": "BENCHMARK CONSULTING INC., d/b/a Castle v. SAFEPOINT INSURANCE COMPANY",
+ "decided_date": "2025-09-26",
+ "cl_cluster_id": 10751669,
+ "cl_opinion_id": 11218254,
+ "cl_url": "https://www.courtlistener.com/opinion/10751669/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Villanti; Black; Rothstein-Youakim",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "John Carassas",
+ "appellant_counsel": "MPANY, Appellee. No. 2D2024-0937 September 26, 2025 Appeal from the County Court for Pinellas County; John Carassas, Judge. Richard N. Asfar of Almazan Law, Tampa; Richard N. Asfar of Adams & Reese, LLP, Tampa (substituted as counsel of record); and Brandon L. Fizer of Fix It Or Else, St. Petersburg",
+ "appellee_counsel": "County; John Carassas, Judge. Richard N. Asfar of Almazan Law, Tampa; Richard N. Asfar of Adams & Reese, LLP, Tampa (substituted as counsel of record); and Brandon L. Fizer of Fix It Or Else, St. Petersburg, for Appellant. Patrick M. Chidnese and Frieda C. Lindroth of Bickford & Chidnese, LLP, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1017,
+ "_tried": [
+  "2D2024-0937"
+ ],
+ "looked_up_at": "2026-09-19T07:29:55Z"
+}

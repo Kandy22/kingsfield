@@ -1,0 +1,31 @@
+{
+ "video_id": "KLY2SvFnKBw",
+ "title": "2D20 3361 & 21 729",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-3361",
+  "2D2021-0729"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:07:40Z",
+ "case_number": "2D2020-3361",
+ "case_name": "PAUL S. GACCIONE  vs JULIA L. GACCIONE",
+ "decided_date": "2022-06-08",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/839849/opinion/Opinion_20-3361.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/June/08/20-3361",
+ "ctrack_id": "4678290",
+ "n_decision_records": 1,
+ "panel_judges": "Sleet; Atkinson; Stargel",
+ "trial_judge": "Jack Helinger",
+ "county": "Pinellas",
+ "appellant_counsel": "v. JULIA L. GACCIONE, Appellee. Nos. 2D20-3361, 2D21-729 CONSOLIDATED June 8, 2022 Appeal from the Circuit Court for Pinellas County; Jack Helinger, Judge. Jason Scott Coupal, Ayo & Iken, PLC, New Port Richey; and Jason Scott Coupal, Landmark Legal, New Port Richey (substituted as counsel of record)",
+ "appellee_counsel": "eal from the Circuit Court for Pinellas County; Jack Helinger, Judge. Jason Scott Coupal, Ayo & Iken, PLC, New Port Richey; and Jason Scott Coupal, Landmark Legal, New Port Richey (substituted as counsel of record), for Appellant. Peter N. Meros of Meros, Smith, Lazzara & Olney, P.A., St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 919
+}

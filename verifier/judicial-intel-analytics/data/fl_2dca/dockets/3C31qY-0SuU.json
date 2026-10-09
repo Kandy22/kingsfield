@@ -1,0 +1,41 @@
+{
+ "video_id": "3C31qY-0SuU",
+ "title": "24 2745",
+ "case_number": "2D2024-2745",
+ "case_numbers_all": [
+  "2D2024-2745"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2745",
+ "case_name": "Gooden v. State of Florida",
+ "decided_date": "2026-03-20",
+ "cl_cluster_id": 10811560,
+ "cl_opinion_id": 11278312,
+ "cl_url": "https://www.courtlistener.com/opinion/10811560/gooden-v-state-of-florida/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Julie L. Sercus",
+ "appellant_counsel": null,
+ "appellee_counsel": "Appellee. No. 2D2024-2745 March 20, 2026 Appeal from the Circuit Court for Pinellas County; Julie L. Sercus, Judge. Laura L. Cepero and William R. Ponall of Ponall Law, Maitland, for Appellant. James Uthmeier, Attorney General, Tallahassee, and Krystle Celine Cacci, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 824,
+ "_tried": [
+  "2D2024-2745"
+ ],
+ "looked_up_at": "2026-09-19T07:02:58Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2486366/opinion/Opinion_2024-2745.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/march/20/2024-2745",
+ "ctrack_id": "ctrack_19338856",
+ "n_decision_records": 1
+}

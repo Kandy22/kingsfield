@@ -1,0 +1,35 @@
+{
+ "video_id": "kDkH21qSrqw",
+ "title": "24 1304",
+ "case_number": "2D2024-1304",
+ "case_numbers_all": [
+  "2D2024-1304"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1304",
+ "case_name": "CITIZENS PROPERTY INSURANCE CORPORATION v. YASSEL GARCIA FERNANDEZ",
+ "decided_date": "2025-11-12",
+ "cl_cluster_id": 10751910,
+ "cl_opinion_id": 11218495,
+ "cl_url": "https://www.courtlistener.com/opinion/10751910/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Jennifer X. Gabbard",
+ "appellant_counsel": "T COURT OF APPEAL OF FLORIDA SECOND DISTRICT CITIZENS PROPERTY INSURANCE CORPORATION, Appellant, v. YASSEL GARCIA FERNANDEZ, Appellee. No. 2D2024-1304 November 12, 2025 Appeal from the Circuit Court for Hillsborough County; Jennifer X. Gabbard, Judge. Maureen G. Pearcy of Paul R. Pearcy, P.A., Miami",
+ "appellee_counsel": "pellant, v. YASSEL GARCIA FERNANDEZ, Appellee. No. 2D2024-1304 November 12, 2025 Appeal from the Circuit Court for Hillsborough County; Jennifer X. Gabbard, Judge. Maureen G. Pearcy of Paul R. Pearcy, P.A., Miami, for Appellant. Elliot B. Kula and William D. Mueller of Kula & Associates, P.A., Miami",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 826,
+ "_tried": [
+  "2D2024-1304"
+ ],
+ "looked_up_at": "2026-09-19T07:51:05Z"
+}

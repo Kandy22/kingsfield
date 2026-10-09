@@ -1,0 +1,41 @@
+{
+ "video_id": "26ipKD942cY",
+ "title": "25 1038",
+ "case_number": "2D2025-1038",
+ "case_numbers_all": [
+  "2D2025-1038"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1038",
+ "case_name": "Kesler v. Progressive Select Insurance Company",
+ "decided_date": "2026-04-01",
+ "cl_cluster_id": 10831166,
+ "cl_opinion_id": 11298403,
+ "cl_url": "https://www.courtlistener.com/opinion/10831166/kesler-v-progressive-select-insurance-company/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Petition granted; order quashed in part.",
+ "disposition": "granted",
+ "per_curiam": false,
+ "author": "Sleet",
+ "panel_judges": "Sleet; Silberman; Morris",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 32724,
+ "_tried": [
+  "2D2025-1038"
+ ],
+ "looked_up_at": "2026-09-19T07:02:45Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Petition - Authored Opinion",
+ "flcourts_pdf": "/content/download/2486887/opinion/Opinion_2025-1038.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/april/01/2025-1038",
+ "ctrack_id": "ctrack_19354902",
+ "n_decision_records": 1
+}

@@ -1,0 +1,30 @@
+{
+ "video_id": "5pK2WpOrI5E",
+ "title": "23 800",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0800"
+ ],
+ "case_number": "2D2023-0800",
+ "source": "flcourts",
+ "case_name": "BURTON v. STATE OF FLORIDA",
+ "decided_date": "2024-05-17",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2434674/opinion/Opinion_2023-0800.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/May/17/2023-0800",
+ "ctrack_id": "ctrack_18509089",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:03:45Z",
+ "panel_judges": "Kelly; Lucas; Atkinson",
+ "trial_judge": "Stephen Mathew Whyte",
+ "county": "Manatee",
+ "appellant_counsel": "F FLORIDA SECOND DISTRICT WILLIE JAMES BURTON, Appellant, v. STATE OF FLORIDA, Appellee No. 2D2023-0800 May 17, 2024 Appeal from the Circuit Court for Manatee County; Stephen Mathew Whyte, Judge. Howard L. Dimmig, II, Public Defender, and Lawrence R. Metsch, Special Assistant Public Defender, Bartow",
+ "appellee_counsel": "mmig, II, Public Defender, and Lawrence R. Metsch, Special Assistant Public Defender, Bartow, for Appellant. Ashley Moody, Attorney General, Tallahassee, and Natalia Reyna- Pimiento, Assistant Attorney General; Krystle Celine Cacci, Assistant Attorney General (substituted as counsel of record) Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 955
+}

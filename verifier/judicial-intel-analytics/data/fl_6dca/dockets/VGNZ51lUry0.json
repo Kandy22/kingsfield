@@ -1,0 +1,27 @@
+{
+ "video_id": "VGNZ51lUry0",
+ "title": "Oral Argument 01/22/2026-Case # 25-0443",
+ "found": true,
+ "case_numbers_all": [
+  "6D2025-0443"
+ ],
+ "case_number": "6D2025-0443",
+ "source": "flcourts",
+ "case_name": "LA MINNESOTA RIVIERA, LLC v. RIVIERA GOLF ESTATES HOMEOWNERS ASSOCIATION, INC.",
+ "decided_date": "2026-04-17",
+ "disposition_text": "Reversed and Remanded with instructions.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2487593/opinion/Opinion_2025-0443.pdf",
+ "flcourts_page": "https://6dca.flcourts.gov/opinions/Opinions-Archive/written-opinions/2026/april/17/2025-0443",
+ "ctrack_id": "ctrack_19377280",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T08:33:21Z",
+ "author": "Nardella",
+ "panel_judges": "Nardella",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 9592
+}

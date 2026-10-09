@@ -1,9 +1,14 @@
 {
+  "effortLevel": "high",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(curl -s http://localhost:3001*)",
       "Bash(curl -s http://localhost:3000*)",
       "Bash(npx tsc *)",
+      "Bash(backend/node_modules/.bin/tsc --noEmit -p backend)",
       "Bash(git add *)",
       "Bash(git commit *)",
       "mcp__Claude_Preview__preview_eval",
@@ -18,6 +23,30 @@
       "mcp__Claude_Preview__preview_list",
       "mcp__Claude_Preview__preview_logs",
       "mcp__Claude_Preview__preview_network"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.venv-cascade/bin/python\" \"${CLAUDE_PROJECT_DIR}/.claude/hooks/enforce_agent_dirs.py\" || exit 2"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.venv-cascade/bin/python\" \"${CLAUDE_PROJECT_DIR}/.claude/hooks/require_adversary_signoff.py\" || exit 2",
+            "timeout": 300
+          }
+        ]
+      }
     ]
   }
 }

@@ -1,0 +1,35 @@
+{
+ "video_id": "ylEB33dQqnE",
+ "title": "24 2222",
+ "case_number": "2D2024-2222",
+ "case_numbers_all": [
+  "2D2024-2222"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2222",
+ "case_name": "EDUARDO MARIN v. JANE ROBYN MARIN",
+ "decided_date": "2025-10-15",
+ "cl_cluster_id": 10751733,
+ "cl_opinion_id": 11218318,
+ "cl_url": "https://www.courtlistener.com/opinion/10751733/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed in part, affirmed in part, and remanded.",
+ "disposition": "mixed",
+ "per_curiam": false,
+ "author": "Black",
+ "panel_judges": "Black; Northcutt; Morris",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Sarasota",
+ "trial_judge": "Maria Ruhl",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT EDUARDO MARIN, Appellant, v. JANE ROBYN MARIN, Appellee. No. 2D2024-2222 October 15, 2025 Appeal from the Circuit Court for Sarasota County; Maria Ruhl, Judge. Eric R. Maier of Older Lundy Koch & Martino, Tampa",
+ "appellee_counsel": "T COURT OF APPEAL OF FLORIDA SECOND DISTRICT EDUARDO MARIN, Appellant, v. JANE ROBYN MARIN, Appellee. No. 2D2024-2222 October 15, 2025 Appeal from the Circuit Court for Sarasota County; Maria Ruhl, Judge. Eric R. Maier of Older Lundy Koch & Martino, Tampa, for Appellant. Kathi B. Halvorsen, Sarasota",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 9636,
+ "_tried": [
+  "2D2024-2222"
+ ],
+ "looked_up_at": "2026-09-19T08:17:48Z"
+}

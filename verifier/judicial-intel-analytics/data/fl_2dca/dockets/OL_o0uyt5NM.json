@@ -1,0 +1,30 @@
+{
+ "video_id": "OL_o0uyt5NM",
+ "title": "2D20 2772",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2772"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:08:50Z",
+ "case_number": "2D2020-2772",
+ "case_name": "JUSTIN HULL  vs STATE OF FLORIDA",
+ "decided_date": "2022-06-10",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/840092/opinion/Opinion_20-2772.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/June/10/20-2772",
+ "ctrack_id": "4678906",
+ "n_decision_records": 1,
+ "author": "Labrit",
+ "panel_judges": "Labrit",
+ "trial_judge": "Samantha L. Ward",
+ "county": "Hillsborough",
+ "appellant_counsel": "ALL HULL, Appellant, v. STATE OF FLORIDA, Appellee. No. 2D20-2772 June 10, 2022 Appeal from the Circuit Court for Hillsborough County; Samantha L. Ward, Judge. Howard L. Dimmig, II, Public Defender; Eric S. Gardner, Jr., Assistant Public Defender; and Daniel Muller, Assistant Public Defender, Bartow",
+ "has_dissent": true,
+ "has_special_concurrence": false,
+ "opinion_chars": 64093
+}

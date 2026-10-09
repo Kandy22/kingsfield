@@ -1,0 +1,229 @@
+{
+ "F01": {
+  "name": "Career and Employment History",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F02": {
+  "name": "Educational Background",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F03": {
+  "name": "Professional and Political Affiliations",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F04": {
+  "name": "Practical Chambers Data",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F05": {
+  "name": "Active Cases",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F06": {
+  "name": "Average Case Length",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F07": {
+  "name": "Verdict Breakdown",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F08": {
+  "name": "Case Practice Area Breakdown",
+  "populated": false,
+  "entities": [],
+  "jev_role": "classify_incoming",
+  "status": "needs_trial_dockets"
+ },
+ "F09": {
+  "name": "Matter Type Breakdown",
+  "populated": false,
+  "entities": [],
+  "jev_role": "classify_incoming",
+  "status": "needs_trial_dockets"
+ },
+ "F10": {
+  "name": "Motion-by-Motion Success Rates",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F11": {
+  "name": "Comparative Motion Benchmarks",
+  "populated": false,
+  "entities": [],
+  "jev_role": "score_outlier",
+  "status": "needs_trial_dockets"
+ },
+ "F12": {
+  "name": "Disposition Breakdown",
+  "populated": true,
+  "entities": [
+   "court",
+   "appellate_judges(17)"
+  ],
+  "jev_role": "none",
+  "status": "populated"
+ },
+ "F13": {
+  "name": "Average Case Duration",
+  "populated": true,
+  "entities": [
+   "court",
+   "appellate_judges(17)"
+  ],
+  "jev_role": "none",
+  "status": "populated"
+ },
+ "F14": {
+  "name": "Average Time to Trial",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F15": {
+  "name": "Average Time to First Dismissal Order",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F16": {
+  "name": "State Court Motion Metrics",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F17": {
+  "name": "Timing Events",
+  "populated": true,
+  "entities": [
+   "court"
+  ],
+  "jev_role": "none",
+  "status": "populated"
+ },
+ "F18": {
+  "name": "Legal Findings",
+  "populated": false,
+  "entities": [],
+  "jev_role": "verify_against_opinion",
+  "status": "needs_trial_dockets"
+ },
+ "F19": {
+  "name": "Appeals Analytics",
+  "populated": true,
+  "entities": [
+   "court",
+   "appellate_judges(17)",
+   "trial_judges(81)"
+  ],
+  "jev_role": "none",
+  "status": "populated"
+ },
+ "F20": {
+  "name": "Class Action Analytics",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F21": {
+  "name": "Entity Profiling",
+  "populated": true,
+  "entities": [
+   "counsel(22)"
+  ],
+  "jev_role": "match_entity",
+  "status": "populated"
+ },
+ "F22": {
+  "name": "Approximating a Judge",
+  "populated": true,
+  "entities": [
+   "court",
+   "appellate_judges(17)"
+  ],
+  "jev_role": "score_rule_fit",
+  "status": "populated"
+ },
+ "F23": {
+  "name": "Synthetic Legal Precedent Structures",
+  "populated": false,
+  "entities": [],
+  "jev_role": "rank_neighbor",
+  "status": "needs_source"
+ },
+ "F24": {
+  "name": "The Duty to Settle",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_source"
+ },
+ "F25": {
+  "name": "Jury and Voting Models",
+  "populated": true,
+  "entities": [
+   "court"
+  ],
+  "jev_role": "none",
+  "status": "populated"
+ },
+ "F26": {
+  "name": "Judicial Outcome Prediction",
+  "populated": true,
+  "entities": [
+   "court",
+   "cases(1416)"
+  ],
+  "jev_role": "calibrate_or_abstain",
+  "status": "populated"
+ },
+ "F27": {
+  "name": "Litigation Timelines",
+  "populated": false,
+  "entities": [],
+  "jev_role": "none",
+  "status": "needs_trial_dockets"
+ },
+ "F28": {
+  "name": "Forum and Strategy Optimization",
+  "populated": false,
+  "entities": [],
+  "jev_role": "choose_forum",
+  "status": "needs_source"
+ },
+ "F29": {
+  "name": "Counsel-Performance Analytics",
+  "populated": true,
+  "entities": [
+   "counsel(22)"
+  ],
+  "jev_role": "none",
+  "status": "populated"
+ }
+}

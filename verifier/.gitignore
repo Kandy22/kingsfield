@@ -12,3 +12,18 @@ judicial-intel/data/video/
 judicial-intel/data/frames/
 judicial-intel/data/transcripts/
 judicial-intel/data/signals/
+# judicial-intel-analytics (2026-09-19): media and regenerable data stay out.
+# captions/*.vtt      ← pull_captions.py      (400 MB)   info.json metadata IS kept
+# transcripts/*.turns ← build_transcripts.py  (50 MB)    hand-label truth files ARE kept
+# panel/, dockets/, flcourts/, index.json, manifest.json are kept — they are the dataset.
+judicial-intel-analytics/data/*/audio/
+judicial-intel-analytics/data/*/video/
+judicial-intel-analytics/data/*/frames/
+judicial-intel-analytics/data/*/captions/*.vtt
+judicial-intel-analytics/data/*/captions/_urls_*.txt
+judicial-intel-analytics/data/*/transcripts/*.turns.json
+judicial-intel-analytics/data/*/transcripts/*.srt
+judicial-intel-analytics/data/pilot/
+judicial-intel-analytics/__pycache__/
+judicial-intel-analytics/pipeline/__pycache__/
+new-kingsfield-judicial-intel-categories/src/__pycache__/

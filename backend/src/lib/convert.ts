@@ -1,8 +1,33 @@
 import { promisify } from "util";
 import { execSync } from "child_process";
+import fs from "fs";
 import JSZip from "jszip";
 
+// Ported from upstream Mike (03e8acf, "find LibreOffice in the macOS app
+// bundle"): the official macOS installer keeps soffice inside the app bundle
+// and puts nothing on PATH, so a `which` check alone reports LibreOffice as
+// missing on a Mac that has it. Explicit paths can also be set by env var.
+const MAC_BUNDLE_SOFFICE = "/Applications/LibreOffice.app/Contents/MacOS/soffice";
+
+function isExecutable(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath, fs.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function explicitSofficePaths(): string[] {
+  return [process.env.SOFFICE_BINARY_PATH, process.env.LIBREOFFICE_BINARY_PATH]
+    .filter((p): p is string => Boolean(p))
+    .filter(isExecutable);
+}
+
 function libreOfficeAvailable(): boolean {
+  if (explicitSofficePaths().length > 0 || isExecutable(MAC_BUNDLE_SOFFICE)) {
+    return true;
+  }
   try {
     execSync("which libreoffice soffice 2>/dev/null", { stdio: "pipe" });
     return true;
@@ -13,6 +38,11 @@ function libreOfficeAvailable(): boolean {
 
 const LIBREOFFICE_AVAILABLE = libreOfficeAvailable();
 
+const CONVERTER_UNAVAILABLE_MESSAGE =
+  "LibreOffice (soffice) was not found, so DOCX→PDF conversion is unavailable. " +
+  "Install LibreOffice or set SOFFICE_BINARY_PATH or LIBREOFFICE_BINARY_PATH " +
+  "to the soffice executable, then restart the backend.";
+
 let _convert:
   | ((buf: Buffer, ext: string, filter: undefined) => Promise<Buffer>)
   | null = null;
@@ -20,7 +50,12 @@ let _convert:
 async function getConvert() {
   if (!_convert) {
     const libre = await import("libreoffice-convert");
-    _convert = promisify(libre.default.convert.bind(libre.default));
+    const sofficeBinaryPaths = explicitSofficePaths();
+    const convertWithOptions = promisify(
+      libre.default.convertWithOptions.bind(libre.default),
+    );
+    _convert = (buf, ext, filter) =>
+      convertWithOptions(buf, ext, filter, { sofficeBinaryPaths });
   }
   return _convert;
 }
@@ -63,7 +98,7 @@ export async function normalizeDocxZipPaths(buffer: Buffer): Promise<Buffer> {
  */
 export async function docxToPdf(buffer: Buffer): Promise<Buffer> {
   if (!LIBREOFFICE_AVAILABLE) {
-    throw new Error("LibreOffice is not installed — DOCX→PDF conversion unavailable.");
+    throw new Error(CONVERTER_UNAVAILABLE_MESSAGE);
   }
   const convert = await getConvert();
   const normalized = await normalizeDocxZipPaths(buffer);

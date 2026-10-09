@@ -1,0 +1,30 @@
+{
+ "video_id": "a6q_-8iump8",
+ "title": "2D20 518",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-0518"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:12:16Z",
+ "case_number": "2D2020-0518",
+ "case_name": "HOP-HEDZ, INC., ET AL  vs ALLSTATE FUNDING CORPORATION, ET AL",
+ "decided_date": "2021-09-29",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/790835/opinion/Opinion_20-0518.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/September/29/20-0518",
+ "ctrack_id": "4618635",
+ "n_decision_records": 1,
+ "panel_judges": "Villanti; Lucas; Smith",
+ "trial_judge": "Cheryl K. Thomas",
+ "county": "Hillsborough",
+ "appellant_counsel": "CAFE PROPERTIES, LLC, Appellant, v. ALLSTATE FUNDING CORPORATION, Appellee. No. 2D20-518 September 29, 2021 Appeal from the Circuit Court for Hillsborough County; Cheryl K. Thomas, Judge. Heather A. DeGrave and Stuart Jay Levine of Walters Levine Lozano & DeGrave, Tampa; and W. Bart Meacham of Tampa",
+ "appellee_counsel": "29, 2021 Appeal from the Circuit Court for Hillsborough County; Cheryl K. Thomas, Judge. Heather A. DeGrave and Stuart Jay Levine of Walters Levine Lozano & DeGrave, Tampa; and W. Bart Meacham of Tampa for Appellants. Farha Ahmed and Damian G. Waldman of Law Offices of Damian G. Waldman, P.A., Largo",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 930
+}

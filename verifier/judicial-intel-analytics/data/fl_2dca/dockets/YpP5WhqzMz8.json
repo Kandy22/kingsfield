@@ -1,0 +1,32 @@
+{
+ "video_id": "YpP5WhqzMz8",
+ "title": "2D21 384",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0384"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:11:36Z",
+ "case_number": "2D2021-0384",
+ "case_name": "KB HOME FORT MYERS LLC  vs TAISHAN GYPSUM CO., LTD., F/K/A SHANDONG TAIHE DONGXIN CO., LTD., ET AL",
+ "decided_date": "2022-04-13",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/834936/opinion/Opinion_21-0384.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2022/April/13/21-0384",
+ "ctrack_id": "4664522",
+ "n_decision_records": 1,
+ "author": "Labrit",
+ "panel_judges": "Labrit; Sleet; Kelly",
+ "special_concurrence_judges": "Kelly",
+ "trial_judge": "Geoffrey H. Gentile",
+ "county": "Charlotte",
+ "appellant_counsel": "D CO., LTD., Appellees. No. 2D21-384 April 13, 2022 Appeal from the Circuit Court for Charlotte County; Geoffrey H. Gentile, Judge. Chris W. Altenbernd of Banker Lopez Gassler P.A., Tampa; Eleanor Sills of Banker Lopez Gassler P.A., Tallahassee; and Joseph H. Lang, Jr. of Carlton Fields, P.A., Tampa",
+ "appellee_counsel": " P.A., Tampa; Eleanor Sills of Banker Lopez Gassler P.A., Tallahassee; and Joseph H. Lang, Jr. of Carlton Fields, P.A., Tampa, for Appellant. Enjoliqué Aytch Lett of Greenberg Traurig, P.A., Miami; and Christina Hull Eikhoff, Matthew D. Lawson, and David Venderbush of Alston & Bird, Atlanta, Georgia",
+ "has_dissent": false,
+ "has_special_concurrence": true,
+ "opinion_chars": 42150
+}

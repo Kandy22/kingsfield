@@ -1,0 +1,40 @@
+{
+ "judge_id": "keith-meyer",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 9,
+   "affirmed": 8,
+   "reversed": 1,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.111,
+   "reversal_rate_ci95": {
+    "lo": 0.02,
+    "hi": 0.435,
+    "method": "wilson"
+   },
+   "county": "Pinellas",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2023-0776",
+    "2D2021-0117",
+    "2D2023-1556",
+    "2D2021-0698",
+    "2D2022-3539",
+    "2D2020-3155",
+    "2D2022-4212",
+    "2D2024-0251",
+    "2D2020-2209"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

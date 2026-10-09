@@ -1,0 +1,41 @@
+{
+ "video_id": "7mWn8GhonxI",
+ "title": "24 1903",
+ "case_number": "2D2024-1903",
+ "case_numbers_all": [
+  "2D2024-1903"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1903",
+ "case_name": "Matthews-Hamad v. Petty",
+ "decided_date": "2026-01-02",
+ "cl_cluster_id": 10768163,
+ "cl_opinion_id": 11234748,
+ "cl_url": "https://www.courtlistener.com/opinion/10768163/matthews-hamad-v-petty/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Northcutt; Rothstein-Youakim; Atkinson",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Thomas M. Ramsberger",
+ "appellant_counsel": null,
+ "appellee_counsel": "Appellant, v. ASHLEY RAYNE SMITH and ANTHONY L. PETTY, Appellees. No. 2D2024-1903 January 2, 2026 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Marcy I. LaHart of Marcy I. LaHart, P.A., Tacoma, Washington, for Appellant. George A. Vaka of Vaka Law Group, P.L., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 885,
+ "_tried": [
+  "2D2024-1903"
+ ],
+ "looked_up_at": "2026-09-19T07:04:16Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2483136/opinion/Opinion_2024-1903.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/january/02/2024-1903",
+ "ctrack_id": "ctrack_19234878",
+ "n_decision_records": 1
+}

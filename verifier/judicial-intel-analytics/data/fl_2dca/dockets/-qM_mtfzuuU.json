@@ -1,0 +1,41 @@
+{
+ "video_id": "-qM_mtfzuuU",
+ "title": "24 1335",
+ "case_number": "2D2024-1335",
+ "case_numbers_all": [
+  "2D2024-1335"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1335",
+ "case_name": "Fried, Fried v. Albakri, M. D., Florida Neurovascular Institute, P. A.",
+ "decided_date": "2025-09-24",
+ "cl_cluster_id": 10751642,
+ "cl_opinion_id": 11218227,
+ "cl_url": "https://www.courtlistener.com/opinion/10751642/fried-fried-v-albakri-m-d-florida-neurovascular-institute-p-a/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Silberman; Morris; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Paul L. Huey",
+ "appellant_counsel": "025 Appeal from the Circuit Court for Hillsborough County; Paul L. Huey, Judge. Nicholas P. McNamara and Bryan S. Gowdy of Creed & Gowdy, P.A., Jacksonville; Jennifer Gentry Fernandez and Frank F. Fernandez, III of The Fernandez Firm, Tampa; and Andrew L. Ellenberg of Needle & Ellenberg, P.A., Miami",
+ "appellee_counsel": "m, Tampa; and Andrew L. Ellenberg of Needle & Ellenberg, P.A., Miami, for Appellant. Dinah S. Stein and Philip M. Berberian of Hicks, Porter, Ebenfeld & Stein, P.A., Miami; and Mark E. McLaughlin, Damien M. Hoffman, and Julia L. Dulko of Beytin, McLaughlin, McLaughlin, O'Hara & Bocchino, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1263,
+ "_tried": [
+  "2D2024-1335"
+ ],
+ "looked_up_at": "2026-09-19T07:02:14Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2460929/opinion/Opinion_2024-1335.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2025/september/24/2024-1335",
+ "ctrack_id": "ctrack_19106610",
+ "n_decision_records": 1
+}

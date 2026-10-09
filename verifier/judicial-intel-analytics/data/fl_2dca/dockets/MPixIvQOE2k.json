@@ -1,0 +1,29 @@
+{
+ "video_id": "MPixIvQOE2k",
+ "title": "23 2133",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-2133"
+ ],
+ "case_number": "2D2023-2133",
+ "source": "flcourts",
+ "case_name": "FAISON v. Best Buy Stores LP",
+ "decided_date": "2024-05-24",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2434999/opinion/Opinion_2023-2133.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/May/24/2023-2133",
+ "ctrack_id": "ctrack_18517285",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:08:12Z",
+ "panel_judges": "Silberman; Black; Smith",
+ "trial_judge": "Melissa M. Polo",
+ "county": "Hillsborough",
+ "appellee_counsel": " Appellant, v. BEST BUY STORES, LP, Appellee. No. 2D2023-2133 May 24, 2024 Appeal from the Circuit Court for Hillsborough County; Melissa M. Polo, Judge. Gil Sanchez, III, of Black Rock Trial Lawyers, PLLC, Tampa, for Appellant. Jeffrey A. Albinson and Dale T. Golden of Golden Albinson Proulx, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 789
+}

@@ -1,0 +1,26 @@
+{
+ "video_id": "9wqPUkQlNJs",
+ "title": "2D20 3210",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-3210"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:04:55Z",
+ "case_number": "2D2020-3210",
+ "case_name": "GEORGE KOZMA, M. D. AND JONATHAN EBERHARDT, ARNP vs ADVANCED SURGERY CENTER OF SARASOTA, LLC, ET AL.,",
+ "decided_date": "2021-11-12",
+ "disposition_text": "Dismissed",
+ "disposition": "dismissed",
+ "opinion_type": "Dismissed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/816353/opinion/Opinion_20-3210.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2021/November/12/20-3210",
+ "ctrack_id": "4628399",
+ "n_decision_records": 1,
+ "panel_judges": "Northcutt; Atkinson; Smith",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1435
+}

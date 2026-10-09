@@ -1,0 +1,35 @@
+{
+ "video_id": "VAU15oej4IE",
+ "title": "25 0671",
+ "case_number": "2D2025-0671",
+ "case_numbers_all": [
+  "2D2025-0671"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0671",
+ "case_name": "In re Guardianship of Theresa Marie Schiavo v. MICHAEL SCHIAVO",
+ "decided_date": "2026-04-08",
+ "cl_cluster_id": 10839186,
+ "cl_opinion_id": 11306530,
+ "cl_url": "https://www.courtlistener.com/opinion/10839186/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": "Northcutt; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Sherwood Coleman",
+ "appellant_counsel": "a Marie Schiavo, MARY SCHINDLER; BOBBY SCHINDLER; and TERRI SCHIAVO LIFE & HOPE NETWORK, Appellants, v. MICHAEL SCHIAVO, Appellee. No. 2D2025-0671 April 8, 2026 Appeal from the Circuit Court for Pinellas County; Sherwood Coleman, Judge. Jeremy D. Bailie of Weber, Crabb & Wein, P.A., Saint Petersburg",
+ "appellee_counsel": ", v. MICHAEL SCHIAVO, Appellee. No. 2D2025-0671 April 8, 2026 Appeal from the Circuit Court for Pinellas County; Sherwood Coleman, Judge. Jeremy D. Bailie of Weber, Crabb & Wein, P.A., Saint Petersburg, for Appellants. Hamden H. Baskin, III, and Jeffrey A. Eisel of Baskin Eisel Rightmyer, Clearwater",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 13568,
+ "_tried": [
+  "2D2025-0671"
+ ],
+ "looked_up_at": "2026-09-19T07:26:11Z"
+}

@@ -1,0 +1,31 @@
+{
+ "video_id": "8ih9MzinJKI",
+ "title": "22 2517",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-2517"
+ ],
+ "case_number": "2D2022-2517",
+ "source": "flcourts",
+ "case_name": "FISION CORPORATION VS MARIA FRUEH",
+ "decided_date": "2023-08-23",
+ "disposition_text": "Affirmed - Authored Opinion",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/876035/opinion/Opinion_2022-2517.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2023/August/23/2022-2517",
+ "ctrack_id": "ctrack_16491496",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:04:34Z",
+ "panel_judges": "Smith; Atkinson",
+ "special_concurrence_judges": "Atkinson",
+ "trial_judge": "Darren D. Farfante",
+ "county": "Hillsborough",
+ "appellant_counsel": "A FRUEH, Appellee. No. 2D22-2517 August 23, 2023 Appeal from the Circuit Court for Hillsborough County; Darren D. Farfante, Judge. Cory L. Chandler of Spector Gadon Rosen Vinci P.C., St. Petersburg; and Kristen Over of Spector Gadon Rosen Vinci P.C., St. Petersburg (substituted as counsel of record)",
+ "appellee_counsel": "rcuit Court for Hillsborough County; Darren D. Farfante, Judge. Cory L. Chandler of Spector Gadon Rosen Vinci P.C., St. Petersburg; and Kristen Over of Spector Gadon Rosen Vinci P.C., St. Petersburg (substituted as counsel of record), for Appellant. V. Stephen Cohen of Bajo Cohen Agliano P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": true,
+ "opinion_chars": 21163
+}

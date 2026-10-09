@@ -1,0 +1,34 @@
+{
+ "judge_id": "kevin-r-bruning",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 3,
+   "affirmed": 3,
+   "reversed": 0,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.0,
+   "reversal_rate_ci95": {
+    "lo": 0.0,
+    "hi": 0.562,
+    "method": "wilson"
+   },
+   "county": "Sarasota",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2021-0748",
+    "2D2022-4067",
+    "2D2023-0586"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

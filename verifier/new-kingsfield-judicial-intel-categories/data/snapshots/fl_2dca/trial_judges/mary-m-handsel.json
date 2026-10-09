@@ -1,0 +1,37 @@
+{
+ "judge_id": "mary-m-handsel",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 6,
+   "affirmed": 4,
+   "reversed": 2,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.333,
+   "reversal_rate_ci95": {
+    "lo": 0.097,
+    "hi": 0.7,
+    "method": "wilson"
+   },
+   "county": "Pasco",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2021-0849",
+    "2D2022-0011",
+    "2D2022-1085",
+    "2D2022-0921",
+    "2D2021-2391",
+    "2D2022-1458"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

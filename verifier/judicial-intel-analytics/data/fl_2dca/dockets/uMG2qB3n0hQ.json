@@ -1,0 +1,29 @@
+{
+ "video_id": "uMG2qB3n0hQ",
+ "title": "23 0044",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0044"
+ ],
+ "case_number": "2D2023-0044",
+ "source": "flcourts",
+ "case_name": "Moschella v. State of Florida",
+ "decided_date": "2025-04-09",
+ "disposition_text": "Reversed and remand for dismissal of the charges.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Per Curiam Opinion",
+ "is_pca": false,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2481992/opinion/Opinion_2023-0044.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/April/09/2023-0044",
+ "ctrack_id": "ctrack_18891844",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:17:01Z",
+ "panel_judges": "Northcutt; Kelly; Khouzam",
+ "trial_judge": "Frederick P. Mercurio",
+ "county": "Manatee",
+ "appellee_counsel": "ppellee. No. 2D2023-0044 April 9, 2025 Appeal from the Circuit Court for Manatee County; Frederick P. Mercurio, Judge. Michael Ufferman of Michael Ufferman Law Firm, P.A., Tallahassee, for Appellant. James Uthmeier, Attorney General, Tallahassee, and David Campbell, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 3650
+}

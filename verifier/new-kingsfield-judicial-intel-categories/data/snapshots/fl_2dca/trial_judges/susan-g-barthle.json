@@ -1,0 +1,39 @@
+{
+ "judge_id": "susan-g-barthle",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 8,
+   "affirmed": 5,
+   "reversed": 3,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.375,
+   "reversal_rate_ci95": {
+    "lo": 0.137,
+    "hi": 0.694,
+    "method": "wilson"
+   },
+   "county": "Pasco",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2022-4080",
+    "2D2024-1696",
+    "2D2022-1370",
+    "2D2022-2442",
+    "2D2022-4106",
+    "2D2025-0620",
+    "2D2022-1890",
+    "2D2022-1532"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

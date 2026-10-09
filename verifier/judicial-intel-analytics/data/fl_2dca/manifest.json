@@ -1,0 +1,81 @@
+{
+  "channel_id": "fl_2dca",
+  "entries": {
+    "B2UqO1OV1BA": {
+      "video_id": "B2UqO1OV1BA",
+      "download": {
+        "status": "downloaded"
+      },
+      "transcription": {
+        "status": "done",
+        "segment_count": 1967
+      },
+      "signals": {
+        "status": "done",
+        "frame_count": 0
+      },
+      "timeline": {
+        "status": "done",
+        "segment_count": 1967
+      },
+      "transcript_verification": {
+        "status": "verified",
+        "score": 100.0
+      }
+    },
+    "cwPVWKqwg4A": {
+      "video_id": "cwPVWKqwg4A",
+      "download": {
+        "status": "downloaded"
+      },
+      "transcription": {
+        "status": "done",
+        "segment_count": 2333
+      },
+      "diarization": {
+        "status": "done",
+        "segment_count": 58,
+        "path": "/Users/aaronray/kingsfield/Verifier/judicial-intel-analytics/data/fl_2dca/transcripts/cwPVWKqwg4A.diarize.json"
+      },
+      "signals": {
+        "status": "done",
+        "frame_count": 0
+      },
+      "timeline": {
+        "status": "done",
+        "segment_count": 58
+      },
+      "transcript_verification": {
+        "status": "verified",
+        "score": 100.0
+      }
+    },
+    "eLU5je2C12I": {
+      "video_id": "eLU5je2C12I",
+      "download": {
+        "status": "downloaded"
+      },
+      "transcription": {
+        "status": "done",
+        "segment_count": 1367
+      },
+      "diarization": {
+        "status": "done",
+        "segment_count": 26,
+        "path": "/Users/aaronray/kingsfield/Verifier/judicial-intel-analytics/data/fl_2dca/transcripts/eLU5je2C12I.diarize.json"
+      },
+      "signals": {
+        "status": "done",
+        "frame_count": 0
+      },
+      "timeline": {
+        "status": "done",
+        "segment_count": 26
+      },
+      "transcript_verification": {
+        "status": "verified",
+        "score": 96.4
+      }
+    }
+  }
+}

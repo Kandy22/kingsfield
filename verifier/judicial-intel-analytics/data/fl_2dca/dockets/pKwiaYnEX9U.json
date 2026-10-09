@@ -1,0 +1,35 @@
+{
+ "video_id": "pKwiaYnEX9U",
+ "title": "25 0177",
+ "case_number": "2D2025-0177",
+ "case_numbers_all": [
+  "2D2025-0177"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0177",
+ "case_name": "BISK EDUCATION, INC v. FSOI, LLC",
+ "decided_date": "2026-05-01",
+ "cl_cluster_id": 10851623,
+ "cl_opinion_id": 11319011,
+ "cl_url": "https://www.courtlistener.com/opinion/10851623/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Silberman; Kelly; Rothstein-Youakim",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Helene L. Daniel",
+ "appellant_counsel": " OF APPEAL OF FLORIDA SECOND DISTRICT BISK EDUCATION, INC, Appellant, v. FSOI, LLC, Appellee. No. 2D2025-0177 May 1, 2026 Appeal from the Circuit Court for Hillsborough County; Helene L. Daniel, Judge. Kristin A. Norse, Robert W. Ritsch, and Brandon K. Breslow of Kynes, Markman & Felman, P.A., Tampa",
+ "appellee_counsel": "ay 1, 2026 Appeal from the Circuit Court for Hillsborough County; Helene L. Daniel, Judge. Kristin A. Norse, Robert W. Ritsch, and Brandon K. Breslow of Kynes, Markman & Felman, P.A., Tampa, for Appellant. Samuel J. Salario, Jessica Slatten, and Brian M. Trujillo of Lawson Huck Gonzalez, PLLC, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 867,
+ "_tried": [
+  "2D2025-0177"
+ ],
+ "looked_up_at": "2026-09-19T08:01:01Z"
+}

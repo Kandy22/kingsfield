@@ -1,0 +1,41 @@
+{
+ "judge_id": "cheryl-k-thomas",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 10,
+   "affirmed": 6,
+   "reversed": 3,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.4,
+   "reversal_rate_ci95": {
+    "lo": 0.168,
+    "hi": 0.687,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2019-4583",
+    "2D2021-0368",
+    "2D2023-1097",
+    "2D2022-2306",
+    "2D2022-1521",
+    "2D2020-2908",
+    "2D2025-0639",
+    "2D2020-0518",
+    "2D2020-3313",
+    "2D2024-2464"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

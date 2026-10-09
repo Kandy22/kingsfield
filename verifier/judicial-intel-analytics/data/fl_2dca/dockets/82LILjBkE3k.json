@@ -1,0 +1,26 @@
+{
+ "video_id": "82LILjBkE3k",
+ "title": "23 98",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0098"
+ ],
+ "case_number": "2D2023-0098",
+ "source": "flcourts",
+ "case_name": "CONCERNED CITIZENS OF TARPON SPRINGS, INC. VS CITY OF TARPON SPRINGS, KAMILE SALAME, AND MORGAN GROUP DEVELOPMENT, LLP",
+ "decided_date": "2023-08-23",
+ "disposition_text": "Denied - PC Denied",
+ "disposition": "denied",
+ "opinion_type": "Petition - PC Denied",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2426711/opinion/Opinion_2023-0098.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/August/23/2023-0098",
+ "ctrack_id": "ctrack_16681213",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:04:23Z",
+ "panel_judges": "Sleet; Villanti; Black",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1042
+}

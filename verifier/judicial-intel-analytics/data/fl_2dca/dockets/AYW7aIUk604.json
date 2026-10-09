@@ -1,0 +1,42 @@
+{
+ "video_id": "AYW7aIUk604",
+ "title": "25 0699 & 25 1594",
+ "case_number": "2D2025-0699",
+ "case_numbers_all": [
+  "2D2025-0699",
+  "2D2025-1594"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0699",
+ "case_name": "Worldwide Aircraft Services, Inc., d/b/a Jet ICU v. Louisiana Health Services & Indemnity Company, d/b/a Blue Cross and Blue Shield of Louisiana, et al",
+ "decided_date": "2026-04-17",
+ "cl_cluster_id": 10844486,
+ "cl_opinion_id": 11311844,
+ "cl_url": "https://www.courtlistener.com/opinion/10844486/worldwide-aircraft-services-inc-dba-jet-icu-v-louisiana-health/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Kelly; Smith",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Matthew L. Felix",
+ "appellant_counsel": "LORIDA, INC., and LOUISIANA HEALTH SERVICE & INDEMNITY COMPANY, d/b/a BLUE CROSS AND BLUE SHIELD OF LOUISIANA, Appellees. No. 2D2025-0699 April 17, 2026 Appeal from the County Court for Hillsborough County; Matthew L. Felix, Judge. Michael Brannigan of The Law Office of Michael Brannigan P.A., Tampa",
+ "appellee_counsel": " Felix, Judge. Michael Brannigan of The Law Office of Michael Brannigan P.A., Tampa, for Appellant. Daniel Alter and Eric Yesner of GrayRobinson, P.A., Fort Lauderdale, for Appellee Blue Cross and Blue Shield of Florida, Inc. Timothy J. Conner and Emily R. McWey of Holland & Knight LLP, Jacksonville",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1186,
+ "_tried": [
+  "2D2025-0699"
+ ],
+ "looked_up_at": "2026-09-19T07:05:05Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "flcourts_pdf": "/content/download/2487559/opinion/Opinion_2025-0699.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2026/april/17/2025-0699",
+ "ctrack_id": "ctrack_19376752",
+ "n_decision_records": 1
+}

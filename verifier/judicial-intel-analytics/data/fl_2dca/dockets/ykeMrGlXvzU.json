@@ -1,0 +1,35 @@
+{
+ "video_id": "ykeMrGlXvzU",
+ "title": "25 0191",
+ "case_number": "2D2025-0191",
+ "case_numbers_all": [
+  "2D2025-0191"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0191",
+ "case_name": "ROY MATTHEWS v. LANDMARK TOWERS AT SAND KEY CONDOMINIUM",
+ "decided_date": "2025-11-19",
+ "cl_cluster_id": 10751971,
+ "cl_opinion_id": 11218556,
+ "cl_url": "https://www.courtlistener.com/opinion/10751971/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Amy Williams",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT ROY MATTHEWS, Appellant, v. LANDMARK TOWERS AT SAND KEY CONDOMINIUM ASSOCIATION, INC., Appellee. No. 2D2025-0191 November 19, 2025 Appeal from the Circuit Court for Pinellas County; Amy Williams, Judge. Brian J. Lee of Morgan & Morgan, Jacksonville",
+ "appellee_counsel": "TOWERS AT SAND KEY CONDOMINIUM ASSOCIATION, INC., Appellee. No. 2D2025-0191 November 19, 2025 Appeal from the Circuit Court for Pinellas County; Amy Williams, Judge. Brian J. Lee of Morgan & Morgan, Jacksonville, for Appellant. Paul A. Milberg and Benjamin I. Lazarus of Kelly Kronenberg, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 815,
+ "_tried": [
+  "2D2025-0191"
+ ],
+ "looked_up_at": "2026-09-19T08:17:10Z"
+}

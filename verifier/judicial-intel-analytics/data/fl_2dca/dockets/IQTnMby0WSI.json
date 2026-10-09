@@ -1,0 +1,30 @@
+{
+ "video_id": "IQTnMby0WSI",
+ "title": "2D20 3439",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-3439"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:07:02Z",
+ "case_number": "2D2020-3439",
+ "case_name": "AUSTIN PORTABLE STORAGE, LP, ET AL  vs PODS ENTERPRISES, LLC",
+ "decided_date": "2021-10-27",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/798036/opinion/Opinion_20-3439.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/20212/October/27/20-3439",
+ "ctrack_id": "4625112",
+ "n_decision_records": 1,
+ "panel_judges": "Casanueva; Kelly; Rothstein-Youakim",
+ "trial_judge": "Steven Scott Stephens",
+ "county": "Hillsborough",
+ "appellant_counsel": "lants, v. PODS ENTERPRISES, LLC, Appellee. Case No. 2D20-3439 October 27, 2021 Appeal from the Circuit Court for Hillsborough County; Steven Scott Stephens, Judge. Scott M. Ratchick of Chamberlain, Hrdlicka, White, Williams & Aughtry, Atlanta, Georgia, and George L. Guerra of Guerra King P.A., Tampa",
+ "appellee_counsel": " Atlanta, Georgia, and George L. Guerra of Guerra King P.A., Tampa, for Appellants. Jonathan B. Sbar and Andrea K. Holder of Rocke, McLean & Sbar, P.A., Tampa; Jeffrey S. Bucholtz and Paul Alessio Mezzina of King & Spalding LLP, Washington, DC; and John F. Dienelt of John Dienelt PLLC, Austin, Texas",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1529
+}

@@ -1,0 +1,35 @@
+{
+ "video_id": "hdII9oCbds8",
+ "title": "24 2389",
+ "case_number": "2D2024-2389",
+ "case_numbers_all": [
+  "2D2024-2389"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2389",
+ "case_name": "SEAN PATRICK EMKE v. STATE OF FLORIDA",
+ "decided_date": "2026-02-18",
+ "cl_cluster_id": 10795475,
+ "cl_opinion_id": 11262127,
+ "cl_url": "https://www.courtlistener.com/opinion/10795475/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Silberman; Smith; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Manatee",
+ "trial_judge": "Dana Moss",
+ "appellant_counsel": null,
+ "appellee_counsel": "LORIDA, Appellee. No. 2D2024-2389 February 18, 2026 Appeal from the Circuit Court for Manatee County; Dana Moss, Judge. Michael Ufferman of Michael Ufferman Law Firm, P.A., Tallahassee, for Appellant. James Uthmeier, Attorney General, Tallahassee, and Laura Dempsey, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 816,
+ "_tried": [
+  "2D2024-2389"
+ ],
+ "looked_up_at": "2026-09-19T07:46:07Z"
+}

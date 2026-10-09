@@ -1,0 +1,35 @@
+{
+ "video_id": "T5AxrP2pUjU",
+ "title": "24 1505",
+ "case_number": "2D2024-1505",
+ "case_numbers_all": [
+  "2D2024-1505"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1505",
+ "case_name": "ANNA WILLIAMS v. HSF AFFILIATES, LLC; BHH AFFILIATES, LLC;",
+ "decided_date": "2026-01-30",
+ "cl_cluster_id": 10781783,
+ "cl_opinion_id": 11248407,
+ "cl_url": "https://www.courtlistener.com/opinion/10781783/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Atkinson; Smith; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Anne-Leigh Gaylord Moe",
+ "appellant_counsel": null,
+ "appellee_counsel": "m the Circuit Court for Hillsborough County; Anne-Leigh Gaylord Moe, Judge. Mary J. Walter of Walter Appeals & General Litigation, Orlando, for Appellant. Irene Porter and Priscilla Augustine of Hicks, Porter & Stein, P.A., Miami; and Jennifer D. Burby of Weekley Schulte Valdes Murman Tonelli, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 1011,
+ "_tried": [
+  "2D2024-1505"
+ ],
+ "looked_up_at": "2026-09-19T07:24:19Z"
+}

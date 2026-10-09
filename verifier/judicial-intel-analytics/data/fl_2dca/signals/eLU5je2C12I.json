@@ -1,0 +1,11 @@
+{
+  "video_id": "eLU5je2C12I",
+  "title": "25 1145",
+  "analyzed_at": "2026-07-08T06:30:40.217676+00:00",
+  "prosody": {
+    "segment_count": 1653,
+    "total_speech_seconds": 1797.7
+  },
+  "frames": [],
+  "note": "no video file \u2014 re-run download.py --with-video"
+}

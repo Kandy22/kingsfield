@@ -1,0 +1,35 @@
+{
+ "video_id": "r6cRkJE-ZmQ",
+ "title": "25 127",
+ "case_number": "2D2025-0127",
+ "case_numbers_all": [
+  "2D2025-0127"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0127",
+ "case_name": "FIRST ACCEPTANCE INSURANCE COMPANY, INC. v. AUTO GLASS AMERICA, LLC as ASSIGNEE OF KAYLA JOHNSON",
+ "decided_date": "2026-03-06",
+ "cl_cluster_id": 10804769,
+ "cl_opinion_id": 11271504,
+ "cl_url": "https://www.courtlistener.com/opinion/10804769/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Jeremy Randall Griner",
+ "appellant_counsel": " INC., Appellant, v. AUTO GLASS AMERICA, LLC as ASSIGNEE OF KAYLA JOHNSON, Appellee. No. 2D2025-0127 March 6, 2026 Appeal from the County Court for Hillsborough County; Jeremy Randall Griner, Judge. Joseph Clancy and William J. McFarlane, III of McFarlane Law McFarlane, Dolan & Prince, Coral Springs",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 919,
+ "_tried": [
+  "2D2025-0127"
+ ],
+ "looked_up_at": "2026-09-19T08:02:53Z"
+}

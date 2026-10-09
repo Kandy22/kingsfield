@@ -6,12 +6,8 @@ import {
     buildMessages,
     buildWorkflowStore,
     enrichWithPriorEvents,
-    AssistantStreamError,
-    buildCancelledAssistantMessage,
-    extractAnnotations,
     isAbortError,
     runLLMStream,
-    stripTransientAssistantEvents,
     PROJECT_EXTRA_TOOLS,
     type ChatMessage,
 } from "../lib/chatTools";
@@ -19,8 +15,14 @@ import {
     getUserModelSettings,
 } from "../lib/userSettings";
 import { checkProjectAccess } from "../lib/access";
-import { safeErrorLog, safeErrorMessage } from "../lib/safeError";
-import { verifyDraftForSse } from "../middleware/hallucination_guard";
+import { safeErrorLog } from "../lib/safeError";
+import {
+    createBufferingSseWriter,
+    failedReplyRecord,
+    finalizeHeldOutput,
+    startSseKeepalive,
+    verifyDraftForSse,
+} from "../middleware/hallucination_guard";
 
 const PROJECT_SYSTEM_PROMPT_EXTRA = `PROJECT CONTEXT:
 You are operating within a project folder that contains a collection of legal documents the user has organised for a single matter. The user's questions will usually refer to one or more documents in this project — your job is to find the relevant files to work on. Use list_documents to see what is available and fetch_documents / read_document to pull in any documents you need before answering.
@@ -165,9 +167,16 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
     res.flushHeaders();
 
     const write = (line: string) => res.write(line);
+    // Model-written output is held server-side until Gate 1 has run.
+    const buffered = createBufferingSseWriter(write);
     const streamAbort = new AbortController();
     let streamFinished = false;
+    // True once the finalized reply is in chat_messages. After that the catch only logs.
+    let replySaved = false;
+    // Held output is invisible to the browser; ping until it is released.
+    const keepalive = startSseKeepalive(write);
     res.on("close", () => {
+        keepalive.stop();
         if (!streamFinished) streamAbort.abort();
     });
 
@@ -180,7 +189,7 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
             docIndex,
             userId,
             db,
-            write,
+            write: buffered.write,
             extraTools: PROJECT_EXTRA_TOOLS,
             workflowStore,
             includeResearchTools: legalResearchUs,
@@ -190,10 +199,36 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
             projectId,
         });
 
-        const verification = await verifyDraftForSse(fullText, {
-            courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
-            supabase: db,
+        // Gate 1 over the whole reply decides what is released: unchanged,
+        // or withheld whole (never rewritten). The saved message is exactly what is sent.
+        const finalized = await finalizeHeldOutput({
+            held: buffered.takeHeld(),
+            events,
+            annotations,
+            fullText,
+            verify: (text) =>
+                verifyDraftForSse(text, {
+                    courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                    supabase: db,
+                }),
         });
+        // Save first, then send: a failed save is caught below, before the
+        // browser has been given a reply that was never stored.
+        const { error: replySaveError } = await db.from("chat_messages").insert({
+            chat_id: chatId,
+            role: "assistant",
+            content: finalized.savedEvents.length ? finalized.savedEvents : null,
+            // Sent citation entries plus the one client-safe verification record.
+            annotations: finalized.savedAnnotations,
+        });
+        if (replySaveError) {
+            console.error("[project-chat/stream] failed to save reply", safeErrorLog(replySaveError));
+            throw new Error("Failed to save the reply.");
+        }
+        replySaved = true;
+        keepalive.stop();
+        for (const line of finalized.linesToSend) write(line);
+        const verification = finalized.verification;
         write(
             `data: ${JSON.stringify({
                 type: "verification",
@@ -204,14 +239,6 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
             })}\n\n`,
         );
 
-        const persistedEvents = stripTransientAssistantEvents(events);
-        await db.from("chat_messages").insert({
-            chat_id: chatId,
-            role: "assistant",
-            content: persistedEvents.length ? persistedEvents : null,
-            annotations: annotations.length ? annotations : null,
-        });
-
         if (!chatTitle && lastUser?.content) {
             await db
                 .from("chats")
@@ -219,67 +246,41 @@ projectChatRouter.post("/", requireAuth, async (req, res) => {
                 .eq("id", chatId);
         }
     } catch (err) {
-        if (isAbortError(err)) {
-            console.log("[project-chat/stream] client aborted stream", {
-                chatId,
-            });
-            if (err instanceof AssistantStreamError) {
-                const partial = buildCancelledAssistantMessage({
-                    fullText: err.fullText,
-                    events: err.events,
-                    buildAnnotations: (fullText, events) =>
-                        extractAnnotations(fullText, docIndex, events),
-                });
-                const { error: saveError } = await db.from("chat_messages").insert({
-                    chat_id: chatId,
-                    role: "assistant",
-                    content: partial.events.length ? partial.events : null,
-                    annotations: partial.annotations.length
-                        ? partial.annotations
-                        : null,
-                });
-                if (saveError) {
-                    console.error(
-                        "[project-chat/stream] failed to save aborted stream",
-                        saveError,
-                    );
-                }
-            }
+        keepalive.stop();
+        if (replySaved) {
+            // The verified reply is already saved (and sent): nothing more is saved or sent.
+            console.error("[project-chat/stream] error after the reply was saved:", safeErrorLog(err));
             return;
         }
-        console.error("[project-chat/stream] error:", safeErrorLog(err));
-        const message = safeErrorMessage(err, "Stream error");
-        const errorEvents = err instanceof AssistantStreamError
-            ? stripTransientAssistantEvents(err.events)
-            : [{ type: "error" as const, message }];
-        const errorFullText =
-            err instanceof AssistantStreamError ? err.fullText : "";
+        // Anything the model wrote before this point (err.fullText, err.events),
+        // its tool results and any annotations are dropped. Only a fixed marker is saved.
+        const aborted = isAbortError(err);
+        if (aborted) {
+            console.log("[project-chat/stream] stream aborted", { chatId });
+        } else {
+            console.error("[project-chat/stream] error:", safeErrorLog(err));
+        }
+        const failedReply = failedReplyRecord(aborted ? "aborted" : "failed");
         try {
-            const annotations = extractAnnotations(
-                errorFullText,
-                docIndex,
-                errorEvents,
-            );
             const { error: saveError } = await db.from("chat_messages").insert({
                 chat_id: chatId,
                 role: "assistant",
-                content: errorEvents.length ? errorEvents : null,
-                annotations: annotations.length ? annotations : null,
+                content: failedReply.events,
+                annotations: failedReply.annotations,
             });
             if (saveError)
-                console.error("[project-chat/stream] failed to save error", saveError);
+                console.error("[project-chat/stream] failed to save marker", safeErrorLog(saveError));
         } catch (saveErr) {
-            console.error("[project-chat/stream] failed to save error", saveErr);
+            console.error("[project-chat/stream] failed to save marker", safeErrorLog(saveErr));
         }
+        // Aborted: the client is gone, nothing is written. Failed: the fixed error event, then [DONE].
         try {
-            write(
-                `data: ${JSON.stringify({ type: "error", message })}\n\n`,
-            );
-            write("data: [DONE]\n\n");
+            for (const line of failedReply.sseLines) write(line);
         } catch {
             /* ignore */
         }
     } finally {
+        keepalive.stop();
         streamFinished = true;
         res.end();
     }

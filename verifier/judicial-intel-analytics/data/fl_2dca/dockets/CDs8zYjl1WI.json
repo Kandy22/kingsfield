@@ -1,0 +1,28 @@
+{
+ "video_id": "CDs8zYjl1WI",
+ "title": "22 2701",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-2701"
+ ],
+ "case_number": "2D2022-2701",
+ "source": "flcourts",
+ "case_name": "ERNEST S. MARSHALL VS DERRICK HADLEY, ET AL",
+ "decided_date": "2023-05-03",
+ "disposition_text": "Affirmed - Per Curiam Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2389287/opinion/Opinion_2022-2701.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/May/03/2022-2701",
+ "ctrack_id": "ctrack_16496283",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:05:31Z",
+ "panel_judges": "Villanti; Black; Sleet",
+ "trial_judge": "Diana L. Moreland",
+ "county": "Manatee",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 799
+}

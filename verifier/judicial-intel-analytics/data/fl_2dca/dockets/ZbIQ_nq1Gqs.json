@@ -1,0 +1,35 @@
+{
+ "video_id": "ZbIQ_nq1Gqs",
+ "title": "25 1760",
+ "case_number": "2D2025-1760",
+ "case_numbers_all": [
+  "2D2025-1760"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1760",
+ "case_name": "PROGRESSIVE AMERICAN INSURANCE COMPANY v. ANTHONY PRIETO",
+ "decided_date": "2026-06-19",
+ "cl_cluster_id": 10877591,
+ "cl_opinion_id": 11345095,
+ "cl_url": "https://www.courtlistener.com/opinion/10877591/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Dismissed.",
+ "disposition": "dismissed",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Silberman; Kelly; Rothstein-Youakim",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 993,
+ "_tried": [
+  "2D2025-1760"
+ ],
+ "looked_up_at": "2026-09-19T07:30:32Z"
+}

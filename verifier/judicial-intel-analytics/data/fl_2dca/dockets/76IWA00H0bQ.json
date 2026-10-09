@@ -1,0 +1,31 @@
+{
+ "video_id": "76IWA00H0bQ",
+ "title": "24 0664",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-0664"
+ ],
+ "case_number": "2D2024-0664",
+ "source": "flcourts",
+ "case_name": "Brita, et al v. Citizens Property Insurance Corporation",
+ "decided_date": "2025-06-18",
+ "disposition_text": "Reversed and remanded for further proceedings; conflict certified.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2482006/opinion/Opinion_2024-0664.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/June/18/2024-0664",
+ "ctrack_id": "ctrack_18980044",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:04:12Z",
+ "author": "Khouzam",
+ "panel_judges": "Khouzam",
+ "trial_judge": "Paul Huey",
+ "county": "Hillsborough",
+ "appellant_counsel": "/k/a JUANA TEJADA, Appellants, v. CITIZENS PROPERTY INSURANCE CORPORATION, Appellee. No. 2D2024-0664 June 18, 2025 Appeal from the Circuit Court for Hillsborough County; Paul Huey, Judge. Barbara M. Hernando and Dean Makris of Makris & Mullinax, P.A., Tampa; and Aaron Kling of Kling Law, P.A., Tampa",
+ "appellee_counsel": "t Court for Hillsborough County; Paul Huey, Judge. Barbara M. Hernando and Dean Makris of Makris & Mullinax, P.A., Tampa; and Aaron Kling of Kling Law, P.A., Tampa, for Appellants. Evan A. Zuckerman of Vernis & Bowling of Broward, P.A., Hollywood; and Andrew A. Labbe of Groelle & Salmon, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 22620
+}

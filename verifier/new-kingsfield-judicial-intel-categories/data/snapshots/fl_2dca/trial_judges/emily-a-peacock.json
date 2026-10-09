@@ -1,0 +1,60 @@
+{
+ "judge_id": "emily-a-peacock",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 29,
+   "affirmed": 22,
+   "reversed": 2,
+   "mixed": 5,
+   "other": 0,
+   "reversal_rate": 0.241,
+   "reversal_rate_ci95": {
+    "lo": 0.122,
+    "hi": 0.421,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "",
+    "2D2022-0836",
+    "2D2020-0504",
+    "2D2021-1500",
+    "2D2022-0257",
+    "2D2024-1448",
+    "2D2024-0090",
+    "2D2023-2272",
+    "2D2024-1332",
+    "2D2020-3102",
+    "2D2021-0485",
+    "2D2021-0653",
+    "2D2021-2443",
+    "2D2023-1066",
+    "2D2020-3500",
+    "2D2022-0259",
+    "2D2020-0995",
+    "2D2021-0020",
+    "2D2023-0853",
+    "2D2022-3642",
+    "2D2024-1776",
+    "2D2025-0511",
+    "2D2022-2383",
+    "2D2023-2439",
+    "2D2022-0200",
+    "2D2019-3549",
+    "2D2023-2567",
+    "2D2025-1817",
+    "2D2024-1251"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

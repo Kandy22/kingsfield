@@ -1,0 +1,28 @@
+{
+ "video_id": "tENharaJDz0",
+ "title": "23 0192",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0192"
+ ],
+ "case_number": "2D2023-0192",
+ "source": "flcourts",
+ "case_name": "VASTAG v. STATE OF FLORIDA",
+ "decided_date": "2024-12-13",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2444711/opinion/Opinion_2023-0192.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/December/13/2023-0192",
+ "ctrack_id": "ctrack_18753800",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:16:44Z",
+ "panel_judges": "Morris; Atkinson; Labrit",
+ "trial_judge": "Lon Arend",
+ "county": "Manatee",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 922
+}

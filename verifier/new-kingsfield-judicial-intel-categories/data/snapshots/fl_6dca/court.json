@@ -1,0 +1,296 @@
+{
+ "judge_id": "court",
+ "court_id": "fl_6dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "court",
+   "n": 4052,
+   "affirmed": 3656,
+   "reversed": 191,
+   "mixed": 116,
+   "other": 89,
+   "reversal_rate": 0.077,
+   "reversal_rate_ci95": {
+    "lo": 0.07,
+    "hi": 0.086,
+    "method": "wilson"
+   },
+   "by_year": [
+    {
+     "year": 2023,
+     "n": 803,
+     "reversal_rate": 0.088
+    },
+    {
+     "year": 2024,
+     "n": 1076,
+     "reversal_rate": 0.061
+    },
+    {
+     "year": 2025,
+     "n": 1182,
+     "reversal_rate": 0.082
+    },
+    {
+     "year": 2026,
+     "n": 991,
+     "reversal_rate": 0.082
+    }
+   ],
+   "pca_share": 0.798,
+   "argued_share": 0.018,
+   "argued": {
+    "scope": "court",
+    "n": 72,
+    "affirmed": 44,
+    "reversed": 15,
+    "mixed": 13,
+    "other": 0,
+    "reversal_rate": 0.389,
+    "reversal_rate_ci95": {
+     "lo": 0.285,
+     "hi": 0.504,
+     "method": "wilson"
+    }
+   }
+  },
+  "F12": [
+   {
+    "name": "affirm",
+    "count": 3656,
+    "share": 0.902
+   },
+   {
+    "name": "reverse",
+    "count": 191,
+    "share": 0.047
+   },
+   {
+    "name": "mixed",
+    "count": 116,
+    "share": 0.029
+   },
+   {
+    "name": "dismissed",
+    "count": 35,
+    "share": 0.009
+   },
+   {
+    "name": "granted",
+    "count": 26,
+    "share": 0.006
+   },
+   {
+    "name": "other",
+    "count": 15,
+    "share": 0.004
+   },
+   {
+    "name": "denied",
+    "count": 13,
+    "share": 0.003
+   }
+  ],
+  "F13": {
+   "n": 67,
+   "median": 20,
+   "mean": 56.5,
+   "p10": 5,
+   "p90": 182,
+   "from_event": "oral_argument",
+   "to_event": "decision"
+  },
+  "F17": [
+   {
+    "milestone": "decision",
+    "from_event": "oral_argument",
+    "n": 67,
+    "p50_days": 20,
+    "p80_days": 85,
+    "p90_days": 182,
+    "basis": "empirical quantiles of argument→decision days for this court; upload date stands in for argument date"
+   }
+  ],
+  "F22": {
+   "target": "affirm",
+   "fit_on": "argued cases with a decision; bins are empirical rates, no smoothing",
+   "n": 72,
+   "root": {
+    "leaf": false,
+    "feature": "skepticism_gap",
+    "op": ">=",
+    "threshold": 1,
+    "left": {
+     "leaf": true,
+     "n": 10,
+     "p_affirm": 1.0,
+     "label": "bench harder on appellant → affirm"
+    },
+    "right": {
+     "leaf": false,
+     "feature": "skepticism_gap",
+     "op": "<=",
+     "threshold": -1,
+     "left": {
+      "leaf": true,
+      "n": 13,
+      "p_affirm": 0.307,
+      "label": "bench harder on appellee → reversal-leaning; low support"
+     },
+     "right": {
+      "leaf": false,
+      "feature": "ruling_lean_confidence",
+      "op": ">=",
+      "threshold": 0.7,
+      "left": {
+       "leaf": false,
+       "feature": "ruling_lean",
+       "op": "==",
+       "threshold": "affirm",
+       "left": {
+        "leaf": true,
+        "n": 5,
+        "p_affirm": 0.8,
+        "label": "confident affirm lean"
+       },
+       "right": {
+        "leaf": true,
+        "n": 3,
+        "p_affirm": 0.667,
+        "label": "confident reverse lean"
+       }
+      },
+      "right": {
+       "leaf": true,
+       "n": 41,
+       "p_affirm": 0.585,
+       "label": "abstain"
+      }
+     }
+    }
+   },
+   "rules_text": [
+    "IF skepticism_gap >= +1 THEN affirm  (p=1.0, n=10)",
+    "ELIF skepticism_gap <= -1 THEN reversal-leaning  (p_affirm=0.307, n=13)",
+    "ELIF ruling_lean_confidence >= 0.7 AND ruling_lean == affirm THEN affirm  (p=0.8, n=5)",
+    "ELIF ruling_lean_confidence >= 0.7 AND ruling_lean == reverse THEN reverse-leaning  (p_affirm=0.667, n=3)",
+    "ELSE abstain  (p_affirm=0.585 ≈ base 0.611, n=41)"
+   ]
+  },
+  "F26": {
+   "model": "calibration_table",
+   "base_rate": 0.611,
+   "bins": {
+    "gap=0|uninformative": {
+     "n": 41,
+     "p_affirm": 0.585
+    },
+    "gap=-1": {
+     "n": 9,
+     "p_affirm": 0.444
+    },
+    "gap=+1": {
+     "n": 7,
+     "p_affirm": 1.0
+    },
+    "gap>=+2": {
+     "n": 3,
+     "p_affirm": 1.0
+    },
+    "gap=0|lean=affirm|conf>=0.7": {
+     "n": 5,
+     "p_affirm": 0.8
+    },
+    "gap<=-2": {
+     "n": 4,
+     "p_affirm": 0.0
+    },
+    "gap=0|lean=reverse|conf>=0.7": {
+     "n": 3,
+     "p_affirm": 0.667
+    }
+   },
+   "abstain_rule": "n<20 or |p-base|<0.1",
+   "vendor_claims": "Pre/Dicta '85%' is their claim; Kingsfield reports bin rates with n"
+  },
+  "F25": [
+   {
+    "model": "condorcet_majority",
+    "params": {
+     "n": 3,
+     "p": 0.7,
+     "assumes": "independent voters, identical competence"
+    },
+    "result": {
+     "p_majority_correct": 0.784
+    },
+    "note": "Model output under stated assumptions; not a measured property of any court."
+   },
+   {
+    "model": "banzhaf",
+    "params": {
+     "weights": [
+      1,
+      1,
+      1
+     ],
+     "quota": 2
+    },
+    "result": {
+     "index": [
+      0.3333,
+      0.3333,
+      0.3333
+     ]
+    },
+    "note": "Normalized Banzhaf power index for the stated weighted-majority game."
+   }
+  ]
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion API + youtube",
+   "collected_at": "2026-09-19T08:34:16+00:00",
+   "note": "argued subset from the 2DCA/6DCA YouTube clips"
+  },
+  "F12": {
+   "source": "flcourts opinion API",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F13": {
+   "source": "youtube upload_date → flcourts decided_date",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F17": {
+   "source": "empirical quantiles; no model",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F22": {
+   "source": "fit on typesafe/jev-1.13 panel outputs vs flcourts dispositions",
+   "collected_at": "2026-09-19T08:34:16+00:00",
+   "note": "jev role score_rule_fit is downstream; nothing here calls a model"
+  },
+  "F26": {
+   "source": "calibration of jev ruling_lean + skepticism_gap against flcourts dispositions",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  },
+  "F25": {
+   "source": "pure math; illustrative parameters",
+   "collected_at": "2026-09-19T08:34:16+00:00"
+  }
+ },
+ "validation_problems": {
+  "F26": [
+   "item 0 missing 'outcome'",
+   "item 0 missing 'p'",
+   "item 0 missing 'n_calibration'",
+   "item 0 missing 'bin'",
+   "item 0 missing 'abstain'",
+   "item 0 missing 'why'"
+  ],
+  "F25": [
+   "item 0 is not an object"
+  ]
+ }
+}

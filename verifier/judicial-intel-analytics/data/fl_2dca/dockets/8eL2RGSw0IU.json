@@ -1,0 +1,33 @@
+{
+ "video_id": "8eL2RGSw0IU",
+ "title": "24 2052",
+ "case_number": "2D2024-2052",
+ "case_numbers_all": [],
+ "found": true,
+ "matched_docket_number": "2D2024-2052",
+ "case_name": "Kaplafka-Dinofa v. Camden Operating, L.P.",
+ "decided_date": "2025-11-26",
+ "cl_cluster_id": 10751027,
+ "cl_opinion_id": 11217612,
+ "cl_url": "https://www.courtlistener.com/opinion/10751027/kaplafka-dinofa-v-camden-operating-lp/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Kelly; Villanti; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Emily A. Peacock",
+ "appellant_counsel": ". CAMDEN OPERATING, L.P.; CAMDEN DEVELOPMENT, INC.; and TEAM MANAGEMENT OF PASCO, INC., Appellees. No. 2D2024-2052 November 26, 2025 Appeal from the Circuit Court for Hillsborough County; Emily A. Peacock, Judge. Michael J. Labbee and Tyler A. Hayden of Phillips, Hayden & Labbee, LLP, St. Petersburg",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 864,
+ "_tried": [
+  "2D2024-2052"
+ ],
+ "looked_up_at": "2026-09-19T07:04:32Z"
+}

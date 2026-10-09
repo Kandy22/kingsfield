@@ -1,0 +1,41 @@
+{
+ "video_id": "EkzpDUeDTGE",
+ "title": "25 0367",
+ "case_number": "2D2025-0367",
+ "case_numbers_all": [
+  "2D2025-0367"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0367",
+ "case_name": "Avesta Communities, LLC, Rex v. Fred",
+ "decided_date": "2026-03-25",
+ "cl_cluster_id": 10814630,
+ "cl_opinion_id": 11281384,
+ "cl_url": "https://www.courtlistener.com/opinion/10814630/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded with instructions.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": "Black; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 26482,
+ "_tried": [
+  "2D2025-0367"
+ ],
+ "looked_up_at": "2026-09-19T07:06:01Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2486503/opinion/Opinion_2025-0367.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/march/25/2025-0367",
+ "ctrack_id": "ctrack_19344966",
+ "n_decision_records": 1
+}

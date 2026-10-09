@@ -1,0 +1,41 @@
+{
+ "judge_id": "elizabeth-v-krier",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 10,
+   "affirmed": 9,
+   "reversed": 0,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.1,
+   "reversal_rate_ci95": {
+    "lo": 0.018,
+    "hi": 0.404,
+    "method": "wilson"
+   },
+   "county": "Collier",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-2493",
+    "2D2021-3235",
+    "2D2020-3430",
+    "2D2020-1356",
+    "2D2021-1017",
+    "2D2020-2181",
+    "2D2021-2188",
+    "2D2021-2580",
+    "2D2020-2336",
+    "2D2021-3016"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

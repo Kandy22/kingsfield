@@ -1,0 +1,35 @@
+{
+ "video_id": "GArC66qTJ2k",
+ "title": "24 2510",
+ "case_number": "2D2024-2510",
+ "case_numbers_all": [
+  "2D2024-2510"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2510",
+ "case_name": "LEDSUY Y. SANCHEZ v. STATE OF FLORIDA",
+ "decided_date": "2025-10-24",
+ "cl_cluster_id": 10751783,
+ "cl_opinion_id": 11218368,
+ "cl_url": "https://www.courtlistener.com/opinion/10751783/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": null,
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Robin F. Fuson",
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 845,
+ "_tried": [
+  "2D2024-2510"
+ ],
+ "looked_up_at": "2026-09-19T07:07:31Z"
+}

@@ -1,0 +1,35 @@
+{
+ "video_id": "dkxQuWKYXtY",
+ "title": "24 1772",
+ "case_number": "2D2024-1772",
+ "case_numbers_all": [
+  "2D2024-1772"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-1772",
+ "case_name": "CLERK OF THE COURT AND COMPTROLLER FOR THE v. ANGIE RANGEL; EFRAIN RUIZ-DIAZ; and STATE OF FLORIDA",
+ "decided_date": "2026-03-06",
+ "cl_cluster_id": 10804770,
+ "cl_opinion_id": 11271505,
+ "cl_url": "https://www.courtlistener.com/opinion/10804770/x/",
+ "n_opinions_in_cluster": 2,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": "Silberman",
+ "panel_judges": "Silberman; Lucas; Villanti",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": "llees. No. 2D2024-1772 March 6, 2026 Appeal pursuant to Fla. R. App. P. 9.130 from the Circuit Court for Hillsborough County; G. Gregory Green, Judge. Kristen M. Fiore and Nancy Mason Wallace of Akerman LLP, Tallahassee; and Shelby K. Russ of Hillsborough County Clerk of Court and Comptroller, Tampa",
+ "appellee_counsel": "Fla. R. App. P. 9.130 from the Circuit Court for Hillsborough County; G. Gregory Green, Judge. Kristen M. Fiore and Nancy Mason Wallace of Akerman LLP, Tallahassee; and Shelby K. Russ of Hillsborough County Clerk of Court and Comptroller, Tampa, for Appellant. J. Tony Lopez of Taino Law Group, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 9583,
+ "_tried": [
+  "2D2024-1772"
+ ],
+ "looked_up_at": "2026-09-19T07:39:54Z"
+}

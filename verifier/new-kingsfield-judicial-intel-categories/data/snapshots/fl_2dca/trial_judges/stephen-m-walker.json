@@ -1,0 +1,38 @@
+{
+ "judge_id": "stephen-m-walker",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 7,
+   "affirmed": 5,
+   "reversed": 1,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.286,
+   "reversal_rate_ci95": {
+    "lo": 0.082,
+    "hi": 0.641,
+    "method": "wilson"
+   },
+   "county": "Sarasota",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2022-2709",
+    "2D2024-2678",
+    "2D2020-1654",
+    "2D2020-1504",
+    "2D2024-0168",
+    "2D2022-0812",
+    "2D2021-3004"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

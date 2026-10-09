@@ -1,0 +1,27 @@
+{
+ "video_id": "sNA1P1O2fbo",
+ "title": "24 2810",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-2810"
+ ],
+ "case_number": "2D2024-2810",
+ "source": "flcourts",
+ "case_name": "Godwin v. Michelini",
+ "decided_date": "2025-08-20",
+ "disposition_text": "Dismissed; question certified.",
+ "disposition": "dismissed",
+ "opinion_type": "Petition - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2482131/opinion/Opinion_2024-2810.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/August/20/2024-2810",
+ "ctrack_id": "ctrack_19062980",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:16:32Z",
+ "author": "Morris",
+ "panel_judges": "Morris; Northcutt; Moe",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 12128
+}

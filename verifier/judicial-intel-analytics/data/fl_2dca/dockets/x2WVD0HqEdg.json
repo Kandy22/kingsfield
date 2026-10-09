@@ -1,0 +1,35 @@
+{
+ "video_id": "x2WVD0HqEdg",
+ "title": "24 2941",
+ "case_number": "2D2024-2941",
+ "case_numbers_all": [
+  "2D2024-2941"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2941",
+ "case_name": null,
+ "decided_date": null,
+ "cl_cluster_id": 10824577,
+ "cl_opinion_id": 11291349,
+ "cl_url": "https://www.courtlistener.com/opinion/10824577/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Kelly; Smith",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Joseph Anthony Bulone",
+ "appellant_counsel": null,
+ "appellee_counsel": "ATE OF FLORIDA, Appellee. NO. 2D2024-2941 March 27, 2026 Appeal from the Circuit Court for Pinellas County; Joseph Anthony Bulone, Judge. J. Jervis Wise of Brunvand and Wise Law Group, Clearwater, for Appellant. James Uthmeier, Attorney General, and William A. Leto, Assistant Attorney General, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 814,
+ "_tried": [
+  "2D2024-2941"
+ ],
+ "looked_up_at": "2026-09-19T08:13:26Z"
+}

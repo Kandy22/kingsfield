@@ -1,0 +1,28 @@
+{
+ "video_id": "OTySwOTwXyc",
+ "title": "22 1476",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-1476"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:08:54Z",
+ "case_number": "2D2022-1476",
+ "case_name": "KIMBERLY MARTIN  vs CHARLES DEAN MARTIN",
+ "decided_date": "2023-02-22",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/860647/opinion/Opinion_22-1476.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/February/22/22-1476",
+ "ctrack_id": "4741177",
+ "n_decision_records": 1,
+ "panel_judges": "Northcutt; Khouzam; Black",
+ "trial_judge": "James S. Moody, III",
+ "county": "Hillsborough",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 839
+}

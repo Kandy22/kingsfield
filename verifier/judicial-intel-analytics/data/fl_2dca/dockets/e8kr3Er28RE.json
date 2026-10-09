@@ -1,0 +1,35 @@
+{
+ "video_id": "e8kr3Er28RE",
+ "title": "25 0602",
+ "case_number": "2D2025-0602",
+ "case_numbers_all": [
+  "2D2025-0602"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0602",
+ "case_name": "JANE HORTON v. TAMPA BAY DOWNS, INC.",
+ "decided_date": "2026-06-03",
+ "cl_cluster_id": 10869431,
+ "cl_opinion_id": 11336888,
+ "cl_url": "https://www.courtlistener.com/opinion/10869431/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Lucas; Kelly; Guard",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Mark Wolfe",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT JANE HORTON, Appellant, v. TAMPA BAY DOWNS, INC., Appellee. No. 2D2025-0602 June 3, 2026 Appeal from the Circuit Court for Hillsborough County; Mark Wolfe, Judge. Brian J. Lee of Morgan & Morgan, Jacksonville",
+ "appellee_counsel": "TON, Appellant, v. TAMPA BAY DOWNS, INC., Appellee. No. 2D2025-0602 June 3, 2026 Appeal from the Circuit Court for Hillsborough County; Mark Wolfe, Judge. Brian J. Lee of Morgan & Morgan, Jacksonville, for Appellant. Kathryn L. Ender, Seth V. Alhadeff and Janice Lopez of Dinsmore & Shohl, LLP, Miami",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 788,
+ "_tried": [
+  "2D2025-0602"
+ ],
+ "looked_up_at": "2026-09-19T07:40:32Z"
+}

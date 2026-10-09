@@ -1,0 +1,30 @@
+{
+ "video_id": "Ivm6zl921mA",
+ "title": "24 0090",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-0090"
+ ],
+ "case_number": "2D2024-0090",
+ "source": "flcourts",
+ "case_name": "GIBSON, ESQ., LOFTUS, ESQ., et al v. U. S. BANK, N. A., FAIRCHILD",
+ "decided_date": "2024-10-16",
+ "disposition_text": "Affirmed in Part; reversed in part, and remanded.",
+ "disposition": "mixed",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2442015/opinion/Opinion_2024-0090.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2024/October/16/2024-0090",
+ "ctrack_id": "ctrack_18683250",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:07:14Z",
+ "author": "Black",
+ "panel_judges": "Black; Villanti; Rothstein-Youakim",
+ "trial_judge": "Emily A. Peacock",
+ "county": "Hillsborough",
+ "appellee_counsel": " Loan Trust 2006-2, Mortgage Pass-Through Certificates, Series 2006-2, Appellees. No. 2D2024-0090 October 16, 2024 Appeal from the Circuit Court for Hillsborough County; Emily A. Peacock, Judge. Kevin J. Loftus, pro se. Grant H. Gibson, pro se. Matthew D. Weidner of Weidner Law, P.A., St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 9837
+}

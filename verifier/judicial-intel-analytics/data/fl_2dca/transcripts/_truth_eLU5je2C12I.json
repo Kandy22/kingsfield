@@ -1,0 +1,12 @@
+{
+ "_note": "Hand-labeled BENCH/COUNSEL by reading the caption transcript (2D25-1145, Nimbus Apollo v. US Bank). Keyed by turn start second. Merged bench+counsel turns omitted.",
+ "2": "BENCH", "25": "BENCH", "31": "BENCH", "32": "BENCH", "35": "COUNSEL", "37": "BENCH",
+ "40": "COUNSEL", "145": "BENCH", "155": "COUNSEL", "156": "BENCH", "158": "COUNSEL", "159": "BENCH",
+ "184": "BENCH", "197": "COUNSEL", "200": "BENCH", "206": "COUNSEL", "212": "BENCH", "214": "COUNSEL",
+ "312": "BENCH", "315": "BENCH", "316": "COUNSEL", "318": "COUNSEL", "468": "BENCH", "477": "COUNSEL",
+ "478": "BENCH", "491": "COUNSEL", "492": "COUNSEL", "599": "BENCH", "604": "COUNSEL", "606": "BENCH",
+ "613": "COUNSEL", "614": "BENCH", "615": "COUNSEL", "671": "BENCH", "695": "BENCH", "698": "COUNSEL",
+ "769": "BENCH", "778": "COUNSEL", "781": "BENCH", "790": "COUNSEL", "844": "BENCH", "873": "COUNSEL",
+ "874": "BENCH", "887": "COUNSEL", "969": "BENCH", "974": "COUNSEL", "1009": "BENCH", "1015": "BENCH",
+ "1029": "COUNSEL", "1064": "BENCH", "1070": "COUNSEL", "1158": "BENCH"
+}

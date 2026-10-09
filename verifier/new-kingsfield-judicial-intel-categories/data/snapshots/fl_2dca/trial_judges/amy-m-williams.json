@@ -1,0 +1,43 @@
+{
+ "judge_id": "amy-m-williams",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 12,
+   "affirmed": 7,
+   "reversed": 4,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.417,
+   "reversal_rate_ci95": {
+    "lo": 0.193,
+    "hi": 0.68,
+    "method": "wilson"
+   },
+   "county": "Pinellas",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-3141",
+    "2D2025-0953",
+    "2D2024-0912",
+    "2D2024-0859",
+    "2D2025-1111",
+    "2D2024-2401",
+    "2D2025-1145",
+    "2D2021-1363",
+    "2D2025-0068",
+    "2D2022-0588",
+    "2D2023-0205",
+    "2D2022-0988"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

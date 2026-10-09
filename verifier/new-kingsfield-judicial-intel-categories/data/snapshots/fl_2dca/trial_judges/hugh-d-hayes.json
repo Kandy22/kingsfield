@@ -1,0 +1,37 @@
+{
+ "judge_id": "hugh-d-hayes",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 6,
+   "affirmed": 1,
+   "reversed": 4,
+   "mixed": 1,
+   "other": 0,
+   "reversal_rate": 0.833,
+   "reversal_rate_ci95": {
+    "lo": 0.436,
+    "hi": 0.97,
+    "method": "wilson"
+   },
+   "county": "Collier",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2020-3006",
+    "2D2021-1715",
+    "2D2022-0469",
+    "2D2021-0793",
+    "2D2020-0525",
+    "2D2019-2836"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "video_id": "ke0uI2dd5Y4",
+ "title": "22 102",
+ "found": true,
+ "case_numbers_all": [
+  "2D2022-0102"
+ ],
+ "case_number": "2D2022-0102",
+ "source": "flcourts",
+ "case_name": "STATE FARM MUTUAL AUTOMOBILE INSURANCE CO. VS SHAZAM AUTO GLASS, LLC,",
+ "decided_date": "2023-05-12",
+ "disposition_text": "Affirmed - Per Curiam Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2390729/opinion/Opinion_2022-0102.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2023/May/12/2022-0102",
+ "ctrack_id": "ctrack_16494539",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:14:43Z",
+ "trial_judge": "Miriam V. Valkenburg",
+ "county": "Hillsborough",
+ "appellee_counsel": "from the County Court for Hillsborough County; Miriam V. Valkenburg, Judge. Kurt T. Koehler of Cole, Scott & Kissane, P.A., Jacksonville, for Appellant. David M. Caldevilla of de la Parte & Gilbert, P.A., Tampa; and Christopher N. Ligori and Ronald S. Haynes of Christopher Ligori & Associates, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 1012
+}

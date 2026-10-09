@@ -1,0 +1,41 @@
+{
+ "video_id": "5PvXQo49KTs",
+ "title": "25 1356",
+ "case_number": "2D2025-1356",
+ "case_numbers_all": [
+  "2D2025-1356"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-1356",
+ "case_name": "Garrett v. Lynch, ARNP, Sarasota Pain Management, et al",
+ "decided_date": "2026-07-10",
+ "cl_cluster_id": 10925388,
+ "cl_opinion_id": 11392926,
+ "cl_url": "https://www.courtlistener.com/opinion/10925388/garrett-v-lynch-arnp-sarasota-pain-management/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": "Guard",
+ "panel_judges": "Guard; Lucas; Kelly",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Jennifer X. Gabbard",
+ "appellant_counsel": "yatt Dean Garrett, deceased, Appellant, v. AGNES LYNCH, ARNP; SARASOTA PAIN MANAGEMENT; and PHYSICIAN PARTNERS OF AMERICA, Appellees. No. 2D2025-1356 July 10, 2026 Appeal from the Circuit Court for Hillsborough County; Jennifer X. Gabbard, Judge. Jeffrey B. Crockett of Coffey Burlington, P.L., Miami",
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 20707,
+ "_tried": [
+  "2D2025-1356"
+ ],
+ "looked_up_at": "2026-09-19T07:03:36Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2491313/opinion/Opinion_2025-1356.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/july/10/2025-1356",
+ "ctrack_id": "ctrack_19492213",
+ "n_decision_records": 1
+}

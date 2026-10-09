@@ -1,0 +1,30 @@
+{
+ "video_id": "sIXSMNLbdsI",
+ "title": "23 0826",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0826"
+ ],
+ "case_number": "2D2023-0826",
+ "source": "flcourts",
+ "case_name": "GOLDBOOK LTD., FRED LASSWELL, INC. v. ALLY WESTSHORE, LLC",
+ "decided_date": "2024-11-20",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Appeal - Per Curiam Affirmed",
+ "is_pca": true,
+ "per_curiam": true,
+ "flcourts_pdf": "/content/download/2443624/opinion/Opinion_2023-0826.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2024/November/20/2023-0826",
+ "ctrack_id": "ctrack_18726805",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:16:30Z",
+ "panel_judges": "Morris; Black; Smith",
+ "trial_judge": "Melissa M. Polo",
+ "county": "Hillsborough",
+ "appellant_counsel": "DISTRICT GOLDBOOK LTD. and FRED LASSWELL, INC., Appellants, v. ALLY WESTSHORE, LLC, Appellee. No. 2D2023-0826 November 20, 2024 Appeal from the Circuit Court for Hillsborough County; Melissa M. Polo, Judge. Shannon L. Troutman and Brandon S. Vesely of The Florida Appellate Firm, P.A., St. Petersburg",
+ "appellee_counsel": "-0826 November 20, 2024 Appeal from the Circuit Court for Hillsborough County; Melissa M. Polo, Judge. Shannon L. Troutman and Brandon S. Vesely of The Florida Appellate Firm, P.A., St. Petersburg, for Appellants. Marie A. Borland, Mark M. Wall, and A. Evan Dix of Hill, Ward & Henderson, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 850
+}

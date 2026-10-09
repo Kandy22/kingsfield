@@ -1,0 +1,31 @@
+{
+ "video_id": "8mhSKHIIu3s",
+ "title": "23 96",
+ "found": true,
+ "case_numbers_all": [
+  "2D2023-0096"
+ ],
+ "case_number": "2D2023-0096",
+ "source": "flcourts",
+ "case_name": "OPTUMRX v. KING'S DRUGS, INC., VISTACARE PHARMACY SERVICES, LLC, et al",
+ "decided_date": "2024-04-17",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2400244/opinion/Opinion_2023-0096.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2024/April/17/2023-0096",
+ "ctrack_id": "ctrack_18473197",
+ "n_decision_records": 1,
+ "looked_up_at": "2026-09-19T07:04:35Z",
+ "author": "Lucas",
+ "panel_judges": "Lucas; Northcutt; Casanueva",
+ "trial_judge": "Rex M. Barbas",
+ "county": "Hillsborough",
+ "appellant_counsel": "pellees. No. 2D2023-0096 April 17, 2024 Appeal from the Circuit Court for Hillsborough County; Rex M. Barbas, Judge. Kristen M. Fiore of Akerman LLP, Tallahassee; Michael J. Holecek of Gibson, Dunn & Crutcher LLP, Los Angeles, California; Alexandra M. Mora and Ndifreka U. Uwem of Akerman, LLP, Miami",
+ "appellee_counsel": "ifornia; Alexandra M. Mora and Ndifreka U. Uwem of Akerman, LLP, Miami, for Appellant. Richard E. Miller of Jacobs Law Group, PC, Philadelphia, Pennsylvania; Sean Estes of Hoyer Law Group, PLLC, Tampa; and Mark R. Rosen, admitted pro hac vice, of Jacobs Law Group, PC, West Conshohocken, Pennsylvania",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 19694
+}

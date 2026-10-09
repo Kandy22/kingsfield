@@ -1,0 +1,41 @@
+{
+ "video_id": "-HZvrcfM2mk",
+ "title": "25 0213",
+ "case_number": "2D2025-0213",
+ "case_numbers_all": [
+  "2D2025-0213"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0213",
+ "case_name": "Teed v. Everest Campus East, LLC, Bay Guard Pool Services",
+ "decided_date": "2026-04-08",
+ "cl_cluster_id": 10839185,
+ "cl_opinion_id": 11306529,
+ "cl_url": "https://www.courtlistener.com/opinion/10839185/teed-v-everest-campus-east-llc-bay-guard-pool-services/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Labrit",
+ "panel_judges": "Labrit; Silberman; Smith",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Anne-Leigh Gaylord Moe",
+ "appellant_counsel": null,
+ "appellee_counsel": "pril 8, 2026 Appeal from the Circuit Court for Hillsborough County; Anne-Leigh Gaylord Moe, Judge. Brian J. Lee and Ryan A. Carlson of Morgan & Morgan, Jacksonville, for Appellant. Donna M. Krusbe, Annmarie G. Flores, and Jaime B. Eagan of Wilson Elser Moskowitz Edelman & Dicker LLP, West Palm Beach",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 10491,
+ "_tried": [
+  "2D2025-0213"
+ ],
+ "looked_up_at": "2026-09-19T07:02:06Z",
+ "source": "courtlistener+flcourts",
+ "opinion_type": "Appeal - Authored Opinion",
+ "flcourts_pdf": "/content/download/2487134/opinion/Opinion_2025-0213.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2026/april/08/2025-0213",
+ "ctrack_id": "ctrack_19363463",
+ "n_decision_records": 1
+}

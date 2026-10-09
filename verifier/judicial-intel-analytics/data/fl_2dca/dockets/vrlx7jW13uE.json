@@ -1,0 +1,26 @@
+{
+ "video_id": "vrlx7jW13uE",
+ "title": "2D20-192",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-0192"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:17:27Z",
+ "case_number": "2D2020-0192",
+ "case_name": "DEPARTMENT OF HIGHWAY SAFETY AND MOTOR VEHICLES  vs RICHARD ALAN CHAKRIN",
+ "decided_date": "2020-10-14",
+ "disposition_text": "Granted ; order quashed.",
+ "disposition": "granted",
+ "opinion_type": "Granted",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/681607/opinion/Opinion_20-0192.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2020/October/14/20-0192",
+ "ctrack_id": "4533143",
+ "n_decision_records": 1,
+ "panel_judges": "Kelly; Black",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 42633
+}

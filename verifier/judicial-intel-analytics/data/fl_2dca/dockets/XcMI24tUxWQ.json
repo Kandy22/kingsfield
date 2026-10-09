@@ -1,0 +1,35 @@
+{
+ "video_id": "XcMI24tUxWQ",
+ "title": "25 0410",
+ "case_number": "2D2025-0410",
+ "case_numbers_all": [
+  "2D2025-0410"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0410",
+ "case_name": "OANH NGUYEN and KIEU NGUYEN v. MARVIN WILLIAMS",
+ "decided_date": "2026-02-27",
+ "cl_cluster_id": 10801261,
+ "cl_opinion_id": 11267986,
+ "cl_url": "https://www.courtlistener.com/opinion/10801261/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": "Morris",
+ "panel_judges": "Morris; Khouzam; Labrit",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Melissa Polo",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT OANH NGUYEN and KIEU NGUYEN, Appellants, v. MARVIN WILLIAMS, Appellee. No. 2D2025-0410 February 27, 2026 Appeal from the Circuit Court for Hillsborough County; Melissa Polo, Judge. Stephanie Meacham, Tampa",
+ "appellee_counsel": "ICT OANH NGUYEN and KIEU NGUYEN, Appellants, v. MARVIN WILLIAMS, Appellee. No. 2D2025-0410 February 27, 2026 Appeal from the Circuit Court for Hillsborough County; Melissa Polo, Judge. Stephanie Meacham, Tampa, for Appellants. Mark D. Tinker and Brandon J. Tyler of Cole, Scott & Kissane, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 22406,
+ "_tried": [
+  "2D2025-0410"
+ ],
+ "looked_up_at": "2026-09-19T07:28:41Z"
+}

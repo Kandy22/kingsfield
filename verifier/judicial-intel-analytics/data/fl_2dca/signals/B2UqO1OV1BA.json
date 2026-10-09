@@ -1,0 +1,11 @@
+{
+  "video_id": "B2UqO1OV1BA",
+  "title": "25 1914",
+  "analyzed_at": "2026-07-08T06:30:40.238091+00:00",
+  "prosody": {
+    "segment_count": 1967,
+    "total_speech_seconds": 2235.9
+  },
+  "frames": [],
+  "note": "no video file \u2014 re-run download.py --with-video"
+}

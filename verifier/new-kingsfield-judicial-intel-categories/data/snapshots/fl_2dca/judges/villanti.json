@@ -1,0 +1,82 @@
+{
+ "judge_id": "villanti",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "appellate_judge_panels",
+   "n": 182,
+   "affirmed": 136,
+   "reversed": 36,
+   "mixed": 10,
+   "other": 0,
+   "reversal_rate": 0.253,
+   "reversal_rate_ci95": {
+    "lo": 0.195,
+    "hi": 0.321,
+    "method": "wilson"
+   },
+   "note": "cases argued on video where this judge sat; reversal is a panel outcome, not an individual vote"
+  },
+  "F12": [
+   {
+    "name": "affirm",
+    "count": 136,
+    "share": 0.747
+   },
+   {
+    "name": "reverse",
+    "count": 36,
+    "share": 0.198
+   },
+   {
+    "name": "mixed",
+    "count": 10,
+    "share": 0.055
+   }
+  ],
+  "F13": {
+   "n": 181,
+   "median": 14,
+   "mean": 46.7,
+   "p10": 6,
+   "p90": 153,
+   "from_event": "oral_argument",
+   "to_event": "decision"
+  },
+  "F22": {
+   "target": "affirm",
+   "fit_on": "panel-level skepticism gap on this judge's panels",
+   "n": 182,
+   "root": {
+    "leaf": true,
+    "n": 182,
+    "p_affirm": null,
+    "label": "see court F22"
+   },
+   "rules_text": [
+    "share of panels with gap>=+1: 0.22",
+    "share with gap<=-1: 0.05",
+    "authored: 14 of 182"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F12": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F13": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  },
+  "F22": {
+   "source": "flcourts opinion PDF (panel) + youtube + jev panel",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

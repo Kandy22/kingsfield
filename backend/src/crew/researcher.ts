@@ -13,7 +13,8 @@
  */
 
 import { completeText } from '../lib/llm/index.js';
-import { citationLookup, getCluster, getOpinion } from '../research/courtlistener.js';
+import { getCluster, getOpinion } from '../research/courtlistener.js';
+import { confirmExistence } from '../verification/pipeline.js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const RESEARCHER_SYSTEM_PROMPT = `
@@ -89,11 +90,12 @@ export async function runResearcher(
   deps: ResearcherDeps,
 ): Promise<ResearcherOutput> {
   // Phase 1 — search plan.
-  // IMPORTANT: citationLookup() is a *verifier*, not a search engine.
-  // It checks whether citation strings (e.g. "424 U.S. 319") exist in
-  // CourtListener. Phase 1 must therefore produce specific case citations
-  // that the model believes are relevant — NOT topic keywords.
-  // The model draws on training to propose; CourtListener verifies.
+  // IMPORTANT: confirmExistence() is a *verifier*, not a search engine.
+  // It checks whether citation strings (e.g. "424 U.S. 319") exist: Florida
+  // keys in the local index, everything else in CourtListener. Phase 1 must
+  // therefore produce specific case citations that the model believes are
+  // relevant — NOT topic keywords.
+  // The model draws on training to propose; Gate 1 verifies.
   const planText = await completeText({
     model: deps.model,
     systemPrompt: RESEARCHER_SYSTEM_PROMPT,
@@ -120,13 +122,13 @@ only cases. Format each as:
   for (const step of searchPlan) {
     if (step.source === 'courtlistener') {
       try {
-        const hits = await citationLookup(step.query, deps.courtListenerToken);
-        for (const hit of hits.filter((h) => h.status === 'matched' && h.cluster_id)) {
-          const auth = await materializeAuthority(hit.cluster_id!, deps);
+        // Gate 1 (local Florida index first) before anything is materialized.
+        const found = await confirmExistence(step.query, deps.courtListenerToken);
+        if ('vetoNote' in found) {
+          gaps.push(`No verified match for: ${step.query} (${found.vetoNote})`);
+        } else {
+          const auth = await materializeAuthority(found.clusterId, deps);
           if (auth) authorities.push(auth);
-        }
-        if (hits.every((h) => h.status !== 'matched')) {
-          gaps.push(`No CourtListener match for: ${step.query}`);
         }
       } catch (e: any) {
         gaps.push(`Search failed for "${step.query}": ${e.message}`);

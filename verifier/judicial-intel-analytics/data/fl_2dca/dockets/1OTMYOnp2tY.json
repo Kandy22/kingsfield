@@ -1,0 +1,29 @@
+{
+ "video_id": "1OTMYOnp2tY",
+ "title": "2D21 3214",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-3214"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:02:36Z",
+ "case_number": "2D2021-3214",
+ "case_name": "RYAN HAYES  vs CISCON, LLC D/ B/ A ACE RENT A CAR",
+ "decided_date": "2022-12-02",
+ "disposition_text": "Affirmed",
+ "disposition": "affirm",
+ "opinion_type": "Affirmed",
+ "is_pca": true,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/854212/opinion/Opinion_21-3214.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/PCAs/2022/December/02/21-3214",
+ "ctrack_id": "4721516",
+ "n_decision_records": 1,
+ "panel_judges": "Villanti; Lucas; Rothstein-Youkim",
+ "trial_judge": "Emily Peacock",
+ "county": "Hillsborough",
+ "appellee_counsel": "SECOND DISTRICT RYAN HAYES, Appellant, v. CISCON, LLC d/b/a ACE RENT A CAR, Appellee. No. 2D21-3214 December 2, 2022 Appeal from the Circuit Court for Hillsborough County; Emily Peacock, Judge. Ryan Hayes, pro se. Robert J. Grace, Jr. and Gerard P. Duignan of Bleakley Bavol Denman Grace, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 734
+}

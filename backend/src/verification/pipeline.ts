@@ -24,6 +24,7 @@ import {
   checkCurrency,
   type CitationLookupHit,
 } from '../research/courtlistener.js';
+import { localGate1, localGate1Text, type Gate1Result } from './local_sqlite_gate.js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export type VerdictStatus = 'verified' | 'conditional' | 'vetoed' | 'pending';
@@ -75,8 +76,87 @@ export async function verifyCitation(
   candidate: CitationCandidate,
   opts: VerifyOptions,
 ): Promise<GateVerdict> {
-  const verdict: GateVerdict = {
-    citation: candidate.citation,
+  const verdict = pendingVerdict(candidate.citation);
+
+  // Gate 1, local: Florida keys must exist in kingsfield_florida.db (Constraint A).
+  // Runs before the cache and every CourtListener call (Constraint D). A veto is final.
+  const local = localGate1(candidate.citation);
+  if (local.verdict === 'veto') {
+    verdict.status = 'vetoed';
+    verdict.notes.push(localVetoNote(local.reason));
+    return verdict;
+  }
+  return verifyPastLocalGate1(candidate, local, verdict, opts);
+}
+
+/**
+ * Verify every citation in a draft text in one shot. Local Gate 1 extracts and
+ * checks every case citation in the draft (short cites and Id. resolved to their
+ * full citation), then each surviving authority goes through gates 1-4 once.
+ */
+export async function verifyDraft(
+  draftText: string,
+  opts: VerifyOptions,
+): Promise<{
+  verdicts: GateVerdict[];
+  hasVetoes: boolean;
+  hasConditional: boolean;
+}> {
+  // Gate 1, local, over the whole draft: extracts every case cite (full, short, Id., supra)
+  // and decides Florida keys before the cache or any CourtListener call (Constraint D).
+  const local = await localGate1Text(draftText);
+  const verdicts: GateVerdict[] = [];
+  const verified = new Set<string>();
+  for (const r of local) {
+    if (r.verdict === 'veto') {
+      const v = pendingVerdict(r.text || '[draft]');
+      v.status = 'vetoed';
+      v.notes.push(localVetoNote(r.reason));
+      verdicts.push(v);
+      continue;
+    }
+    if (r.fullCitation === null) {
+      // An Id. pointing at a statute or other non-case cite is outside Gate 1. Any other
+      // non-veto without a full citation breaks the gate's contract, so it fails closed.
+      if (r.reason === 'non_case_antecedent') continue;
+      const v = pendingVerdict(r.text || '[draft]');
+      v.status = 'vetoed';
+      v.notes.push(`Local Gate 1 returned ${r.verdict} without a full citation (${r.reason}).`);
+      verdicts.push(v);
+      continue;
+    }
+    // Short cites and Id. resolve to their full citation; verify each authority once.
+    if (verified.has(r.fullCitation)) continue;
+    verified.add(r.fullCitation);
+    verdicts.push(
+      await verifyPastLocalGate1({ citation: r.fullCitation }, r, pendingVerdict(r.fullCitation), opts),
+    );
+  }
+  return {
+    verdicts,
+    hasVetoes: verdicts.some((v) => v.status === 'vetoed'),
+    hasConditional: verdicts.some((v) => v.status === 'conditional'),
+  };
+}
+
+/**
+ * Gate 1 alone, for callers that only need existence (the Researcher): the local
+ * Florida index first, CourtListener only for non-Florida keys.
+ */
+export async function confirmExistence(
+  citation: string,
+  courtListenerToken: string,
+): Promise<{ clusterId: number; url?: string } | { vetoNote: string }> {
+  const local = localGate1(citation);
+  if (local.verdict === 'veto') return { vetoNote: localVetoNote(local.reason) };
+  return clusterAfterLocalGate1(citation, local, courtListenerToken);
+}
+
+// ───── helpers ─────
+
+function pendingVerdict(citation: string): GateVerdict {
+  return {
+    citation,
     status: 'pending',
     gate1_existence: false,
     gate2_quote_accuracy: null,
@@ -84,7 +164,49 @@ export async function verifyCitation(
     gate4_jurisdiction_fit: null,
     notes: [],
   };
+}
 
+function localVetoNote(reason: string): string {
+  return `CITATION VETOED by the local Florida index (${reason}). Possible hallucination.`;
+}
+
+/**
+ * Gate 1 for a citation the local gate did not veto. A local pass already proved
+ * existence; the index is built from CourtListener bulk data, so its cluster id is used
+ * directly and citationLookup is skipped (saves CourtListener rate limit). A fall-through
+ * (non-Florida key) goes to CourtListener Citation Lookup.
+ */
+async function clusterAfterLocalGate1(
+  citation: string,
+  local: Gate1Result,
+  courtListenerToken: string,
+): Promise<{ clusterId: number; url?: string } | { vetoNote: string }> {
+  if (local.verdict === 'pass') {
+    return local.clusterId
+      ? { clusterId: local.clusterId }
+      : { vetoNote: 'Local Florida index passed the citation without a cluster id.' };
+  }
+  // Only an explicit fall-through (non-Florida key) may reach CourtListener.
+  if (local.verdict !== 'fall_through') return { vetoNote: localVetoNote(local.reason) };
+  const hits = await citationLookup(citation, courtListenerToken);
+  const hit = hits.find((h) => h.status === 'matched');
+  if (!hit || !hit.cluster_id) {
+    return {
+      vetoNote:
+        'CITATION NOT FOUND in CourtListener. Possible hallucination. Verify against ' +
+        'Caselaw Access Project or original reporter before any use.',
+    };
+  }
+  return { clusterId: hit.cluster_id, url: hit.url };
+}
+
+/** Gates 1 (remote half) through 4, for a candidate local Gate 1 did not veto. */
+async function verifyPastLocalGate1(
+  candidate: CitationCandidate,
+  local: Gate1Result,
+  verdict: GateVerdict,
+  opts: VerifyOptions,
+): Promise<GateVerdict> {
   // Try cache first — re-verifying every cite on every request is wasteful.
   const cached = await readCache(candidate.citation, opts.supabase);
   if (cached) {
@@ -93,21 +215,16 @@ export async function verifyCitation(
     verdict.gate1_existence = true;
     verdict.notes.push('Cache hit.');
   } else {
-    // Gate 1: existence via CourtListener Citation Lookup.
-    const hits = await citationLookup(candidate.citation, opts.courtListenerToken);
-    const hit = hits.find((h) => h.status === 'matched');
-    if (!hit || !hit.cluster_id) {
+    const found = await clusterAfterLocalGate1(candidate.citation, local, opts.courtListenerToken);
+    if ('vetoNote' in found) {
       verdict.status = 'vetoed';
-      verdict.notes.push(
-        'CITATION NOT FOUND in CourtListener. Possible hallucination. Verify against ' +
-          'Caselaw Access Project or original reporter before any use.',
-      );
+      verdict.notes.push(found.vetoNote);
       return verdict;
     }
     verdict.gate1_existence = true;
 
     // Pull cluster + first opinion text, hash it, persist as a Source row.
-    const cluster = await getCluster(hit.cluster_id, opts.courtListenerToken);
+    const cluster = await getCluster(found.clusterId, opts.courtListenerToken);
     const opinionUrl = cluster.sub_opinions[0];
     const opinion = opinionUrl
       ? await getOpinion(opinionUrl, opts.courtListenerToken)
@@ -121,7 +238,7 @@ export async function verifyCitation(
         type: 'case',
         jurisdiction: cluster.court,
         year: parseInt(cluster.date_filed?.slice(0, 4) ?? '0', 10) || null,
-        source_url: hit.url ?? `https://www.courtlistener.com${cluster.absolute_url}`,
+        source_url: found.url ?? `https://www.courtlistener.com${cluster.absolute_url}`,
         sha256,
         full_text: fullText,
         // Persist the opinion ID so Gate 3 (currency) can run on cache hits.
@@ -186,37 +303,6 @@ export async function verifyCitation(
   await persistVerdict(verdict, opts.supabase);
   return verdict;
 }
-
-/**
- * Verify every citation in a draft text in one shot. Uses CourtListener's
- * block-of-text mode for Gate 1, then spreads out to per-citation checks
- * for gates 2-4.
- */
-export async function verifyDraft(
-  draftText: string,
-  opts: VerifyOptions,
-): Promise<{
-  verdicts: GateVerdict[];
-  hasVetoes: boolean;
-  hasConditional: boolean;
-}> {
-  const hits = await citationLookup(draftText, opts.courtListenerToken);
-  // Convert hits + the original draft into candidate objects.
-  const candidates: CitationCandidate[] = hits.map((h) => ({
-    citation: h.citation,
-  }));
-  const verdicts: GateVerdict[] = [];
-  for (const c of candidates) {
-    verdicts.push(await verifyCitation(c, opts));
-  }
-  return {
-    verdicts,
-    hasVetoes: verdicts.some((v) => v.status === 'vetoed'),
-    hasConditional: verdicts.some((v) => v.status === 'conditional'),
-  };
-}
-
-// ───── helpers ─────
 
 function quoteAppearsIn(quote: string, fullText: string): boolean {
   // Normalize whitespace/quotes; case-sensitive comparison.

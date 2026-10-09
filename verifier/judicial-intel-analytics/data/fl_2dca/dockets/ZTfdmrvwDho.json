@@ -1,0 +1,31 @@
+{
+ "video_id": "ZTfdmrvwDho",
+ "title": "24 0011",
+ "found": true,
+ "case_numbers_all": [
+  "2D2024-0011"
+ ],
+ "case_number": "2D2024-0011",
+ "source": "flcourts",
+ "case_name": "Blackshear, Jr., M. D., P. A., Blackshear, M. D. v. Haynes",
+ "decided_date": "2025-12-31",
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "opinion_type": "Appeal - Authored Opinion",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/2483059/opinion/Opinion_2024-0011.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2025/december/31/2024-0011",
+ "ctrack_id": "ctrack_19233281",
+ "n_decision_records": 2,
+ "looked_up_at": "2026-09-19T07:11:54Z",
+ "author": "Smith",
+ "panel_judges": "Smith; Silberman; Villanti",
+ "trial_judge": "William Douglas Baird",
+ "county": "Pinellas",
+ "appellant_counsel": "A SECOND DISTRICT WILLIAM BLACKSHEAR, M.D., and WILLIAM M. BLACKSHEAR, JR., M.D., P.A., Appellants, v. BETTY JEAN HAYNES, Appellee. No. 2D2024-0011 December 31, 2025 Appeal from the Circuit Court for Pinellas County; William Douglas Baird, Senior Judge. Garrett A. Tozier of Shutts & Bowen LLP, Tampa",
+ "appellee_counsel": ". No. 2D2024-0011 December 31, 2025 Appeal from the Circuit Court for Pinellas County; William Douglas Baird, Senior Judge. Garrett A. Tozier of Shutts & Bowen LLP, Tampa, for Appellants. Brandon K. Breslow, Kristin A. Norse, and Stuart C. Markman, of Counsel, of Kynes, Markman & Felman, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 22624
+}

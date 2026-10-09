@@ -1,0 +1,51 @@
+{
+ "judge_id": "hunter-w-carroll",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 20,
+   "affirmed": 13,
+   "reversed": 5,
+   "mixed": 2,
+   "other": 0,
+   "reversal_rate": 0.35,
+   "reversal_rate_ci95": {
+    "lo": 0.181,
+    "hi": 0.567,
+    "method": "wilson"
+   },
+   "county": "Sarasota",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2024-2203",
+    "2D2024-0192",
+    "2D2021-3878",
+    "2D2020-3302",
+    "2D2023-2775",
+    "2D2023-1089",
+    "2D2022-0678",
+    "2D2024-0278",
+    "2D2021-3566",
+    "2D2020-1824",
+    "2D2021-3412",
+    "2D2025-0063",
+    "2D2022-1438",
+    "2D2025-0063",
+    "2D2023-0954",
+    "2D2020-2757",
+    "2D2024-0382",
+    "2D2023-0489",
+    "2D2023-2631",
+    "2D2024-1806"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

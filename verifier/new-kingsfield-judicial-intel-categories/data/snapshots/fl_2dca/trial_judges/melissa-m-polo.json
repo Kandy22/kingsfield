@@ -1,0 +1,43 @@
+{
+ "judge_id": "melissa-m-polo",
+ "court_id": "fl_2dca",
+ "as_of": "2026-09-19",
+ "fields": {
+  "F19": {
+   "scope": "trial_judge_trail",
+   "n": 12,
+   "affirmed": 10,
+   "reversed": 2,
+   "mixed": 0,
+   "other": 0,
+   "reversal_rate": 0.167,
+   "reversal_rate_ci95": {
+    "lo": 0.047,
+    "hi": 0.448,
+    "method": "wilson"
+   },
+   "county": "Hillsborough",
+   "note": "argued appeals only (a selected, harder subset); n is small — read the CI, not the point",
+   "cases": [
+    "2D2025-0115",
+    "2D2025-0214",
+    "2D2021-3150",
+    "2D2025-0588",
+    "2D2023-2133",
+    "2D2024-0273",
+    "2D2023-0072",
+    "2D2023-1073",
+    "2D2023-0826",
+    "2D2025-0342",
+    "2D2023-0400",
+    "2D2022-0368"
+   ]
+  }
+ },
+ "provenance": {
+  "F19": {
+   "source": "flcourts opinion PDF (trial judge, disposition)",
+   "collected_at": "2026-09-19T08:32:01+00:00"
+  }
+ }
+}

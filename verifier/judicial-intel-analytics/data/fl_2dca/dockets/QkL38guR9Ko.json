@@ -1,0 +1,35 @@
+{
+ "video_id": "QkL38guR9Ko",
+ "title": "25 0999",
+ "case_number": "2D2025-0999",
+ "case_numbers_all": [
+  "2D2025-0999"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0999",
+ "case_name": "FLORIDA INSURANCE GUARANTY ASSOCIATION v. SYNERGY CONTRACTING GROUP, INC. a/a/o ARLETTE SCHMIDT",
+ "decided_date": "2026-09-02",
+ "cl_cluster_id": 10964720,
+ "cl_opinion_id": 11432331,
+ "cl_url": "https://www.courtlistener.com/opinion/10964720/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Reversed and remanded.",
+ "disposition": "reverse",
+ "per_curiam": false,
+ "author": "Atkinson",
+ "panel_judges": "Atkinson; Northcutt; Rothstein-Youakim",
+ "dissenting_judges": null,
+ "special_concurrence_judges": "Northcutt; Rothstein-Youakim",
+ "county": "Pinellas",
+ "trial_judge": "Patricia Muscarella",
+ "appellant_counsel": "E GUARANTY ASSOCIATION, Appellant, v. SYNERGY CONTRACTING GROUP, INC. a/a/o ARLETTE SCHMIDT, Appellee. No. 2D2025-0999 September 2, 2026 Appeal from the Circuit Court for Pinellas County; Patricia Muscarella, Judge. Megan G. Colter and Dorothy DiFiore of Quintairos, Prieto, Wood & Boyer, P.A., Tampa",
+ "appellee_counsel": "a/o ARLETTE SCHMIDT, Appellee. No. 2D2025-0999 September 2, 2026 Appeal from the Circuit Court for Pinellas County; Patricia Muscarella, Judge. Megan G. Colter and Dorothy DiFiore of Quintairos, Prieto, Wood & Boyer, P.A., Tampa, for Appellant. Steven I. Battisti of Battisti Felce, P.A., Celebration",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 16196,
+ "_tried": [
+  "2D2025-0999"
+ ],
+ "looked_up_at": "2026-09-19T07:21:12Z"
+}

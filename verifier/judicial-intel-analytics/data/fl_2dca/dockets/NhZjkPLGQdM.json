@@ -1,0 +1,35 @@
+{
+ "video_id": "NhZjkPLGQdM",
+ "title": "25 0629",
+ "case_number": "2D2025-0629",
+ "case_numbers_all": [
+  "2D2025-0629"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0629",
+ "case_name": "STATE OF FLORIDA v. STEVIE SWINSON",
+ "decided_date": "2026-01-14",
+ "cl_cluster_id": 10774272,
+ "cl_opinion_id": 11240857,
+ "cl_url": "https://www.courtlistener.com/opinion/10774272/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Northcutt; Silberman; Kelly",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Barbara Twine- Thomas",
+ "appellant_counsel": "A SECOND DISTRICT STATE OF FLORIDA, Appellant, v. STEVIE SWINSON, Appellee. No. 2D2025-0629 January 14, 2026 Appeal from the Circuit Court for Hillsborough County; Barbara Twine- Thomas, Judge. James Uthmeier, Attorney General, Tallahassee, and Krystle Celine Cacci, Assistant Attorney General, Tampa",
+ "appellee_counsel": "llee. No. 2D2025-0629 January 14, 2026 Appeal from the Circuit Court for Hillsborough County; Barbara Twine- Thomas, Judge. James Uthmeier, Attorney General, Tallahassee, and Krystle Celine Cacci, Assistant Attorney General, Tampa, for Appellant. Victoria E. Hatfield of O'Brien Hatfield, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 830,
+ "_tried": [
+  "2D2025-0629"
+ ],
+ "looked_up_at": "2026-09-19T07:13:07Z"
+}

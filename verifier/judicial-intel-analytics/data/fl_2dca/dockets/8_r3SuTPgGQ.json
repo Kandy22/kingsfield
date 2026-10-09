@@ -1,0 +1,33 @@
+{
+ "video_id": "8_r3SuTPgGQ",
+ "title": "24 2082",
+ "case_number": "2D2024-2082",
+ "case_numbers_all": [],
+ "found": true,
+ "matched_docket_number": "2D2024-2082",
+ "case_name": "City of Tampa, Florida v. Liberty Hospitality Management, LLC",
+ "decided_date": "2026-03-06",
+ "cl_cluster_id": 10804772,
+ "cl_opinion_id": 11271507,
+ "cl_url": "https://www.courtlistener.com/opinion/10804772/city-of-tampa-florida-v-liberty-hospitality-management-llc/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Petition granted.",
+ "disposition": "granted",
+ "per_curiam": false,
+ "author": "Morris",
+ "panel_judges": "Morris; Silberman; Sleet",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": null,
+ "trial_judge": null,
+ "appellant_counsel": null,
+ "appellee_counsel": null,
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 23054,
+ "_tried": [
+  "2D2024-2082"
+ ],
+ "looked_up_at": "2026-09-19T07:04:32Z"
+}

@@ -1,0 +1,35 @@
+{
+ "video_id": "rCAmFPV2ik8",
+ "title": "25 0674",
+ "case_number": "2D2025-0674",
+ "case_numbers_all": [
+  "2D2025-0674"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2025-0674",
+ "case_name": "XYZ 300, LLC, a Florida Limited Liability Company LLC v. CITY OF ST. PETERSBURG",
+ "decided_date": "2026-02-04",
+ "cl_cluster_id": 10783937,
+ "cl_opinion_id": 11250575,
+ "cl_url": "https://www.courtlistener.com/opinion/10783937/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": false,
+ "author": null,
+ "panel_judges": "Northcutt; Kelly",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Pinellas",
+ "trial_judge": "Thomas M. Ramsberger",
+ "appellant_counsel": "as trustee of the Mirror Lake Land Trust UAD March 20, 2013, Appellant, v. CITY OF ST. PETERSBURG, Appellee. No. 2D2025-0674 February 4, 2026 Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Matthew D. Weidner and Jason Michael Kral of Weidner Law, P.A., St. Petersburg",
+ "appellee_counsel": " Appeal from the Circuit Court for Pinellas County; Thomas M. Ramsberger, Judge. Matthew D. Weidner and Jason Michael Kral of Weidner Law, P.A., St. Petersburg, for Appellant. Jackie Kovilaritch, City Attorney, and Joseph P. Kelly, Assistant City Attorney, Office of the City Attorney, St. Petersburg",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": false,
+ "opinion_chars": 14177,
+ "_tried": [
+  "2D2025-0674"
+ ],
+ "looked_up_at": "2026-09-19T08:03:30Z"
+}

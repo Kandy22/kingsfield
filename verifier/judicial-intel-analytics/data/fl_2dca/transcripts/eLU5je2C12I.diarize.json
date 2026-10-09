@@ -1,0 +1,239 @@
+{
+  "summary": "The court hearing discusses a case involving Nimbus Apollo versus US Bank National Association. Mr. Rubye, representing the appellant, argues that the clerk prematurely issued a certificate of title in a foreclosure case, thereby bypassing a required 10-day objection period and subsequent hearing. He explains that several motions for rehearing and to vacate were filed but were denied without a hearing, which he contends goes against established case law that requires a hearing for such objections. The judge questions what actions were taken to ensure a hearing was set.",
+  "segments": [
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:00 - 00:06",
+      "content": "Calling is the case involving Nimbus Apollo versus US Bank National Association.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:07 - 00:12",
+      "content": "So we should have Mr. Rubye for the appellate and Mr. Donovan on behalf of the Appley.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:16 - 00:17",
+      "content": "Thank you very much.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:23 - 00:24",
+      "content": "So, Mr. Rubai, you were just here.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:25 - 00:26",
+      "content": "Oh, you're right.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:27 - 00:28",
+      "content": "just here some place.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:29 - 00:31",
+      "content": "Good morning, Mr. Rubar.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:31 - 00:32",
+      "content": "just wait.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:33 - 00:35",
+      "content": "All right. How how much time would you like to reserve for your party?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:35 - 00:37",
+      "content": "Oh, five minutes. Very good. Five minutes.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:37 - 00:40",
+      "content": "All right. Whenever you're ready, Mr. Riby, please proceed.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:40 - 02:24",
+      "content": "Um, this is a case involving a foreclosure and the appeal is about the fact that I've never actually had this happen, although I've been involved in a lot of foreclosures. Somehow or another the clerk issued the certificate of title. Uh the sale was a uh 26. It's two days in February. They issued on on on uh the fourth and not the 10 days that's required by the statute. And in in in inquiring to how and why that happened, it turned out that one of the orders that was entered on a presale objection that was filed 8:36 in the morning to this objection of the sale because they didn't want the sale to take place at all. Um, and we had filed that objection, that the order that was entered on that, which was actually entered the next day, had an extra paragraph in the bottom of it. And what it said was the clerk is instructed to complete the necessary steps towards issuance of a certificate of title and disbursement of funds to the final judgment of foreclosure and at August 16th and pursuant to Florida law. See that that paragraph shouldn't have been there because the clerk took that to mean, because it says the clerk is instructed to complete the necessary steps for certificate of title. They do that automatically. If there's a if you have a foreclosure sale, unless a judge calls down with the day to cancel it, or unless there's an order entered before that date cancel it. They automatically just go forward with the sale. And under the statute that 10 days, you have to file an objection within 10 days after that sale is filed. And of course, you can have different objections based on how much is bid, who bid, how much it was, efficiency of sale, etc, etc. But what happened here was,",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:25 - 00:26",
+      "content": "Let me ask you a threshold question here.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:27 - 00:27",
+      "content": "Yes.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:27 - 00:34",
+      "content": "Your your friend on the other side suggests, your friend on the other side suggests that this issue is not preserved for review.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:35 - 00:35",
+      "content": "Is not what?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:36 - 00:38",
+      "content": "Preserved for review. You know what that means, right?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:38 - 00:38",
+      "content": "Yes.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "00:39 - 00:42",
+      "content": "So, can you, I assume you've read his brief. Tell me about it.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "00:42 - 03:04",
+      "content": "The reason it's preserved for review is because we made a motion to re hear it with the court, was denied without a hearing. And that shouldn't have happened because uh we filed several, we filed an objection, we filed a motion to re hear, we filed a motion to vacate, we filed three motions directed to the court to add the search. And under the case law I've put in my brief.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "03:04 - 03:14",
+      "content": "What did you do to try to get it set for hearing? Because you know that a motion for re hearing is not guaranteed. Judge can rule on that without having a hearing. What did you do to get a hearing set on it?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "03:17 - 03:20",
+      "content": "Well, you know, we call up and try to get you have to go through draws and",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "03:20 - 03:23",
+      "content": "What do we have in our record that shows that you tried to get a hearing?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "03:26 - 03:31",
+      "content": "I don't think there's anything on the records. I requested an evidentiary hearing then I filed a motion for it to be heard.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 1",
+      "timestamp": "03:32 - 03:33",
+      "content": "What so there was a motion for that?",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    },
+    {
+      "speaker": "Speaker 2",
+      "timestamp": "03:34 - 05:00",
+      "content": "Yeah, I filed a motion for evidentiary hearing. I filed um I filed Okay, so first of all, um on the 20 um Okay, I filed um Motion to on 3/7/2025 and best before the end of the 10 days that would have occurred. I filed a motion to vacate certificate of sale prematurely issued. I also filed on the same date an objection to sale and request for an evidentiary hearing. And then on 3/10, three days later, still before well, I think it would have ran 3/8, but I filed a motion for re hearing and vacate order with the attached copy of order. That was within the 15 days. So I filed all three of those. Um and then they um submitted these orders uh through a cover letter, which attached, it showed to be served to Gabriel Stream, who was the prior attorney way before me. Um, and they gave form orders to deny all them in chambers without a hearing. But the case law is very clear under that um I my case I got Regnar and thatker case. Umker case, they're both very clear that the statute that uh uh the what we're operating under. When you make an objection like that, there has to be a hearing. It's required. That you get a hearing, an evidentiary hearing, a hearing.",
+      "language": "English",
+      "language_code": "en",
+      "translation": "",
+      "emotion": "Neutral"
+    }
+  ]
+}

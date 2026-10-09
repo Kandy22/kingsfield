@@ -1,0 +1,27 @@
+{
+ "video_id": "ap6Du9lsOGk",
+ "title": "2D20-2202",
+ "found": true,
+ "case_numbers_all": [
+  "2D2020-2202"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:12:23Z",
+ "case_number": "2D2020-2202",
+ "case_name": "AMERICAN HOME ASSURANCE COMPANY  vs JOHN  ROBERT SEBO, INDIVIDUALLY & TRUSTEE",
+ "decided_date": "2021-06-30",
+ "disposition_text": "Denied",
+ "disposition": "denied",
+ "opinion_type": "Denied",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/753733/opinion/Opinion_20-2202.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2021/June/30/20-2202",
+ "ctrack_id": "4591611",
+ "n_decision_records": 1,
+ "author": "Casanueva",
+ "panel_judges": "Casanueva; Villanti; Black",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 12493
+}

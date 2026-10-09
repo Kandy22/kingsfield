@@ -1,0 +1,35 @@
+{
+ "video_id": "wqjAFlHx7iI",
+ "title": "24 2891",
+ "case_number": "2D2024-2891",
+ "case_numbers_all": [
+  "2D2024-2891"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2891",
+ "case_name": "ASSOCIATED RECEIVABLES FUNDING, INC. v. ADVANCE TECHNOLOGY SOLUTIONS OF GEORGIA, LLC;",
+ "decided_date": "2025-10-24",
+ "cl_cluster_id": 10751806,
+ "cl_opinion_id": 11218391,
+ "cl_url": "https://www.courtlistener.com/opinion/10751806/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Northcutt; Black; Atkinson",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Laura E. Ward",
+ "appellant_counsel": null,
+ "appellee_counsel": "KINS; CITIBANK, N.A.; and IDC TECHNOLOGIES, INC., Appellees. No. 2D2024-2891 October 24, 2025 Appeal from the Circuit Court for Hillsborough County; Laura E. Ward, Judge. Alexander B. Cvercko of Cvercko & Associates, PA, Jacksonville, for Appellant. Donald A. Mihokovich of Adams and Reese LLP, Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 924,
+ "_tried": [
+  "2D2024-2891"
+ ],
+ "looked_up_at": "2026-09-19T08:12:12Z"
+}

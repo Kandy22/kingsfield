@@ -1,0 +1,30 @@
+{
+ "video_id": "FGrXM8ZTO8Y",
+ "title": "2D21 747",
+ "found": true,
+ "case_numbers_all": [
+  "2D2021-0747"
+ ],
+ "source": "flcourts",
+ "looked_up_at": "2026-09-19T07:06:06Z",
+ "case_number": "2D2021-0747",
+ "case_name": "R. B.  vs B. T.",
+ "decided_date": "2023-01-13",
+ "disposition_text": "Reversed and remanded with instructions.",
+ "disposition": "reverse",
+ "opinion_type": "Reversed",
+ "is_pca": false,
+ "per_curiam": false,
+ "flcourts_pdf": "/content/download/857893/opinion/Opinion_21-0747.pdf",
+ "flcourts_page": "https://2dca.flcourts.gov/opinions/Opinions-Archive/Written-Opinions/2023/January/13/21-0747",
+ "ctrack_id": "4733438",
+ "n_decision_records": 1,
+ "panel_judges": "Kelly; Villanti",
+ "trial_judge": "Wesley D. Tibbals",
+ "county": "Hillsborough",
+ "appellant_counsel": "DISTRICT COURT OF APPEAL OF FLORIDA SECOND DISTRICT R.B., Appellant, v. B.T., Appellee. No. 2D21-747 January 13, 2023 Appeal from the Circuit Court for Hillsborough County; Wesley D. Tibbals, Judge. Allison M. Perry of Florida Appeals, P.A., Tampa",
+ "appellee_counsel": ", v. B.T., Appellee. No. 2D21-747 January 13, 2023 Appeal from the Circuit Court for Hillsborough County; Wesley D. Tibbals, Judge. Allison M. Perry of Florida Appeals, P.A., Tampa, for Appellant. Richard J. Mockler, Katherine Johnson Nassar, and Angela Lynn Leiner of Mockler Leiner Law, P.A., Tampa",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "opinion_chars": 5028
+}

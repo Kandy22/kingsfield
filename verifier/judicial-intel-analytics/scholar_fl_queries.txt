@@ -1,0 +1,24 @@
+# scholar_fl_queries.txt
+# Kingsfield Lawfare — Google Scholar FL Case Law Query List
+# One query per line. Lines starting with # are ignored.
+# Run: python3 scholar_fl_scraper.py --batch scholar_fl_queries.txt --pages 5
+#
+# TRACK A: Pro se / ADA / court access (directly relevant to Ray v. Mackin)
+pro se filing restriction ADA accommodation Florida court
+ADA Title II court access disability Florida
+mandamus writ court executive Florida
+judicial vacancy ADA accommodation Florida
+
+# TRACK B: FL judicial behavior patterns (judicial analytics pipeline)
+Florida district court appeal reversal rate
+Florida circuit court sanctions discovery misconduct
+Florida pro se litigant dismissal standard
+
+# TRACK C: Citation verification benchmark expansion
+hearsay exception Florida evidence
+Fourth Amendment Florida suppression motion
+Florida comparative fault negligence
+
+# TRACK D: Kingsfield competitive intelligence
+AI evidence Florida court admissibility
+expert witness Florida daubert standard

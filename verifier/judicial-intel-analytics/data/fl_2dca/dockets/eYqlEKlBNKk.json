@@ -1,0 +1,35 @@
+{
+ "video_id": "eYqlEKlBNKk",
+ "title": "24 2495",
+ "case_number": "2D2024-2495",
+ "case_numbers_all": [
+  "2D2024-2495"
+ ],
+ "found": true,
+ "matched_docket_number": "2D2024-2495",
+ "case_name": "RENAISSANCE HOTEL MANAGEMENT COMPANY, LLC v. JOHN VANN",
+ "decided_date": "2025-12-19",
+ "cl_cluster_id": 10761606,
+ "cl_opinion_id": 11228191,
+ "cl_url": "https://www.courtlistener.com/opinion/10761606/x/",
+ "n_opinions_in_cluster": 1,
+ "disposition_text": "Affirmed.",
+ "disposition": "affirm",
+ "per_curiam": true,
+ "author": null,
+ "panel_judges": "Northcutt; Silberman; Kelly",
+ "dissenting_judges": null,
+ "special_concurrence_judges": null,
+ "county": "Hillsborough",
+ "trial_judge": "Lyann Goudie",
+ "appellant_counsel": null,
+ "appellee_counsel": "PA INTERNATIONAL PLAZA HOTEL, Appellant, v. JOHN VANN, Appellee. No. 2D2024-2495 December 19, 2025 Appeal from the Circuit Court for Hillsborough County; Lyann Goudie, Judge. P. Brandon Perkins of Campbell Conroy & O'Neil, Fort Lauderdale, for Appellant. Brian J. Lee of Morgan & Morgan, Jacksonville",
+ "has_dissent": false,
+ "has_special_concurrence": false,
+ "is_pca": true,
+ "opinion_chars": 831,
+ "_tried": [
+  "2D2024-2495"
+ ],
+ "looked_up_at": "2026-09-19T07:41:09Z"
+}
