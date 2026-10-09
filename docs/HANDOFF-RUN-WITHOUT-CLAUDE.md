@@ -30,7 +30,7 @@ Everything below is a normal shell command. Nothing here needs Claude, an agent,
 | JEV / System One router | `router/` (Python, with a local `.gguf` model) |
 | Wingman | `wingman-in-your-ear/` (start with `RUN_wingman.command`; spec files `WINGMAN_*.md`) |
 | Judicial intel (oral arguments, Jev scoring) | `verifier/judicial-intel-analytics/` and `verifier/new-kingsfield-judicial-intel-categories/` |
-| **Business plan (BP)** | `to sort/Kingsfield Bus Plan/Kingsfield_Business_Plan_2026_v2.docx` (main), `business-plan/Kingsfield_BP_v3_Additions.docx` (also in `business/`). Read as text: `textutil -convert txt -stdout <file>`. Mapped to what exists in `docs/DB-AND-CITATIONS-EXPLAINED.md` section 9 |
+| **Business plan (BP)** | `to sort/Kingsfield Bus Plan/Kingsfield_Business_Plan_2026_v2.docx` (main), `business-plan/Kingsfield_BP_v3_Additions.docx` (BP dated 2026-05-20, additions 2026-05-21). Read as text: `textutil -convert txt -stdout <file>`. Mapped to what exists in `docs/DB-AND-CITATIONS-EXPLAINED.md` section 9 |
 | **The DB / citations / labels explained** | `docs/DB-AND-CITATIONS-EXPLAINED.md` |
 | Project state notes | `docs/context/current-state.md` (top = newest; **older "OPEN/not fixed" sections below the top may be stale**) and `docs/context/decisions.md` |
 | Python for all of the above | `~/.venv-cascade/bin/python` (Python 3.12) |

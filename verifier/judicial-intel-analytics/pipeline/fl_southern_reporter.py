@@ -92,31 +92,50 @@ def stage_list(out: Path, courts, since: int, until: int):
     print(f"list: {n} new decisions -> {path}")
 
 
-def stage_text(out: Path, courts, limit: int):
-    s = requests.Session()
+def stage_text(out: Path, courts, limit: int, kinds, workers: int):
+    """PDF -> text with a few polite parallel workers. Only `kinds` are fetched: PCA orders contain no
+    citations (their reporter cite is printed by LATER opinions), so the default is opinions only."""
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    lock = threading.Lock()
     fails = (out / "failures.txt").open("a", encoding="utf-8")
-    done = 0
+    counter = {"done": 0}
+    todo = []
     for line in (out / "decisions.jsonl").open(encoding="utf-8"):
         rec = json.loads(line)
-        if rec["court"] not in courts or not rec.get("pdf_uri"):
+        if rec["court"] not in courts or rec["listing_type"] not in kinds or not rec.get("pdf_uri"):
             continue
         dest = out / "text" / rec["court"] / (doc_id(rec) + ".txt")
-        if dest.exists():
-            continue
+        if not dest.exists():
+            todo.append((rec, dest))
+    if limit:
+        todo = todo[:limit]
+    print(f"text: {len(todo)} files to fetch ({workers} workers)", flush=True)
+
+    local = threading.local()
+
+    def work(item):
+        rec, dest = item
+        if not hasattr(local, "s"):
+            local.s = requests.Session()
         try:
-            txt = pdf_text(s, rec["pdf_uri"])  # PDF stays in memory
+            txt = pdf_text(local.s, rec["pdf_uri"])  # PDF stays in memory
         except Exception as ex:
-            fails.write(f"{rec['_key']}\t{ex}\n")
-            fails.flush()
-            continue
+            with lock:
+                fails.write(f"{rec['_key']}\t{ex}\n")
+                fails.flush()
+            return
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(txt, encoding="utf-8")
-        done += 1
-        if done % 200 == 0:
-            print(f"  text: {done} files", flush=True)
-        if limit and done >= limit:
-            break
-    print(f"text: {done} files written")
+        with lock:
+            counter["done"] += 1
+            if counter["done"] % 500 == 0:
+                print(f"  text: {counter['done']} / {len(todo)}", flush=True)
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        list(ex.map(work, todo))
+    print(f"text: {counter['done']} files written")
 
 
 COURT_RE = [
@@ -215,13 +234,15 @@ def main():
     ap.add_argument("--courts", default=",".join(COURTS))
     ap.add_argument("--since", type=int, default=2008)
     ap.add_argument("--until", type=int, default=date.today().year)
+    ap.add_argument("--kinds", default="opinions", help="text stage: listing kinds to fetch (opinions,pca)")
+    ap.add_argument("--workers", type=int, default=3, help="text stage: parallel fetchers (each waits 0.5 s between requests)")
     ap.add_argument("--limit", type=int, default=0, help="text stage: stop after N files (testing)")
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     courts = [c for c in a.courts.split(",") if c in COURTS]
     {"list": lambda: stage_list(out, courts, a.since, a.until),
-     "text": lambda: stage_text(out, courts, a.limit),
+     "text": lambda: stage_text(out, courts, a.limit, a.kinds.split(","), a.workers),
      "cites": lambda: stage_cites(out),
      "match": lambda: stage_match(out)}[a.stage]()
 

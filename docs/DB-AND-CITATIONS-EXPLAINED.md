@@ -139,7 +139,7 @@ A row back means Gate 1 would pass it; no row means veto. Or run the real gate:
 
 ## 9. How this maps to your business plan (BP)
 
-The BP is `to sort/Kingsfield Bus Plan/Kingsfield_Business_Plan_2026_v2.docx` (main plan, section 4.2 "Three Agent Layers"), plus `business-plan/Kingsfield_BP_v3_Additions.docx` (same file also at `business/`). What the BP promises, and what exists today:
+The BP is `to sort/Kingsfield Bus Plan/Kingsfield_Business_Plan_2026_v2.docx` (main plan, section 4.2 "Three Agent Layers"; **dated 2026-05-20**), plus `business-plan/Kingsfield_BP_v3_Additions.docx` (**2026-05-21**). Both are about 4.5 months old and pre-date everything in this document, so they describe the intended product, not the current state. What the BP promises, and what exists today:
 
 | BP promise | Built? |
 |---|---|
@@ -148,3 +148,41 @@ The BP is `to sort/Kingsfield Bus Plan/Kingsfield_Business_Plan_2026_v2.docx` (m
 | "Verification Council: nine adversarial reviewers; every output GREEN, AMBER or RED" | **Not built.** What exists is the four-status verdict. Proposed mapping, to confirm: `verified` = GREEN, `conditional` = AMBER, `vetoed` / `pending` / error = RED. |
 | "Targets sub-5% residual error through adversarial human-in-the-loop review" | **Not measured.** The benchmark card (Hugging Face `legal-citation-benchmark`) shows the unverified models' error rates; no residual-error number exists for Kingsfield itself. The human review tool (Task 2) is what would produce it. |
 | "Calibrated Kingsfield confidence score" (Oct 3 Task 3.3) | **Not built.** The router's 0.80 threshold is a placeholder. |
+
+
+## 10. The Task 1 numbers, explained (what "5,166 decisions" and "391,465" each mean)
+
+These are different things; do not compare them.
+
+| Number | What it counts | Where it is |
+|---|---|---|
+| **391,465** | **citation rows in the finished database**: one per reporter citation like `618 So. 2d 177`, for Florida cases already in CourtListener | `kingsfield_florida.db`. Built. Used by Gate 1 to say a citation exists. |
+| **"decisions"** (5,166 at 6:44 AM, 58,169 at 7:20 AM, final about 250,000 to 300,000) | **documents the Florida courts published**, one row each, straight from the courts' own website listing. Not citations. | `~/Kingsfield_Corpus/flcourts/decisions.jsonl`. Still being collected. |
+
+**Court codes:** `1dca` to `5dca` are Florida's First to Fifth District Courts of Appeal; `6dca` is the Sixth (it started in 2023, so 2008 to 2022 is empty); `supremecourt` is the Florida Supreme Court.
+**`opinions` vs `pca`:** an `opinion` is a written decision with reasoning (these contain the citations the pipeline reads). A `pca` ("per curiam affirmed") is a one-line order with no opinion text; PCAs only need listing, because their reporter cite is printed by *later* opinions that cite them. So the text stage now downloads **opinions only** (override with `--kinds opinions,pca`).
+
+**What Task 1 is for:** the court listing says "case 18-0525 decided 2020-12-30" but not "842 So. 2d 1057". Later opinions print that cite. The pipeline reads the later opinions' text, finds each `So. 2d`/`So. 3d` citation, and matches it back to the decision (same court + year + case-name score at least 85 and 5 above the runner-up). Output: `fl_southern_citations.csv` (a decision-to-citation table) and `review_queue.jsonl` (what a human must label).
+
+**Two different things both called "text/transcripts" (do not mix them):**
+| | Task 1 "text" | Judicial analytics "transcripts" |
+|---|---|---|
+| What | the **words of written opinions** (court PDFs turned into text; PDFs are never saved) | the **words spoken in oral-argument videos** |
+| Where | `~/Kingsfield_Corpus/flcourts/text/<court>/` | `Verifier/judicial-intel-analytics/data/fl_2dca/` : `captions/` 2,892 files (`.vtt` YouTube captions + `.info.json`), `audio/` 426 downloads, `transcripts/` 1,447 files (`.turns.json`, speaker turns), `panel/` Jev scoring results |
+| Used for | extracting citations (Task 1) | Jev scoring of arguments; the offer catalog (snapshots: `fl_2dca/cases.jsonl` 1,416 cases, `fl_6dca/cases.jsonl` 98 cases) |
+
+**Time (corrected):** list about 3 hours total (about 2 more now); text about 10 to 11 hours after the speed-up (3 parallel fetchers, opinions only; measured 30 PDFs in 9 seconds); citation extraction about 1 hour; match, minutes. The 1st DCA text stage was started early (its listing is done), so overall about 14 to 15 hours from 6:35 AM, running unattended.
+
+## 11. What to do and say about the databases (derived from the repo's own rules; I could NOT find your "smart not stupid" plan on this Mac or in any past session, so check this against it)
+
+**Citation database (`kingsfield_florida.db`)**
+- Say: "Gate 1 checks that a Florida citation exists in a local index of public reporter citations (reporter, volume, page, case name, court), built from CourtListener's bulk data." Say that anything it cannot confirm is withheld, not shown.
+- Do not say: that it verifies a case *says what the AI claims* (that is Gate 2, not built on this data); that it covers trial courts or other states; that page ranges are the printed ranges (they are inferred); or that it guarantees no hallucinations (the benchmark shows the unverified-model error rates; Kingsfield's own residual error is not measured).
+- Keep: opinion text and AI summaries in separate tables (Constraint B). No headnotes, key numbers or editorial synopses are ingested (the ROSS ruling); keep it that way, including from LawDiver or any Westlaw/Lexis product.
+- Before redistributing the database file or serving it publicly, re-check CourtListener's current bulk-data terms and keep attribution. It is local and not distributed today.
+
+**Judicial analytics data**
+- Say: the Jev outputs are a lift-with-abstention signal (best signal `skepticism_gap`; `ruling_lean` only at confidence 0.7 or more), not an accuracy model; never report a mean score; state the abstention rule and the labeling protocol.
+- Keep raw captions, audio and PDFs local; publish derived statistics and code only (your rule: code only to GitHub).
+- **Check now:** the public GitHub repo still tracks third-party material (for example a Trellis case-documents PDF under `verifier/judicial-intel/attornies-data/` and the July backup of many documents). Decide whether the repo stays public before any claim is made about the data.
+- Have counsel (your licensed-attorney anchor in the BP) confirm any fair-use position before it is stated publicly; this document is not legal advice.
