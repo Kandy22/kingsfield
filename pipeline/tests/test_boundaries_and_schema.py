@@ -643,7 +643,10 @@ class Gate1Ordering(unittest.TestCase):
         reload_path = chat[start:end]
         self.assertRegex(reload_path, r"from\(\s*[\"']chat_messages[\"']\s*\)\s*\.select\(\s*[\"']\*[\"']\s*\)",
                          "GET /chat/:chatId no longer selects every column (annotations included) of chat_messages")
-        self.assertRegex(reload_path, r"res\.json\(\{\s*chat\s*,\s*messages:\s*hydrated\s*\}\)")
+        # The chat row's title is replaced by its Gate 1 result (gatedStoredTitle); the messages are still the
+        # hydrated saved rows, untouched. Anything else (a filtered, reshaped or annotation-dropping body) fails here.
+        self.assertRegex(reload_path, r"res\.json\(\{\s*chat:\s*\{\s*\.\.\.chat\s*,\s*title:\s*await gatedStoredTitle\(\s*chat\.title\s*,\s*db\s*\)\s*\}\s*,\s*messages:\s*hydrated\s*\}\)")
+        self.assertRegex(reload_path, r"const hydrated = await hydrateEditStatuses\(\s*messages \?\? \[\]\s*,\s*db\s*\)")
         self.assertNotIn(".filter(", reload_path, "the reload path filters messages or annotations")
         self.assertNotRegex(reload_path, r"[\"']verification[\"']", "the reload path special-cases the verification record")
         self.assertNotRegex(reload_path, r"\bdelete\s+\w+\.annotations|annotations\s*=\s*(?:null|undefined|\[\])",
@@ -693,15 +696,9 @@ class TsFallbackAndCli(unittest.TestCase):
             self.skipTest("this node has no --no-experimental-sqlite switch")
         self.assertEqual(out[0]["verdict"], "veto", out)
 
-    def test_cli_prints_gate_result_json_matching_check_citation(self):
-        db = fx.get_fixture().db
-        for cite in self.CITES:
-            with self.subTest(cite=cite):
-                proc = subprocess.run(
-                    [sys.executable, str(REPO / "pipeline" / "gate1.py"), "--db", str(db), "--citation", cite],
-                    capture_output=True, text=True, timeout=60, cwd=str(REPO))
-                data = json.loads(proc.stdout.strip().splitlines()[-1])
-                self.assertEqual(data["verdict"], fx.py_check(cite, db).verdict, proc.stdout + proc.stderr)
+    # test_cli_prints_gate_result_json_matching_check_citation: moved to pipeline/tests_extended/test_extended_variants.py
+    # (main-verify tier split; the CLI contract stays covered by test_cli_vetoes_on_missing_db and
+    # test_cli_does_not_shell_interpret_citation_text, and the verdicts themselves by every GateCase test).
 
     def test_cli_vetoes_on_missing_db(self):
         missing = fx.new_tempdir("kf_adv_cli_") / "none.db"

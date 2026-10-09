@@ -35,6 +35,7 @@ EXPECTED_CASES = {
     "chat_clean_reply_is_sent_and_saved_unchanged_with_its_chips_and_a_verification_record",
     "chat_chip_with_a_flagged_quote_is_dropped_but_the_clean_reply_is_sent",
     "chat_abort_saves_only_the_aborted_marker_and_sends_nothing",
+    "chat_abort_case_does_not_depend_on_the_wall_clock",
     "chat_error_saves_only_the_failed_marker_and_sends_only_the_generic_error",
     "chat_a_failed_save_of_the_reply_means_the_reply_is_not_sent",
     "chat_reply_is_saved_before_it_is_sent",

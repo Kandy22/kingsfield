@@ -55,7 +55,8 @@ def _run_cases():
             raise AssertionError("tsx failed (%d):\n%s" % (proc.returncode, proc.stderr[-2500:]))
         lines = [l for l in proc.stdout.splitlines() if l.strip()]
         _RUN["data"] = json.loads(lines[-1])
-        sys.stderr.write("tabular_bypass_cases info: %s\n" % json.dumps(_RUN["data"]["info"], sort_keys=True))
+        if os.environ.get("KF_INFO"):
+            sys.stderr.write("tabular_bypass_cases info: %s\n" % json.dumps(_RUN["data"]["info"], sort_keys=True))
     return _RUN["data"]
 
 
@@ -66,7 +67,8 @@ class _Cases(unittest.TestCase):
 
     def _case(self, name):
         self.assertIn(name, self.report, "the harness did not run %s" % name)
-        self.assertIsNone(self.report[name], self.report[name])
+        if self.report[name] is not None:
+            self.fail(str(self.report[name])[:450])
 
 
 class TabularChipMetadata(_Cases):
@@ -113,6 +115,11 @@ class TabularChatWiring(_Cases):
 
     def test_a_throwing_reply_save_means_the_reply_is_not_sent(self):
         self._case("chat_a_throwing_reply_save_means_the_reply_is_not_sent")
+
+    def test_a_client_that_is_already_gone_before_the_model_starts_never_starts_it(self):
+        # The close listener is registered after several awaits; a disconnect before that is never seen as an event.
+        # Cost and load, not a leak: the reply would be gated and saved.
+        self._case("chat_a_client_that_is_already_gone_before_the_model_starts_never_starts_it")
 
 
 class TabularGenerateBypass(_Cases):
@@ -246,18 +253,14 @@ class TabularChatTitle(_Cases):
         self._case("chat_title_real_gate_obfuscated_cites_fall_back_and_a_clean_title_passes")
 
 
-class OpenItems(_Cases):
-    """Model text with no Gate 1 that is deliberately not part of this gate. The body is intact: un-skip when fixed.
-    The reason names the open item; docs/context/current-state.md must record it."""
+class ClockAndStoredTitles(_Cases):
+    """The harness runs every case on a clock whose milliseconds are always 999 (the worst case for the fabricated cite's
+    "999"); the first case proves the clock is in effect and that timestamp masking hides nothing but timestamps.
+    Stored tabular chat titles are now re-gated on read (the open item of round 3 is closed: un-skipped, body unchanged)."""
 
-    @unittest.skip(
-        "OPEN ITEM (Part C follow-up, found 2026-10-08 by the adversary): titles saved BEFORE the title gate existed may be "
-        "model-written and ungated, and the list route returns tabular_review_chats.title as stored "
-        "(GET /tabular-review/:reviewId/chats, tabular.ts ~1159-1186; the chat.ts and projects.ts read paths are in "
-        "test_title_gate_bypass.py). The cell gate re-gates stored cells on every read; titles do not. Fix: a one-time scrub "
-        "of existing rows (re-gate each stored title, replace a vetoed one with the start of the chat's first user message) "
-        "or a read-time gate. docs/context/current-state.md must record it."
-    )
+    def test_the_999_ms_clock_is_in_effect_and_masking_hides_only_timestamps(self):
+        self._case("clock_frozen_at_999_ms_is_in_effect_and_masking_hides_only_timestamps")
+
     def test_stored_tabular_chat_titles_are_gated_on_read(self):
         self._case("open_stored_tabular_chat_titles_are_gated_on_read")
 

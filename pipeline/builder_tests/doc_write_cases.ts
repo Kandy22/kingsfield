@@ -76,6 +76,11 @@ const S: {
   streamChatWithTools: (p: any) => Promise<void>;
   timeline: string[];
   timeoutOverrideMs: number | null;
+  docBefore: string;
+  docAfter: string;
+  extractCalls: number;
+  extractThrows: boolean;
+  activeFilename: string;
 } = {} as any;
 
 function resetStubs() {
@@ -90,8 +95,30 @@ function resetStubs() {
   };
   S.timeline = [];
   S.timeoutOverrideMs = null;
+  S.docBefore = '';
+  S.docAfter = '';
+  S.extractCalls = 0;
+  S.extractThrows = false;
+  S.activeFilename = 'a.docx';
 }
 resetStubs();
+
+/** A real .docx whose paragraphs are the lines of `text`. */
+async function docxFrom(text: string): Promise<Buffer> {
+  const mod = nodeRequire('jszip');
+  const JSZip = mod.default ?? mod;
+  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const paras = text
+    .split('\n')
+    .map((l) => `<w:p><w:r><w:t xml:space="preserve">${esc(l)}</w:t></w:r></w:p>`)
+    .join('');
+  const zip = new JSZip();
+  zip.file(
+    'word/document.xml',
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${paras}</w:body></w:document>`,
+  );
+  return zip.generateAsync({ type: 'nodebuffer' });
+}
 
 const realGuard = nodeRequire(GUARD_PATH);
 const STUBS: Record<string, any> = {
@@ -102,7 +129,8 @@ const STUBS: Record<string, any> = {
     },
     downloadFile: async (p: string) => {
       S.downloads.push(p);
-      return new Uint8Array([1, 2, 3]).buffer;
+      const b = await docxFrom(S.docBefore);
+      return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength);
     },
     generatedDocKey: (u: string, d: string, f: string) => `generated/${u}/${d}/${f}`,
     storageKey: (u: string, d: string, f: string) => `documents/${u}/${d}/${f}`,
@@ -110,12 +138,17 @@ const STUBS: Record<string, any> = {
   './convert': { convertedPdfKey: (u: string, d: string) => `pdf/${u}/${d}.pdf` },
   './supabase': { createServerSupabase: () => S.db },
   './docxTrackedChanges': {
-    extractDocxBodyText: async () => '',
+    // chatTools renders the stored source and the engine's output itself (renderDocxForGate), so both are real
+    // .docx files built from the text the case set (one paragraph per line); the stub engine's output reads S.docAfter.
+    extractDocxBodyText: async (_bytes: Buffer) => {
+      S.extractCalls++;
+      return S.docBefore;
+    },
     // The engine is stubbed: it reports one applied change per edit. Counting calls shows the gate ran first.
     applyTrackedEdits: async (_bytes: unknown, edits: any[]) => {
       S.trackedCalls++;
       return {
-        bytes: Buffer.from([9, 9, 9]),
+        bytes: S.extractThrows ? Buffer.from([9, 9, 9]) : await docxFrom(S.docAfter),
         changes: edits.map((e, i) => ({
           id: `c${i}`,
           delId: `d${i}`,
@@ -135,7 +168,7 @@ const STUBS: Record<string, any> = {
     attachActiveVersionPaths: async () => {},
     loadActiveVersion: async () => ({
       storage_path: 'documents/u1/d1/a.docx',
-      filename: 'a.docx',
+      filename: S.activeFilename,
       pdf_storage_path: null,
       file_type: 'docx',
       size_bytes: 3,
@@ -680,6 +713,176 @@ cases.edit_two_calls_in_one_batch_are_each_gated_on_their_own = async () => {
     1,
     'only the clean call recorded edits',
   );
+};
+
+// ===== edit_document: the second pass over the text around each change =====
+
+const FILLER = 'Plain words that cite nothing at all. '.repeat(40);
+const squash = (t: string) => t.replace(/\s+/g, ' ');
+/** Vetoes the fabricated cite even when it is broken across a line. */
+const squashedFabVerify = async (t: string) => fabVerify(squash(t));
+
+cases.edit_the_users_own_unverifiable_cite_far_from_the_change_does_not_block_it = async () => {
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  S.docBefore = `The user cited ${FAB} long ago.\n${FILLER}\nThe old clause ends here.`;
+  S.docAfter = S.docBefore.replace('old clause', 'new clause');
+  const out = await run([call('edit_document', editArgs())]);
+  assert.equal(JSON.parse(contents(out)[0]).ok, true, contents(out)[0]);
+  assert.equal(S.uploads.length, 1, 'written');
+  assert.equal(S.verified.length, 2, 'the model strings, then the neighbourhood');
+  const near = S.verified[1];
+  assert.ok(near.includes('new clause'), 'the changed text is gated');
+  assert.ok(near.includes('Plain words'), 'text around it is gated');
+  assert.ok(!near.includes('999'), 'the far cite is the user\'s own and was not gated');
+  assert.ok(near.length < 1000, `a window, not the document: ${near.length} chars`);
+  assert.equal(S.timeline.indexOf('verify') < S.timeline.indexOf('upload'), true);
+};
+
+cases.edit_a_cite_next_to_the_change_is_gated_from_the_document_not_from_the_claimed_context = async () => {
+  // editArgs claims context_before "before " / context_after " after"; neither is in the document. What really sits
+  // next to the change is an unverifiable cite, and that is what the gate must see.
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  S.docBefore = `Authority: ${FAB} says the old rule applies.`;
+  S.docAfter = S.docBefore.replace('old rule', 'new rule');
+  const out = await run([call('edit_document', editArgs())]);
+  assertRefused(out, 'neighbour cite', []);
+  assert.equal(S.trackedCalls, 1, 'the engine ran in memory');
+  assert.equal(S.verified.length, 2);
+  assert.ok(S.verified[1].includes(FAB_CORE), 'the real neighbour was gated');
+  assert.ok(!S.verified[0].includes(FAB_CORE), 'the model strings alone were clean');
+};
+
+cases.edit_a_cite_completed_across_a_paragraph_break_is_gated = async () => {
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  // Same paragraph count, one paragraph changed (the word "old" removed from its end); the cite spans the break.
+  S.docBefore = 'See Doe v. Roe, 999 So.old\n3d 999 (Fla. 2015).';
+  S.docAfter = 'See Doe v. Roe, 999 So.\n3d 999 (Fla. 2015).';
+  const out = await run([call('edit_document', editArgs())]);
+  assertRefused(out, 'cross-paragraph', []);
+  assert.ok(squash(S.verified[1]).includes(FAB_CORE));
+};
+
+cases.edit_a_deletion_that_joins_two_halves_of_a_cite_is_gated = async () => {
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  S.docBefore = 'Doe v. Roe, 999 So. DELETED 3d 999 (Fla. 2015).';
+  S.docAfter = 'Doe v. Roe, 999 So. 3d 999 (Fla. 2015).';
+  const out = await run([call('edit_document', editArgs())]);
+  assertRefused(out, 'deletion junction', []);
+  assert.ok(S.verified[1].includes(FAB_CORE));
+};
+
+cases.edit_two_distant_changes_are_two_windows_with_a_gap_between = async () => {
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  S.docBefore = `First old part.\n${FILLER}\nSecond old part.`;
+  S.docAfter = `First new part.\n${FILLER}\nSecond new part.`;
+  await run([call('edit_document', editArgs())]);
+  assert.equal(S.uploads.length, 1);
+  const near = S.verified[1];
+  assert.ok(near.includes('First new part') && near.includes('Second new part'));
+  assert.equal(near.split('\n[...]\n').length, 2, 'two windows');
+  assert.ok(near.length < 2 * 800);
+};
+
+cases.edit_a_failing_second_pass_refuses_with_nothing_written = async () => {
+  S.docBefore = 'The old clause.';
+  S.docAfter = 'The new clause.';
+  const failures: Record<string, (n: number) => Promise<SseVerificationResult>> = {
+    throws: async (n) => {
+      if (n === 2) throw new Error(RAW);
+      return CLEAN;
+    },
+    error_result: async (n) => (n === 2 ? result([], { hasVetoes: true, error: RAW }) : CLEAN),
+    pending: async (n) => (n === 2 ? result([verdict(FAB, 'pending')]) : CLEAN),
+  };
+  for (const [name, verify] of Object.entries(failures)) {
+    resetStubs();
+    S.docBefore = 'The old clause.';
+    S.docAfter = 'The new clause.';
+    S.db = makeDb();
+    let n = 0;
+    S.verify = async () => verify(++n);
+    const out = await run([call('edit_document', editArgs())]);
+    assertRefused(out, `second pass ${name}`, RAW_LEAKS);
+    assert.equal(S.verified.length, 2, `${name}: both passes ran`);
+  }
+  resetStubs();
+  S.docBefore = 'The old clause.';
+  S.docAfter = 'The new clause.';
+  S.db = makeDb();
+  let n = 0;
+  S.timeoutOverrideMs = 20;
+  S.verify = () => (++n === 2 ? new Promise(() => {}) : Promise.resolve(CLEAN));
+  assertRefused(await run([call('edit_document', editArgs())]), 'second pass timeout');
+};
+
+cases.edit_renderings_that_cannot_be_lined_up_are_refused = async () => {
+  const variants: Record<string, () => void> = {
+    paragraph_count_differs: () => {
+      S.docBefore = 'one\ntwo';
+      S.docAfter = 'one';
+    },
+    extraction_throws: () => {
+      S.docBefore = 'one';
+      S.docAfter = 'two';
+      S.extractThrows = true;
+    },
+  };
+  for (const [name, set] of Object.entries(variants)) {
+    resetStubs();
+    S.db = makeDb();
+    S.verify = async () => CLEAN;
+    set();
+    const out = await run([call('edit_document', editArgs())]);
+    assertRefused(out, name, []);
+  }
+};
+
+cases.edit_with_no_visible_text_change_asks_the_gate_only_once = async () => {
+  // e.g. the replacement is only a line break: nothing in the accepted text moved, and the model's strings were released.
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  S.docBefore = S.docAfter = 'Unchanged text.';
+  await run([call('edit_document', editArgs())]);
+  assert.equal(S.uploads.length, 1);
+  assert.equal(S.verified.length, 1);
+};
+
+cases.edit_does_not_gate_the_stored_filename_because_no_model_text_reaches_it = async () => {
+  // The user named the file after a cite they have not verified. The new version inherits that name from the stored
+  // row; the model can't set it. Refusing every edit to such a file would be the whole-document bug again.
+  S.db = makeDb();
+  S.verify = squashedFabVerify;
+  S.activeFilename = `Re ${FAB_CORE}.docx`;
+  S.docBefore = 'The old clause.';
+  S.docAfter = 'The new clause.';
+  const out = await run([call('edit_document', editArgs({ find: 'old', replace: 'new' }))]);
+  assert.equal(JSON.parse(contents(out)[0]).ok, true, contents(out)[0]);
+  assert.ok(S.verified.every((t) => !t.includes('999')), 'no gated text carries the filename');
+  // The only filename the edit writes is the inherited one (the fake select returns no earlier row).
+  const versionInsert = writesOf(S.db).find((o: Op) => o.table === 'document_versions' && o.op === 'insert');
+  assert.equal(versionInsert!.payload.filename, 'Untitled document');
+};
+
+cases.editedNeighbourhoods_windows_widen_to_whole_words_and_merge = async () => {
+  const f = chatTools.editedNeighbourhoods;
+  assert.deepEqual(f('same\ntext', 'same\ntext'), []);
+  assert.equal(f('a\nb', 'a'), null);
+  const long = 'word '.repeat(400); // 2000 chars
+  const w = f(`${long}old${long}`, `${long}new${long}`);
+  assert.equal(w!.length, 1);
+  assert.ok(w![0].includes('new') && !w![0].includes('old'));
+  assert.ok(w![0].length < 800, `${w![0].length}`);
+  assert.ok(w![0].startsWith('word') && w![0].endsWith('word'), 'cut at word edges, not inside a word');
+  // a change near the start of the first paragraph and one near the end of the last are two windows
+  const two = f(`old ${long}${long} old`, `new ${long}${long} new`);
+  assert.equal(two!.length, 2);
+  // changes close together are one window
+  assert.equal(f('a old b old c', 'a new b new c')!.length, 1);
 };
 
 // ===== replicate_document =====

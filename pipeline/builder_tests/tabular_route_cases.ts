@@ -69,8 +69,15 @@ function fabVerify(text: string): SseVerificationResult {
   return result(vs);
 }
 
+/**
+ * The route stamps rows with new Date().toISOString() (tabular_review_chats.updated_at), and the saved-ops log is scanned
+ * for the fabricated cite's "999". A clock whose milliseconds read .999 would trip that scan (1 run in 1000), so ISO
+ * timestamps are masked first. Nothing a model writes has this shape and a cite cannot hide inside one.
+ */
+const ISO_TIMESTAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z/g;
 function leakCheck(blob: string, needles: string[], label: string) {
-  for (const n of needles) assert.ok(!blob.includes(n), `${label}: "${n}" reached the client or a saved row`);
+  const scanned = blob.replace(ISO_TIMESTAMP, '<timestamp>');
+  for (const n of needles) assert.ok(!scanned.includes(n), `${label}: "${n}" reached the client or a saved row`);
 }
 
 // ---------- the real tabular router, with its dependencies stubbed ----------
@@ -696,7 +703,27 @@ cases.chat_chip_with_a_flagged_quote_is_dropped_but_the_clean_reply_is_sent = as
   leakCheck(JSON.stringify([res.writes, S.db.ops]), ['Doe', '999'], 'flagged quote chip');
 };
 
-cases.chat_abort_saves_only_the_aborted_marker_and_sends_nothing = async () => {
+/** Runs fn with `new Date()` / Date.now() frozen at a time whose milliseconds are 999. */
+async function withClockAt999<T>(fn: () => Promise<T>): Promise<T> {
+  const RealDate = Date;
+  const FIXED = RealDate.UTC(2026, 9, 9, 12, 0, 0, 999);
+  class FixedDate extends RealDate {
+    constructor(...args: any[]) {
+      super(...((args.length === 0 ? [FIXED] : args) as [any]));
+    }
+    static now() {
+      return FIXED;
+    }
+  }
+  (globalThis as any).Date = FixedDate;
+  try {
+    return await fn();
+  } finally {
+    (globalThis as any).Date = RealDate;
+  }
+}
+
+const abortBody = async () => {
   S.db = chatDb();
   let verifyCalls = 0;
   S.verify = async () => {
@@ -723,6 +750,11 @@ cases.chat_abort_saves_only_the_aborted_marker_and_sends_nothing = async () => {
   assert.equal(res.ended, true);
   leakCheck(JSON.stringify([res.writes, S.db.ops]), ['partial', 'Doe', '999'], 'aborted reply');
 };
+cases.chat_abort_saves_only_the_aborted_marker_and_sends_nothing = abortBody;
+// The route stamps tabular_review_chats.updated_at with new Date().toISOString() after the marker is saved. The ops log
+// is scanned for the fabricated cite's "999", so a clock whose milliseconds read 999 (1 run in 1000) used to fail this
+// case. Frozen here so the old behaviour is a deterministic failure, not a flake.
+cases.chat_abort_case_does_not_depend_on_the_wall_clock = () => withClockAt999(abortBody);
 
 cases.chat_error_saves_only_the_failed_marker_and_sends_only_the_generic_error = async () => {
   S.db = chatDb();
@@ -1019,11 +1051,12 @@ cases.limiter_timeout_abandons_the_task_frees_the_slot_and_ignores_the_late_resu
     () => timedOut as unknown as string,
   );
   // Task B is queued behind A on a one-slot limiter: it can only run once A's slot is freed by the timeout.
-  const startedB = Date.now();
   const b = limit(async () => 'b done');
   assert.equal(await a, timedOut, 'the caller gets onTimeout()');
   assert.equal(await b, 'b done');
-  assert.ok(Date.now() - startedB < 70, 'B ran as soon as the timeout freed the slot, not when A finished');
+  // Ordered, not timed: timers fire in expiry order and microtasks drain between them, so B's whole run fits between the
+  // 15 ms timeout and A's 80 ms late finish however slow the machine is.
+  assert.equal(lateRan, false, 'B ran as soon as the timeout freed the slot, not when A finished');
   await sleep(90);
   assert.equal(lateRan, true, 'the abandoned task did finish later');
   assert.equal(await a, timedOut, 'the late result changed nothing');

@@ -1,11 +1,21 @@
 # Kingsfield Lawfare — Current State
-*Last updated: 2026-10-09. The items below supersede the 2026-10-08 open list.*
+*Last updated: 2026-10-09 (main-verify signed off). The items below supersede the 2026-10-08 open list.*
 
-## 2026-10-09 gate follow-ups on main
+## 2026-10-09 gate follow-ups on main (`main-verify` signed off)
 
-Closed on `main` after `29efac5`: tabular chat, document writes, chat titles (including read-time replacement of a stored title that fails Gate 1), inferred Florida bounds, MCP connector refusal, owner checks on project/council/IP routes, analytics extract gated before save, jammed `So. 2d` / `So. 3d` identifier scrub, crew fallback skipped on disconnect, live failed-reply text.
+Everything after `540e748` (incl. `29efac5..565a0c0`, applied by `apply_*.py` scripts) was reviewed by the adversary in the `main-verify` cascade and signed (`.claude/signoffs/main-verify.signoff`). The `apply_*.py` scripts are removed from the repo root.
 
-Still open: a crew model call already in flight is not cancelled; `GET /analytics` re-checks stored rows on read but does not rewrite them.
+Closed and verified: tabular chat, document writes, chat titles (including read-time replacement of a stored title that fails Gate 1), inferred Florida bounds, MCP connector refusal (decoded argument strings are gated, not the JSON text), owner checks on project/council/IP routes plus crew `documentIds` and the `projectId` a council session is saved under, analytics extract gated before save and re-checked on read (decoded strings and object keys), jammed `So. 2d` / `So. 3d` identifier scrub, live failed-reply text, and crew abort on disconnect (the signal now reaches every role call and the team lead; a disconnect before the model starts never starts it; the `/crew/chat` catch saves an `aborted` marker and writes nothing to a gone client).
+
+`edit_document` gates the real neighbourhood of each applied change, not the whole document, so unverifiable cites already in a user's own document no longer block every edit. The check diffs the document before and after the edit (all `w:t` text in order, including runs inside hyperlinks, fields, smart tags and content controls) and gates a 300-character window around each change. Filenames are not gated in `edit_document`; it writes none.
+
+`pipeline/gate1.py` now reads JSON-style escapes (`\n`, `\u000a`, `\x0a`, `\b`, other control escapes) as a space, so they cannot hide a cite split across them.
+
+Still open:
+- `GET /analytics` re-checks stored rows on read but does not rewrite them.
+- Docket and IP renewal watcher `report_md` is stored, returned and emailed with no Gate 1 (pre-existing; test skipped in `test_crew_chat_bypass.OpenItems`).
+- `edit_document`: text more than ~300 characters from a change is not re-gated, and the matcher's `extractDocxBodyText` drops `<w:br/>`.
+- Two files outside the builder's write scope were edited by the lead during `main-verify` and then adversary-reviewed: `backend/src/crew/coordinator.ts` and `backend/src/lib/caseIntelligence.ts`. `caseIntelligence.ts` and the crew role files are not in the signoff digest.
 
 # Kingsfield Lawfare — Current State
 *Last updated: 2026-10-08 (chat-route-verify signed off: W2-W4 and findings 1-3 resolved on `feature/local-sqlite-gate1`; route auth awaiting cherry-pick to main; tabular chat is merge blocker 4)*

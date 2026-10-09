@@ -35,6 +35,8 @@ Each moved test, the attack class it belongs to, and the tests of that class tha
       Stay: WrapperFailsClosed.test_a_child_that_hangs_is_killed_at_the_timeout_and_vetoed and test_every_child_failure_yields_exactly_one_veto.
 """
 
+import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -45,12 +47,14 @@ import gate1_fixture as fx  # noqa: E402
 import draft_harness as dh  # noqa: E402
 import test_gate1_bypass as gb  # noqa: E402
 import test_gate1_draft_mode as dm  # noqa: E402
+import test_boundaries_and_schema as bs  # noqa: E402
 
 S = dm.S
 FAB = dm.FAB
 MAX_CHILDREN = dm.MAX_CHILDREN
 _alive_pid = dm._alive_pid
 VALID_VARIANTS = gb.VALID_VARIANTS
+gb_glyphs = dm.FAB_HOMOGLYPHS
 
 
 # ───── from test_gate1_bypass.py ─────
@@ -167,6 +171,43 @@ class ConcurrencyCapExtended(unittest.TestCase):
             except ProcessLookupError:
                 pass
         self.assertEqual(alive, [], "orphaned children: %r" % alive)
+
+
+class TsFallbackAndCliExtended(unittest.TestCase):
+    CITES = bs.TsFallbackAndCli.CITES
+
+    def test_cli_prints_gate_result_json_matching_check_citation(self):
+        db = fx.get_fixture().db
+        for cite in self.CITES:
+            with self.subTest(cite=cite):
+                proc = subprocess.run(
+                    [sys.executable, str(fx.REPO / "pipeline" / "gate1.py"), "--db", str(db), "--citation", cite],
+                    capture_output=True, text=True, timeout=60, cwd=str(fx.REPO))
+                data = json.loads(proc.stdout.strip().splitlines()[-1])
+                self.assertEqual(data["verdict"], fx.py_check(cite, db).verdict, proc.stdout + proc.stderr)
+
+
+class UnicodeAndHidingThroughTheWrapperExtended(unittest.TestCase):
+    """The homoglyph variants that left pipeline/tests (main-verify tier split): same body as
+    UnicodeAndHidingThroughTheWrapper.test_fabricated_florida_cites_are_vetoed_through_the_wrapper, over the moved variants."""
+    maxDiff = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.variants = {"glyph_" + n: dm.wrap(gb_glyphs[n]) for n in dm.TS_GLYPHS_MOVED}
+        cls.variants.update({"hide_" + n: dm.wrap(dm.FAB_HIDING[n]) for n in dm.TS_HIDING_MOVED})
+        cls.batch = dh.Batch(cls.variants) if cls.variants else None
+
+    def test_fabricated_florida_cites_are_vetoed_through_the_wrapper(self):
+        for name in self.variants:
+            with self.subTest(variant=name):
+                r = self.batch.results(name)
+                self.assertEqual(dh.contract_problems(r), [], dh.compact(r))
+                verdicts = [x["verdict"] for x in r]
+                self.assertTrue(r, "SILENTLY DROPPED: %r" % self.variants[name])
+                self.assertIn("veto", verdicts, dh.compact(r))
+                self.assertNotIn("pass", verdicts, dh.compact(r))
+                self.assertNotIn("fall_through", verdicts, dh.compact(r))
 
 
 class WrapperFailsClosedExtended(unittest.TestCase):

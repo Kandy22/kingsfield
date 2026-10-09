@@ -304,6 +304,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         documentType: 'legal document',
       },
       deps.model,
+      deps.signal,
     );
     const reply = formatWritingCoachReply(writingCoach);
     return {
@@ -339,6 +340,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         task: input.userMessage,
       },
       deps.model,
+      deps.signal,
     );
     const reply = formatImpeacherReply(impeacher);
     return {
@@ -371,6 +373,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         jurisdiction: input.jurisdiction,
       },
       deps.model,
+      deps.signal,
     );
     const reply = formatOppositionMapperReply(oppositionMapper);
     return {
@@ -397,6 +400,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         accusedContent: input.documentText || undefined,
       },
       deps.model,
+      deps.signal,
     );
     const reply = formatIpTriageReply(ipTriage);
     return {
@@ -422,6 +426,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         perspective: undefined,
       },
       deps.model,
+      deps.signal,
     );
     const reply = formatIpClauseReviewReply(ipClauseReview);
     return {
@@ -447,6 +452,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
           : undefined,
       },
       deps.model,
+      deps.signal,
     );
     const reply = formatDmcaTakedownReply(dmcaTakedown);
     return {
@@ -530,6 +536,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         task: input.userMessage,
       },
       deps.model,
+      deps.signal,
     );
   }
 
@@ -543,6 +550,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
       analystFindings: analyst,
     },
     deps.model,
+    deps.signal,
   );
 
   // Team Lead synthesizes.
@@ -555,6 +563,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
       strategist: strategist!,
     },
     deps.model,
+    deps.signal,
   );
 
   return {
@@ -1086,13 +1095,14 @@ interface TeamLeadInput {
   strategist: StrategistOutput;
 }
 
-async function runTeamLead(input: TeamLeadInput, model: string): Promise<string> {
+async function runTeamLead(input: TeamLeadInput, model: string, signal?: AbortSignal): Promise<string> {
   const authBlock = input.researcher.authorities
     .map((a) => `- ${a.citation}: ${a.relevanceNote}`)
     .join('\n');
 
   return completeText({
     model,
+    signal,
     systemPrompt: TEAM_LEAD_SYSTEM_PROMPT,
     user: `
 USER QUESTION:

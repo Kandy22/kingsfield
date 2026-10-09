@@ -207,7 +207,7 @@ class RouteWiring(unittest.TestCase):
                 # The title update runs after the flag is set, so a failure there lands in the guard.
                 self.assertLess(flag, src.index(".update({ title:", flag))
                 # No insert of an assistant row on the success path other than the finalized one.
-                try_body = src[src.index("    try {\n        write(`data: ${JSON.stringify({ type: \"chat_id\""):i]
+                try_body = src[src.index("A client that is already gone never starts the model."):i]
                 self.assertEqual(try_body.count('role: "assistant"'), 1)
 
 

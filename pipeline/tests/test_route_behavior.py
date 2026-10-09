@@ -41,7 +41,8 @@ def _run_mode(mode, mock_llm):
         raise AssertionError("tsx failed in %s mode (%d):\n%s" % (mode, proc.returncode, proc.stderr[-2500:]))
     lines = [l for l in proc.stdout.splitlines() if l.strip()]
     data = json.loads(lines[-1])
-    sys.stderr.write("route_behavior_cases[%s] info: %s\n" % (mode, json.dumps(data.get("info"), sort_keys=True)))
+    if os.environ.get("KF_INFO"):
+        sys.stderr.write("route_behavior_cases[%s] info: %s\n" % (mode, json.dumps(data.get("info"), sort_keys=True)))
     return data["results"]
 
 
@@ -96,6 +97,9 @@ class CouncilRouteWithholds(_Cases):
 
     def test_a_gate_error_withholds_with_the_generic_message_and_leaks_no_raw_error(self):
         self._case("council_gate_error_withholds_with_the_generic_message_and_leaks_no_raw_error")
+
+    def test_a_project_the_caller_does_not_own_is_never_saved_into(self):
+        self._case("council_a_project_the_caller_does_not_own_is_never_saved_into")
 
     def test_a_model_failure_sends_the_fixed_500_and_saves_nothing(self):
         self._case("council_model_failure_sends_the_fixed_500_and_saves_nothing")

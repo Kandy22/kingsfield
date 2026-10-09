@@ -57,21 +57,54 @@ interface CachedCourt {
 let courtsCache: { fetchedAt: number; courts: CachedCourt[] } | null = null;
 
 /**
- * Fetch and extract text from one or more uploaded documents.
+ * Push every string found anywhere in `value` (decoded values, arrays and
+ * objects) onto `out`. False when nesting or count limits are exceeded or the
+ * value is not plain data, so the caller can fail closed.
+ */
+function collectStrings(value: unknown, out: string[], depth = 0): boolean {
+  if (typeof value === 'string') {
+    out.push(value);
+    return out.length <= 20_000;
+  }
+  if (value === null || value === undefined || typeof value === 'number' || typeof value === 'boolean') {
+    return true;
+  }
+  if (depth >= 12) return false;
+  if (Array.isArray(value)) {
+    return value.every((item) => collectStrings(item, out, depth + 1));
+  }
+  if (typeof value === 'object') {
+    // Keys are model-written text too: gate them like values.
+    return Object.entries(value as Record<string, unknown>).every(([key, item]) => {
+      out.push(key);
+      if (out.length > 20_000) return false;
+      return collectStrings(item, out, depth + 1);
+    });
+  }
+  return false;
+}
+
+/**
+ * Fetch and extract text from one or more uploaded documents
+ * that belong to `userId`.
  * Looks up the active version's storage path, downloads from R2,
  * and extracts text using pdfjs (PDF) or mammoth (DOCX).
  */
 async function fetchDocumentTexts(
   documentIds: string[],
   db: SupabaseClient,
+  userId: string,
 ): Promise<{ name: string; text: string }[]> {
   const results: { name: string; text: string }[] = [];
+  if (!userId) return results; // no caller identity: read nothing (fail closed)
   for (const docId of documentIds) {
     try {
+      // The service-role client bypasses row security, so ownership is checked here.
       const { data: doc } = await (db as any)
         .from('documents')
         .select('filename, current_version_id')
         .eq('id', docId)
+        .eq('user_id', userId)
         .single();
       if (!doc) continue;
 
@@ -161,16 +194,24 @@ export function buildRoutes(deps: RouteDeps): Router {
     if (error) return void res.status(500).json({ detail: error.message });
     const rows = data ?? [];
     const extractions = await Promise.all(rows.map(async (row) => {
-      const blob = JSON.stringify({
-        caption: row.caption,
-        entities: row.entities,
-        allegations: row.allegations,
-        defenses: row.defenses,
-        authorities: row.authorities,
-        rarity: row.rarity,
-        defense_summary: row.defense_summary,
-      });
-      const checked = await verifyDraftForSse(blob, {
+      // Gate the decoded strings, not the JSON text: an escaped "\n" in the
+      // JSON is a real line break on the rendered page, and Gate 1 must see that.
+      const strings: string[] = [];
+      const within = collectStrings(
+        {
+          caption: row.caption,
+          entities: row.entities,
+          allegations: row.allegations,
+          defenses: row.defenses,
+          authorities: row.authorities,
+          rarity: row.rarity,
+          defense_summary: row.defense_summary,
+        },
+        strings,
+      );
+      const checked = !within
+        ? { hasVetoes: true, error: true }
+        : await verifyDraftForSse(strings.join('\n\n'), {
         courtListenerToken: deps.courtListenerToken,
         supabase: deps.supabase,
       });
@@ -244,6 +285,18 @@ export function buildRoutes(deps: RouteDeps): Router {
           : "Extraction failed.";
         return void res.status(422).json({ detail });
       }
+      // runCaseExtraction gated JSON.stringify(intel) (an escaped "\n" hides a split cite
+      // there). Re-check the decoded strings before the row is returned.
+      const rowStrings: string[] = [];
+      const rowChecked = collectStrings(result.row, rowStrings)
+        ? await verifyDraftForSse(rowStrings.join('\n\n'), {
+            courtListenerToken: deps.courtListenerToken,
+            supabase: deps.supabase,
+          })
+        : null;
+      if (!rowChecked || rowChecked.hasVetoes || rowChecked.error) {
+        return void res.status(422).json({ detail: 'The extraction was withheld because it could not be verified.' });
+      }
       res.json({ extraction: result.row });
     } catch (err) {
       console.error('[analytics/extract] error', safeErrorLog(err));
@@ -312,7 +365,13 @@ export function buildRoutes(deps: RouteDeps): Router {
       }
 
       // Saved only now, and exactly what is sent (the withheld version if withheld).
-      if (!MOCK_ENABLED && typeof projectId === 'string' && projectId) {
+      // Only into a matter the caller owns: the body's projectId is not trusted.
+      if (
+        !MOCK_ENABLED &&
+        typeof projectId === 'string' &&
+        projectId &&
+        (await ownedProject(res.locals.userId as string, projectId))
+      ) {
         try {
           const { error: saveError } = await deps.supabase.from('llm_council_sessions').insert({
             project_id: projectId,
@@ -497,10 +556,9 @@ export function buildRoutes(deps: RouteDeps): Router {
     // Nothing is visible while the crew runs and Gate 1 checks; ping until the reply is released.
     const keepalive = startSseKeepalive(write);
     const crewAbort = new AbortController();
-    res.on('close', () => {
-      keepalive.stop();
-      crewAbort.abort();
-    });
+    // Two handlers on purpose: the ping stops on its own, whatever happens to the cancel.
+    res.on('close', () => keepalive.stop());
+    res.on('close', () => crewAbort.abort());
 
     try {
       let reply: string;
@@ -520,7 +578,7 @@ export function buildRoutes(deps: RouteDeps): Router {
         let resolvedDocText = documentText as string | undefined;
         let resolvedDocName = documentName as string | undefined;
         if (Array.isArray(documentIds) && documentIds.length > 0) {
-          const docs = await fetchDocumentTexts(documentIds, deps.supabase);
+          const docs = await fetchDocumentTexts(documentIds, deps.supabase, res.locals.userId as string);
           if (docs.length > 0) {
             resolvedDocName = docs.map((d) => d.name).join(', ');
             resolvedDocText = docs
@@ -582,9 +640,11 @@ export function buildRoutes(deps: RouteDeps): Router {
     } catch (err) {
       keepalive.stop();
       // The raw error stays in the server log; the client gets the fixed error event, then [DONE].
+      // Once the client is gone ('aborted') nothing is written to the socket at all.
       console.error('[crew/chat] error', safeErrorLog(err));
       try {
-        for (const line of failedReplyRecord('failed').sseLines) write(line);
+        const gone = crewAbort.signal.aborted || res.destroyed === true || res.writableEnded === true;
+        for (const line of failedReplyRecord(gone ? 'aborted' : 'failed').sseLines) write(line);
       } catch {
         /* the socket is already gone */
       }

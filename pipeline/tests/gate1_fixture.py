@@ -233,10 +233,102 @@ class NodeFlagUnsupported(Exception):
 _TS_SCRIPT_DEFAULT_DB = _TS_SCRIPT.replace("{ dbPath: process.env.GATE_DB }", "undefined")
 
 
+# One long-lived node process answers the default-mode requests (no node flags, explicit dbPath). It imports the same
+# local_sqlite_gate.ts and calls the same localGate1(citation, { dbPath }) for every citation; the gate opens and closes
+# the database on every call and keeps no state between calls, so a verdict is the one a fresh process gives. This only
+# removes the ~0.3 s node start-up per citation. Requests that need their own process (node flags, the KINGSFIELD_FLORIDA_DB
+# default) and any worker failure take the one-shot path below, unchanged.
+_TS_WORKER_SCRIPT = """
+import readline from 'node:readline';
+const mod = await import(process.env.GATE_URL);
+const rl = readline.createInterface({ input: process.stdin });
+for await (const line of rl) {
+  let out;
+  try {
+    const req = JSON.parse(line);
+    out = req.inputs.map((c) => {
+      try { return mod.localGate1(c, { dbPath: req.db }); }
+      catch (e) { return { verdict: 'THROW', reason: String(e) }; }
+    });
+  } catch (e) { out = { workerError: String(e) }; }
+  process.stdout.write(JSON.stringify(out) + '\\n');
+}
+"""
+
+_worker = None
+_WORKER_REQUEST_TIMEOUT_S = 120
+
+
+class _TsWorker:
+    def __init__(self):
+        import select  # noqa: F401  (POSIX only; this suite runs on macOS)
+        env = dict(os.environ)
+        env["GATE_URL"] = TS_GATE.as_uri()
+        self.proc = subprocess.Popen(
+            [_NODE, "--no-warnings", "--input-type=module", "-e", _TS_WORKER_SCRIPT],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            env=env, cwd=str(REPO), bufsize=0,
+        )
+        self.buf = b""
+
+    def ask(self, citations, db_path):
+        import select
+        req = (json.dumps({"inputs": list(citations), "db": str(db_path)}) + "\n").encode("utf-8")
+        self.proc.stdin.write(req)
+        self.proc.stdin.flush()
+        deadline = _WORKER_REQUEST_TIMEOUT_S
+        while b"\n" not in self.buf:
+            ready, _, _ = select.select([self.proc.stdout], [], [], deadline)
+            if not ready:
+                raise TimeoutError("TS gate worker did not answer")
+            chunk = os.read(self.proc.stdout.fileno(), 1 << 20)
+            if not chunk:
+                raise EOFError("TS gate worker exited")
+            self.buf += chunk
+        line, _, self.buf = self.buf.partition(b"\n")
+        out = json.loads(line.decode("utf-8"))
+        if not isinstance(out, list) or len(out) != len(citations):
+            raise ValueError("TS gate worker answered %r" % (out,))
+        return out
+
+    def stop(self):
+        try:
+            self.proc.stdin.close()
+        except Exception:
+            pass
+        try:
+            self.proc.kill()
+        except Exception:
+            pass
+        try:
+            self.proc.wait(timeout=5)
+        except Exception:
+            pass
+
+
+def _worker_check(citations, db_path):
+    global _worker
+    try:
+        if _worker is None or _worker.proc.poll() is not None:
+            _worker = _TsWorker()
+            atexit.register(_worker.stop)
+        return _worker.ask(citations, db_path)
+    except Exception:
+        if _worker is not None:
+            _worker.stop()
+        _worker = None
+        return None
+
+
 def ts_check_many(citations, db_path, node_flags=(), use_env_default=False):
     key = (tuple(citations), str(db_path), tuple(node_flags), use_env_default)
     if key in _ts_cache:
         return _ts_cache[key]
+    if not node_flags and not use_env_default:
+        out = _worker_check(citations, db_path)
+        if out is not None:
+            _ts_cache[key] = out
+            return out
     env = dict(os.environ)
     env["GATE_URL"] = TS_GATE.as_uri()
     env["GATE_INPUTS"] = json.dumps(list(citations))

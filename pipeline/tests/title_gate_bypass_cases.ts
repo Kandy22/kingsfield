@@ -244,7 +244,11 @@ function makeDb(handle: (op: Op) => { data?: any; error?: any; throws?: string }
         };
       },
     });
-  return { from: (table: string) => chain({ table, op: 'select', filters: [] }), ops };
+  return {
+    from: (table: string) => chain({ table, op: 'select', filters: [] }),
+    rpc: (name: string, _args?: unknown) => chain({ table: `rpc:${name}`, op: 'select', filters: [] }),
+    ops,
+  };
 }
 
 const filterValue = (op: Op, name: string, col: string) => op.filters.find((f) => f[0] === name && f[1] === col)?.[2];
@@ -301,34 +305,70 @@ function assertOnlyTitle(res: any, db: any, expected: string, label: string, cha
   assert.ok(db.ops.every((o: Op) => o.table === 'chats'), `${label}: a table other than chats was touched`);
 }
 
-// A scaled clock for the limiter's per-call timeout (75 s in production): any timer of 30 s or more fires after 20 ms here.
-// The requested delays are recorded so a test can check the limit has not been shortened below the gate's own worst case.
+// A manual clock for the limiter's per-call timeout (75 s in production). Any timer of 30 s or more is captured instead of
+// scheduled and fired by hand once it is armed and still uncleared: no wall-clock wait anywhere, so machine load cannot change
+// the outcome. The requested delays are recorded so a test can check the limit has not been shortened below the gate's own worst
+// case. Completion is event-driven: the driver yields to the event loop (setImmediate rounds, not time) until the request
+// settles, and fails if it has not settled after MANUAL_ROUNDS rounds with every armed timer fired.
+const MANUAL_ROUNDS = 5000;
+const nextRound = () => new Promise<void>((r) => setImmediate(r));
+async function rounds(n: number) {
+  for (let i = 0; i < n; i++) await nextRound();
+}
+
 async function withScaledGateTimeout<T>(fn: () => Promise<T>): Promise<{ out: T; requested: number[] }> {
-  const orig = globalThis.setTimeout;
-  const requested: number[] = [];
+  const origSet = globalThis.setTimeout;
+  const origClear = globalThis.clearTimeout;
+  type Armed = { f: (...a: unknown[]) => void; a: unknown[]; ms: number; fired: boolean; cleared: boolean; unref: () => unknown; ref: () => unknown };
+  const armed: Armed[] = [];
   (globalThis as any).setTimeout = ((f: any, ms?: number, ...a: unknown[]) => {
     if (typeof ms === 'number' && ms >= 30_000) {
-      requested.push(ms);
-      return orig(f, 20, ...a);
+      const t: Armed = { f, a, ms, fired: false, cleared: false, unref: () => t, ref: () => t };
+      armed.push(t);
+      return t;
     }
-    return orig(f, ms, ...a);
+    return origSet(f, ms, ...a);
+  }) as any;
+  (globalThis as any).clearTimeout = ((h: any) => {
+    if (h && typeof h === 'object' && armed.includes(h)) {
+      h.cleared = true;
+      return;
+    }
+    return origClear(h);
   }) as any;
   try {
-    return { out: await fn(), requested };
+    let done = false;
+    const p = fn().then(
+      (v) => {
+        done = true;
+        return v;
+      },
+      (e) => {
+        done = true;
+        throw e;
+      },
+    );
+    for (let i = 0; i < MANUAL_ROUNDS && !done; i++) {
+      await nextRound();
+      // Only timers armed before this round: a task started by a freed slot gets its own round to finish.
+      const due = armed.filter((t) => !t.fired && !t.cleared);
+      for (const t of due) {
+        if (t.cleared) continue;
+        t.fired = true;
+        t.f(...t.a);
+      }
+    }
+    if (!done) throw new Error(`still running after ${MANUAL_ROUNDS} rounds with every armed gate timeout fired; the gate timeout did not free the request`);
+    return { out: await p, requested: armed.map((t) => t.ms) };
   } finally {
-    globalThis.setTimeout = orig;
+    globalThis.setTimeout = origSet;
+    globalThis.clearTimeout = origClear;
   }
 }
 
-/** Fails (instead of hanging the whole run) when a request that should have been freed by the gate timeout is not. */
-function finishes<T>(p: Promise<T>, label: string, ms = 4000): Promise<T> {
-  let t: any;
-  return Promise.race([
-    p,
-    new Promise<T>((_resolve, reject) => {
-      t = setTimeout(() => reject(new Error(`${label}: still running after ${ms} ms; the gate timeout did not free the request`)), ms);
-    }),
-  ]).finally(() => clearTimeout(t));
+/** Kept for the call sites; the bound on completion is now the driver's round count, not a wall-clock cap. */
+function finishes<T>(p: Promise<T>, _label: string, _ms?: number): Promise<T> {
+  return p;
 }
 
 // ---------- cases ----------
@@ -474,7 +514,7 @@ cases.title_a_gate_that_never_answers_falls_back_ignores_the_late_answer_and_fre
   assert.ok(requested.length >= 1, 'the route never armed a gate timeout of 30 s or more');
   assert.ok(Math.min(...requested) >= 60_000, `the title gate limit (${Math.min(...requested)} ms) is shorter than the gate's own worst case (30 s queue + 30 s child)`);
   for (const r of late) r(CLEAN); // the abandoned gate call answers "clean" after the fact
-  await sleep(40);
+  await rounds(50);
   assertOnlyTitle(res, S.db, OWN, 'timeout, after the late answer');
   leakCheck(JSON.stringify([res.body, S.db.ops]), [MARK], 'late answer');
   // the slot is free again: the next title through the same module-level limiter is gated normally and saved
@@ -673,12 +713,20 @@ const REAL_GATE_FABRICATED: Array<[string, string]> = [
   ['numeric entity', 'Doe v. Roe, &#57;&#57;&#57; So. 3d 999 (Fla. 2015)'],
 ];
 
+// Signoff tier: one representative per kind (plain, no court, width-folded digits, period-less, a real record under another caption,
+// a hidden channel). TITLE_FULL=1 (pipeline/tests_extended/test_extended_title.py) runs every form.
+const REAL_GATE_KEEP = ['plain', 'no court parenthetical', 'full-width digits', 'period-less',
+  'real volume and page, another case\'s caption', 'markdown link title (hidden channel)'];
+const REAL_GATE_LIST: Array<[string, string]> = process.env.TITLE_FULL === '1'
+  ? REAL_GATE_FABRICATED
+  : REAL_GATE_FABRICATED.filter(([label]) => REAL_GATE_KEEP.includes(label));
+
 cases.title_real_gate_obfuscated_and_near_miss_cites_fall_back = async () => {
   requireRealGate();
   const released: string[] = [];
   const leaks: string[] = [];
   const how: Record<string, string> = {};
-  for (const [label, title] of REAL_GATE_FABRICATED) {
+  for (const [label, title] of REAL_GATE_LIST) {
     assert.ok(title.length <= 80, `harness: "${label}" is ${title.length} units; the route's cut would hide the cite`);
     resetStubs();
     S.realGate = true;
@@ -758,6 +806,31 @@ cases.open_stored_chat_titles_are_gated_on_read = async () => {
   await quiet(() => handlerFor('get', '/:chatId')(req, res));
   assert.ok(res.body, `no body (status ${res.statusCode})`);
   leakCheck(JSON.stringify(res.body), ['Doe', 'Roe', '999'], 'stored chat title on GET /chat/:chatId');
+};
+
+// The sidebar list (GET /chat, rpc get_chats_overview) returns every stored title too.
+cases.stored_chat_titles_are_gated_on_the_list_route = async () => {
+  S.db = makeDb((op) => {
+    if (op.table === 'rpc:get_chats_overview') {
+      return {
+        data: [
+          { id: 'c1', title: FAB, project_id: null, created_at: 'x' },
+          { id: 'c2', title: 'Lease Rights', project_id: null, created_at: 'x' },
+          { id: 'c3', title: null, project_id: null, created_at: 'x' },
+        ],
+      };
+    }
+    return undefined;
+  });
+  S.verify = async (t) => fabVerify(t);
+  const req: any = { body: {}, params: {}, query: {}, headers: {} };
+  const res = fakeRes();
+  await quiet(() => handlerFor('get', '/')(req, res));
+  assert.ok(Array.isArray(res.body), `no list body (status ${res.statusCode})`);
+  leakCheck(JSON.stringify(res.body), ['Doe', 'Roe', '999'], 'stored chat title on GET /chat');
+  const clean = (res.body as any[]).find((r) => r.id === 'c2');
+  assert.equal(clean?.title, 'Lease Rights', 'a clean stored title must still be returned');
+  assert.equal(res.body.length, 3, 'a row was dropped');
 };
 
 // ---------- run ----------

@@ -63,9 +63,16 @@ class _Handler(BaseHTTPRequestHandler):
         pass
 
 
+class _QuietServer(ThreadingHTTPServer):
+    """A client that gave up (the timeout cases) makes the stub server's write fail; that is expected, not output."""
+
+    def handle_error(self, request, client_address):
+        pass
+
+
 class _Server:
     def __init__(self, mode):
-        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
+        self.httpd = _QuietServer(("127.0.0.1", 0), _Handler)
         self.httpd.daemon_threads = True
         self.httpd.mode = mode
         self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)

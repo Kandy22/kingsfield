@@ -126,7 +126,8 @@ class RouteWiring(unittest.TestCase):
         self.assertNotIn("error: err", h)
         # Catch: fixed error event then [DONE] (the helper's lines), raw error only through safeErrorLog.
         catch = h[h.rindex("} catch (err) {"): h.index("} finally {")]
-        self.assertIn("failedReplyRecord('failed').sseLines", catch)
+        # A client that is gone gets nothing ('aborted' has no SSE lines); otherwise the fixed error event.
+        self.assertIn("failedReplyRecord(gone ? 'aborted' : 'failed').sseLines", catch)
         self.assertIn("safeErrorLog(err)", catch)
         for m in re.finditer(r"\berr\b", catch):
             before = catch[: m.start()]
@@ -206,7 +207,9 @@ class RouteWiring(unittest.TestCase):
         self.assertIn("MOCK_COUNCIL", h)
         self.assertEqual(h.count("await gateCouncilOutput("), 1)
         self.assertLess(h.index("MOCK_COUNCIL"), h.index("await gateCouncilOutput("))
-        self.assertIn("!MOCK_ENABLED && typeof projectId === 'string'", h, "the mock session is not saved")
+        self.assertIn("!MOCK_ENABLED &&\n        typeof projectId === 'string'", h, "the mock session is not saved")
+        # Saved only under a project the caller owns.
+        self.assertLess(h.index("await ownedProject("), h.index(".from('llm_council_sessions').insert("))
 
     # ----- stored sessions -----
 

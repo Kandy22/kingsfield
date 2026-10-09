@@ -71,8 +71,31 @@ function fabVerify(text: string): SseVerificationResult {
   return text.includes(FAB_CORE) ? result([verdict(FAB, 'vetoed')]) : result([]);
 }
 
+// The whole run uses a clock whose millisecond field is always 999, the worst case for the "999" needle of the fabricated
+// cite: every ISO timestamp the routes write (updated_at, ...) ends in ".999Z". Real time still advances (seconds do).
+// A case that breaks under this clock fails every run, not one run in a thousand.
+const RealDate = Date;
+const frozenMsNow = () => Math.floor(RealDate.now() / 1000) * 1000 + 999;
+(globalThis as any).Date = new Proxy(RealDate, {
+  construct(target, args, newTarget) {
+    return args.length === 0 ? new target(frozenMsNow()) : Reflect.construct(target, args, newTarget);
+  },
+  apply(target) {
+    return new target(frozenMsNow()).toString();
+  },
+  get(target, prop, receiver) {
+    if (prop === 'now') return frozenMsNow;
+    return Reflect.get(target, prop, receiver);
+  },
+});
+
+/** Route-written ISO timestamps (Date#toISOString shape) are masked before scanning; everything else is scanned as is. */
+const ISO_TIMESTAMP = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/g;
+const maskTimestamps = (s: string) => s.replace(ISO_TIMESTAMP, '<timestamp>');
+
 function leakCheck(blob: string, needles: string[], label: string) {
-  for (const n of needles) assert.ok(!blob.includes(n), `${label}: "${n}" reached the client or the database`);
+  const scanned = maskTimestamps(blob);
+  for (const n of needles) assert.ok(!scanned.includes(n), `${label}: "${n}" reached the client or the database`);
 }
 
 /** Fabricated "NNN So. 3d NNN" cites, however dressed, after the normalisation a renderer or the gate applies. */
@@ -484,6 +507,26 @@ function ungatedCellWrites(db: any): string[] {
 const cases: Record<string, () => Promise<void>> = {};
 const info: Record<string, unknown> = {};
 
+// ===== the clock: a ".999" millisecond field must neither break a case nor hide a leak =====
+
+cases.clock_frozen_at_999_ms_is_in_effect_and_masking_hides_only_timestamps = async () => {
+  assert.ok(new Date().toISOString().endsWith('.999Z'), 'the harness clock is not frozen at .999');
+  assert.equal(Date.now() % 1000, 999);
+  // A clean reply: the route writes updated_at stamps, which carry ".999Z", and the needle "999" must still pass.
+  S.db = chatDb();
+  S.runLLMStream = realisticLlm({ text: 'A clean answer.', viaTool: false });
+  S.verify = async () => CLEAN;
+  const res = await callChat();
+  const blob = JSON.stringify([res.writes, S.db.ops]);
+  assert.ok(/\.999Z/.test(blob), 'the route wrote no timestamp: this case no longer exercises the .999 clock');
+  assert.ok(blob.includes('999'), 'harness: expected the raw blob to contain 999');
+  leakCheck(blob, ['Doe', 'Roe', '999'], 'clean reply under the .999 clock');
+  // Masking hides only a timestamp: a real leak next to one is still found, and so is a cite shaped like part of one.
+  assert.throws(() => leakCheck(`${FAB} at 2026-01-01T00:00:00.999Z`, ['999'], 'x'));
+  assert.throws(() => leakCheck('2026-01-01T00:00:00.999 999 So. 3d 999', ['999'], 'x'));
+  assert.throws(() => leakCheck('T00:00:00.999Z 999', ['999'], 'x'));
+};
+
 // ===== chat: tabular chips are model-written and built by the route =====
 
 // extractTabularAnnotations copies ref / col_index / row_index straight out of the model's JSON and builds
@@ -664,6 +707,24 @@ cases.chat_client_disconnect_mid_stream_saves_only_the_aborted_marker = async ()
   assert.deepEqual(events(res).map((e) => e.type), ['chat_id'], 'only the chat id was written');
   assert.equal(res.ended, true);
   leakCheck(JSON.stringify([res.writes, S.db.ops]), ['partial', 'Doe', '999'], 'disconnect');
+};
+
+// The socket closes while the route is still awaiting its own database reads (before it registers its close listener): the 'close'
+// event has already fired and will never fire again, so only the response's own state says the client is gone. Starting (and
+// paying for) the model for a reply nobody can receive is the finding; nothing reaches the client either way.
+cases.chat_a_client_that_is_already_gone_before_the_model_starts_never_starts_it = async () => {
+  S.db = chatDb();
+  let modelCalls = 0;
+  S.runLLMStream = async () => {
+    modelCalls++;
+    return { fullText: 'x', events: [], annotations: [] };
+  };
+  S.verify = async () => CLEAN;
+  const res = fakeRes();
+  res.destroyed = true;
+  res.writableEnded = false;
+  await callChatWith(res);
+  assert.equal(modelCalls, 0, 'the model was started for a client that had already disconnected');
 };
 
 // The save of the verified reply throws (not an {error} result): the reply must not have been sent.
@@ -953,35 +1014,78 @@ async function callPrompt(body: any = { title: 'Term' }) {
   return res;
 }
 
-// A scaled clock for the limiter's per-call timeout (75 s in production): any timer of 30 s or more fires after 20 ms here.
-// The requested delays are recorded so a test can check the limit has not been shortened below the gate's own worst case.
+// A manual clock for the limiter's per-call timeout (75 s in production). Any timer of 30 s or more is captured instead of
+// scheduled, and fired by hand as soon as it is armed and still uncleared: no wall-clock wait anywhere, so machine load cannot
+// change the outcome. The requested delays are recorded so a test can check the limit has not been shortened below the gate's
+// own worst case. Completion is event-driven: the driver yields to the event loop (setImmediate rounds, not time) until the
+// request settles, and fails if it has not settled after MANUAL_ROUNDS rounds with every armed timer fired.
+const MANUAL_ROUNDS = 5000;
+const nextRound = () => new Promise<void>((r) => setImmediate(r));
+async function rounds(n: number) {
+  for (let i = 0; i < n; i++) await nextRound();
+}
+
 async function withScaledGateTimeout<T>(fn: () => Promise<T>): Promise<{ out: T; requested: number[] }> {
-  const orig = globalThis.setTimeout;
-  const requested: number[] = [];
+  const origSet = globalThis.setTimeout;
+  const origClear = globalThis.clearTimeout;
+  type Armed = { f: (...a: unknown[]) => void; a: unknown[]; ms: number; fired: boolean; cleared: boolean; unref: () => unknown; ref: () => unknown };
+  const armed: Armed[] = [];
   (globalThis as any).setTimeout = ((f: any, ms?: number, ...a: unknown[]) => {
     if (typeof ms === 'number' && ms >= 30_000) {
-      requested.push(ms);
-      return orig(f, 20, ...a);
+      const t: Armed = { f, a, ms, fired: false, cleared: false, unref: () => t, ref: () => t };
+      armed.push(t);
+      return t;
     }
-    return orig(f, ms, ...a);
+    return origSet(f, ms, ...a);
+  }) as any;
+  (globalThis as any).clearTimeout = ((h: any) => {
+    if (h && typeof h === 'object' && armed.includes(h)) {
+      h.cleared = true;
+      return;
+    }
+    return origClear(h);
   }) as any;
   try {
-    return { out: await fn(), requested };
+    let done = false;
+    const p = fn().then(
+      (v) => {
+        done = true;
+        return v;
+      },
+      (e) => {
+        done = true;
+        throw e;
+      },
+    );
+    for (let i = 0; i < MANUAL_ROUNDS && !done; i++) {
+      await nextRound();
+      // Only timers that were already armed before this round: a task started by a freed slot gets its own round to finish.
+      const due = armed.filter((t) => !t.fired && !t.cleared);
+      for (const t of due) {
+        if (t.cleared) continue;
+        t.fired = true;
+        t.f(...t.a);
+      }
+    }
+    if (!done) throw new Error(`still running after ${MANUAL_ROUNDS} rounds with every armed gate timeout fired; the gate timeout did not free the request`);
+    return { out: await p, requested: armed.map((t) => t.ms) };
   } finally {
-    globalThis.setTimeout = orig;
+    globalThis.setTimeout = origSet;
+    globalThis.clearTimeout = origClear;
   }
 }
 
-/** Fails (instead of hanging the whole run) when a request that should have been freed by the gate timeout is not. */
-function finishes<T>(p: Promise<T>, label: string, ms = 4000): Promise<T> {
-  let t: any;
-  return Promise.race([
-    p,
-    new Promise<T>((_resolve, reject) => {
-      t = setTimeout(() => reject(new Error(`${label}: still running after ${ms} ms; the gate timeout did not free the request`)), ms);
-    }),
-  ]).finally(() => clearTimeout(t));
+/** Kept for the call sites; the bound on completion is now the driver's round count, not a wall-clock cap. */
+function finishes<T>(p: Promise<T>, _label: string): Promise<T> {
+  return p;
 }
+
+/** A gate call that never answers until the test releases it (its late answer is CLEAN). */
+const hung: Array<() => void> = [];
+const hangUntilReleased = () => new Promise<SseVerificationResult>((resolve) => hung.push(() => resolve(CLEAN)));
+const releaseHung = () => {
+  for (const r of hung.splice(0)) r();
+};
 
 cases.prompt_route_a_vetoed_or_unverifiable_prompt_is_never_returned = async () => {
   const modelPrompt = `Extract the governing term, citing ${FAB}`;
@@ -1279,11 +1383,7 @@ cases.get_review_real_gate_stored_obfuscated_cites_are_withheld = async () => {
 // ===== round 2: the limiter's per-call timeout =====
 // These run last: they hold the shared limiter's slots for the scaled 20 ms.
 
-const HANG_MS = 400; // the stub gate answers this late; the (scaled) timeout fires at 20 ms
-const hangThenClean = async () => {
-  await sleep(HANG_MS);
-  return CLEAN;
-};
+const hangThenClean = () => hangUntilReleased();
 
 cases.regenerate_cell_a_gate_that_never_answers_withholds_the_cell_and_ignores_the_late_result = async () => {
   S.db = regenDb();
@@ -1300,7 +1400,8 @@ cases.regenerate_cell_a_gate_that_never_answers_withholds_the_cell_and_ignores_t
     assert.equal(res.body?.verification?.hasVetoes, true);
   }
   leakCheck(wireAndDb(res), needles, 'regenerate-cell timeout');
-  await sleep(HANG_MS + 150); // the abandoned gate call now answers CLEAN: nothing may be written or sent because of it
+  releaseHung(); // the abandoned gate call now answers CLEAN: nothing may be written or sent because of it
+  await rounds(50);
   leakCheck(wireAndDb(res), needles, 'regenerate-cell after the late result');
   const contentWrites = (S.db.ops as Op[]).filter((o) => o.table === 'tabular_cells' && o.op === 'update' && o.payload?.content);
   const real = contentWrites.filter((o) => typeof o.payload.content === 'string' && o.payload.content !== 'null');
@@ -1314,7 +1415,8 @@ cases.prompt_route_a_gate_that_never_answers_returns_the_fixed_502_and_ignores_t
   const { out: res } = await withScaledGateTimeout(() => finishes(callPrompt(), 'POST /prompt'));
   assert.equal(res.statusCode, 502);
   assert.deepEqual(res.body, { detail: PROMPT_WITHHELD });
-  await sleep(HANG_MS + 150);
+  releaseHung();
+  await rounds(50);
   assert.equal(res.statusCode, 502, 'the late result changed the status');
   assert.deepEqual(res.body, { detail: PROMPT_WITHHELD }, 'the late result changed the body');
   assert.deepEqual(res.writes, []);
@@ -1339,7 +1441,8 @@ cases.get_review_gate_calls_that_never_answer_free_their_slots_and_late_results_
     assert.equal(cellByCol(res, col).content.verification.hasVetoes, false, `col ${col}`);
   }
   leakCheck(JSON.stringify(res.body), ['HANG'], 'GET timeout');
-  await sleep(HANG_MS + 150);
+  releaseHung();
+  await rounds(50);
   assert.deepEqual(writesIn(S.db), [], 'a late gate result caused a database write');
   leakCheck(JSON.stringify(res.body), ['HANG'], 'GET after the late results');
 };
@@ -1614,7 +1717,7 @@ cases.chat_title_a_gate_that_never_answers_falls_back_ignores_the_late_answer_an
   assert.ok(requested.length >= 1, 'the route never armed a title gate timeout of 30 s or more');
   assert.ok(Math.min(...requested) >= 60_000, `the title gate limit (${Math.min(...requested)} ms) is shorter than the gate's own worst case (30 s queue + 30 s child)`);
   for (const r of late) r(CLEAN);
-  await sleep(40);
+  await rounds(50);
   assertTabularTitle(res, FIRST, 'timeout, after the late answer');
   leakCheck(JSON.stringify([res.writes, S.db.ops]), [MARK], 'late answer');
 };

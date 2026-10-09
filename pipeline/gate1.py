@@ -819,6 +819,10 @@ _BLOCK_TAGS = frozenset({"p", "br", "div", "li", "ul", "ol", "tr", "td", "th", "
                          "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "pre", "section", "article", "dd", "dt"})
 _TAG = re.compile(r"<(/?)([A-Za-z][A-Za-z0-9]{0,15})((?:[ \t\r\n/][^<>]{0,2000})?)>")
 _MD_ESCAPE = re.compile(r"\\([!-/:-@\[-`{-~])")
+# Also \uXXXX / \xXX spellings of the same separators (tab..CR, NEL, NBSP, LS, PS).
+_ESCAPED_WS = re.compile(
+    r"\\(?:[nrtfvb]|u(?:00[01][0-9a-fA-F]|0085|00[aA]0|2028|2029)|x(?:[01][0-9a-fA-F]|85|[aA]0))"
+)
 _MD_FOOTNOTE = re.compile(r"\[\^?[0-9]{1,3}\]")
 # A hyphen (ASCII, U+2010 or U+2011) at a line end joins the pieces, also after a period
 # ('So.-\n3d'); U+00AD soft hyphens are format characters and are stripped before this runs.
@@ -959,7 +963,11 @@ def _clean_draft(text: str) -> str:
         ch for ch in t
         if (cat := unicodedata.category(ch)) != "Cf" and not (cat == "Cc" and ch not in "\t\n\r\f\v")
     )
-    t = _MD_ESCAPE.sub(r"\1", t).replace("\\", "")  # escapes, then any stray backslash
+    t = _MD_ESCAPE.sub(r"\1", t)
+    # A JSON- or source-escaped whitespace ('\n', '\t', ...) is a real separator once decoded:
+    # it must read as one, not be deleted (which glues '999\nSo.' into '999nSo.').
+    t = _ESCAPED_WS.sub(" ", t)
+    t = t.replace("\\", "")  # then any stray backslash
     t = _BLOCKQUOTE.sub("", t)
     t = _HEADING.sub("", t)
     t = _HYPHEN_BREAK.sub(_hyphen_sub, t)

@@ -12,6 +12,9 @@ import {
   extractDocxBodyText,
   type EditInput,
 } from "./docxTrackedChanges";
+import fastDiff from "fast-diff";
+import JSZip from "jszip";
+import { XMLParser } from "fast-xml-parser";
 import { buildDownloadUrl } from "./downloadTokens";
 import {
   attachActiveVersionPaths,
@@ -909,6 +912,7 @@ function collectModelStrings(
   value: unknown,
   out: string[],
   depth = 0,
+  withKeys = false,
 ): boolean {
   if (typeof value === "string") {
     out.push(value);
@@ -925,13 +929,14 @@ function collectModelStrings(
   if (depth >= DOC_GATE_MAX_DEPTH) return false;
   if (Array.isArray(value)) {
     for (const item of value) {
-      if (!collectModelStrings(item, out, depth + 1)) return false;
+      if (!collectModelStrings(item, out, depth + 1, withKeys)) return false;
     }
     return true;
   }
   if (typeof value === "object") {
-    for (const item of Object.values(value as Record<string, unknown>)) {
-      if (!collectModelStrings(item, out, depth + 1)) return false;
+    for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+      if (withKeys) out.push(key);
+      if (!collectModelStrings(item, out, depth + 1, withKeys)) return false;
     }
     return true;
   }
@@ -1092,6 +1097,165 @@ function buildReplicaFilenames(
     filenames.push(`${baseStem}${suffix}${srcExt}`);
   }
   return filenames;
+}
+
+/** Characters of real document text gated on each side of a changed spot. */
+const EDIT_NEIGHBOURHOOD_CHARS = 300;
+/** A window is widened to whole words, but never by more than this. */
+const EDIT_NEIGHBOURHOOD_SNAP_CHARS = 100;
+/** Printed between windows so the end of one can never read as the start of a cite with the next. */
+const EDIT_NEIGHBOURHOOD_GAP = "\n[...]\n";
+
+/**
+ * The text actually around every spot an edit changed, taken from the
+ * document itself (accepted view, as `extractDocxBodyText` renders it).
+ *
+ * Not the context the model supplied: `contextBefore` / `contextAfter` on an
+ * applied change are the model's own strings, copied back verbatim. The engine
+ * only uses them to find the spot, and falls back to a looser match (one side
+ * of the context, or `find` alone) when they don't fit, so they need not be
+ * next to the change at all. Gate 1 already sees them (editDocumentGateParts),
+ * but they say nothing about what the edit now touches in the user's text.
+ *
+ * Paragraphs are compared one to one. Inside a changed paragraph a diff finds
+ * each inserted run and each deletion point; the text within
+ * EDIT_NEIGHBOURHOOD_CHARS of either (widened to whole words, crossing
+ * paragraph breaks) is the neighbourhood. Overlapping windows are merged.
+ * Text further away is untouched by the edit and is not gated here.
+ * Null when the two renderings can't be lined up (fail closed).
+ */
+export function editedNeighbourhoods(
+  before: string,
+  after: string,
+): string[] | null {
+  const beforeParas = before.split("\n");
+  const afterParas = after.split("\n");
+  if (beforeParas.length !== afterParas.length) return null;
+
+  const spots: Array<[number, number]> = [];
+  let base = 0;
+  for (let i = 0; i < afterParas.length; i++) {
+    const b = beforeParas[i];
+    const a = afterParas[i];
+    if (b !== a) {
+      let pos = 0;
+      for (const [op, text] of fastDiff(b, a)) {
+        if (op === 0) {
+          pos += text.length;
+        } else if (op === 1) {
+          spots.push([base + pos, base + pos + text.length]);
+          pos += text.length;
+        } else {
+          spots.push([base + pos, base + pos]);
+        }
+      }
+      if (pos !== a.length) return null;
+    }
+    base += a.length + 1;
+  }
+
+  const isSpace = (ch: string) => /\s/.test(ch);
+  const windows: Array<[number, number]> = [];
+  for (const [start, end] of spots) {
+    let lo = Math.max(0, start - EDIT_NEIGHBOURHOOD_CHARS);
+    let hi = Math.min(after.length, end + EDIT_NEIGHBOURHOOD_CHARS);
+    for (
+      let n = 0;
+      lo > 0 && n < EDIT_NEIGHBOURHOOD_SNAP_CHARS && !isSpace(after[lo - 1]);
+      n++
+    ) {
+      lo--;
+    }
+    for (
+      let n = 0;
+      hi < after.length &&
+      n < EDIT_NEIGHBOURHOOD_SNAP_CHARS &&
+      !isSpace(after[hi]);
+      n++
+    ) {
+      hi++;
+    }
+    windows.push([lo, hi]);
+  }
+  windows.sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+
+  const merged: Array<[number, number]> = [];
+  for (const [lo, hi] of windows) {
+    const last = merged[merged.length - 1];
+    if (last && lo <= last[1]) last[1] = Math.max(last[1], hi);
+    else merged.push([lo, hi]);
+  }
+  return merged.map(([lo, hi]) => after.slice(lo, hi));
+}
+
+/**
+ * The page as a reader sees it, for gating only: one line per paragraph, built
+ * from EVERY w:t in document order whatever element wraps it (hyperlink, field,
+ * smart tag, move, content control, text box), minus tracked deletions. A tab
+ * reads as a tab and a break as a space, so neither jams two runs together nor
+ * adds a line. `extractDocxBodyText` (the matcher's view) skips runs under
+ * wrappers it does not follow, so a cite finished by such a run is invisible
+ * there; this renderer does not share that blind spot. Paragraph order is the
+ * same for the original and the edited file, so lines align one to one.
+ */
+export async function renderDocxForGate(bytes: Buffer): Promise<string> {
+  const zip = await JSZip.loadAsync(bytes);
+  const entry =
+    zip.file("word/document.xml") ?? zip.file("word\\document.xml");
+  if (!entry) return "";
+  const tree = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "@_",
+    preserveOrder: true,
+    trimValues: false,
+    parseTagValue: false,
+    parseAttributeValue: false,
+    processEntities: true,
+  }).parse(await entry.async("string")) as Array<Record<string, unknown>>;
+
+  const nameOf = (n: Record<string, unknown>): string | null => {
+    for (const k of Object.keys(n)) if (k !== ":@" && k !== "#text") return k;
+    return null;
+  };
+  const kidsOf = (n: Record<string, unknown>): Array<Record<string, unknown>> => {
+    const name = nameOf(n);
+    const v = name ? n[name] : null;
+    return Array.isArray(v) ? (v as Array<Record<string, unknown>>) : [];
+  };
+
+  const lines: string[] = [];
+  const renderPara = (p: Record<string, unknown>): void => {
+    let text = "";
+    const nested: Array<Record<string, unknown>> = [];
+    const walk = (nodes: Array<Record<string, unknown>>): void => {
+      for (const n of nodes) {
+        const name = nameOf(n);
+        if (!name || name === "w:del") continue;
+        if (name === "w:p") nested.push(n);
+        else if (name === "w:t") {
+          for (const k of kidsOf(n)) {
+            if (nameOf(k) === null && "#text" in k) text += String(k["#text"]);
+          }
+        } else if (name === "w:tab") text += "\t";
+        else if (name === "w:br" || name === "w:cr") text += " ";
+        else if (name === "w:noBreakHyphen") text += "-";
+        else walk(kidsOf(n));
+      }
+    };
+    walk(kidsOf(p));
+    lines.push(text.replace(/[\r\n]/g, " "));
+    for (const n of nested) renderPara(n);
+  };
+  const visit = (nodes: Array<Record<string, unknown>>): void => {
+    for (const n of nodes) {
+      const name = nameOf(n);
+      if (!name || name === "w:del") continue;
+      if (name === "w:p") renderPara(n);
+      else visit(kidsOf(n));
+    }
+  };
+  visit(tree);
+  return lines.join("\n");
 }
 
 export async function generateDocx(
@@ -1681,11 +1845,6 @@ export async function runEditDocument(params: {
     errors,
   } = await applyTrackedEdits(current.bytes, edits, { author: "Kingsfield" });
 
-  const editedText = await extractDocxBodyText(editedBytes);
-  if (!(await gateDocWriteText([editedText, versionFilename], db))) {
-    return { ok: false, error: DOC_WRITE_REFUSED_MESSAGE };
-  }
-
   if (changes.length === 0) {
     return {
       ok: false,
@@ -1693,6 +1852,35 @@ export async function runEditDocument(params: {
         errors[0]?.reason ??
         "No edits could be applied. Refine context_before/context_after and retry.",
     };
+  }
+
+  // Gate 1, second pass: what the edit now sits next to. The model's strings
+  // were released above, but joined to the user's own text they can still read
+  // as a citation (a changed volume, court or pin; half a cite completed by
+  // what follows). Only the text around each changed spot is gated, taken from
+  // the document itself and not from the context the model claimed; the rest
+  // of the document is the user's own and was not touched. The filename is
+  // not gated: it is read from the stored version row and no model text
+  // reaches it here (generate_docx and replicate_document gate the names they
+  // write). Refused whole, before any write.
+  let neighbourhoods: string[] | null = null;
+  try {
+    neighbourhoods = editedNeighbourhoods(
+      await renderDocxForGate(current.bytes),
+      await renderDocxForGate(editedBytes),
+    );
+  } catch (err) {
+    console.error("[doc-write-gate] neighbourhood", safeErrorLog(err));
+  }
+  if (
+    !neighbourhoods ||
+    (neighbourhoods.length > 0 &&
+      !(await gateDocWriteText(
+        [neighbourhoods.join(EDIT_NEIGHBOURHOOD_GAP)],
+        db,
+      )))
+  ) {
+    return { ok: false, error: DOC_WRITE_REFUSED_MESSAGE };
   }
 
   const ab = editedBytes.buffer.slice(
@@ -2613,8 +2801,18 @@ export async function runToolCalls(
         })}\n\n`,
       );
       // mcp arguments withheld before connector egress
-      const mcpText = JSON.stringify(args ?? {});
-      if (!(await gateDocWriteText([mcpText], db))) {
+      // Gate the DECODED strings (keys and values), not the JSON text: an
+      // escaped "\n" or "\t" inside a string is a real separator once decoded.
+      const mcpParts: string[] = [];
+      if (!collectModelStrings(args ?? {}, mcpParts, 0, true)) {
+        toolResults.push({
+          role: "tool",
+          tool_call_id: tc.id,
+          content: JSON.stringify({ ok: false, error: DOC_WRITE_REFUSED_MESSAGE }),
+        });
+        continue;
+      }
+      if (!(await gateDocWriteText(mcpParts, db))) {
         toolResults.push({
           role: "tool",
           tool_call_id: tc.id,

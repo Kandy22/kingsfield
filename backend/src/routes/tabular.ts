@@ -1548,8 +1548,14 @@ tabularRouter.post("/:reviewId/chat", requireAuth, async (req, res) => {
         keepalive.stop();
         if (!streamFinished) streamAbort.abort();
     });
+    // The 'close' event may already have fired during the awaits above and never fires again.
+    if (res.destroyed || res.writableEnded) streamAbort.abort();
 
     try {
+        // A client that is already gone never starts the model.
+        if (streamAbort.signal.aborted) {
+            throw Object.assign(new Error("Stream aborted."), { name: "AbortError" });
+        }
         if (chatId) {
             write(`data: ${JSON.stringify({ type: "chat_id", chatId })}\n\n`);
         }

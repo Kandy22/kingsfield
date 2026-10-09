@@ -233,3 +233,12 @@ There is no formal tag, hashtag, or topic code for AI-hallucination cases in any
 - **Derived rows are marked** `bounds_source = 'inferred_next_case'`; real CAP bounds are `'cap'` and take precedence whenever a page-bounds CSV is present, so CAP data can replace inferred rows later. The column is nullable and appended; the gates select columns by name and never read it, so older DBs keep working.
 - **Fla. L. Weekly:** sequences are keyed by volume and section letter (D, S, none never mix). Inference is capped at a 25-page span (`--weekly-max-span`), beyond which `last_page` is NULL; the cap is a judgement, not measured. **Fla. L. Weekly Supp. is never inferred** (trial-court orders, sparse coverage), so its pins keep vetoing.
 - **Known limit:** a case missing from the citations CSV widens its predecessor's bound over the gap.
+
+
+## 2026-10-09 — Main verification (`main-verify`)
+
+- **Everything after `540e748` was reviewed by the adversary and signed.** The `apply_*.py` patch scripts are removed; patches go through the cascade, not scripts.
+- **`edit_document` gates the neighbourhood of each applied change, not the whole document.** The user's own text elsewhere in the document is not our output and must not block an edit. The neighbourhood comes from diffing the document before and after the edit, not from the model's claimed `context_before`/`context_after`. The text source reads every `w:t`, so wrapper elements cannot hide a run. The edit's filename is not gated (the tool writes none).
+- **Gate the decoded strings, not their JSON text.** MCP arguments, analytics rows and case extractions are gated as decoded keys and values joined with a blank line.
+- **Watcher `report_md` without Gate 1 stays an open item,** not a blocker: it predates `540e748` and no change since then makes it reachable from new paths.
+- **Lead edits outside builder scope:** `crew/coordinator.ts` (signal propagation) and `lib/caseIntelligence.ts` (decoded-string gate) were edited by the lead from the builder's exact change list, because the path-guard hook keeps builders out of those files. The adversary reviewed both.

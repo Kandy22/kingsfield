@@ -699,13 +699,21 @@ class OffsetsIndexTheNormalizedDraft(unittest.TestCase):
 
 
 # Hiding attacks again, now through the real wrapper (representative subset; the full set runs in-process).
-TS_HIDING = ("md_escaped_period", "md_escaped_period_and_paren", "html_nbsp_entity", "html_tag_between_tokens",
-             "italic_reporter", "nul_in_reporter", "unit_separator_as_space", "five_digit_volume",
-             "seven_digit_page", "slip_opinion_blank_volume_and_page", "missing_space_before_reporter", "all_caps",
-             "florida_court_wrong_spelling_dca")
+TS_HIDING = ("md_escaped_period", "html_tag_between_tokens", "nul_in_reporter", "unit_separator_as_space",
+             "five_digit_volume", "slip_opinion_blank_volume_and_page", "all_caps", "florida_court_wrong_spelling_dca")
+# Five more of the original thirteen run through the same wrapper in pipeline/tests_extended/test_extended_variants.py
+# (main-verify tier split); every one of FAB_HIDING still runs in-process in DraftExtractionHolesInProcess.
+TS_HIDING_MOVED = ("md_escaped_period_and_paren", "html_nbsp_entity", "italic_reporter", "seven_digit_page",
+                   "missing_space_before_reporter")
 TS_DRAFT_VARIANTS = {}
 TS_DRAFT_VARIANTS.update({"hide_" + n: wrap(FAB_HIDING[n]) for n in TS_HIDING})
-TS_DRAFT_VARIANTS.update({"glyph_" + n: wrap(c) for n, c in FAB_HOMOGLYPHS.items()})
+# Signoff tier: the first four homoglyph variants through the wrapper; the rest run through the same wrapper in
+# pipeline/tests_extended/test_extended_variants.py (the full set also runs in-process in
+# DraftExtractionHolesInProcess.test_homoglyph_and_invisible_character_variants_inside_a_draft, which stays here).
+TS_GLYPH_NAMES = list(FAB_HOMOGLYPHS)
+TS_GLYPHS_KEPT = TS_GLYPH_NAMES[:4]
+TS_GLYPHS_MOVED = TS_GLYPH_NAMES[4:]
+TS_DRAFT_VARIANTS.update({"glyph_" + n: wrap(FAB_HOMOGLYPHS[n]) for n in TS_GLYPHS_KEPT})
 TS_DRAFT_VARIANTS.update({
     "caption_" + n: "See " + CAPTION_DRESSINGS[n].format(c=WRONG_CAPTION) + "." for n in ("italic_star", "parenthesized", "html_em")})
 TS_DRAFT_VARIANTS["caption_et_al"] = "See " + ET_AL_VARIANTS["et_al"] + "."

@@ -740,6 +740,291 @@ cases.mcp_connector_tool_arguments_with_a_vetoed_cite_are_not_sent_out = async (
   );
 };
 
+// ===================================================================================================================
+// E. main-verify round: neighbourhood gating of edit_document, replicate_document names, MCP argument encodings
+// ===================================================================================================================
+
+/** A real .docx from raw <w:p> XML (so a case can put runs inside wrappers, tabs and breaks). */
+async function makeDocxXml(paragraphXml: string[]): Promise<Buffer> {
+  const mod = nodeRequire('jszip');
+  const JSZip = mod.default ?? mod;
+  const zip = new JSZip();
+  zip.file(
+    '[Content_Types].xml',
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/></Types>',
+  );
+  zip.file(
+    'word/document.xml',
+    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' +
+      paragraphXml.join('') +
+      '</w:body></w:document>',
+  );
+  return zip.generateAsync({ type: 'nodebuffer' });
+}
+const run1 = (text: string) => `<w:r><w:t xml:space="preserve">${text}</w:t></w:r>`;
+const para = (...inner: string[]) => `<w:p>${inner.join('')}</w:p>`;
+
+/**
+ * An INDEPENDENT renderer: every w:t in document order (tracked deletions removed, w:tab as a space, w:br as a newline,
+ * paragraph ends as a newline), whatever element wraps it. It does not share code with extractDocxBodyText, which skips
+ * runs inside hyperlinks, fields, smart tags, moves and in-paragraph content controls. This is what a reader of the
+ * stored file sees.
+ */
+async function independentRender(bytes: Buffer): Promise<string> {
+  const mod = nodeRequire('jszip');
+  const JSZip = mod.default ?? mod;
+  const zip = await JSZip.loadAsync(bytes);
+  let xml: string = await zip.file('word/document.xml').async('string');
+  xml = xml.replace(/<w:del\b[\s\S]*?<\/w:del>/g, '');
+  xml = xml.replace(/<w:tab\s*\/>/g, ' ').replace(/<w:br\b[^>]*\/>/g, '\n').replace(/<w:noBreakHyphen\s*\/>/g, '-');
+  xml = xml.replace(/<\/w:p>/g, '\n').replace(/<[^>]+>/g, '');
+  return xml
+    .replace(/&#(\d+);/g, (_m, n) => String.fromCodePoint(Number(n)))
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&');
+}
+
+/**
+ * The tool call was either refused whole (fixed result, nothing written), or what was written reads back clean under the
+ * real Gate 1 through the independent renderer. Anything else is a leak.
+ */
+async function expectRefusedOrRendersClean(out: any, label: string) {
+  const c = contents(out);
+  if (c.length >= 1 && c.every((x) => x === FIXED_RESULT)) {
+    assertNothingWritten(label);
+    return;
+  }
+  assert.ok(S.uploads.length >= 1, `${label}: neither refused nor written (engine error? setup wrong?): ${JSON.stringify(c).slice(0, 300)}`);
+  const text = await independentRender(S.uploads[S.uploads.length - 1].bytes);
+  const g = await realGate1(text);
+  const bad = g.verdicts.filter((v: any) => v.status !== 'verified' && v.status !== 'conditional');
+  assert.ok(
+    !g.hasVetoes && !g.error && bad.length === 0,
+    `${label}: LEAK. Written, and reads back (independent renderer) as ${JSON.stringify(text.slice(0, 120))}; ` +
+      `real Gate 1: ${S.gateLog[S.gateLog.length - 1].slice(0, 80)}`,
+  );
+}
+
+async function editXml(paragraphXml: string[], edits: Array<Record<string, unknown>>, oneCall = false) {
+  S.files.set(SRC_PATH, await makeDocxXml(paragraphXml));
+  S.activePath = SRC_PATH;
+  const calls = oneCall
+    ? [call('edit_document', { doc_id: 'doc-0', edits }, 'e0')]
+    : edits.map((e, i) => call('edit_document', { doc_id: 'doc-0', edits: [e] }, `e${i}`));
+  return run(calls, { turnEditState: new Map() });
+}
+const fresh = () => {
+  resetStubs();
+  S.db = makeDb();
+  S.verify = realGate1;
+};
+
+// Signoff tier vs extended tier. Every variant list below runs in full when DOCWRITE_FULL=1 (pipeline/tests_extended runs this file
+// that way); the signoff tier keeps one or two representatives per attack class, so each case stays cheap (every variant is a
+// real Gate 1 call, a Python child). The representatives are named in the second argument.
+const FULL_VARIANTS = process.env.DOCWRITE_FULL === '1';
+function variants<T>(all: Record<string, T>, keep: string[]): Record<string, T> {
+  return FULL_VARIANTS ? all : Object.fromEntries(Object.entries(all).filter(([k]) => keep.includes(k)));
+}
+
+// Findings F1: text the matcher cannot see (runs inside w:hyperlink, w:fldSimple, w:smartTag, w:moveTo, an in-paragraph
+// w:sdt) is part of the page. The edit inserts only "999"; the user's own hidden run supplies "Doe v. Roe, 999 So. 3d " in front
+// and the next run supplies " (Fla. 2015)". extractDocxBodyText (the matcher's view, used for the neighbourhood) reads
+// "999 (Fla. 2015)", which is no citation, so the edit is written and the page reads "Doe v. Roe, 999 So. 3d 999 (Fla. 2015)".
+cases.edit_runs_the_matcher_cannot_see_complete_a_cite_on_the_page_is_refused_or_reads_back_clean = async () => {
+  const wrappers: Record<string, (inner: string) => string> = {
+    hyperlink: (i) => `<w:hyperlink w:anchor="x">${i}</w:hyperlink>`,
+    fldSimple: (i) => `<w:fldSimple w:instr=" REF x ">${i}</w:fldSimple>`,
+    smartTag: (i) => `<w:smartTag w:uri="urn:x" w:element="e">${i}</w:smartTag>`,
+    moveTo: (i) => `<w:moveTo w:id="900" w:author="a" w:date="2020-01-01T00:00:00Z">${i}</w:moveTo>`,
+    sdtInParagraph: (i) => `<w:sdt><w:sdtContent>${i}</w:sdtContent></w:sdt>`,
+  };
+  const failures: string[] = [];
+  for (const [name, wrap] of Object.entries(variants(wrappers, ['hyperlink']))) {
+    fresh();
+    const out = await editXml(
+      [para(run1('Intro paragraph.')), para(wrap(run1('Doe v. Roe, 999 So. 3d ')), run1('PLACEHOLDER'), run1(' (Fla. 2015)'))],
+      [{ find: 'PLACEHOLDER', replace: '999', context_before: '', context_after: '', reason: 'fill the page' }],
+    );
+    try {
+      await expectRefusedOrRendersClean(out, name);
+    } catch (e: any) {
+      failures.push(String(e?.message ?? e).slice(0, 600));
+    }
+  }
+  assert.ok(failures.length === 0, failures.join('\n'));
+};
+
+// A tab or break between the user's runs: the matcher joins "3d" and "999" with nothing; the page shows a space. Either the
+// gate reads the jammed form as the cite it is, or the page must read back clean.
+cases.edit_tab_or_break_between_the_users_runs_does_not_hide_a_completed_cite = async () => {
+  const failures: string[] = [];
+  for (const [name, sep] of Object.entries(variants({ tab: '<w:tab/>', br: '<w:br/>' }, ['tab']))) {
+    fresh();
+    const out = await editXml(
+      [para(run1('Intro paragraph.')), para(`<w:r><w:t xml:space="preserve">Doe v. Roe, 999 So. 3d</w:t>${sep}</w:r>`, run1('PLACEHOLDER'), run1(' (Fla. 2015)'))],
+      [{ find: 'PLACEHOLDER', replace: '999', context_before: '', context_after: '', reason: 'fill the page' }],
+    );
+    try {
+      await expectRefusedOrRendersClean(out, name);
+    } catch (e: any) {
+      failures.push(String(e?.message ?? e).slice(0, 600));
+    }
+  }
+  assert.ok(failures.length === 0, failures.join('\n'));
+};
+
+// The model inserts the tail of the user's cite behind a separator the engine writes as text or as a break. Every one must be
+// refused (the cite is whole in the replacement's own neighbourhood), or read back clean.
+cases.edit_inserted_tail_of_the_users_cite_behind_any_separator_is_refused = async () => {
+  const seps: Record<string, string> = {
+    newline: '\n', tab: '\t', nbsp: ' ', zwsp: '​', softHyphen: '­', wordJoiner: '⁠', lineSep: ' ', spaceNewline: ' \n ',
+  };
+  const failures: string[] = [];
+  for (const [name, sep] of Object.entries(variants(seps, ['newline', 'softHyphen']))) {
+    fresh();
+    const out = await editXml(
+      [para(run1('Intro paragraph.')), para(run1('See Doe v. Roe, 999 So.'))],
+      [{ find: 'So.', replace: `So.${sep}3d 999 (Fla. 2015)`, context_before: '', context_after: '', reason: 'complete' }],
+    );
+    try {
+      await expectRefusedOrRendersClean(out, name);
+    } catch (e: any) {
+      failures.push(String(e?.message ?? e).slice(0, 500));
+    }
+  }
+  assert.ok(failures.length === 0, failures.join('\n'));
+};
+
+// Two edits in ONE tool call each fill one blank of a template. Neither carries a cite alone; the finished paragraph does.
+cases.edit_two_blanks_filled_in_one_call_never_store_a_vetoed_cite = async () => {
+  fresh();
+  const out = await editXml(
+    [para(run1('Intro paragraph.')), para(run1('See Doe v. Roe, ___ So. 3d ___ (Fla. 2015).'))],
+    [
+      { find: '___', replace: '999', context_before: 'Roe, ', context_after: ' So.', reason: 'volume' },
+      { find: '___', replace: '999', context_before: '3d ', context_after: ' (Fla', reason: 'page' },
+    ],
+    true,
+  );
+  await expectRefusedOrRendersClean(out, 'two blanks, one call');
+};
+
+// The model's claimed context is a clean string far from the real spot (the engine falls back to find-only). The gate must look at
+// what the edit really touched.
+cases.edit_with_misleading_context_still_gates_the_real_neighbourhood = async () => {
+  fresh();
+  const out = await editXml(P_SMITH.map((p) => para(run1(p))), [
+    { find: '100', replace: '999', context_before: 'Intro ', context_after: ' points', reason: 'volume' },
+  ]);
+  await expectRefusedOrRendersClean(out, 'misleading context');
+};
+
+// A cite in reason, context_before or context_after of an otherwise clean edit.
+cases.edit_a_cite_in_reason_or_context_strings_is_refused = async () => {
+  const failures: string[] = [];
+  const base = { find: 'Intro paragraph.', replace: 'Intro text.' };
+  const strings: Record<string, Record<string, unknown>> = {
+    reason: { ...base, context_before: '', context_after: '', reason: `per ${FAB}` },
+    context_before: { ...base, context_before: FAB, context_after: '', reason: 'x' },
+    context_after: { ...base, context_before: '', context_after: FAB, reason: 'x' },
+    reason_period_less: { ...base, context_before: '', context_after: '', reason: 'per Doe v Roe 999 So 3d 999 Fla 2015' },
+  };
+  for (const [name, edit] of Object.entries(variants(strings, ['reason', 'context_after']))) {
+    fresh();
+    const out = await editXml(P_SMITH.map((p) => para(run1(p))), [edit]);
+    try {
+      const c = contents(out);
+      assert.ok(c.length >= 1 && c.every((x) => x === FIXED_RESULT), `${name}: not refused: ${JSON.stringify(c).slice(0, 200)}`);
+      assertNothingWritten(name);
+    } catch (e: any) {
+      failures.push(String(e?.message ?? e).slice(0, 400));
+    }
+  }
+  assert.ok(failures.length === 0, failures.join('\n'));
+};
+
+// A deletion makes two halves of a non-cite meet.
+cases.edit_a_deletion_that_fuses_a_cite_is_refused_or_reads_back_clean = async () => {
+  fresh();
+  const out = await editXml(
+    [para(run1('Intro paragraph.')), para(run1('See Doe v. Roe, 999 NOTE So. 3d 999 (Fla. 2015).'))],
+    [{ find: ' NOTE', replace: '', context_before: '', context_after: '', reason: 'tidy' }],
+  );
+  await expectRefusedOrRendersClean(out, 'deletion fuses a cite');
+};
+
+// replicate_document: the model-chosen filename is the only model text a copy carries.
+const replicate = (args: Record<string, unknown>) => run([call('replicate_document', { doc_id: 'doc-0', ...args })]);
+
+cases.replicate_control_a_clean_filename_writes_the_copy_after_the_gate = async () => {
+  fresh();
+  S.files.set(SRC_PATH, await makeDocx(['Intro paragraph.']));
+  const out = await replicate({ new_filename: 'Service Agreement Copy.docx' });
+  const r = JSON.parse(contents(out)[0]);
+  assert.equal(r.ok, true, `control replicate failed: ${contents(out)[0]} gate=${S.gateLog.join(' // ')}`);
+  assert.equal(S.uploads.length, 1);
+  assert.equal(S.timeline[0], 'verify', 'the gate ran before the first write');
+};
+
+cases.replicate_filename_forms_of_a_fabricated_cite_are_refused = async () => {
+  const names: Record<string, Record<string, unknown>> = {
+    plain: { new_filename: `${FAB}.docx` },
+    period_less_filename_form: { new_filename: 'Doe v Roe 999 So 3d 999 Fla 2015 Memo.docx' },
+    upper_case: { new_filename: 'DOE V ROE 999 SO 3D 999 FLA 2015.docx' },
+    full_width_digits: { new_filename: 'Doe v. Roe, ９９９ So. 3d ９９９ (Fla. 2015).docx' },
+    zero_width_inside_reporter: { new_filename: 'Doe v. Roe, 999 So.​ 3d 999 (Fla. 2015).docx' },
+    count_three: { new_filename: `${FAB}.docx`, count: 3 },
+    no_extension: { new_filename: FAB },
+  };
+  const failures: string[] = [];
+  for (const [name, args] of Object.entries(variants(names, ['plain', 'period_less_filename_form', 'count_three']))) {
+    fresh();
+    S.files.set(SRC_PATH, await makeDocx(['Intro paragraph.']));
+    const out = await replicate(args);
+    try {
+      const c = contents(out);
+      assert.ok(c.length >= 1 && c.every((x) => x === FIXED_RESULT), `${name}: not refused: ${JSON.stringify(c).slice(0, 200)}; gate=${S.gateLog.join(' // ')}`);
+      assertNothingWritten(name);
+    } catch (e: any) {
+      failures.push(String(e?.message ?? e).slice(0, 500));
+    }
+  }
+  assert.ok(failures.length === 0, failures.join('\n'));
+};
+
+// MCP connector egress: the arguments are gated as JSON text. JSON escapes (\n, \t, \r) are literal backslash sequences in that text,
+// but the connector receives the real characters. A cite split by a newline or tab must be refused like any other.
+cases.mcp_connector_arguments_with_a_cite_split_by_an_escaped_newline_or_tab_are_not_sent_out = async () => {
+  const forms: Record<string, unknown> = {
+    newline: { content: 'See Doe v. Roe, 999 So.\n3d 999 (Fla. 2015).' },
+    tab: { content: 'See Doe v. Roe, 999 So.\t3d 999 (Fla. 2015).' },
+    crlf: { content: 'See Doe v. Roe, 999 So.\r\n3d 999 (Fla. 2015).' },
+    blank_line: { content: 'See Doe v. Roe, 999 So.\n\n3d 999 (Fla. 2015).' },
+    newline_before_page: { content: 'See Doe v. Roe, 999 So. 3d\n999 (Fla. 2015).' },
+    newline_in_volume_reporter_gap: { content: 'See Doe v. Roe, 999\nSo. 3d 999 (Fla. 2015).' },
+    double_encoded_json: { content: JSON.stringify({ body: 'See Doe v. Roe, 999 So.\n3d 999 (Fla. 2015).' }) },
+    cite_as_object_key: { 'Doe v. Roe, 999 So. 3d 999 (Fla. 2015)': 1 },
+    nested_array: { parts: [['See Doe v. Roe, 999 So. 3d 999 (Fla. 2015)']] },
+    period_less: { content: 'Doe v Roe 999 So 3d 999 Fla 2015' },
+  };
+  const failures: string[] = [];
+  for (const [name, args] of Object.entries(variants(forms, ['newline', 'newline_in_volume_reporter_gap', 'double_encoded_json']))) {
+    fresh();
+    await run([call('mcp_drive_create_file', args)]);
+    if (S.mcpCalls.length) failures.push(`${name}: sent to the connector as ${JSON.stringify(S.mcpCalls[0].args).slice(0, 160)}; gate=${S.gateLog.join(' // ').slice(0, 200)}`);
+  }
+  assert.ok(failures.length === 0, failures.join('\n'));
+};
+
+cases.mcp_connector_control_clean_arguments_are_sent = async () => {
+  fresh();
+  await run([call('mcp_drive_create_file', { name: 'Notes', content: `See ${SMITH_CITE}.\nNext steps.` })]);
+  assert.equal(S.mcpCalls.length, 1, `clean arguments were not sent (the gate over-vetoes, or the harness is broken); gate=${S.gateLog.join(' // ')}`);
+};
+
 // ---------- run ----------
 
 (async () => {

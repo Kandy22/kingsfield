@@ -81,21 +81,29 @@ function fakeRes() {
 }
 
 /** Supabase stand-in: every chain resolves to "no row"; inserts are recorded; `from('sources')` can be made to throw. */
-function makeSupabase(throwOnSources?: string) {
+function makeSupabase(throwOnSources?: string, ownedProjects: string[] = []) {
   const inserts: Array<{ table: string; row: any }> = [];
   const tables: string[] = [];
   const noRow = { data: null, error: null };
-  const builder = (table: string): any =>
+  // `projects` answers a row only for an id in ownedProjects (the route asks with .eq('id', X).eq('user_id', caller)).
+  const builder = (table: string, ids: unknown[] = []): any =>
     new Proxy(function () {}, {
       get: (_t, prop) => {
-        if (prop === 'then') return (res: any, rej: any) => Promise.resolve(noRow).then(res, rej);
+        if (prop === 'then') {
+          return (res: any, rej: any) => {
+            const id = ids.find((v) => typeof v === 'string' && ownedProjects.includes(v));
+            const out = table === 'projects' && id ? { data: { id, user_id: 'caller', name: 'Owned matter' }, error: null } : noRow;
+            return Promise.resolve(out).then(res, rej);
+          };
+        }
         if (prop === 'insert') {
           return (row: unknown) => {
             inserts.push({ table, row: JSON.parse(JSON.stringify(row)) });
-            return builder(table);
+            return builder(table, ids);
           };
         }
-        return () => builder(table);
+        if (prop === 'eq') return (col: string, v: unknown) => builder(table, col === 'id' ? [...ids, v] : ids);
+        return () => builder(table, ids);
       },
     });
   const client: any = {
@@ -379,7 +387,7 @@ function assertSavedRowIsWithheld(sb: ReturnType<typeof makeSupabase>, projectId
 
 if (MODE === 'council') {
   cases.council_vetoed_advisor_withholds_the_whole_output_and_saves_only_the_withheld_text = async () => {
-    const sb = makeSupabase();
+    const sb = makeSupabase(undefined, ['proj-1']);
     const { res, f, calls } = await councilRun(ADV_DEEP_BAD, sb, { projectId: 'proj-1' });
     assert.equal(res.statusCode, 200, 'status');
     assert.ok(res.body, 'no JSON body was sent');
@@ -403,7 +411,7 @@ if (MODE === 'council') {
   };
 
   cases.council_clean_output_passes_through_unchanged_and_is_saved_as_sent = async () => {
-    const sb = makeSupabase();
+    const sb = makeSupabase(undefined, ['proj-2']);
     const { res, f } = await councilRun(ADV_DEEP_CLEAN, sb, { projectId: 'proj-2' });
     assert.equal(res.statusCode, 200);
     const b = res.body;
@@ -431,7 +439,7 @@ if (MODE === 'council') {
   };
 
   cases.council_gate_error_withholds_with_the_generic_message_and_leaks_no_raw_error = async () => {
-    const sb = makeSupabase(RAW); // the cache read for the federal cite throws: verifyDraftForSse returns an error result
+    const sb = makeSupabase(RAW, ['proj-3']); // the cache read for the federal cite throws: verifyDraftForSse returns an error result
     const { res, f } = await councilRun(`A federal panel followed ${FED} on this point.`, sb, { projectId: 'proj-3' });
     assert.equal(res.statusCode, 200);
     assertCouncilWithheld(res.body, WITHHELD_MESSAGE, 'council gate error');
@@ -442,6 +450,14 @@ if (MODE === 'council') {
     // The session insert goes through llm_council_sessions only; the throwing table is "sources".
     assertSavedRowIsWithheld(sb, 'proj-3', WITHHELD_MESSAGE, leaks, 'council gate error');
     assert.deepEqual(f.stray, []);
+  };
+
+  cases.council_a_project_the_caller_does_not_own_is_never_saved_into = async () => {
+    const sb = makeSupabase(undefined, ['proj-mine']);
+    const { res } = await councilRun(ADV_DEEP_CLEAN, sb, { projectId: 'proj-someone-elses' });
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.withheld, false, 'the clean output must still be returned');
+    assert.deepEqual(sb.inserts, [], "a session was saved under a project the caller does not own");
   };
 
   cases.council_model_failure_sends_the_fixed_500_and_saves_nothing = async () => {

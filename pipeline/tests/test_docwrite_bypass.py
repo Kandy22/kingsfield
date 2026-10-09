@@ -56,6 +56,18 @@ EXPECTED_CASES = {
     "malformed_generate_args_write_nothing_and_echo_nothing",
     "generate_everything_rendered_was_shown_to_the_gate",
     "mcp_connector_tool_arguments_with_a_vetoed_cite_are_not_sent_out",
+    # main-verify round
+    "edit_runs_the_matcher_cannot_see_complete_a_cite_on_the_page_is_refused_or_reads_back_clean",
+    "edit_tab_or_break_between_the_users_runs_does_not_hide_a_completed_cite",
+    "edit_inserted_tail_of_the_users_cite_behind_any_separator_is_refused",
+    "edit_two_blanks_filled_in_one_call_never_store_a_vetoed_cite",
+    "edit_with_misleading_context_still_gates_the_real_neighbourhood",
+    "edit_a_cite_in_reason_or_context_strings_is_refused",
+    "edit_a_deletion_that_fuses_a_cite_is_refused_or_reads_back_clean",
+    "replicate_control_a_clean_filename_writes_the_copy_after_the_gate",
+    "replicate_filename_forms_of_a_fabricated_cite_are_refused",
+    "mcp_connector_arguments_with_a_cite_split_by_an_escaped_newline_or_tab_are_not_sent_out",
+    "mcp_connector_control_clean_arguments_are_sent",
 }
 
 
@@ -87,7 +99,8 @@ class DocWriteBypassCases(unittest.TestCase):
     def test_every_case_passes(self):
         for name, failure in sorted(self.report.items()):
             with self.subTest(case=name):
-                self.assertIsNone(failure, failure)
+                if failure is not None:
+                    self.fail(str(failure)[:450])
 
 
 # ---------------------------------------------------------------------------
@@ -174,6 +187,90 @@ class GatePremises(unittest.TestCase):
                 bad = [(r.verdict, r.reason) for r in rs if r.verdict == "fall_through"]
                 self.assertFalse(bad, "a Florida key fell through to CourtListener: %r -> %r" % (text, bad))
                 self.assertTrue(rs, "the gate saw no citation at all in %r" % text)
+
+
+# ---------------------------------------------------------------------------
+# JSON-encoded text: analytics extraction, GET /analytics and MCP arguments are gated as JSON.stringify output, where a
+# newline or tab inside a string is a literal backslash sequence. The reader of the value sees the real character.
+# ---------------------------------------------------------------------------
+
+
+class JsonEncodedText(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.db = fx.get_fixture().db
+
+    def assertVetoed(self, text, why):
+        rs = fx.py_check_text(text, self.db)
+        if not any(r.verdict == "veto" for r in rs):
+            self.fail("LEAK (%s): no veto for %r -> %r" % (why, text, [(r.verdict, r.reason) for r in rs]))
+
+    def test_a_cite_split_by_a_json_escaped_whitespace_is_still_a_cite(self):
+        for sep in ("\n", "\t", "\r\n", "\n\n", " \n "):
+            value = "Doe v. Roe, 999 So." + sep + "3d 999 (Fla. 2015)."
+            for label, blob in (
+                ("object value", json.dumps({"claim": value}, ensure_ascii=False)),
+                ("nested in a list", json.dumps({"allegations": [{"claim": "x", "authorities": [value]}]}, ensure_ascii=False)),
+                ("double encoded", json.dumps({"body": json.dumps({"claim": value}, ensure_ascii=False)}, ensure_ascii=False)),
+            ):
+                with self.subTest(sep=repr(sep), shape=label):
+                    self.assertVetoed(blob, "JSON-escaped whitespace inside a cite")
+
+    def test_raw_control_characters_inside_a_cite_are_vetoed_premise(self):
+        # The premise of test_case_extraction_gate: decoded, a control character glues the cite and the gate vetoes it.
+        for ch in ("\x08", "\x0b", "\x1f"):
+            with self.subTest(char=repr(ch)):
+                self.assertVetoed("Doe v. Roe, 999%sSo. 3d 999 (Fla. 2015)." % ch, "raw control character")
+
+    def test_escape_spellings_that_decode_to_a_separator_do_not_hide_a_cite(self):
+        # Text that is itself JSON, or source code, and is decoded once more downstream.
+        spellings = {
+            "u000a": "\\u000a", "u000A": "\\u000A", "x0a": "\\x0a", "u000d u000a": "\\u000d\\u000a", "u0009": "\\u0009",
+            "u0020": "\\u0020", "x20": "\\x20", "two backslashes n": "\\\\n", "three backslashes n": "\\\\\\n",
+            "escaped slash then n": "\\/\\n", "slash u2028": "\\u2028",
+        }
+        leaks = []
+        for label, sep in spellings.items():
+            for template in ("Doe v. Roe, 999%sSo. 3d 999 (Fla. 2015).", "Doe v. Roe, 999 So.%s3d 999 (Fla. 2015).",
+                             "Doe v. Roe, 999 So. 3d%s999 (Fla. 2015)."):
+                text = template % sep
+                if not any(r.verdict == "veto" for r in fx.py_check_text(text, self.db)):
+                    leaks.append("%s: %r" % (label, text))
+        if leaks:
+            self.fail("%d spellings read as no citation at all; first: %s" % (len(leaks), "; ".join(leaks[:4])))
+
+    def test_escapes_inside_the_court_parenthetical_or_pin_never_turn_a_bad_cite_into_a_pass(self):
+        smith = "Smith v. State, 100 So. 3d 200"
+        bad = []
+        for sep in ("\\n", "\\b", "\\u0008", "\\u000a", "\\x0a", "\\t"):
+            for text in (
+                "%s, 999%s(Fla. 2012)" % (smith, sep),          # out-of-range pin after an escape
+                "%s,%s999 (Fla. 2012)" % (smith, sep),
+                "%s, 21%s0 (Fla. 2012)" % (smith, sep),         # digits split by an escape
+                "%s (Fla.%s1st DCA 2012)" % (smith, sep),       # wrong court level after an escape
+                "Doe v. Roe, 999 So. 3d 999 (Fla.%s2015)" % sep,
+            ):
+                if any(r.verdict == "pass" for r in fx.py_check_text(text, self.db)):
+                    bad.append(text)
+        if bad:
+            self.fail("%d passed; first: %r" % (len(bad), bad[0]))
+
+    def test_the_escape_handling_adds_no_false_veto_to_real_cites(self):
+        smith = "Smith v. State, 100 So. 3d 200 (Fla. 2012)"
+        for text in (
+            "See\n" + smith + ".", json.dumps({"c": "See\n" + smith + "."}), "See\\n" + smith + ".",
+            "Smith v. State,\\n100 So. 3d 200 (Fla. 2012).", json.dumps({"a": "x", "b": "Compare\t" + smith}),
+            "Smith v. State, 100 So. 3d 200 \\(Fla. 2012\\).", "path C:\\new\\table has no citation",
+        ):
+            with self.subTest(text=text):
+                rs = self.results(text) if hasattr(self, "results") else fx.py_check_text(text, self.db)
+                self.assertFalse(any(r.verdict == "veto" and "Smith" in text and "C:" not in text for r in rs),
+                                 [(r.verdict, r.reason) for r in rs])
+
+    def test_a_cite_split_before_the_page_or_after_the_volume_by_a_json_escaped_newline(self):
+        for value in ("Doe v. Roe, 999 So. 3d\n999 (Fla. 2015).", "Doe v. Roe, 999\nSo. 3d 999 (Fla. 2015)."):
+            with self.subTest(value=value):
+                self.assertVetoed(json.dumps({"claim": value}, ensure_ascii=False), "JSON-escaped newline inside a cite")
 
 
 # ---------------------------------------------------------------------------

@@ -41,6 +41,16 @@ EXPECTED_CASES = {
     "edit_every_gate_failure_refuses",
     "edit_malformed_edits_are_refused_without_a_write",
     "edit_two_calls_in_one_batch_are_each_gated_on_their_own",
+    "edit_the_users_own_unverifiable_cite_far_from_the_change_does_not_block_it",
+    "edit_a_cite_next_to_the_change_is_gated_from_the_document_not_from_the_claimed_context",
+    "edit_a_cite_completed_across_a_paragraph_break_is_gated",
+    "edit_a_deletion_that_joins_two_halves_of_a_cite_is_gated",
+    "edit_two_distant_changes_are_two_windows_with_a_gap_between",
+    "edit_a_failing_second_pass_refuses_with_nothing_written",
+    "edit_renderings_that_cannot_be_lined_up_are_refused",
+    "edit_with_no_visible_text_change_asks_the_gate_only_once",
+    "edit_does_not_gate_the_stored_filename_because_no_model_text_reaches_it",
+    "editedNeighbourhoods_windows_widen_to_whole_words_and_merge",
     "replicate_clean_filenames_are_written_as_before_and_gated_first",
     "replicate_a_vetoed_new_filename_writes_nothing_and_returns_the_fixed_result",
     "replicate_a_cite_formed_only_in_the_final_filename_is_refused",
@@ -130,16 +140,34 @@ class Wiring(unittest.TestCase):
         self.assertLess(disp.index("content: DOC_WRITE_REFUSED_RESULT"), disp.index("safeToolResult"))
 
     def test_edit_document_gates_before_any_read_or_write(self):
+        """First pass: the model's strings, before the document is read. Second pass: the text around each change."""
         edit = self._edit()
         gate = edit.index("await gateDocWriteText(")
-        self.assertEqual(edit.count("gateDocWriteText("), 1)
+        self.assertEqual(edit.count("gateDocWriteText("), 2)
         self.assertLess(gate, edit.index(".from("))
         self.assertLess(gate, edit.index("loadActiveVersion("))
         self.assertLess(gate, edit.index("loadCurrentVersionBytes("))
         self.assertLess(gate, edit.index("applyTrackedEdits("))
-        for m in WRITE.finditer(edit):
-            self.assertLess(gate, m.start(), f"write before the gate: {m.group(0)}")
         self.assertIn("error: DOC_WRITE_REFUSED_MESSAGE", edit[gate: gate + 200])
+        # The second pass runs on the engine's output, before the first write.
+        second = edit.index("await gateDocWriteText(", gate + 1)
+        self.assertGreater(second, edit.index("applyTrackedEdits("))
+        for m in WRITE.finditer(edit):
+            self.assertLess(second, m.start(), f"write before the second gate pass: {m.group(0)}")
+        self.assertIn("editedNeighbourhoods(", edit[:second])
+        self.assertIn("error: DOC_WRITE_REFUSED_MESSAGE", edit[second: second + 200])
+
+    def test_edit_second_pass_gates_neighbourhoods_not_the_whole_document_or_claimed_context(self):
+        edit = self._edit()
+        # The old second pass gated the whole rendered document (and the filename).
+        self.assertNotRegex(edit, r"gateDocWriteText\(\s*\[\s*editedText")
+        self.assertNotIn("versionFilename]", edit)
+        second = edit.index("await gateDocWriteText(", edit.index("applyTrackedEdits("))
+        window = edit[second - 400: second + 200]
+        self.assertIn("neighbourhoods", window)
+        # The model-claimed contextBefore / contextAfter on the applied changes are not what is gated.
+        self.assertNotIn("contextBefore", edit[:second])
+        self.assertNotIn("contextAfter", edit[:second])
 
     def test_edit_gate_covers_replacement_reason_and_context_but_not_find(self):
         parts = self._between("function editDocumentGateParts(", "function buildReplicaFilenames(")

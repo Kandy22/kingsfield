@@ -237,6 +237,26 @@ export async function enrichAuthorityCiteCounts(
 }
 
 // Orchestrate: load text, extract, upsert the row. Returns the stored row.
+function collectIntelStrings(value: unknown, out: string[], depth = 0): boolean {
+  if (typeof value === "string") {
+    out.push(value);
+    return out.length <= 20_000;
+  }
+  if (value === null || value === undefined || typeof value === "number" || typeof value === "boolean") {
+    return true;
+  }
+  if (depth >= 12) return false;
+  if (Array.isArray(value)) return value.every((item) => collectIntelStrings(item, out, depth + 1));
+  if (typeof value === "object") {
+    // Keys are model-written too: a cite can sit in a key name.
+    return Object.entries(value as Record<string, unknown>).every(([key, item]) => {
+      out.push(key);
+      return out.length <= 20_000 && collectIntelStrings(item, out, depth + 1);
+    });
+  }
+  return false;
+}
+
 export async function runCaseExtraction(params: {
   documentId: string;
   userId: string;
@@ -272,7 +292,13 @@ export async function runCaseExtraction(params: {
   intel.authorities = await enrichAuthorityCiteCounts(intel.authorities);
 
   // extraction withheld: Gate 1 over the model JSON before the row is saved.
-  const extracted = JSON.stringify(intel);
+  // Gate the decoded strings, not the JSON text: JSON spells control characters as \b and
+  // \u000b, which the gate would read as stray backslashes and miss a cite they split.
+  const strings: string[] = [];
+  if (!collectIntelStrings(intel, strings)) {
+    return { ok: false, error: "The extraction was withheld because it could not be verified." };
+  }
+  const extracted = strings.join("\n\n");
   const gated = await gateTitleText(extracted, "", {
     verify: (value) => verifyDraftForSse(value, {
       courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",

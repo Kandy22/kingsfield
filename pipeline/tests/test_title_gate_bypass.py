@@ -51,7 +51,8 @@ def _run_cases():
             raise AssertionError("tsx failed (%d):\n%s" % (proc.returncode, proc.stderr[-2500:]))
         lines = [l for l in proc.stdout.splitlines() if l.strip()]
         _RUN["data"] = json.loads(lines[-1])
-        sys.stderr.write("title_gate_bypass_cases info: %s\n" % json.dumps(_RUN["data"]["info"], sort_keys=True))
+        if os.environ.get("KF_INFO"):
+            sys.stderr.write("title_gate_bypass_cases info: %s\n" % json.dumps(_RUN["data"]["info"], sort_keys=True))
     return _RUN["data"]
 
 
@@ -118,7 +119,9 @@ class RealGate(_Cases):
     shown in the sidebar."""
 
     def test_obfuscated_and_near_miss_cites_fall_back(self):
-        # 15 titles: plain, no court parenthetical, full-width digits, zero-width space (reporter and volume),
+        # Signoff tier: plain, no court parenthetical, full-width digits, period-less, a real record under another caption, a
+        # markdown link title. The other nine forms run in pipeline/tests_extended/test_extended_title.py. Full list of 15:
+        # plain, no court parenthetical, full-width digits, zero-width space (reporter and volume),
         # period-less, upper-case, Cyrillic o, OCR zero, Fla. L. Weekly, a real volume/page under another case's
         # caption, a real cite with a pin past the last page, a cite hidden in a markdown link title and in an HTML
         # attribute, a numeric-entity cite. One Python gate call each.
@@ -131,20 +134,22 @@ class RealGate(_Cases):
         self._case("title_real_gate_clean_titles_pass_and_a_cite_without_the_rest_of_the_pipeline_fails_closed")
 
 
-class OpenItems(_Cases):
-    """Model text with no Gate 1 that is deliberately not part of this gate. The body is intact: un-skip when fixed."""
+class StoredTitlesAreGatedOnRead(_Cases):
+    """Titles saved before the title gate existed may be model-written. The read paths now re-gate them (the open item of
+    round 3, un-skipped with its body unchanged): GET /chat/:chatId, GET /chat (the sidebar list) and, for tabular,
+    GET /tabular-review/:reviewId/chats (test_tabular_bypass.py). GET /projects/:projectId/chats is checked statically below."""
 
-    @unittest.skip(
-        "OPEN ITEM (Part C follow-up, found 2026-10-08 by the adversary): titles saved BEFORE the title gate existed may be "
-        "model-written and ungated, and every read path returns chats.title as stored: GET /chat (get_chats_overview rpc), "
-        "GET /chat/:chatId (chat.ts ~208-227, `chat` row), GET /projects/:projectId/chats (projects.ts ~762-781, select *), "
-        "and, for tabular, GET /tabular-review/:reviewId/chats (tabular.ts ~1159-1186). The cell gate re-gates stored cells "
-        "on every read; titles do not. Fix: a one-time scrub of existing rows (re-gate every stored title, replace a "
-        "vetoed one with the start of the chat's first user message) or a read-time gate. docs/context/current-state.md "
-        "must record it."
-    )
     def test_stored_chat_titles_are_gated_on_read(self):
         self._case("open_stored_chat_titles_are_gated_on_read")
+
+    def test_stored_chat_titles_are_gated_on_the_sidebar_list(self):
+        self._case("stored_chat_titles_are_gated_on_the_list_route")
+
+    def test_the_project_chat_list_gates_each_stored_title(self):
+        code = _code((SRC / "routes" / "projects.ts").read_text(encoding="utf-8"))
+        i = code.index("/:projectId/chats")
+        sec = code[i:i + 3500]
+        self.assertIn("gateTitleText(", sec, "GET /projects/:projectId/chats returns stored titles without Gate 1")
 
 
 # ───── static: every writer of a chat title, and the shape of the generate-title handler ─────

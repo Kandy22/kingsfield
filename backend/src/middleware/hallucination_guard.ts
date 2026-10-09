@@ -79,7 +79,7 @@ export async function verifyDraftForSse(
 // ---------------------------------------------------------------------------
 
 const SSE_IDENT = /^[A-Za-z0-9_.:-]{1,64}$/;
-const JAMMED_CITE = /\d{1,4}so\.?[23]d\d{1,6}/i;
+const JAMMED_CITE = /\d{1,4}[^A-Za-z0-9]{0,3}so\.?[^A-Za-z0-9]{0,3}[23]d/i;
 const isSafeIdent = (v: string) => SSE_IDENT.test(v) && !JAMMED_CITE.test(v);
 const isIdent = (v: unknown) => typeof v === 'string' && isSafeIdent(v);
 const isCount = (v: unknown) => typeof v === 'number' && Number.isFinite(v);

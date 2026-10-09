@@ -45,7 +45,8 @@ class ChatReplyCases(unittest.TestCase):
         data = json.loads(lines[-1])
         cls.report = data["results"]
         cls.info = data["info"]
-        sys.stderr.write("chat_veto_cases info: %s\n" % json.dumps(cls.info, sort_keys=True))
+        if os.environ.get("KF_INFO"):
+            sys.stderr.write("chat_veto_cases info: %s\n" % json.dumps(cls.info, sort_keys=True))
 
     def _case(self, name):
         self.assertIn(name, self.report, "the harness did not run %s" % name)
