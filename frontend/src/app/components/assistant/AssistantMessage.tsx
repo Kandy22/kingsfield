@@ -2277,6 +2277,11 @@ export function AssistantMessage({
     return (
         <div style={{ minHeight }}>
             <ResponseStatus status={status} />
+            {effectiveErrorMessage && !events?.some((event) => event.type === "content") && (
+                <p className="failed-reply-text mb-2 text-sm font-sans text-gray-700 dark:text-paper">
+                    {effectiveErrorMessage}
+                </p>
+            )}
             <div className="w-full font-inter relative mt-2">
                 {events && events.length > 0 ? (
                     <div className="flex flex-col gap-4">
