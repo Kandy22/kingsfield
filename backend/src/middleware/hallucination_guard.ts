@@ -79,7 +79,9 @@ export async function verifyDraftForSse(
 // ---------------------------------------------------------------------------
 
 const SSE_IDENT = /^[A-Za-z0-9_.:-]{1,64}$/;
-const isIdent = (v: unknown) => typeof v === 'string' && SSE_IDENT.test(v);
+const JAMMED_CITE = /\d{1,4}so\.?[23]d\d{1,6}/i;
+const isSafeIdent = (v: string) => SSE_IDENT.test(v) && !JAMMED_CITE.test(v);
+const isIdent = (v: unknown) => typeof v === 'string' && isSafeIdent(v);
 const isCount = (v: unknown) => typeof v === 'number' && Number.isFinite(v);
 const isNumOrNull = (v: unknown) => v === null || isCount(v);
 const isNumArray = (v: unknown) => Array.isArray(v) && v.every(isCount);
@@ -501,7 +503,7 @@ function scrubEvent(ev: Ev): Ev {
   for (const [k, v] of Object.entries(ev)) {
     if (k === 'type') continue;
     if (v === null || typeof v === 'boolean' || isCount(v)) out[k] = v;
-    else if (typeof v === 'string' && SSE_IDENT.test(v)) out[k] = v;
+    else if (typeof v === 'string' && isSafeIdent(v)) out[k] = v;
     else if (Array.isArray(v)) out[k] = v.every(isCount) ? v : [];
   }
   return out;
