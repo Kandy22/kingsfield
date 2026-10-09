@@ -2612,6 +2612,16 @@ export async function runToolCalls(
           name: tc.function.name,
         })}\n\n`,
       );
+      // mcp arguments withheld before connector egress
+      const mcpText = JSON.stringify(args ?? {});
+      if (!(await gateDocWriteText([mcpText], db))) {
+        toolResults.push({
+          role: "tool",
+          tool_call_id: tc.id,
+          content: JSON.stringify({ ok: false, error: DOC_WRITE_REFUSED_MESSAGE }),
+        });
+        continue;
+      }
       const { content, event } = await executeMcpToolCall(
         userId,
         tc.function.name,
