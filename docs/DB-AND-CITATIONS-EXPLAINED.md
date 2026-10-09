@@ -173,7 +173,7 @@ These are different things; do not compare them.
 
 **Time (corrected):** list about 3 hours total (about 2 more now); text about 10 to 11 hours after the speed-up (3 parallel fetchers, opinions only; measured 30 PDFs in 9 seconds); citation extraction about 1 hour; match, minutes. The 1st DCA text stage was started early (its listing is done), so overall about 14 to 15 hours from 6:35 AM, running unattended.
 
-## 11. What to do and say about the databases (derived from the repo's own rules; I could NOT find your "smart not stupid" plan on this Mac or in any past session, so check this against it)
+## 11. What to do and say about the databases (checked against the business plan, whose cover title is "Smart. Not Stupid."; see `docs/BP-VS-REALITY-2026-10-09.md`)
 
 **Citation database (`kingsfield_florida.db`)**
 - Say: "Gate 1 checks that a Florida citation exists in a local index of public reporter citations (reporter, volume, page, case name, court), built from CourtListener's bulk data." Say that anything it cannot confirm is withheld, not shown.
