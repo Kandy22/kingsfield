@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Abort the crew route when the client closes the socket.
-
-This stops the single-agent fallback and skips the send. A model call already
-in flight still finishes; specialists do not yet take the signal.
-"""
+"""Skip the crew fallback and the send after the client disconnects."""
 from pathlib import Path
 
 path = Path("backend/src/routes/index.ts")
@@ -22,21 +18,14 @@ new = """    const keepalive = startSseKeepalive(write);
 if old not in text:
     raise SystemExit("keepalive site missing")
 text = text.replace(old, new, 1)
-old = "      const out = await runCrew(\n"
-new = "      if (crewAbort.signal.aborted) return;\n      const out = await runCrew(\n"
+old = "        const out = await runCrew(\n"
+new = "        if (crewAbort.signal.aborted) return;\n        const out = await runCrew(\n"
 if old not in text:
     raise SystemExit("runCrew site missing")
 text = text.replace(old, new, 1)
-# pass signal as third-to-last by extending the deps object if present
-old = "          courtListenerToken: deps.courtListenerToken,\n        },\n      );"
-new = "          courtListenerToken: deps.courtListenerToken,\n          signal: crewAbort.signal,\n        },\n      );\n      if (crewAbort.signal.aborted) return;"
-if old not in text:
-    raise SystemExit("crew deps missing")
-text = text.replace(old, new, 1)
-old = "      if (!reply) {\n        const { completeText } = await import('../lib/llm/index.js');\n"
-new = "      if (!reply) {\n        if (crewAbort.signal.aborted) return;\n        const { completeText } = await import('../lib/llm/index.js');\n"
+old = "        reply = out.reply;\n\n        // If the Coordinator decided to skip the crew, produce a simple answer.\n        if (!reply) {\n"
+new = "        if (crewAbort.signal.aborted) return;\n        reply = out.reply;\n\n        // If the Coordinator decided to skip the crew, produce a simple answer.\n        if (!reply) {\n          if (crewAbort.signal.aborted) return;\n"
 if old not in text:
     raise SystemExit("fallback site missing")
-text = text.replace(old, new, 1)
-path.write_text(text)
+path.write_text(text.replace(old, new, 1))
 print("patched", path)
