@@ -980,6 +980,13 @@ async function gateDocWriteText(
 }
 
 /** The stored filename generate_docx derives from the model's title. */
+function floridaPeriodRestored(text: string): string {
+  return text
+    .replace(/\bSo 2d\b/g, "So. 2d")
+    .replace(/\bSo 3d\b/g, "So. 3d")
+    .replace(/\bSo (\d)/g, "So. $1");
+}
+
 function generatedDocxFilename(title: string): string {
   const safeTitle =
     title
@@ -1001,12 +1008,22 @@ function generatedDocxGateParts(
   sections: unknown,
 ): string[] | null {
   if (typeof title !== "string" || !Array.isArray(sections)) return null;
-  const parts: string[] = [title, title.toUpperCase(), generatedDocxFilename(title)];
+  const parts: string[] = [
+    title,
+    title.toUpperCase(),
+    generatedDocxFilename(title),
+    floridaPeriodRestored(title),
+    floridaPeriodRestored(generatedDocxFilename(title)),
+  ];
   if (!collectModelStrings(sections, parts)) return null;
   for (const section of sections) {
     if (!section || typeof section !== "object") continue;
     const { heading, table } = section as { heading?: unknown; table?: unknown };
     if (typeof heading === "string") parts.push(heading.toUpperCase());
+    const content = (section as { content?: unknown }).content;
+    const headingText = typeof heading === "string" ? heading : "";
+    const contentText = typeof content === "string" ? content : "";
+    let tableHead = "";
     if (table && typeof table === "object") {
       const { headers, rows } = table as { headers?: unknown; rows?: unknown };
       const across = (cells: unknown) => {
@@ -1016,18 +1033,27 @@ function generatedDocxGateParts(
       };
       across(headers);
       if (Array.isArray(rows)) for (const row of rows) across(row);
+      if (Array.isArray(headers)) {
+        tableHead = headers.filter((c): c is string => typeof c === "string").join(" ");
+      }
+      const columns: string[][] = [];
+      const addColumn = (cells: unknown) => {
+        if (!Array.isArray(cells)) return;
+        cells.forEach((cell, index) => {
+          if (typeof cell !== "string") return;
+          columns[index] = columns[index] ?? [];
+          columns[index].push(cell);
+        });
+      };
+      addColumn(headers);
+      if (Array.isArray(rows)) for (const row of rows) addColumn(row);
+      for (const column of columns) parts.push(column.join(" "));
     }
+    parts.push([headingText, tableHead, contentText].filter(Boolean).join("\n\n"));
   }
   return parts;
 }
 
-/**
- * Every model-written string edit_document would persist per edit: replacement
- * text, reason, and the context strings (stored verbatim in document_edits),
- * plus the three assembled as they will read in the document. `find` is only
- * matched against the user's own text and is never written, so it is not
- * checked. Null when the shape can't be checked.
- */
 function editDocumentGateParts(edits: unknown): string[] | null {
   if (!Array.isArray(edits)) return null;
   const parts: string[] = [];
@@ -1654,6 +1680,11 @@ export async function runEditDocument(params: {
     changes,
     errors,
   } = await applyTrackedEdits(current.bytes, edits, { author: "Kingsfield" });
+
+  const editedText = await extractDocxBodyText(editedBytes);
+  if (!(await gateDocWriteText([editedText, versionFilename], db))) {
+    return { ok: false, error: DOC_WRITE_REFUSED_MESSAGE };
+  }
 
   if (changes.length === 0) {
     return {

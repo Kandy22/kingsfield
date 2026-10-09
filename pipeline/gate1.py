@@ -143,10 +143,19 @@ _WS_RUN = re.compile(_WS + "+")
 _WS_EDGE = re.compile("^" + _WS + "+|" + _WS + "+$")
 
 
+def _restore_filename_cite(s: str) -> str:
+    s = re.sub(r"(?i)\bSo 2d\b", "So. 2d", s)
+    s = re.sub(r"(?i)\bSo 3d\b", "So. 3d", s)
+    s = re.sub(r"(?i)\bSo (\d)", r"So. \1", s)
+    s = re.sub(r"(?i)\bFla (\d{4})\b", r"(Fla. \1)", s)
+    return s
+
+
 def normalize(s: str) -> str:
     s = unicodedata.normalize("NFKC", s)
     s = _WS_RUN.sub(" ", s)
-    return _WS_EDGE.sub("", s)
+    s = _WS_EDGE.sub("", s)
+    return _restore_filename_cite(s)
 
 
 # ---------------------------------------------------------------------------

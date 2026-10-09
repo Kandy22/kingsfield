@@ -511,8 +511,16 @@ const WS = '[ \\t\\n\\r\\f\\v\\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\
 const WS_RUN = new RegExp(WS + '+', 'g');
 const WS_EDGE = new RegExp('^' + WS + '+|' + WS + '+$', 'g');
 
+function restoreFilenameCite(s: string): string {
+  return s
+    .replace(/\bSo 2d\b/gi, "So. 2d")
+    .replace(/\bSo 3d\b/gi, "So. 3d")
+    .replace(/\bSo (\d)/gi, "So. $1")
+    .replace(/\bFla (\d{4})\b/gi, "(Fla. $1)");
+}
+
 function normalize(s: string): string {
-  return s.normalize('NFKC').replace(WS_RUN, ' ').replace(WS_EDGE, '');
+  return restoreFilenameCite(s.normalize('NFKC').replace(WS_RUN, ' ').replace(WS_EDGE, ''));
 }
 
 function loose(s: string): string {
