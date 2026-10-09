@@ -470,19 +470,19 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
     let specialtyOutput: VeteransHealthOutput | SecurityClearanceOutput | AiLegalTechOutput | CryptoHoweyOutput | EntertainmentTalentOutput;
     switch (specialtyType) {
       case 'veterans_health':
-        specialtyOutput = await runVeteransHealthSpecialist(specialtyInput, deps.model);
+        specialtyOutput = await runVeteransHealthSpecialist(specialtyInput, deps.model, deps.signal);
         break;
       case 'security_clearance':
-        specialtyOutput = await runSecurityClearanceSpecialist(specialtyInput, deps.model);
+        specialtyOutput = await runSecurityClearanceSpecialist(specialtyInput, deps.model, deps.signal);
         break;
       case 'crypto_howey':
-        specialtyOutput = await runCryptoHoweySpecialist(specialtyInput, deps.model);
+        specialtyOutput = await runCryptoHoweySpecialist(specialtyInput, deps.model, deps.signal);
         break;
       case 'ai_legal_tech':
-        specialtyOutput = await runAiLegalTechSpecialist(specialtyInput, deps.model);
+        specialtyOutput = await runAiLegalTechSpecialist(specialtyInput, deps.model, deps.signal);
         break;
       case 'entertainment_talent':
-        specialtyOutput = await runEntertainmentTalentSpecialist(specialtyInput, deps.model);
+        specialtyOutput = await runEntertainmentTalentSpecialist(specialtyInput, deps.model, deps.signal);
         break;
       default:
         // Unknown specialty → fall through to full crew

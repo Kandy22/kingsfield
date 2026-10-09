@@ -123,7 +123,7 @@ export interface OppositionMapperOutput {
 
 export async function runOppositionMapper(
   input: OppositionMapperInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<OppositionMapperOutput> {
   const safeContext = (input.matterContext ?? '').slice(0, 8000);
 
@@ -146,6 +146,7 @@ export async function runOppositionMapper(
 
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: OPPOSITION_MAPPER_SYSTEM_PROMPT,
     user: `
 MATTER CONTEXT:

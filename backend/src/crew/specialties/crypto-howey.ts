@@ -160,10 +160,11 @@ function recoverTruncatedJson(s: string): string {
 
 export async function runCryptoHoweySpecialist(
   input: CryptoHoweyInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<CryptoHoweyOutput> {
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: SYSTEM_PROMPT,
     user: `
 QUESTION: ${input.question}

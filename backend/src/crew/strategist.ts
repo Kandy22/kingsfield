@@ -65,7 +65,7 @@ export interface StrategistOutput {
 
 export async function runStrategist(
   input: StrategistInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<StrategistOutput> {
   const authBlock = input.verifiedAuthorities
     .map(
@@ -83,6 +83,7 @@ export async function runStrategist(
 
   const text = await completeText({
     model,
+    signal,
     systemPrompt: STRATEGIST_SYSTEM_PROMPT,
     user: `
 QUESTION:

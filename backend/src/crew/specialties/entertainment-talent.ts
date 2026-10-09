@@ -191,10 +191,11 @@ function recoverTruncatedJson(s: string): string {
 
 export async function runEntertainmentTalentSpecialist(
   input: EntertainmentTalentInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<EntertainmentTalentOutput> {
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: SYSTEM_PROMPT,
     user: `
 QUESTION: ${input.question}

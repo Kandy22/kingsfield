@@ -217,7 +217,7 @@ const DISCLAIMER =
 
 export async function runInfringementTriage(
   input: InfringementTriageInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<InfringementTriageOutput> {
   const tracksNote = input.tracks?.length
     ? `Focus on these tracks: ${input.tracks.join(', ')}.`
@@ -225,6 +225,7 @@ export async function runInfringementTriage(
 
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: TRIAGE_SYSTEM_PROMPT,
     user: `
 JURISDICTION: ${input.jurisdiction ?? 'United States (federal + state)'}

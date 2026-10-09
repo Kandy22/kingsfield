@@ -67,13 +67,14 @@ export interface AnalystOutput {
 
 export async function runContractAnalyst(
   input: AnalystInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<AnalystOutput> {
   // Cap document text to avoid blowing the token budget.
   const safeText = (input.documentText ?? '').slice(0, 32000);
 
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: CONTRACT_ANALYST_SYSTEM_PROMPT,
     user: `
 DOCUMENT NAME: ${input.documentName}

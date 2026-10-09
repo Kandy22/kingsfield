@@ -185,10 +185,11 @@ function recoverTruncatedJson(s: string): string {
 
 export async function runAiLegalTechSpecialist(
   input: AiLegalTechInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<AiLegalTechOutput> {
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: SYSTEM_PROMPT,
     user: `
 QUESTION: ${input.question}

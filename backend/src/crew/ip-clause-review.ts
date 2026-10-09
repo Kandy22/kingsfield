@@ -181,7 +181,7 @@ export async function runIpClauseReview(
     /** Party perspective: 'assignor' | 'assignee' | 'licensor' | 'licensee' | 'neutral' */
     perspective?: string;
   },
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<IpClauseReviewOutput> {
   const focusNote = input.focusClauses?.length
     ? `Focus especially on these clause types: ${input.focusClauses.join(', ')}.`
@@ -193,6 +193,7 @@ export async function runIpClauseReview(
 
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: CLAUSE_REVIEW_SYSTEM_PROMPT,
     user: `
 DOCUMENT: ${input.documentName}

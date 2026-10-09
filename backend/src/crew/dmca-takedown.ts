@@ -200,10 +200,11 @@ export async function runDmcaTakedown(
     /** Any additional context. */
     context?: string;
   },
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<DmcaTakedownOutput> {
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: TAKEDOWN_SYSTEM_PROMPT,
     user: `
 MODE: ${input.mode}

@@ -213,7 +213,7 @@ export interface WritingCoachOutput {
 
 export async function runWritingCoach(
   input: WritingCoachInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<WritingCoachOutput> {
   // Cap at 24k chars — more than enough for any motion or brief section.
   const safeText = (input.documentText ?? '').slice(0, 24000);
@@ -239,6 +239,7 @@ ${safeText}
   if (mode === 'persuasive' || mode === 'both') {
     const raw = await completeText({
       model,
+      signal,
       systemPrompt: WRITING_COACH_SYSTEM_PROMPT,
       user: `${userBlock}
 
@@ -261,6 +262,7 @@ Output ONLY the JSON. No preamble, no markdown fences.`,
   if (mode === 'structural' || mode === 'both') {
     const raw = await completeText({
       model,
+      signal,
       systemPrompt: STRUCTURAL_COACH_SYSTEM_PROMPT,
       user: `${userBlock}
 

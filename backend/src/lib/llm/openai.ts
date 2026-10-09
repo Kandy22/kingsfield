@@ -371,13 +371,16 @@ export async function completeOpenAIText(params: {
   user: string;
   maxTokens?: number;
   apiKeys?: { openai?: string | null };
+  signal?: AbortSignal;
 }): Promise<string> {
+  throwIfAborted(params.signal);
   const response = await createResponse({
     model: params.model,
     instructions: params.systemPrompt,
     input: [{ role: "user", content: params.user }],
     maxTokens: params.maxTokens ?? 512,
     apiKey: apiKey(params.apiKeys?.openai),
+    signal: params.signal,
   });
   const json = (await response.json()) as {
     output_text?: string;

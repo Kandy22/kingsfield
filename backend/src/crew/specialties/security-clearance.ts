@@ -164,10 +164,11 @@ function recoverTruncatedJson(s: string): string {
 
 export async function runSecurityClearanceSpecialist(
   input: SecurityClearanceInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<SecurityClearanceOutput> {
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: SYSTEM_PROMPT,
     user: `
 QUESTION: ${input.question}

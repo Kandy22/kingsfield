@@ -138,7 +138,7 @@ export interface ImpeacherOutput {
 
 export async function runImpeacher(
   input: ImpeacherInput,
-  model: string,
+  model: string, signal?: AbortSignal,
 ): Promise<ImpeacherOutput> {
   // Build the transcript block. Primary witness first, then others.
   const transcriptBlock = input.transcripts
@@ -158,6 +158,7 @@ export async function runImpeacher(
 
   const raw = await completeText({
     model,
+    signal,
     systemPrompt: IMPEACHER_SYSTEM_PROMPT,
     user: `
 PRIMARY WITNESS: ${input.primaryWitness}
