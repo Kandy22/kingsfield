@@ -4,6 +4,7 @@
 // system+user → text.
 
 import type { TextGenClient } from "../llm-council/providers.js";
+import { maxOutputTokensOverride } from "./llm/outputLimit.js";
 
 export function makeOpenAICompatClient(
   baseURL: string,
@@ -12,6 +13,10 @@ export function makeOpenAICompatClient(
 ): TextGenClient {
   return {
     async generate({ model, system, user, maxTokens }) {
+      // OpenRouter ignores the caller's reasoning unless it is in the request
+      // body; send it explicitly, and default to "none" so hidden reasoning
+      // tokens are not generated or billed (Mike d666189).
+      const isOpenRouter = /(^|\/\/|\.)openrouter\.ai/i.test(baseURL);
       const res = await fetch(`${baseURL.replace(/\/$/, "")}/chat/completions`, {
         method: "POST",
         headers: {
@@ -20,7 +25,8 @@ export function makeOpenAICompatClient(
         },
         body: JSON.stringify({
           model,
-          max_tokens: maxTokens,
+          max_tokens: maxOutputTokensOverride() ?? maxTokens,
+          ...(isOpenRouter ? { reasoning: { effort: "none" } } : {}),
           messages: [
             { role: "system", content: system },
             { role: "user", content: user },

@@ -6,6 +6,7 @@ import type {
 } from "./types";
 import { toGeminiTools } from "./tools";
 import { createRawLlmStreamRecorder, logRawLlmStream } from "./rawStreamLog";
+import { maxOutputTokensOverride } from "./outputLimit";
 
 type GeminiPart = {
   text?: string;
@@ -190,6 +191,8 @@ export async function streamGemini(
           contents: contents as never,
           config: {
             systemInstruction: systemPrompt,
+            // Provider default unless the operator sets LLM_MAX_OUTPUT_TOKENS (Mike 171d6f9).
+            ...(maxOutputTokensOverride() ? { maxOutputTokens: maxOutputTokensOverride() } : {}),
             tools: functionDeclarations.length
               ? [{ functionDeclarations } as never]
               : undefined,

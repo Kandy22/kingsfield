@@ -8,6 +8,7 @@ import type {
 } from "./types";
 import { toClaudeTools } from "./tools";
 import { createRawLlmStreamRecorder, logRawLlmStream } from "./rawStreamLog";
+import { maxOutputTokensOverride } from "./outputLimit";
 
 type ContentBlock =
   | { type: "text"; text: string }
@@ -134,7 +135,9 @@ export async function streamClaude(
         tools: claudeTools.length
           ? (claudeTools as unknown as Tool[])
           : undefined,
-        max_tokens: MAX_TOKENS,
+        // Anthropic requires max_tokens, so the 16,384 default stays; an
+        // operator-set LLM_MAX_OUTPUT_TOKENS overrides it (Mike 171d6f9).
+        max_tokens: maxOutputTokensOverride() ?? MAX_TOKENS,
         // Claude 4.x models require `thinking.type: "adaptive"` and
         // drive effort via `output_config.effort` rather than a fixed
         // token budget. We only opt in when the caller requested it.

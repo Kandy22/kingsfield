@@ -7,9 +7,9 @@ import type {
   StreamChatResult,
 } from "./types";
 import { createRawLlmStreamRecorder, logRawLlmStream } from "./rawStreamLog";
+import { maxOutputTokensOverride } from "./outputLimit";
 
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
-const MAX_OUTPUT_TOKENS = 16384;
 const COURTLISTENER_CITATION_REMINDER_TOOL_NAMES = new Set([
   "courtlistener_find_in_case",
   "courtlistener_read_case",
@@ -185,7 +185,10 @@ async function createResponse(params: {
       input: params.input,
       tools: params.tools?.length ? params.tools : undefined,
       stream: params.stream,
-      max_output_tokens: params.maxTokens ?? MAX_OUTPUT_TOKENS,
+      // Unset by default: OpenAI applies its own model-aware ceiling (Mike
+      // 171d6f9). LLM_MAX_OUTPUT_TOKENS forces one limit; a caller's own
+      // maxTokens (short helper calls) still wins.
+      max_output_tokens: params.maxTokens ?? maxOutputTokensOverride(),
       previous_response_id: params.previousResponseId,
       reasoning: params.reasoningSummary ? { summary: "auto" } : undefined,
     }),
