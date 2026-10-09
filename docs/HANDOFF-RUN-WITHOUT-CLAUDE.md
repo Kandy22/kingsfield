@@ -253,3 +253,19 @@ The 56 commits between `2caafa1` and `565a0c0` split three ways. Reproduce with 
 | Author **Aaron Ray**, no trailer | 20 | Your own commits and merges (for example the Oct 8 merge `29efac5`, the WIP commit `540e748`) | Not applicable |
 
 The adversary's 2026-10-09 run of the signoff tier found **11 failures** (526 tests) in the second group's code: crew abort not reaching every role, a stored analytics row with a split cite passing the read check, a council session saved under a project the caller does not own, a document-write bypass, a JSON-escaped-newline cite bypass, a name Gate 1 reads as a citation passing the identifier allowlist, and a disconnected tabular client still starting the model.
+
+## 12. Wingman, Task 5 progress (2026-10-09)
+
+Folder: `wingman-in-your-ear/`. **Important: `wingman-demo/` is git-ignored (`.gitignore` line 100), so nothing inside it is under version control.** Back it up yourself before big changes.
+
+| Plan item (Oct 3 Task 5) | Status |
+|---|---|
+| 1. Fix the folder problems | **Done except the UI choice.** Kovel claim and the "never add disclaimers" rule removed from all 9 harness prompts (3 copies, identical; originals backed up in `~/Kingsfield_Corpus/wingman_harness_backup_20261009/`); stale comments fixed (`wingman_live.py` has 285 lines); `logs/` and `.env` already ignored. **Not done:** `App.tsx` is still the old "Remix: Vision Sync" app. The Courtroom Companion file is `src/App.claude-generated-DISCARD.tsx` (you named it DISCARD) and it is a **scripted demo** (advisories fire from a fake script, not live), so swapping it in would remove the live-audio screen. Left as is. |
+| 2. Wire server-sent events into the screen, cards + vibrate only | **Built and tested (offline).** `server/wingmanEvents.ts` (routes `/api/wingman/session`, `/partial`, `/events`, `/close`), `src/components/CueCards.tsx` (fixed overlay, advisory banner on every card, `navigator.vibrate`), and 3 added lines in `src/App.tsx` (import, one `wingman:partial` event per transcription chunk, the `<CueCards />` mount). Offline test: `npx tsx scripts/wingman-events-test.ts` (12 checks pass; no Jev calls). Only the allowlisted cue id and its fixed text ever leave the server; no transcript. **Cues stay OFF until you add `OPENROUTER_API_KEY` (or `TYPESAFE_API_KEY`) to `wingman-demo/.env`** (the panel then says "Cues off"). Not yet tested live with real audio, and the spec's own rule (benchmark on all 31 files before step 4) is not met: only 1 file has been measured. |
+| 3. Objection cue allowlist | **Partly.** Code allows 7 cues: answer the question, hearsay, relevance, foundation, leading, speculation, ruling noted. The Oct 3 list also wants compound, non-responsive, asked-and-answered, narrative, privilege and stay-seated, and drops relevance. Needs a change to the Jev question in `server/jev/TurnState.ts` and the canned lines in `server/wingmanEvents.ts`. Rate cap and "low confidence = silence" already exist (TurnPolicy / Breaker). |
+| 4. Diarization settings (Nemotron 0.32 s, speaker cap, 0.5 s merge) | Not started |
+| 5. Latency under 1 second (iPhone on-device recognizer) | Not started |
+| 6. Offline "Spartacus" phases | Not started |
+| 7. Legal footing (ADA accommodation request; protective-order language) | Not started (a legal document, not code) |
+
+Run the demo: `cd ~/kingsfield/wingman-in-your-ear/wingman-demo && npx tsx server.ts` (default port 5174; `PORT=5199` to change). Do **not** run `npm run build` casually: it overwrites `dist/`, which the cleanup note says is the only copy of the July UI besides `wingman-advisor-ui-BUILD-2026-07-03.backup/`.
