@@ -579,6 +579,12 @@ export interface FinalizeInput {
   fullText: string;
   verify: VerifyFn;
   /**
+   * Tabular-review chat only. Keep `tabular_citation` chips (in `citations` events and in the saved
+   * annotations) whose model-written `quote` passes a standalone Gate 1 check, instead of dropping
+   * them as unmatched case entries. Off by default, so chat and project chat are unchanged.
+   */
+  allowTabularCitations?: boolean;
+  /**
    * Server-side sink for the RAW verification failure (exception, SQLite,
    * network or CourtListener text). Called once per failed verification;
    * `context` says which step failed. Defaults to console.error. The raw text
@@ -639,12 +645,37 @@ interface Ctx {
   withhold: boolean;
   verdictIndex: Map<string, 'ok' | 'veto'>;
   flaggedFamilies: Set<string>;
+  /** Tabular-review chat only (FinalizeInput.allowTabularCitations): tabular_citation entries may be kept. */
+  allowTabular?: boolean;
+  /** Strings that failed the standalone Gate 1 check in step 5 (tabular quotes are looked up here). */
+  flaggedStrings?: Set<string>;
 }
 
 function caseEntryAllowed(entry: unknown, ctx: Ctx): boolean {
   if (ctx.withhold || !isRecord(entry)) return false;
   const key = citeKey(entry.citation);
   return !!key && ctx.verdictIndex.get(key) === 'ok';
+}
+
+/**
+ * Tabular-review citation chips: { type: 'tabular_citation', ref, col_index, row_index, col_name,
+ * doc_name, quote }. They point into the review's own cells (col_name/doc_name come from server
+ * state); `quote` is model-written. They carry no cluster_id and no case citation.
+ */
+function isTabularEntry(entry: unknown): entry is Ev {
+  return isRecord(entry) && entry.type === 'tabular_citation' && !('cluster_id' in entry);
+}
+
+/** The only model-written string in a tabular chip. Checked by Gate 1 on its own (decoded) before the chip is kept. */
+function tabularQuote(entry: unknown): string | null {
+  return isTabularEntry(entry) && typeof entry.quote === 'string' && entry.quote.trim() ? entry.quote : null;
+}
+
+function tabularEntryAllowed(entry: unknown, ctx: Ctx): boolean {
+  if (!ctx.allowTabular || ctx.withhold || !isTabularEntry(entry)) return false;
+  if (typeof entry.quote !== 'string') return false;
+  // A flagged quote drops that chip only; the reply itself was already cleared by Gate 1.
+  return !ctx.flaggedStrings?.has(entry.quote);
 }
 
 /**
@@ -658,7 +689,9 @@ function isDocumentEntry(entry: unknown): boolean {
 }
 
 function filterCitationEntries(entries: unknown[], ctx: Ctx): unknown[] {
-  return entries.filter((entry) => isDocumentEntry(entry) || caseEntryAllowed(entry, ctx));
+  return entries.filter(
+    (entry) => isDocumentEntry(entry) || tabularEntryAllowed(entry, ctx) || caseEntryAllowed(entry, ctx),
+  );
 }
 
 /** content / content_delta are handled by the caller. Returns null to drop. */
@@ -1026,7 +1059,22 @@ export async function finalizeHeldOutput(input: FinalizeInput): Promise<Finalize
     };
     for (const item of items) if (item.kind === 'event' && item.ev) collect(item.ev);
     for (const e of events) if (isRecord(e)) collect(e);
-    const allStrings = [...familyStrings.values()].flat();
+    // Tabular chips: the quote, JSON-decoded, checked on its own (fullText holds only its escaped form).
+    const tabularQuotes: string[] = [];
+    if (input.allowTabularCitations) {
+      const addQuotes = (list: unknown) => {
+        if (!Array.isArray(list)) return;
+        for (const entry of list) {
+          const q = tabularQuote(entry);
+          if (q !== null) tabularQuotes.push(q);
+        }
+      };
+      for (const item of items) {
+        if (item.kind === 'event' && item.ev?.type === 'citations') addQuotes(item.ev.citations);
+      }
+      addQuotes(annotations);
+    }
+    const allStrings = [...[...familyStrings.values()].flat(), ...tabularQuotes];
     const flaggedStrings = allStrings.length
       ? await findFlaggedStrings(allStrings, verifyAs('tool_text'))
       : new Set<string>();
@@ -1040,6 +1088,8 @@ export async function finalizeHeldOutput(input: FinalizeInput): Promise<Finalize
       // Built only from the clean full-text result: every verdict in it is verified or conditional.
       verdictIndex: buildVerdictIndex(first.verdicts),
       flaggedFamilies,
+      allowTabular: input.allowTabularCitations === true,
+      flaggedStrings: flaggedStrings,
     };
 
     // 6. Build what is sent, in held order. Model text goes out unchanged.
@@ -1428,6 +1478,291 @@ export async function gateCouncilOutput(
   } catch (err: any) {
     log('council_internal_error', err);
     return withheld('internal_error', WITHHELD_MESSAGE, errorResult('internal error'));
+  }
+}
+
+// ----- tabular review cells (POST /tabular-review/:id/generate) ----------------------
+
+/** Stored and sent in place of a cell whose model-written text cited a vetoed, pending or unknown-status case. */
+export const CELL_VETO_WITHHELD_MESSAGE = 'This cell was withheld because it cited a case that could not be verified.';
+/** Stored and sent in place of a cell Gate 1 could not check (gate error, busy, malformed result, internal error). */
+export const CELL_WITHHELD_MESSAGE = 'This cell could not be verified and was withheld.';
+
+export type CellFlag = 'green' | 'grey' | 'yellow' | 'red';
+const CELL_FLAGS: readonly CellFlag[] = ['green', 'grey', 'yellow', 'red'];
+
+/** A generated cell as the model wrote it. */
+export interface CellText {
+  summary: string;
+  flag: CellFlag;
+  reasoning: string;
+}
+
+/**
+ * What may be saved in tabular_cells.content and sent as `cell_update.content`: the cell, or the
+ * fixed marker, plus the client-safe verification record (the same shape chat_messages stores).
+ */
+export interface GatedCellContent extends CellText {
+  verification: VerificationAnnotation;
+}
+
+export interface GatedCell {
+  content: GatedCellContent;
+  withheld: boolean;
+  withheldReason: string | null;
+}
+
+/** A cell replaced whole by a fixed marker; the client-safe verification record rides with it. */
+function withheldCell(reason: string, message: string, verification: SseVerificationResult): GatedCell {
+  return {
+    content: {
+      summary: message,
+      flag: 'grey',
+      reasoning: '',
+      verification: buildVerificationAnnotation(clientSafeVerification(verification)),
+    },
+    withheld: true,
+    withheldReason: reason,
+  };
+}
+
+/**
+ * The cell a caller uses when Gate 1 never answered (the limiter timed the call out): the fixed
+ * "could not be verified" marker, with a client-safe error record. Carries no model text.
+ */
+export function unverifiableCell(reason: string = 'gate_timeout'): GatedCell {
+  return withheldCell(reason, CELL_WITHHELD_MESSAGE, errorResult('gate did not answer in time'));
+}
+
+/**
+ * Gate 1 over one generated cell's model-written text (summary and reasoning, the only free text a
+ * cell carries; `flag` is reduced to its four values), through finalizeHeldOutput so the chat rules
+ * apply unchanged: any vetoed, pending or unknown-status verdict withholds, any gate error, throw or
+ * inconsistent result withholds. A withheld cell is replaced whole by the fixed marker
+ * (CELL_VETO_WITHHELD_MESSAGE or CELL_WITHHELD_MESSAGE) with an empty reasoning; the model's text is
+ * never rewritten and never kept. Never throws. Raw failures go only to `logError`.
+ */
+export async function gateCellContent(
+  cell: unknown,
+  opts: { verify: VerifyFn; logError?: VerificationErrorLogger },
+): Promise<GatedCell> {
+  const log = makeFailureLogger(opts.logError);
+  const withheld = withheldCell;
+
+  try {
+    if (!isRecord(cell) || typeof cell.summary !== 'string' || typeof cell.reasoning !== 'string') {
+      const v = errorResult('malformed cell');
+      log('cell_malformed', v.error);
+      return withheld('malformed_output', CELL_WITHHELD_MESSAGE, v);
+    }
+    const summary = cell.summary;
+    const reasoning = cell.reasoning;
+    const flag: CellFlag = CELL_FLAGS.includes(cell.flag as CellFlag) ? (cell.flag as CellFlag) : 'grey';
+    // Both fields are in the one checked string, so a short-form cite in one can use an antecedent in the other.
+    const text = reasoning.trim() ? `${summary}\n\n${reasoning}` : summary;
+
+    const out = await finalizeHeldOutput({
+      held: [sseLine({ type: 'content_delta', text })],
+      events: [{ type: 'content', text }],
+      annotations: [],
+      fullText: text,
+      verify: opts.verify,
+      logError: opts.logError,
+    });
+
+    if (out.withheld) {
+      const vetoed = out.withheldReason === 'veto' || out.withheldReason === 'whole_draft_veto';
+      return withheld(
+        out.withheldReason ?? 'withheld',
+        vetoed ? CELL_VETO_WITHHELD_MESSAGE : CELL_WITHHELD_MESSAGE,
+        out.verification,
+      );
+    }
+    // Belt and braces: a "released" result must be a clean one.
+    if (out.verification.hasVetoes || out.verification.error) {
+      return withheld('inconsistent_result', CELL_WITHHELD_MESSAGE, errorResult('inconsistent result'));
+    }
+    return {
+      content: { summary, flag, reasoning, verification: buildVerificationAnnotation(out.verification) },
+      withheld: false,
+      withheldReason: null,
+    };
+  } catch (err: any) {
+    log('cell_internal_error', err);
+    return withheld('internal_error', CELL_WITHHELD_MESSAGE, errorResult('internal error'));
+  }
+}
+
+/** Rejection of a limiter task that ran past its time limit when the caller gave no `onTimeout`. */
+export class LimiterTimeoutError extends Error {
+  constructor() {
+    super('limiter task timed out');
+    this.name = 'LimiterTimeoutError';
+  }
+}
+
+export interface LimiterTimers {
+  setTimeout: (fn: () => void, ms: number) => unknown;
+  clearTimeout: (handle: unknown) => void;
+}
+
+const defaultLimiterTimers: LimiterTimers = {
+  setTimeout: (fn, ms) => {
+    const handle = setTimeout(fn, ms);
+    // A pending limit timer must never keep the process alive.
+    (handle as { unref?: () => void }).unref?.();
+    return handle;
+  },
+  clearTimeout: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
+};
+
+export interface LimiterOptions {
+  /**
+   * Run-time limit per task, counted from the moment the task starts (time spent waiting for a slot
+   * is not counted, so each task ahead in the queue is itself bounded). Omitted or not a positive
+   * number: no limit.
+   */
+  timeoutMs?: number;
+  /** Injectable clock for tests. */
+  timers?: LimiterTimers;
+}
+
+export type Limiter = <T>(task: () => Promise<T>, onTimeout?: () => T) => Promise<T>;
+
+/**
+ * Run at most `max` tasks at a time; the rest wait in order. Used so a many-cell review cannot fire
+ * unbounded Gate 1 calls (the gate has its own 4-child cap and answers `gate_busy`, a veto, past it).
+ * A task that throws or rejects frees its slot.
+ *
+ * With `opts.timeoutMs`, a task still running at its limit is abandoned: its slot is freed at once and
+ * the caller gets `onTimeout()` (or, with no `onTimeout`, a LimiterTimeoutError). Whatever the
+ * abandoned task later returns or throws is ignored; the caller's promise settles exactly once. The
+ * abandoned task itself is not cancelled, so it must have no side effects the caller relies on.
+ */
+export function createLimiter(max: number, opts: LimiterOptions = {}): Limiter {
+  const limit = Number.isFinite(max) && max >= 1 ? Math.floor(max) : 1;
+  const timeoutMs =
+    typeof opts.timeoutMs === 'number' && Number.isFinite(opts.timeoutMs) && opts.timeoutMs > 0 ? opts.timeoutMs : 0;
+  const timers = opts.timers ?? defaultLimiterTimers;
+  let active = 0;
+  const queue: Array<() => void> = [];
+  const next = () => {
+    while (active < limit && queue.length) {
+      active++;
+      (queue.shift() as () => void)();
+    }
+  };
+  return <T>(task: () => Promise<T>, onTimeout?: () => T): Promise<T> =>
+    new Promise<T>((resolve, reject) => {
+      queue.push(() => {
+        let settled = false;
+        let timer: unknown;
+        // The first of {task result, task error, timeout} wins; everything later is ignored.
+        const finish = (settle: () => void) => {
+          if (settled) return;
+          settled = true;
+          if (timer !== undefined) timers.clearTimeout(timer);
+          active--;
+          next();
+          settle();
+        };
+        if (timeoutMs) {
+          timer = timers.setTimeout(() => {
+            finish(() => {
+              if (!onTimeout) return reject(new LimiterTimeoutError());
+              try {
+                resolve(onTimeout());
+              } catch (err) {
+                reject(err);
+              }
+            });
+          }, timeoutMs);
+        }
+        Promise.resolve()
+          .then(task)
+          .then(
+            (value) => finish(() => resolve(value)),
+            (err) => finish(() => reject(err)),
+          );
+      });
+      next();
+    });
+}
+
+// ----- model-written chat titles ------------------------------------------------------
+
+/** Longest user-text fallback title, in characters (the same length chat.ts / projectChat.ts / the UI use). */
+export const TITLE_FALLBACK_MAX_CHARS = 120;
+/** Same cap and limit as the cell gate: past it the title falls back to the user's own text. */
+export const TITLE_GATE_CONCURRENCY = 2;
+export const TITLE_GATE_TIMEOUT_MS = 75_000;
+const limitTitleGate = createLimiter(TITLE_GATE_CONCURRENCY, { timeoutMs: TITLE_GATE_TIMEOUT_MS });
+
+/**
+ * The fallback chat title: the start of the user's own first message (whitespace collapsed, control
+ * characters removed, cut to `maxChars` characters). User text, not model text, so it is not gated.
+ * Returns '' when there is nothing usable.
+ */
+export function userTitleFallback(text: unknown, maxChars: number = TITLE_FALLBACK_MAX_CHARS): string {
+  if (typeof text !== 'string') return '';
+  const flat = text.replace(/[\s\u0000-\u001f\u007f]+/g, ' ').trim();
+  return Array.from(flat).slice(0, maxChars).join('').trim();
+}
+
+export interface GatedTitle {
+  /** What may be saved to the chat row and sent: the model's title (clean) or `fallback`. */
+  title: string;
+  usedFallback: boolean;
+  /** Why the fallback was used (null when the model's title passed). */
+  reason: string | null;
+}
+
+export interface GateTitleOptions {
+  verify: VerifyFn;
+  /** Server-side sink for the RAW gate failure. Defaults to console.error. */
+  logError?: VerificationErrorLogger;
+  /** Test seam; defaults to the module limiter (cap TITLE_GATE_CONCURRENCY, limit TITLE_GATE_TIMEOUT_MS). */
+  limiter?: Limiter;
+}
+
+/**
+ * Gate 1 over the EXACT final string a route is about to save as a chat title and send. Pass the
+ * model's title after the route's own normalization (trim, strip, truncate): a cite can appear or be
+ * cut apart by normalization, so the normalized string is the one checked.
+ *
+ * Clean (no veto, nothing pending, no unknown status, no error) -> the model's title, unchanged.
+ * Anything else (veto, pending / unknown status, gate error, throw, malformed result, timeout, busy,
+ * non-string or blank title) -> `fallback`, the caller's title built from the user's own text. Model
+ * text is never rewritten and never used after a failure. Never throws; the raw failure goes only to
+ * `logError`. `fallback` is not gated: it is the user's text.
+ */
+export async function gateTitleText(
+  modelTitle: unknown,
+  fallback: string,
+  opts: GateTitleOptions,
+): Promise<GatedTitle> {
+  const log = makeFailureLogger(opts.logError);
+  const safeFallback = typeof fallback === 'string' ? fallback : '';
+  const useFallback = (reason: string): GatedTitle => ({ title: safeFallback, usedFallback: true, reason });
+  try {
+    if (typeof modelTitle !== 'string' || !modelTitle.trim()) return useFallback('empty_title');
+    const title = modelTitle;
+    const limiter = opts.limiter ?? limitTitleGate;
+    let timedOut = false;
+    const r = await limiter(
+      () => safeVerify(opts.verify, title),
+      () => {
+        timedOut = true;
+        return errorResult('gate did not answer in time');
+      },
+    );
+    if (r.error) log('title_verify', r.error);
+    if (timedOut) return useFallback('gate_timeout');
+    if (!isClean(r)) return useFallback(uncleanOutcome(r)?.reason ?? 'unclean');
+    return { title, usedFallback: false, reason: null };
+  } catch (err: any) {
+    log('title_internal_error', err);
+    return useFallback('internal_error');
   }
 }
 

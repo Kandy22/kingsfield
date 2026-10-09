@@ -224,3 +224,12 @@ There is no formal tag, hashtag, or topic code for AI-hallucination cases in any
 - **Mock mode withholding the crew demo reply is correct.** `MOCK_CREW.reply` cites a fabricated federal case; Gate 1 doesn't make exceptions for demo text.
 - **Signoff tier split.** `pipeline/tests` (signoff tier) must run under 200 s on this machine. Only redundant variants move to `pipeline/tests_extended/`, at least one test per attack class stays, nothing is weakened or given a longer timeout, and the adversary runs `tests_extended` separately and requires it to pass before signing.
 - **Builder type-check command** (hook change 2026-10-07, `f4e57d2`): exactly `backend/node_modules/.bin/tsc --noEmit -p backend` from the repo root. `npx tsc` from the root fetched an unrelated npm package.
+
+
+## 2026-10-08 — Inferred page bounds for Florida pin cites (`tabular-docwrite-verify`, Part D)
+
+- **Inferred bounds, Option A (user decision).** `kingsfield_florida.db` was built with no CAP page-bounds CSV (`bounds_rows: 0`), so every Florida pin cite vetoed `pin_unverifiable` and any answer with a pin was withheld. `db/build_sqlite_index.py` now derives `last_page` from the full citations CSV: the start page of the next case in the same reporter and volume, from any state and any court (Southern Reporter also carries AL/LA/MS cases). There is no later case in the volume → `last_page` stays NULL, and its pins still veto `pin_unverifiable`.
+- **Convention: `last_page = next_start - 1`** (builder default, `--last-page-convention prev_page`). The pin check is inclusive, so this can only over-veto a genuine pin on a shared final page (a withheld answer), never pass a pin that sits in the next case's opinion. `next_start` is available as a flag and is the user's call if shared-page false vetoes prove common.
+- **Derived rows are marked** `bounds_source = 'inferred_next_case'`; real CAP bounds are `'cap'` and take precedence whenever a page-bounds CSV is present, so CAP data can replace inferred rows later. The column is nullable and appended; the gates select columns by name and never read it, so older DBs keep working.
+- **Fla. L. Weekly:** sequences are keyed by volume and section letter (D, S, none never mix). Inference is capped at a 25-page span (`--weekly-max-span`), beyond which `last_page` is NULL; the cap is a judgement, not measured. **Fla. L. Weekly Supp. is never inferred** (trial-court orders, sparse coverage), so its pins keep vetoing.
+- **Known limit:** a case missing from the citations CSV widens its predecessor's bound over the gap.

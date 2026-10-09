@@ -142,11 +142,6 @@ def _call_args(code, open_paren):
 
 
 TABULAR_TS = BACKEND_SRC / "routes" / "tabular.ts"
-TABULAR_SKIP_REASON = (
-    "KNOWN OPEN, own task (merge blocker 4 in docs/context/current-state.md, 'Tabular review chat streams and "
-    "saves unverified model text'): tabular chat (backend/src/routes/tabular.ts ~1348) and "
-    "/:reviewId/generate (~933-952) stream unverified model text. Un-skip when tabular.ts buffers and finalizes."
-)
 
 
 def _llm_stream_callers():
@@ -164,12 +159,6 @@ def _llm_stream_callers():
                 continue  # the definition
             callers.append((p, code, m, _call_args(code, m.end() - 1)))
     return callers
-
-
-def _is_tabular_chat_caller(p, args):
-    """The one call site covered by the tabular skip: tabular.ts, wired with TABULAR_TOOLS.
-    A runLLMStream call anywhere else, or in tabular.ts without TABULAR_TOOLS, is NOT exempt."""
-    return p == TABULAR_TS and "TABULAR_TOOLS" in args
 
 
 def _caller_problems(callers):
@@ -191,36 +180,93 @@ def _caller_problems(callers):
 
 class EveryLlmStreamCallerHoldsItsOutput(unittest.TestCase):
     def test_every_caller_of_run_llm_stream_buffers_and_finalizes(self):
-        """Every runLLMStream caller except the tabular chat call (skipped test below, merge blocker 4)."""
-        all_callers = _llm_stream_callers()
-        self.assertTrue(all_callers, "found no caller of runLLMStream; the test needs updating")
-        callers = [c for c in all_callers if not _is_tabular_chat_caller(c[0], c[3])]
-        exempt = [c for c in all_callers if _is_tabular_chat_caller(c[0], c[3])]
-        # The exemption is narrow: only tabular.ts, only the TABULAR_TOOLS call. Say so when it is used.
-        sys.stderr.write("runLLMStream callers: %d enforced, %d exempt (tabular chat, merge blocker 4)\n"
-                         % (len(callers), len(exempt)))
+        """Every runLLMStream caller under backend/src, the tabular chat call included (no exemption: merge blocker 4)."""
+        callers = _llm_stream_callers()
+        self.assertTrue(callers, "found no caller of runLLMStream; the test needs updating")
+        # The tabular exemption is gone; make sure the call it covered is really being enforced.
+        self.assertTrue(any(c[0] == TABULAR_TS and "TABULAR_TOOLS" in c[3] for c in callers),
+                        "the tabular chat runLLMStream call (TABULAR_TOOLS) is not among the enforced callers")
+        sys.stderr.write("runLLMStream callers enforced: %d\n" % len(callers))
         problems = _caller_problems(callers)
         self.assertEqual(problems, [], "LLM output can reach the client without Gate 1:\n" + "\n".join(problems))
 
-    @unittest.skip(TABULAR_SKIP_REASON)
     def test_tabular_chat_caller_of_run_llm_stream_buffers_and_finalizes(self):
         callers = [c for c in _llm_stream_callers() if c[0] == TABULAR_TS]
         self.assertTrue(callers, "found no runLLMStream caller in tabular.ts; the test needs updating")
         problems = _caller_problems(callers)
         self.assertEqual(problems, [], "tabular chat can reach the client without Gate 1:\n" + "\n".join(problems))
 
-    @unittest.skip(TABULAR_SKIP_REASON)
     def test_tabular_generate_does_not_stream_unverified_cells(self):
         # /:reviewId/generate does not go through runLLMStream: queryTabularAllColumns returns model-written cell
         # content that is saved and sent as cell_update. It must pass through Gate 1 before either.
+        #
+        # The gate is reached through gateCellContent( (hallucination_guard.ts), which calls finalizeHeldOutput( itself,
+        # with a verify closure the route builds in cellGateOptions(). A bare textual "gateCellContent(" proves nothing
+        # (any local function of that name would do), so the chain is proved link by link:
+        #   1. the route calls the IMPORTED gateCellContent, before the first save or send of the cell;
+        #   2. its options come from cellGateOptions(), whose verify is the production verifyDraftForSse (imported,
+        #      not redefined in tabular.ts) with the real supabase client;
+        #   3. gateCellContent awaits finalizeHeldOutput( with that same opts.verify, releases only a non-withheld,
+        #      non-vetoed, non-error result, and otherwise returns a fixed marker.
         code = _code(TABULAR_TS.read_text(encoding="utf-8", errors="replace"))
         m = re.search(r"\bawait\s+queryTabularAllColumns\s*\(", code)
         self.assertIsNotNone(m, "found no queryTabularAllColumns call in tabular.ts; the test needs updating")
         tail = code[m.start():]
         cell_write = tail.find("cell_update")
-        verify = [i for i in (tail.find("verifyDraftForSse("), tail.find("finalizeHeldOutput(")) if i >= 0]
-        self.assertTrue(verify and min(verify) < cell_write,
-                        "tabular generate sends/saves cell content before any Gate 1 call")
+        self.assertGreaterEqual(cell_write, 0, "no cell_update after queryTabularAllColumns; the test needs updating")
+        save = tail.find('.from("tabular_cells")')
+        first_sink = min(i for i in (cell_write, save) if i >= 0)
+
+        # 1. the route's call, before any save or send
+        g = re.search(r"(?<![\w.])gateCellContent\s*\(", tail)
+        direct = [i for i in (tail.find("verifyDraftForSse("), tail.find("finalizeHeldOutput(")) if i >= 0]
+        self.assertTrue(g or direct, "tabular generate sends/saves cell content before any Gate 1 call")
+        gate_at = min([g.start()] if g else direct)
+        self.assertLess(gate_at, first_sink, "tabular generate sends/saves cell content before any Gate 1 call")
+        if not g:
+            return  # a direct verifyDraftForSse / finalizeHeldOutput call before the sink is the old accepted shape
+
+        # the name must be the one imported from the guard, not a local stand-in
+        imp = re.search(r"import\s*\{([^}]*)\}\s*from\s*[\"']\.\./middleware/hallucination_guard[\"']", code)
+        self.assertIsNotNone(imp, "tabular.ts no longer imports from ../middleware/hallucination_guard")
+        imported = {s.strip() for s in imp.group(1).split(",") if s.strip()}
+        for name in ("gateCellContent", "verifyDraftForSse"):
+            self.assertIn(name, imported, "%s is not imported from the guard" % name)
+            self.assertIsNone(re.search(r"(?:function|const|let|var)\s+%s\b" % name, code),
+                              "tabular.ts defines its own %s; the gate is no longer the guard's" % name)
+
+        # 2. the options passed are cellGateOptions(...), and its verify is the production closure
+        args = _call_args(tail, g.end() - 1)
+        self.assertIn("cellGateOptions(", args, "the gateCellContent call in generate is not given cellGateOptions(...): " + args[:200])
+        fm = re.search(r"function\s+cellGateOptions\s*\(", code)
+        self.assertIsNotNone(fm, "cellGateOptions is gone; the test needs updating")
+        body = code[fm.start():fm.start() + 900]
+        vm = re.search(r"\bverify\s*:\s*\(\s*text\b[^)]*\)\s*=>\s*verifyDraftForSse\s*\(\s*text\s*,", body)
+        self.assertIsNotNone(vm, "cellGateOptions.verify is not (text) => verifyDraftForSse(text, ...): " + body[:300])
+        vargs = _call_args(body, body.rfind("(", 0, vm.end()))
+        self.assertRegex(vargs, r"supabase\s*:\s*db\b", "the production verifier is not given the route's database client")
+        self.assertRegex(vargs, r"courtListenerToken", "the production verifier is not given the CourtListener token option")
+
+        # 3. gateCellContent really runs finalizeHeldOutput over the cell with the verify it was handed
+        guard = _code((BACKEND_SRC / "middleware" / "hallucination_guard.ts").read_text(encoding="utf-8", errors="replace"))
+        gm = re.search(r"export\s+async\s+function\s+gateCellContent\s*\(", guard)
+        self.assertIsNotNone(gm, "gateCellContent is not an exported async function of the guard")
+        end = guard.find("\nexport ", gm.end())
+        gbody = guard[gm.start():end if end > 0 else len(guard)]
+        fin = re.search(r"await\s+finalizeHeldOutput\s*\(", gbody)
+        self.assertIsNotNone(fin, "gateCellContent does not await finalizeHeldOutput(")
+        fargs = _call_args(gbody, fin.end() - 1)
+        self.assertRegex(fargs, r"verify\s*:\s*opts\.verify\b", "gateCellContent does not pass its caller's verify to finalizeHeldOutput")
+        self.assertRegex(fargs, r"fullText\s*:\s*text\b")
+        after = gbody[fin.end():]
+        self.assertLess(after.find("out.withheld"), after.find("content: { summary, flag, reasoning"),
+                        "gateCellContent builds the released cell before checking out.withheld")
+        self.assertIn("out.verification.hasVetoes || out.verification.error", after)
+        # the guard's own verifyDraftForSse is the production one: it calls verifyDraft and fails closed
+        vd = re.search(r"export\s+async\s+function\s+verifyDraftForSse\s*\(", guard)
+        self.assertIsNotNone(vd)
+        self.assertIn("await verifyDraft(", guard[vd.start():vd.start() + 1200])
+        self.assertIn("hasVetoes: true", guard[vd.start():vd.start() + 1200])
 
 
 if __name__ == "__main__":

@@ -20,7 +20,9 @@ import {
     createBufferingSseWriter,
     failedReplyRecord,
     finalizeHeldOutput,
+    gateTitleText,
     startSseKeepalive,
+    userTitleFallback,
     verifyDraftForSse,
 } from "../middleware/hallucination_guard";
 
@@ -405,7 +407,23 @@ chatRouter.post("/:chatId/generate-title", requireAuth, async (req, res) => {
             maxTokens: 64,
             apiKeys: api_keys,
         });
-        const title = normalizeGeneratedTitle(titleText);
+        // The model's title is Gate 1 checked as the exact normalized string that is saved and
+        // returned. Any veto, pending status, gate error, throw, timeout or busy gate gives the start
+        // of the user's own message instead (user text, so not gated), never the model's text.
+        const gated = await gateTitleText(
+            normalizeGeneratedTitle(titleText),
+            userTitleFallback(message) || TITLE_FALLBACK,
+            {
+                verify: (text) =>
+                    verifyDraftForSse(text, {
+                        courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                        supabase: db,
+                    }),
+                logError: (context, error) =>
+                    console.error(`[generate-title] ${context}`, error),
+            },
+        );
+        const title = gated.title;
 
         await db
             .from("chats")

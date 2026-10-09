@@ -16,8 +16,34 @@ Inputs (plain .csv or .csv.bz2, found by prefix in --corpus):
 No headnotes, syllabi, summaries, or key numbers are read from any column.
 
 Every file is streamed row by row; none is loaded whole. The citations file is read
-twice (once to find Fla. L. Weekly clusters, once to insert), which keeps memory
-proportional to the Florida subset rather than the corpus.
+twice (once to find Fla. L. Weekly clusters and collect start pages, once to insert),
+which keeps memory proportional to the Florida subset rather than the corpus.
+
+Page bounds (citation_index.first_page / last_page / bounds_source)
+-------------------------------------------------------------------
+Real bounds come from an optional CAP-derived page-bounds CSV (bounds_source = 'cap').
+When that file is absent, or has no last_page for a cluster, last_page is INFERRED from
+the full citations CSV (bounds_source = 'inferred_next_case'):
+
+    first_page = the case's own start page (this citation row's page).
+    last_page  = the smallest distinct start page STRICTLY GREATER than this case's start
+                 page among ALL citations (any state, any court, any cluster) in the same
+                 reporter + volume (+ section for Fla. L. Weekly), minus one.
+                 NULL when no later case exists in that group.
+
+Why "minus one" (--last-page-convention prev_page, the default): the gate compares a pin
+inclusively (first_page <= pin <= last_page). The real last page is either next_start - 1
+or, when the next case begins mid-page, next_start itself. Using next_start - 1 can only
+make the gate veto a genuine pin on a shared final page (a withheld answer); using
+next_start can pass a pin that actually sits in the next case's opinion (a wrong cite
+dressed as right). Gate 1 fails closed, so the default is next_start - 1.
+--last-page-convention next_start opts into the permissive reading.
+
+Limits that cannot be fixed from this data: a case missing from the citations CSV widens
+its neighbour's bound over the gap; two cases that start on the same page get the same
+bound. Fla. L. Weekly is sparse and interleaved with non-opinion matter, so its inferred
+span is capped (--weekly-max-span, default 25 pages; 0 disables) and Fla. L. Weekly Supp.
+is never inferred (no section letter, trial-court orders, very sparse coverage).
 
 The build writes <db>.tmp and renames it into place on success, so a failed build
 never leaves a half-written database at the real path. Never point this at the
@@ -27,13 +53,16 @@ corpus volume without the lead's go-ahead; the volume holds the multi-GB inputs.
 from __future__ import annotations
 
 import argparse
+import bisect
 import bz2
 import csv
+import functools
 import io
 import os
 import re
 import sqlite3
 import sys
+from array import array
 from pathlib import Path
 from typing import Dict, Iterator, Optional, Set, Tuple
 
@@ -68,7 +97,8 @@ CREATE TABLE citation_index (
     case_name   TEXT,
     court_id    TEXT,
     first_page  INTEGER,
-    last_page   INTEGER
+    last_page   INTEGER,
+    bounds_source TEXT
 );
 CREATE UNIQUE INDEX uq_citation_row ON citation_index(reporter, volume, page, section, cluster_id);
 CREATE TABLE caselaw_opinion (
@@ -101,10 +131,43 @@ while True:
         _limit //= 10
 
 
+BOUNDS_CAP = "cap"
+BOUNDS_INFERRED = "inferred_next_case"
+LAST_PAGE_CONVENTIONS = ("prev_page", "next_start")
+DEFAULT_LAST_PAGE_CONVENTION = "prev_page"
+DEFAULT_WEEKLY_MAX_SPAN = 25
+# Keys whose bounds are never inferred (see module docstring).
+NO_INFERENCE_KEYS = frozenset({"Fla. L. Weekly Supp."})
+
+
+@functools.lru_cache(maxsize=None)
 def canonical_reporter(raw: str) -> Optional[str]:
     """Map a CourtListener reporter string to the canonical key, or None."""
     loose = re.sub(r"[^a-z0-9]", "", (raw or "").lower())
     return _LOOSE_TO_CANON.get(loose)
+
+
+def infer_last_page(
+    starts: Optional["array"],
+    page: int,
+    convention: str = DEFAULT_LAST_PAGE_CONVENTION,
+    max_span: int = 0,
+) -> Tuple[Optional[int], Optional[str]]:
+    """Return (last_page, null_reason) for a case starting at `page`.
+
+    `starts` is the sorted array of distinct start pages in the case's reporter+volume
+    (+section) group. null_reason is None when last_page is set, else 'last_in_volume' or
+    'span_exceeded'. max_span 0 means no cap.
+    """
+    if starts is None:
+        return None, "last_in_volume"
+    i = bisect.bisect_right(starts, page)
+    if i >= len(starts):
+        return None, "last_in_volume"
+    nxt = starts[i]
+    if max_span and nxt - page > max_span:
+        return None, "span_exceeded"
+    return (nxt - 1 if convention == "prev_page" else nxt), None
 
 
 def _find(corpus: Path, prefix: str) -> Optional[Path]:
@@ -155,7 +218,12 @@ def build_index(
     corpus_dir,
     db_path,
     florida_court_ids=FLORIDA_COURT_IDS,
+    infer_bounds: bool = True,
+    last_page_convention: str = DEFAULT_LAST_PAGE_CONVENTION,
+    weekly_max_span: int = DEFAULT_WEEKLY_MAX_SPAN,
 ) -> dict:
+    if last_page_convention not in LAST_PAGE_CONVENTIONS:
+        raise ValueError(f"last_page_convention must be one of {LAST_PAGE_CONVENTIONS}")
     corpus = Path(corpus_dir)
     db_path = Path(db_path)
 
@@ -178,6 +246,15 @@ def build_index(
         "skipped_no_cluster": 0,
         "bounds_rows": 0,
         "opinions_inserted": 0,
+        # Inference counters. The three null_* reasons count candidate rows before the
+        # INSERT OR IGNORE de-duplication; the bounds_* totals below are read from the DB.
+        "start_pages_collected": 0,
+        "bounds_null_last_in_volume": 0,
+        "bounds_null_span_exceeded": 0,
+        "bounds_null_not_inferred": 0,
+        "bounds_cap": 0,
+        "bounds_inferred": 0,
+        "last_page_null_total": 0,
     }
 
     # Pass 1: Florida docket ids.
@@ -188,11 +265,30 @@ def build_index(
     stats["dockets_florida"] = len(docket_court)
 
     # Pass 2: clusters named by Fla. L. Weekly citations (kept regardless of court).
+    # The same pass collects every start page of the five in-scope reporter keys, from ALL
+    # states and clusters, keyed by (reporter, volume, section), for bounds inference.
     weekly_clusters: Set[str] = set()
+    start_pages: Dict[Tuple[str, int, str], "array"] = {}
     for row in _rows(citations):
-        if canonical_reporter(row.get("reporter", "")) in WEEKLY_KEYS:
+        rep = canonical_reporter(row.get("reporter", ""))
+        if rep is None:
+            continue
+        if rep in WEEKLY_KEYS:
             weekly_clusters.add(row.get("cluster_id", ""))
+        if infer_bounds and rep not in NO_INFERENCE_KEYS:
+            vol, sp = _int(row.get("volume")), split_page(rep, row.get("page"))
+            if vol is not None and sp is not None:
+                key = (rep, vol, sp[0])
+                arr = start_pages.get(key)
+                if arr is None:
+                    arr = start_pages[key] = array("i")
+                arr.append(sp[1])
     stats["weekly_clusters"] = len(weekly_clusters)
+    # Sorted distinct pages per group; int32 arrays keep 18M-row corpora to a few MB.
+    for key in list(start_pages):
+        uniq = array("i", sorted(set(start_pages[key])))
+        start_pages[key] = uniq
+        stats["start_pages_collected"] += len(uniq)
 
     # Pass 3: clusters. Only id, case_name, docket_id are read.
     cluster_name: Dict[str, str] = {}
@@ -241,10 +337,25 @@ def build_index(
                 stats["skipped_bad_page"] += 1
                 continue
             section, page = sp
-            first, last = bounds_map.get(cid, (None, None))
+            cap_first, cap_last = bounds_map.get(cid, (None, None))
+            first = cap_first if cap_first is not None else page
+            last, source = cap_last, (BOUNDS_CAP if cap_last is not None else None)
+            if last is None and infer_bounds:
+                if reporter in NO_INFERENCE_KEYS or (reporter in WEEKLY_KEYS and weekly_max_span <= 0):
+                    stats["bounds_null_not_inferred"] += 1
+                else:
+                    cap = weekly_max_span if reporter in WEEKLY_KEYS else 0
+                    inferred, why = infer_last_page(
+                        start_pages.get((reporter, volume, section)), page, last_page_convention, cap)
+                    if inferred is not None and inferred >= first:
+                        last, source = inferred, BOUNDS_INFERRED
+                    elif why == "span_exceeded":
+                        stats["bounds_null_span_exceeded"] += 1
+                    else:
+                        stats["bounds_null_last_in_volume"] += 1
             batch.append((
                 reporter, volume, page, section, int(cid), cluster_name[cid],
-                cluster_court.get(cid), first if first is not None else page, last,
+                cluster_court.get(cid), first, last, source,
             ))
             if len(batch) >= 5000:
                 stats["citations_inserted"] += _flush(conn, batch)
@@ -270,6 +381,13 @@ def build_index(
 
         conn.executescript(INDEXES)
         conn.commit()
+        for src, n in conn.execute("SELECT bounds_source, COUNT(*) FROM citation_index GROUP BY 1"):
+            if src == BOUNDS_CAP:
+                stats["bounds_cap"] = n
+            elif src == BOUNDS_INFERRED:
+                stats["bounds_inferred"] = n
+        stats["last_page_null_total"] = conn.execute(
+            "SELECT COUNT(*) FROM citation_index WHERE last_page IS NULL").fetchone()[0]
     except BaseException:
         conn.close()
         if tmp.exists():
@@ -282,7 +400,7 @@ def build_index(
 
 def _flush(conn: sqlite3.Connection, batch: list) -> int:
     before = conn.total_changes
-    conn.executemany("INSERT OR IGNORE INTO citation_index VALUES (?,?,?,?,?,?,?,?,?)", batch)
+    conn.executemany("INSERT OR IGNORE INTO citation_index VALUES (?,?,?,?,?,?,?,?,?,?)", batch)
     return conn.total_changes - before
 
 
@@ -290,8 +408,21 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Build kingsfield_florida.db from CourtListener bulk CSVs.")
     ap.add_argument("--corpus", default=DEFAULT_CORPUS)
     ap.add_argument("--out", default=str(DEFAULT_DB))
+    ap.add_argument("--no-infer-bounds", action="store_true",
+                    help="do not infer last_page from neighbouring citations (CAP bounds only)")
+    ap.add_argument("--last-page-convention", choices=LAST_PAGE_CONVENTIONS, default=DEFAULT_LAST_PAGE_CONVENTION,
+                    help="prev_page (default, fail-closed): last_page = next case start - 1; "
+                         "next_start: last_page = next case start")
+    ap.add_argument("--weekly-max-span", type=int, default=DEFAULT_WEEKLY_MAX_SPAN,
+                    help="Fla. L. Weekly: leave last_page NULL when the next case is more than this many "
+                         "pages away (0 disables Weekly inference)")
     args = ap.parse_args(argv)
-    stats = build_index(args.corpus, args.out)
+    stats = build_index(
+        args.corpus, args.out,
+        infer_bounds=not args.no_infer_bounds,
+        last_page_convention=args.last_page_convention,
+        weekly_max_span=args.weekly_max_span,
+    )
     for k, v in stats.items():
         print(f"{k}: {v}")
     return 0

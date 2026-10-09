@@ -1,7 +1,10 @@
 import sqlite3
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from _fixture import build_fixture_db, write_corpus
 from db.build_sqlite_index import build_index, canonical_reporter
@@ -29,7 +32,7 @@ class BuildIndexTests(unittest.TestCase):
 
     def test_citation_index_columns(self):
         cols = [r[1] for r in self.rows("PRAGMA table_info(citation_index)")]
-        self.assertEqual(cols, ["reporter", "volume", "page", "section", "cluster_id", "case_name", "court_id", "first_page", "last_page"])
+        self.assertEqual(cols, ["reporter", "volume", "page", "section", "cluster_id", "case_name", "court_id", "first_page", "last_page", "bounds_source"])
 
     def test_only_florida_keys_kept(self):
         self.assertEqual({r[0] for r in self.rows("SELECT DISTINCT reporter FROM citation_index")},

@@ -8,11 +8,8 @@ import {
 } from "../lib/documentVersions";
 import { normalizeDocxZipPaths } from "../lib/convert";
 import {
-    AssistantStreamError,
-    buildCancelledAssistantMessage,
     isAbortError,
     runLLMStream,
-    stripTransientAssistantEvents,
     TABULAR_TOOLS,
     type ChatMessage,
     type TabularCellStore,
@@ -30,7 +27,20 @@ import {
     ensureReviewAccess,
     filterAccessibleDocumentIds,
 } from "../lib/access";
-import { safeErrorLog, safeErrorMessage } from "../lib/safeError";
+import { safeErrorLog } from "../lib/safeError";
+import {
+    GENERIC_ERROR_MESSAGE,
+    createBufferingSseWriter,
+    createLimiter,
+    failedReplyRecord,
+    finalizeHeldOutput,
+    gateCellContent,
+    gateTitleText,
+    startSseKeepalive,
+    unverifiableCell,
+    userTitleFallback,
+    verifyDraftForSse,
+} from "../middleware/hallucination_guard";
 
 function formatPromptSuffix(format?: string, tags?: string[]): string {
     switch (format) {
@@ -58,6 +68,39 @@ function formatPromptSuffix(format?: string, tags?: string[]): string {
 }
 
 export const tabularRouter = Router();
+
+// Every piece of model-written cell text goes through Gate 1 (gateCellContent) before it is saved or
+// sent: in /generate and /regenerate-cell on the way in, and again on every read in GET /:reviewId
+// (a stored row is never trusted). A cell that is vetoed, pending, of unknown status, or that Gate 1
+// could not check is replaced whole by a fixed marker; other cells are not affected.
+// At most CELL_GATE_CONCURRENCY cells are in the gate at once (the gate itself runs at most 4
+// children and answers gate_busy, a veto, past that). Module-level, so the cap holds across requests.
+// A gate call that has not answered within CELL_GATE_TIMEOUT_MS is abandoned: its slot is freed, its
+// cell gets the "could not be verified" marker, and its late answer is ignored. The limit sits above
+// the gate's own worst case (30 s waiting for a child slot plus 30 s for the child) so the gate's own
+// answer, a veto or a clean result, normally arrives first.
+const CELL_GATE_CONCURRENCY = 2;
+const CELL_GATE_TIMEOUT_MS = 75_000;
+const limitCellGate = createLimiter(CELL_GATE_CONCURRENCY, {
+    timeoutMs: CELL_GATE_TIMEOUT_MS,
+});
+
+/** Returned (502 detail) in place of a model-written column prompt that Gate 1 vetoed or could not check. */
+const PROMPT_WITHHELD_MESSAGE =
+    "The generated prompt was withheld because it could not be verified.";
+
+/** The Gate 1 verifier and server-side error sink gateCellContent is given, for every cell and prompt gate. */
+function cellGateOptions(db: ReturnType<typeof createServerSupabase>, route: string) {
+    return {
+        verify: (text: string) =>
+            verifyDraftForSse(text, {
+                courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                supabase: db,
+            }),
+        logError: (context: string, error: unknown) =>
+            console.error(`[${route}] ${context}`, error),
+    };
+}
 
 function providerLabel(provider: Provider): string {
     if (provider === "claude") return "Anthropic";
@@ -248,11 +291,30 @@ tabularRouter.post("/prompt", requireAuth, async (req, res) => {
                 .trim(),
         ) as { prompt?: unknown };
         if (typeof parsed.prompt === "string" && parsed.prompt.trim()) {
-            res.json({ prompt: parsed.prompt.trim(), source: "llm" });
+            const prompt = parsed.prompt.trim();
+            // Gate 1 over the model-written prompt before it goes anywhere. A veto, or any failure
+            // of the gate, returns the one fixed message below, never the model's text. The
+            // frontend treats a non-2xx answer as a failed generation and leaves the field as is.
+            const db = createServerSupabase();
+            const gated = await limitCellGate(
+                () =>
+                    gateCellContent(
+                        { summary: prompt, flag: "grey", reasoning: "" },
+                        cellGateOptions(db, "tabular/prompt"),
+                    ),
+                () => unverifiableCell(),
+            );
+            if (gated.withheld) {
+                return void res
+                    .status(502)
+                    .json({ detail: PROMPT_WITHHELD_MESSAGE });
+            }
+            res.json({ prompt, source: "llm" });
         } else {
             res.status(502).json({ detail: "LLM returned an empty prompt" });
         }
-    } catch {
+    } catch (err) {
+        console.error("[tabular/prompt] error", safeErrorLog(err));
         res.status(502).json({ detail: "Failed to generate prompt from LLM" });
     }
 });
@@ -298,12 +360,51 @@ tabularRouter.get("/:reviewId", requireAuth, async (req, res) => {
     }[];
     await attachActiveVersionPaths(db, docs);
 
+    // Stored cells are model-written text, and rows saved before the gate existed (or by any path
+    // that skipped it) carry none. Every stored cell goes through Gate 1 again on every read, as
+    // GET /council/:id does for stored sessions; a verification record already in the row is never
+    // trusted (it can be stale, or forged in an old row), and the row itself is not rewritten.
+    // Identical cell texts within one request are gated once.
+    const gatedByText = new Map<
+        string,
+        ReturnType<typeof gateCellContent>
+    >();
+    const gateStoredCell = (parsed: NonNullable<ReturnType<typeof parseCellContent>>) => {
+        const key = JSON.stringify([parsed.summary, parsed.flag ?? null, parsed.reasoning ?? ""]);
+        let gated = gatedByText.get(key);
+        if (!gated) {
+            gated = limitCellGate(
+                () =>
+                    gateCellContent(
+                        parsed,
+                        cellGateOptions(db, "tabular/get-review"),
+                    ),
+                () => unverifiableCell(),
+            );
+            gatedByText.set(key, gated);
+        }
+        return gated;
+    };
+    const gatedCells = await Promise.all(
+        (cells ?? []).map(async (cell) => {
+            const parsed = parseCellContent(cell.content);
+            // Only the cell columns the client reads are returned; `citations` (never written by
+            // this server) is model-shaped free text and is not passed on.
+            return {
+                id: cell.id,
+                review_id: cell.review_id,
+                document_id: cell.document_id,
+                column_index: cell.column_index,
+                status: cell.status,
+                created_at: cell.created_at,
+                content: parsed ? (await gateStoredCell(parsed)).content : null,
+            };
+        }),
+    );
+
     res.json({
         review: { ...review, is_owner: access.isOwner },
-        cells: (cells ?? []).map((cell) => ({
-            ...cell,
-            content: parseCellContent(cell.content),
-        })),
+        cells: gatedCells,
         documents: docs,
     });
 });
@@ -747,40 +848,83 @@ tabularRouter.post(
                 } catch (err) {
                     console.error(
                         `[regenerate-cell] extraction error doc=${document_id}`,
-                        err,
+                        safeErrorLog(err),
                     );
                 }
             }
         }
 
-        const result = await queryTabularCell(
-            tabular_model,
-            docActive?.filename?.trim() || "Untitled document",
-            markdown,
-            column.prompt,
-            column.format,
-            column.tags,
-            api_keys,
-        );
+        // Anything that fails from here on marks the cell errored and answers with fixed text only.
+        const markCellError = async () => {
+            try {
+                await db
+                    .from("tabular_cells")
+                    .update({ status: "error" })
+                    .eq("review_id", reviewId)
+                    .eq("document_id", document_id)
+                    .eq("column_index", column_index);
+            } catch (err) {
+                console.error(
+                    "[regenerate-cell] failed to mark the cell errored",
+                    safeErrorLog(err),
+                );
+            }
+        };
 
-        if (!result) {
-            await db
+        try {
+            const result = await queryTabularCell(
+                tabular_model,
+                docActive?.filename?.trim() || "Untitled document",
+                markdown,
+                column.prompt,
+                column.format,
+                column.tags,
+                api_keys,
+            );
+
+            if (!result) {
+                await markCellError();
+                return void res.status(500).json({ detail: "Generation failed" });
+            }
+
+            // Gate 1 first, same as /generate: what is saved and returned is gated.content (the
+            // model's cell, or the fixed marker) with its client-safe verification record, never
+            // `result`. Saved equals returned.
+            const gated = await limitCellGate(
+                () =>
+                    gateCellContent(
+                        result,
+                        cellGateOptions(db, "tabular/regenerate-cell"),
+                    ),
+                () => unverifiableCell(),
+            );
+
+            const { error: cellSaveError } = await db
                 .from("tabular_cells")
-                .update({ status: "error" })
+                .update({
+                    content: JSON.stringify(gated.content),
+                    status: "done",
+                })
                 .eq("review_id", reviewId)
                 .eq("document_id", document_id)
                 .eq("column_index", column_index);
-            return void res.status(500).json({ detail: "Generation failed" });
+            if (cellSaveError) {
+                // Not saved, so not returned.
+                console.error(
+                    `[regenerate-cell] failed to save cell doc=${document_id} col=${column_index}`,
+                    safeErrorLog(cellSaveError),
+                );
+                await markCellError();
+                return void res.status(500).json({ detail: "Generation failed" });
+            }
+
+            res.json(gated.content);
+        } catch (err) {
+            console.error("[regenerate-cell] error", safeErrorLog(err));
+            await markCellError();
+            if (!res.headersSent)
+                res.status(500).json({ detail: "Generation failed" });
         }
-
-        await db
-            .from("tabular_cells")
-            .update({ content: JSON.stringify(result), status: "done" })
-            .eq("review_id", reviewId)
-            .eq("document_id", document_id)
-            .eq("column_index", column_index);
-
-        res.json(result);
     },
 );
 
@@ -893,7 +1037,7 @@ tabularRouter.post("/:reviewId/generate", requireAuth, async (req, res) => {
                         } catch (err) {
                             console.error(
                                 `[tabular/generate] extraction error doc=${docId}`,
-                                err,
+                                safeErrorLog(err),
                             );
                         }
                     }
@@ -936,18 +1080,37 @@ tabularRouter.post("/:reviewId/generate", requireAuth, async (req, res) => {
                         markdown,
                         columnsToProcess,
                         async (columnIndex, result) => {
-                            receivedColumns.add(columnIndex);
-                            await db
+                            // Gate 1 first: the cell is saved and sent as gated.content (the
+                            // model's cell, or the fixed marker) with its client-safe verification
+                            // record, never as `result`. Saved equals sent.
+                            const gated = await limitCellGate(
+                                () =>
+                                    gateCellContent(
+                                        result,
+                                        cellGateOptions(db, "tabular/generate"),
+                                    ),
+                                () => unverifiableCell(),
+                            );
+                            const { error: cellSaveError } = await db
                                 .from("tabular_cells")
                                 .update({
-                                    content: JSON.stringify(result),
+                                    content: JSON.stringify(gated.content),
                                     status: "done",
                                 })
                                 .eq("review_id", reviewId)
                                 .eq("document_id", docId)
                                 .eq("column_index", columnIndex);
+                            if (cellSaveError) {
+                                // Not saved, so not sent: the cell falls through to the error marking below.
+                                console.error(
+                                    `[tabular/generate] failed to save cell doc=${docId} col=${columnIndex}`,
+                                    safeErrorLog(cellSaveError),
+                                );
+                                return;
+                            }
+                            receivedColumns.add(columnIndex);
                             write(
-                                `data: ${JSON.stringify({ type: "cell_update", document_id: docId, column_index: columnIndex, content: result, status: "done" })}\n\n`,
+                                `data: ${JSON.stringify({ type: "cell_update", document_id: docId, column_index: columnIndex, content: gated.content, status: "done" })}\n\n`,
                             );
                         },
                         api_keys,
@@ -980,8 +1143,9 @@ tabularRouter.post("/:reviewId/generate", requireAuth, async (req, res) => {
     } catch (err) {
         console.error("[tabular/generate] stream error", safeErrorLog(err));
         try {
+            // Fixed text only: no provider, exception or database text reaches the browser.
             write(
-                `data: ${JSON.stringify({ type: "error", message: safeErrorMessage(err, "Stream error") })}\n\ndata: [DONE]\n\n`,
+                `data: ${JSON.stringify({ type: "error", message: GENERIC_ERROR_MESSAGE })}\n\ndata: [DONE]\n\n`,
             );
         } catch {
             /* ignore */
@@ -1084,41 +1248,74 @@ tabularRouter.get(
 // Tabular citation parsing
 // ---------------------------------------------------------------------------
 
-type TabularParsedCitation = {
-    ref: number;
-    col_index: number;
-    row_index: number;
-    quote: string;
-};
-
 const TABULAR_CITATIONS_BLOCK_RE = /<CITATIONS>\s*([\s\S]*?)\s*<\/CITATIONS>/;
 
-function parseTabularCitations(text: string): TabularParsedCitation[] {
+function parseTabularCitations(text: string): unknown[] {
     const match = text.match(TABULAR_CITATIONS_BLOCK_RE);
     if (!match) return [];
     try {
-        return JSON.parse(match[1]) as TabularParsedCitation[];
+        const parsed: unknown = JSON.parse(match[1]);
+        return Array.isArray(parsed) ? parsed : [];
     } catch {
         return [];
     }
 }
 
+/** A finite, non-negative integer: the only thing a model-supplied ref / col_index / row_index may be. */
+function isChipIndex(v: unknown): v is number {
+    return typeof v === "number" && Number.isSafeInteger(v) && v >= 0;
+}
+
+/** A name read from the review's own columns or documents; never anything the model wrote. */
+function ownName(v: unknown): string | null {
+    return typeof v === "string" && v.trim() ? v : null;
+}
+
+// A tabular chip is built field by field. ref, col_index and row_index must be finite non-negative
+// integers (a chip with anything else is dropped whole); col_name and doc_name come only from the
+// review's real columns and documents, or from a fixed fallback with no model text; any other key
+// the model wrote is not copied. The one model-written string left is `quote`, which Gate 1 checks
+// (finalizeHeldOutput with allowTabularCitations) before the chip is sent or saved.
+const CHIP_UNKNOWN_COLUMN = "Unknown column";
+const CHIP_UNKNOWN_DOCUMENT = "Unknown document";
+
 function extractTabularAnnotations(
     fullText: string,
     tabularStore: TabularCellStore,
 ) {
-    return parseTabularCitations(fullText).map((c) => ({
-        type: "tabular_citation" as const,
-        ref: c.ref,
-        col_index: c.col_index,
-        row_index: c.row_index,
-        col_name:
-            tabularStore.columns[c.col_index]?.name ?? `Col ${c.col_index}`,
-        doc_name:
-            tabularStore.documents[c.row_index]?.filename ??
-            `Row ${c.row_index}`,
-        quote: c.quote,
-    }));
+    const chips: {
+        type: "tabular_citation";
+        ref: number;
+        col_index: number;
+        row_index: number;
+        col_name: string;
+        doc_name: string;
+        quote: string;
+    }[] = [];
+    for (const c of parseTabularCitations(fullText)) {
+        if (!c || typeof c !== "object" || Array.isArray(c)) continue;
+        const { ref, col_index, row_index, quote } = c as Record<
+            string,
+            unknown
+        >;
+        if (!isChipIndex(ref) || !isChipIndex(col_index) || !isChipIndex(row_index))
+            continue;
+        if (typeof quote !== "string") continue;
+        chips.push({
+            type: "tabular_citation",
+            ref,
+            col_index,
+            row_index,
+            col_name:
+                ownName(tabularStore.columns[col_index]?.name) ??
+                CHIP_UNKNOWN_COLUMN,
+            doc_name:
+                ownName(tabularStore.documents[row_index]?.filename) ??
+                CHIP_UNKNOWN_DOCUMENT,
+            quote,
+        });
+    }
+    return chips;
 }
 
 // ---------------------------------------------------------------------------
@@ -1334,24 +1531,31 @@ tabularRouter.post("/:reviewId/chat", requireAuth, async (req, res) => {
     res.setHeader("X-Accel-Buffering", "no");
     res.flushHeaders();
     const write = (line: string) => res.write(line);
+    // Model-written output is held server-side until Gate 1 has run.
+    const buffered = createBufferingSseWriter(write);
     const streamAbort = new AbortController();
     let streamFinished = false;
+    // True once the finalized reply is in tabular_review_chat_messages. After that the catch only logs.
+    let replySaved = false;
+    // Held output is invisible to the browser; ping until it is released.
+    const keepalive = startSseKeepalive(write);
     res.on("close", () => {
+        keepalive.stop();
         if (!streamFinished) streamAbort.abort();
     });
 
-    if (chatId) {
-        write(`data: ${JSON.stringify({ type: "chat_id", chatId })}\n\n`);
-    }
-
     try {
-        const { fullText, events } = await runLLMStream({
+        if (chatId) {
+            write(`data: ${JSON.stringify({ type: "chat_id", chatId })}\n\n`);
+        }
+
+        const { fullText, events, annotations } = await runLLMStream({
             apiMessages,
             docStore: new Map(),
             docIndex: {},
             userId,
             db,
-            write,
+            write: buffered.write,
             extraTools: TABULAR_TOOLS,
             includeResearchTools: false,
             tabularStore,
@@ -1362,34 +1566,93 @@ tabularRouter.post("/:reviewId/chat", requireAuth, async (req, res) => {
             signal: streamAbort.signal,
         });
 
-        const persistedEvents = stripTransientAssistantEvents(events);
-        const annotations = extractTabularAnnotations(fullText, tabularStore);
+        // Gate 1 over the whole reply decides what is released: unchanged, or withheld
+        // whole (never rewritten). The saved message is exactly what is sent.
+        const finalized = await finalizeHeldOutput({
+            held: buffered.takeHeld(),
+            events,
+            annotations,
+            fullText,
+            allowTabularCitations: true,
+            verify: (text) =>
+                verifyDraftForSse(text, {
+                    courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                    supabase: db,
+                }),
+        });
 
+        // Save first, then send: a failed save is caught below, before the
+        // browser has been given a reply that was never stored.
         if (chatId) {
-            await db.from("tabular_review_chat_messages").insert({
-                chat_id: chatId,
-                role: "assistant",
-                content: persistedEvents.length ? persistedEvents : null,
-                annotations: annotations.length ? annotations : null,
-            });
+            const { error: replySaveError } = await db
+                .from("tabular_review_chat_messages")
+                .insert({
+                    chat_id: chatId,
+                    role: "assistant",
+                    content: finalized.savedEvents.length
+                        ? finalized.savedEvents
+                        : null,
+                    // Sent tabular citation chips plus the one client-safe verification record.
+                    annotations: finalized.savedAnnotations,
+                });
+            if (replySaveError) {
+                console.error(
+                    "[tabular/chat] failed to save reply",
+                    safeErrorLog(replySaveError),
+                );
+                throw new Error("Failed to save the reply.");
+            }
+        }
+        replySaved = true;
+        keepalive.stop();
+        for (const line of finalized.linesToSend) write(line);
+        const verification = finalized.verification;
+        write(
+            `data: ${JSON.stringify({
+                type: "verification",
+                verdicts: verification.verdicts,
+                hasVetoes: verification.hasVetoes,
+                hasConditional: verification.hasConditional,
+                error: verification.error,
+            })}\n\n`,
+        );
+        if (chatId) {
             await db
                 .from("tabular_review_chats")
                 .update({ updated_at: new Date().toISOString() })
                 .eq("id", chatId);
         }
 
-        // Generate title on first exchange
+        // Title on the first exchange. The model's title is Gate 1 checked as the exact string that is
+        // saved and sent; on any veto, pending status, gate failure or model failure the title is the
+        // start of the user's own first message (user text, not gated), never the model's text. A
+        // failure here only logs: the reply is already saved and sent.
         if (chatId && isFirstExchange && !chatTitle && lastUser.content) {
-            const { title_model } = await getUserModelSettings(userId, db);
-            const title = await generateChatTitle(
-                title_model,
-                lastUser.content,
-                {
-                    reviewTitle: clientReviewTitle ?? review.title ?? null,
-                    projectName: clientProjectName ?? null,
-                },
-                api_keys,
-            );
+            const fallbackTitle = userTitleFallback(lastUser.content);
+            let title = fallbackTitle;
+            try {
+                const { title_model } = await getUserModelSettings(userId, db);
+                const modelTitle = await generateChatTitle(
+                    title_model,
+                    lastUser.content,
+                    {
+                        reviewTitle: clientReviewTitle ?? review.title ?? null,
+                        projectName: clientProjectName ?? null,
+                    },
+                    api_keys,
+                );
+                if (modelTitle) {
+                    const gatedTitle = await gateTitleText(
+                        modelTitle,
+                        fallbackTitle,
+                        cellGateOptions(db, "tabular/chat"),
+                    );
+                    title = gatedTitle.title;
+                }
+            } catch (titleErr) {
+                console.error("[tabular/chat] title", safeErrorLog(titleErr));
+                title = fallbackTitle;
+            }
             if (title) {
                 await db
                     .from("tabular_review_chats")
@@ -1401,74 +1664,58 @@ tabularRouter.post("/:reviewId/chat", requireAuth, async (req, res) => {
             }
         }
     } catch (err) {
-        if (isAbortError(err)) {
+        keepalive.stop();
+        if (replySaved) {
+            // The verified reply is already saved (and sent): nothing more is saved or sent.
+            console.error(
+                "[tabular/chat] error after the reply was saved:",
+                safeErrorLog(err),
+            );
+            return;
+        }
+        // Anything the model wrote before this point, its tool results and any
+        // annotations are dropped. Only a fixed marker is saved.
+        const aborted = isAbortError(err);
+        if (aborted) {
             console.log("[tabular/chat] client aborted stream", { chatId });
-            if (chatId && err instanceof AssistantStreamError) {
-                const partial = buildCancelledAssistantMessage({
-                    fullText: err.fullText,
-                    events: err.events,
-                    buildAnnotations: (fullText) =>
-                        extractTabularAnnotations(fullText, tabularStore),
-                });
+        } else {
+            console.error("[tabular/chat] error", safeErrorLog(err));
+        }
+        const failedReply = failedReplyRecord(aborted ? "aborted" : "failed");
+        if (chatId) {
+            try {
                 const { error: saveError } = await db
                     .from("tabular_review_chat_messages")
                     .insert({
                         chat_id: chatId,
                         role: "assistant",
-                        content: partial.events.length ? partial.events : null,
-                        annotations: partial.annotations.length
-                            ? partial.annotations
-                            : null,
+                        content: failedReply.events,
+                        annotations: failedReply.annotations,
                     });
-                if (saveError) {
+                if (saveError)
                     console.error(
-                        "[tabular/chat] failed to save aborted stream",
-                        saveError,
+                        "[tabular/chat] failed to save marker",
+                        safeErrorLog(saveError),
                     );
-                }
                 await db
                     .from("tabular_review_chats")
                     .update({ updated_at: new Date().toISOString() })
                     .eq("id", chatId);
-            }
-            return;
-        }
-        console.error("[tabular/chat] error", safeErrorLog(err));
-        const message = safeErrorMessage(err, "Stream error");
-        const errorEvents = err instanceof AssistantStreamError
-            ? stripTransientAssistantEvents(err.events)
-            : [{ type: "error" as const, message }];
-        const errorFullText =
-            err instanceof AssistantStreamError ? err.fullText : "";
-        if (chatId) {
-            try {
-                const annotations = extractTabularAnnotations(
-                    errorFullText,
-                    tabularStore,
-                );
-                const { error: saveError } = await db
-                    .from("tabular_review_chat_messages")
-                    .insert({
-                        chat_id: chatId,
-                        role: "assistant",
-                        content: errorEvents.length ? errorEvents : null,
-                        annotations: annotations.length ? annotations : null,
-                    });
-                if (saveError)
-                    console.error("[tabular/chat] failed to save error", saveError);
             } catch (saveErr) {
-                console.error("[tabular/chat] failed to save error", saveErr);
+                console.error(
+                    "[tabular/chat] failed to save marker",
+                    safeErrorLog(saveErr),
+                );
             }
         }
+        // Aborted: the client is gone, nothing is written. Failed: the fixed error event, then [DONE].
         try {
-            write(
-                `data: ${JSON.stringify({ type: "error", message })}\n\n`,
-            );
-            write("data: [DONE]\n\n");
+            for (const line of failedReply.sseLines) write(line);
         } catch {
             /* ignore */
         }
     } finally {
+        keepalive.stop();
         streamFinished = true;
         res.end();
     }

@@ -45,6 +45,24 @@ export const DEFAULT_ROUTING: Record<AdvisorRole | 'chairman', ModelChoice> = {
   chairman: { provider: 'claude', model: 'claude-opus-4-8' },
 };
 
+/** Question framing — Sonnet is fast enough; Opus reserved for chairman. */
+export const FRAMER_ROUTING: ModelChoice = {
+  provider: 'claude',
+  model: 'claude-sonnet-4-6',
+};
+
+/** Peer-review round — Haiku cuts ~5 slow calls per session. */
+export const REVIEWER_ROUTING: ModelChoice = {
+  provider: 'claude',
+  model: 'claude-haiku-4-5',
+};
+
+/** When DeepSeek/Kimi keys are absent, avoid silently spawning extra Opus calls. */
+export const ADVISOR_FALLBACK_ROUTING: ModelChoice = {
+  provider: 'claude',
+  model: 'claude-sonnet-4-6',
+};
+
 /**
  * Minimal text-generation client interface. Implemented for Gemini via
  * @google/genai and for DeepSeek/Kimi via their OpenAI-compatible REST
@@ -81,6 +99,7 @@ export async function callModel(
   choice: ModelChoice,
   turn: ChatTurn,
   clients: LLMClients,
+  options?: { fallback?: ModelChoice },
 ): Promise<string> {
   if (choice.provider !== 'claude') {
     const client = clients[choice.provider];
@@ -92,16 +111,26 @@ export async function callModel(
         maxTokens: turn.maxTokens ?? 2048,
       });
     }
-    // Fallback: use Claude Opus when the provider isn't configured.
+    const fallback = options?.fallback ?? ADVISOR_FALLBACK_ROUTING;
     console.warn(
-      `[llm-council] ${choice.provider} not configured; falling back to Claude Opus for ${choice.model}.`,
+      `[llm-council] ${choice.provider} not configured; falling back to ${fallback.model}.`,
     );
-    choice = { provider: 'claude', model: 'claude-opus-4-8' };
+    choice = fallback;
   }
+  const system =
+    turn.system.length >= 512
+      ? [
+          {
+            type: 'text' as const,
+            text: turn.system,
+            cache_control: { type: 'ephemeral' as const },
+          },
+        ]
+      : turn.system;
   const resp = await clients.anthropic.messages.create({
     model: choice.model,
     max_tokens: turn.maxTokens ?? 2048,
-    system: turn.system,
+    system,
     messages: [{ role: 'user', content: turn.user }],
   });
   return (resp.content ?? [])

@@ -136,6 +136,80 @@ async function attachChatCreatorLabels(
   }
 }
 
+// GET /projects/directory — projects + documents + standalone docs in one round trip
+projectsRouter.get("/directory", requireAuth, async (req, res) => {
+  const userId = res.locals.userId as string;
+  const userEmail = res.locals.userEmail as string | undefined;
+  const db = createServerSupabase();
+
+  const [{ data: overview, error: overviewError }, { data: standalone, error: standaloneError }] =
+    await Promise.all([
+      db.rpc("get_projects_overview", {
+        p_user_id: userId,
+        p_user_email: userEmail ?? null,
+      }),
+      db
+        .from("documents")
+        .select("*")
+        .eq("user_id", userId)
+        .is("project_id", null)
+        .order("created_at", { ascending: false }),
+    ]);
+
+  if (overviewError)
+    return void res.status(500).json({ detail: overviewError.message });
+  if (standaloneError)
+    return void res.status(500).json({ detail: standaloneError.message });
+
+  const projects = (overview ?? []) as {
+    id: string;
+    user_id: string;
+    shared_with?: string[] | null;
+  }[];
+  const projectIds = projects.map((p) => p.id);
+
+  let projectDocs: {
+    id: string;
+    user_id?: string | null;
+    project_id: string | null;
+    current_version_id?: string | null;
+  }[] = [];
+  if (projectIds.length > 0) {
+    const { data: docs, error: docsError } = await db
+      .from("documents")
+      .select("*")
+      .in("project_id", projectIds)
+      .order("created_at", { ascending: true });
+    if (docsError)
+      return void res.status(500).json({ detail: docsError.message });
+    projectDocs = (docs ?? []) as typeof projectDocs;
+  }
+
+  const standaloneDocs = (standalone ?? []) as typeof projectDocs;
+  const allDocs = [...standaloneDocs, ...projectDocs];
+  await attachLatestVersionNumbers(db, allDocs);
+  await attachActiveVersionPaths(db, allDocs);
+  await attachDocumentOwnerLabels(db, allDocs);
+
+  const docsByProject = new Map<string, typeof projectDocs>();
+  for (const doc of projectDocs) {
+    const pid = doc.project_id as string;
+    const list = docsByProject.get(pid) ?? [];
+    list.push(doc);
+    docsByProject.set(pid, list);
+  }
+
+  res.json({
+    standaloneDocuments: standaloneDocs,
+    projects: projects.map((p) => ({
+      ...p,
+      is_owner: p.user_id === userId,
+      documents: docsByProject.get(p.id) ?? [],
+      folders: [],
+    })),
+  });
+});
+
 // GET /projects
 projectsRouter.get("/", requireAuth, async (req, res) => {
   const userId = res.locals.userId as string;

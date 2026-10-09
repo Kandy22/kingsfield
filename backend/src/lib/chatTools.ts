@@ -42,7 +42,13 @@ import {
   type LlmMessage,
   type OpenAIToolSchema,
 } from "./llm";
-import { safeErrorMessage } from "./safeError";
+import { safeErrorLog, safeErrorMessage } from "./safeError";
+import {
+  createLimiter,
+  gateCellContent,
+  unverifiableCell,
+  verifyDraftForSse,
+} from "../middleware/hallucination_guard";
 
 const STANDARD_FONT_DATA_URL = (() => {
   try {
@@ -863,6 +869,205 @@ export async function extractPdfText(buf: ArrayBuffer): Promise<string> {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Gate 1 before document writes
+//
+// generate_docx, edit_document and replicate_document write model text into the
+// user's documents (storage objects, `documents`, `document_versions`,
+// `document_edits`). Each runs this gate FIRST, before any write, over every
+// model-written string it is about to persist. Any vetoed / pending /
+// unknown-status verdict, gate error, throw, timeout or busy gate refuses the
+// whole tool call with the one fixed result below: nothing is written, and the
+// model's text is not echoed. Raw failures go only to the server log.
+// The gate lives in the tool implementations, so chat.ts, projectChat.ts and
+// tabular.ts (all of which hand TOOLS to runLLMStream) get it alike.
+// ---------------------------------------------------------------------------
+
+/** The one message a refused document write returns (tool result, event, and error field alike). */
+export const DOC_WRITE_REFUSED_MESSAGE =
+  "The document was not written because its content contained a citation that could not be verified.";
+/** The one tool result a refused document write returns, for all three tools. */
+const DOC_WRITE_REFUSED_RESULT = JSON.stringify({
+  ok: false,
+  error: DOC_WRITE_REFUSED_MESSAGE,
+});
+const DOC_GATE_CONCURRENCY = 2;
+const DOC_GATE_TIMEOUT_MS = 75_000;
+/** More text than this, or more strings, or deeper nesting, is refused outright (fail closed). */
+const DOC_GATE_MAX_CHARS = 2_000_000;
+const DOC_GATE_MAX_STRINGS = 20_000;
+const DOC_GATE_MAX_DEPTH = 12;
+const limitDocGate = createLimiter(DOC_GATE_CONCURRENCY, {
+  timeoutMs: DOC_GATE_TIMEOUT_MS,
+});
+
+/**
+ * Push every string found anywhere in `value` (arrays and objects, values only)
+ * onto `out`. False when a limit is exceeded or a value is not plain JSON data.
+ */
+function collectModelStrings(
+  value: unknown,
+  out: string[],
+  depth = 0,
+): boolean {
+  if (typeof value === "string") {
+    out.push(value);
+    return out.length <= DOC_GATE_MAX_STRINGS;
+  }
+  if (
+    value === null ||
+    value === undefined ||
+    typeof value === "number" ||
+    typeof value === "boolean"
+  ) {
+    return true;
+  }
+  if (depth >= DOC_GATE_MAX_DEPTH) return false;
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      if (!collectModelStrings(item, out, depth + 1)) return false;
+    }
+    return true;
+  }
+  if (typeof value === "object") {
+    for (const item of Object.values(value as Record<string, unknown>)) {
+      if (!collectModelStrings(item, out, depth + 1)) return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Gate 1 over model-written text that is about to be written to a document.
+ * Resolves true only when the shared guard releases the text (clean or
+ * conditional verdicts only). Never throws; false on any veto, pending or
+ * unknown verdict, gate error, throw, timeout, busy gate, or oversize input.
+ */
+async function gateDocWriteText(
+  parts: string[],
+  db: ReturnType<typeof createServerSupabase>,
+): Promise<boolean> {
+  try {
+    const text = parts.join("\n\n");
+    if (text.length > DOC_GATE_MAX_CHARS) {
+      console.error("[doc-write-gate] content too large to verify");
+      return false;
+    }
+    // Same wrapper the tabular cells use: finalizeHeldOutput under the chat
+    // release rule, verified by verifyDraftForSse (Gate 1).
+    const gated = await limitDocGate(
+      () =>
+        gateCellContent(
+          { summary: text, flag: "grey", reasoning: "" },
+          {
+            verify: (t) =>
+              verifyDraftForSse(t, {
+                courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                supabase: db,
+              }),
+            logError: (context, error) =>
+              console.error(`[doc-write-gate] ${context}`, error),
+          },
+        ),
+      () => unverifiableCell(),
+    );
+    return gated.withheld === false;
+  } catch (err) {
+    console.error("[doc-write-gate] error", safeErrorLog(err));
+    return false;
+  }
+}
+
+/** The stored filename generate_docx derives from the model's title. */
+function generatedDocxFilename(title: string): string {
+  const safeTitle =
+    title
+      .replace(/[^a-zA-Z0-9 -]/g, "")
+      .trim()
+      .slice(0, 64) || "document";
+  return `${safeTitle}.docx`;
+}
+
+/**
+ * Every string generate_docx would write: the title as given, as rendered
+ * (upper case) and as the stored filename; every string anywhere in `sections`
+ * (headings, prose, table headers and cells, and any other field); the
+ * upper-cased headings; and each table row read across (cells are adjacent on
+ * the page). Null when the shape can't be checked.
+ */
+function generatedDocxGateParts(
+  title: unknown,
+  sections: unknown,
+): string[] | null {
+  if (typeof title !== "string" || !Array.isArray(sections)) return null;
+  const parts: string[] = [title, title.toUpperCase(), generatedDocxFilename(title)];
+  if (!collectModelStrings(sections, parts)) return null;
+  for (const section of sections) {
+    if (!section || typeof section !== "object") continue;
+    const { heading, table } = section as { heading?: unknown; table?: unknown };
+    if (typeof heading === "string") parts.push(heading.toUpperCase());
+    if (table && typeof table === "object") {
+      const { headers, rows } = table as { headers?: unknown; rows?: unknown };
+      const across = (cells: unknown) => {
+        if (!Array.isArray(cells)) return;
+        const strs = cells.filter((c): c is string => typeof c === "string");
+        if (strs.length > 1) parts.push(strs.join(" "));
+      };
+      across(headers);
+      if (Array.isArray(rows)) for (const row of rows) across(row);
+    }
+  }
+  return parts;
+}
+
+/**
+ * Every model-written string edit_document would persist per edit: replacement
+ * text, reason, and the context strings (stored verbatim in document_edits),
+ * plus the three assembled as they will read in the document. `find` is only
+ * matched against the user's own text and is never written, so it is not
+ * checked. Null when the shape can't be checked.
+ */
+function editDocumentGateParts(edits: unknown): string[] | null {
+  if (!Array.isArray(edits)) return null;
+  const parts: string[] = [];
+  for (const edit of edits) {
+    if (!edit || typeof edit !== "object" || Array.isArray(edit)) return null;
+    const { find: _find, ...written } = edit as Record<string, unknown>;
+    if (!collectModelStrings(written, parts)) return null;
+    const { context_before, replace, context_after } = written as Record<
+      string,
+      unknown
+    >;
+    parts.push(
+      [context_before, replace, context_after]
+        .map((v) => (typeof v === "string" ? v : ""))
+        .join(""),
+    );
+  }
+  return parts;
+}
+
+/** The filenames replicate_document gives its copies (count > 1 adds " (n)", count 1 adds " (copy)" unless named). */
+function buildReplicaFilenames(
+  sourceFilename: string,
+  requestedFilename: string | null,
+  count: number,
+): string[] {
+  const srcExt = sourceFilename.match(/\.[^./\\]+$/)?.[0] ?? "";
+  const baseStem = (requestedFilename ?? sourceFilename).replace(
+    /\.[^./\\]+$/,
+    "",
+  );
+  const filenames: string[] = [];
+  for (let n = 1; n <= count; n++) {
+    const suffix =
+      count === 1 ? (requestedFilename ? "" : " (copy)") : ` (${n})`;
+    filenames.push(`${baseStem}${suffix}${srcExt}`);
+  }
+  return filenames;
+}
+
 export async function generateDocx(
   title: string,
   sections: unknown[],
@@ -871,6 +1076,13 @@ export async function generateDocx(
   options?: { landscape?: boolean; projectId?: string | null },
 ) {
   try {
+    // Gate 1 first: nothing below runs, and nothing is written, unless every
+    // model-written string in the document (and its filename) is released.
+    const gateParts = generatedDocxGateParts(title, sections);
+    if (!gateParts || !(await gateDocWriteText(gateParts, db))) {
+      return { error: DOC_WRITE_REFUSED_MESSAGE };
+    }
+
     const {
       Document,
       Paragraph,
@@ -1287,12 +1499,7 @@ export async function generateDocx(
       }
     }
     const docId = crypto.randomUUID().replace(/-/g, "");
-    const safeTitle =
-      title
-        .replace(/[^a-zA-Z0-9 -]/g, "")
-        .trim()
-        .slice(0, 64) || "document";
-    const filename = `${safeTitle}.docx`;
+    const filename = generatedDocxFilename(title);
     const key = generatedDocKey(userId, docId, filename);
 
     await uploadFile(
@@ -1419,6 +1626,14 @@ export async function runEditDocument(params: {
   | { ok: false; error: string }
 > {
   const { documentId, userId, edits, db, reuseVersion } = params;
+
+  // Gate 1 first: before any read of the document and before any write, every
+  // model-written string in the edits (replacement, reason, context) must be
+  // released. Refused whole: no storage object, no version row, no edit rows.
+  const gateParts = editDocumentGateParts(edits);
+  if (!gateParts || !(await gateDocWriteText(gateParts, db))) {
+    return { ok: false, error: DOC_WRITE_REFUSED_MESSAGE };
+  }
 
   const { data: doc } = await db
     .from("documents")
@@ -3315,6 +3530,25 @@ export async function runToolCalls(
         fail(`Document '${rawDocId}' not found in this project.`);
       } else if (!projectId) {
         fail("replicate_document is only available in project chats.");
+      } else if (
+        // Gate 1 before any read of the source bytes or any write: a model-chosen
+        // filename is the only model text a copy carries (the bytes are the user's
+        // own). Checked as given and as the final per-copy filenames. With no
+        // new_filename the names derive from the user's own filename, not model text.
+        requestedFilename !== null &&
+        !(await gateDocWriteText(
+          [
+            requestedFilename,
+            ...buildReplicaFilenames(
+              sourceInfo.filename,
+              requestedFilename,
+              requestedCount,
+            ),
+          ],
+          db,
+        ))
+      ) {
+        fail(DOC_WRITE_REFUSED_MESSAGE);
       } else {
         try {
           // Pull the active version once — every copy gets the
@@ -3333,23 +3567,11 @@ export async function runToolCalls(
             // Build N filenames. With count=1 keep the
             // pre-existing "(copy)" suffix; with count>1 use
             // numbered "(1)", "(2)" suffixes.
-            const srcExt = sourceInfo.filename.match(/\.[^./\\]+$/)?.[0] ?? "";
-            const baseStem = (() => {
-              if (requestedFilename) {
-                return requestedFilename.replace(/\.[^./\\]+$/, "");
-              }
-              return sourceInfo.filename.replace(/\.[^./\\]+$/, "");
-            })();
-            const filenames: string[] = [];
-            for (let n = 1; n <= requestedCount; n++) {
-              const suffix =
-                requestedCount === 1
-                  ? requestedFilename
-                    ? ""
-                    : " (copy)"
-                  : ` (${n})`;
-              filenames.push(`${baseStem}${suffix}${srcExt}`);
-            }
+            const filenames = buildReplicaFilenames(
+              sourceInfo.filename,
+              requestedFilename,
+              requestedCount,
+            );
 
             // Bulk insert N documents in one round-trip.
             const docRows = filenames.map((fn) => ({
@@ -3607,6 +3829,17 @@ export async function runToolCalls(
       // model can pass it as `doc_id` to edit_document / read_document
       // / find_in_document in the same turn. Without this the model
       // only sees the DB UUID, which isn't valid as a doc_id anchor.
+      if (
+        (result as { error?: unknown }).error === DOC_WRITE_REFUSED_MESSAGE
+      ) {
+        // Gate 1 refused the write: the one fixed result, nothing of the model's text.
+        toolResults.push({
+          role: "tool",
+          tool_call_id: tc.id,
+          content: DOC_WRITE_REFUSED_RESULT,
+        });
+        continue;
+      }
       const { download_url, storage_path, ...safeToolResult } =
         result as Record<string, unknown>;
       const toolResultPayload = newDocLabel
