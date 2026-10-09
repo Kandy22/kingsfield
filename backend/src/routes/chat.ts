@@ -36,6 +36,20 @@ const devLog = (...args: Parameters<typeof console.log>) => {
 
 const TITLE_FALLBACK = "Misc. Query";
 
+async function gatedStoredTitle(title: string | null, db: Db): Promise<string | null> {
+    if (!title) return title;
+    const gated = await gateTitleText(title, TITLE_FALLBACK, {
+        verify: (text) =>
+            verifyDraftForSse(text, {
+                courtListenerToken: process.env.COURTLISTENER_TOKEN ?? "",
+                supabase: db,
+            }),
+        logError: (context, error) => console.error(`[chat-title] ${context}`, error),
+    });
+    return gated.title;
+}
+
+
 function normalizeGeneratedTitle(raw: string): string {
     const title = raw.trim().replace(/^["'`]+|["'`.,:;!?]+$/g, "").trim();
     if (!title) return TITLE_FALLBACK;
@@ -171,7 +185,12 @@ chatRouter.get("/", requireAuth, async (req, res) => {
         p_limit: limit,
     });
     if (error) return void res.status(500).json({ detail: error.message });
-    res.json(data ?? []);
+    const rows = Array.isArray(data) ? data : [];
+    const gated = await Promise.all(rows.map(async (row) => {
+        if (!row || typeof row !== "object" || typeof (row as { title?: unknown }).title !== "string") return row;
+        return { ...row, title: await gatedStoredTitle((row as { title: string }).title, db) };
+    }));
+    res.json(gated);
 });
 
 // POST /chat/create
@@ -223,7 +242,7 @@ chatRouter.get("/:chatId", requireAuth, async (req, res) => {
         .order("created_at", { ascending: true });
 
     const hydrated = await hydrateEditStatuses(messages ?? [], db);
-    res.json({ chat, messages: hydrated });
+    res.json({ chat: { ...chat, title: await gatedStoredTitle(chat.title, db) }, messages: hydrated });
 });
 
 // Stored doc_edited events capture the `status` at the time the assistant
