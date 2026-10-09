@@ -5,6 +5,8 @@ Everything below is a normal shell command. Nothing here needs Claude, an agent,
 
 ## 0. State of things when this was written (be skeptical, verify with section 3)
 
+> **UPDATE 2026-10-09 ~11:05: `main-verify` is DONE and pushed.** The adversary found 11 holes in the 20 unreviewed `Kandy22` commits (see section 11), the builder fixed them over 4 rounds, and the adversary signed `main` (signoff `0f826ff3...`, matches `tree_digest.py`). Signoff tier 537 tests OK in 175 s; `tests_extended` 12 OK in 86 s; the hook `require_adversary_signoff.py` exits 0. Committed as `e49007d`, GitHub `main` = local `main` = `e40ba52`. The 18 `apply_*.py` scripts are gone. Everything below in this section that calls the post-Part-A code "unreviewed" or lists the 5+1 failing tests is now **superseded**. Still open: watcher `report_md` (docket/IP) has no Gate 1; `edit_document` only gates text within about 300 characters of a change; two files outside the builder's write scope were edited by the lead and reviewed by the adversary (`crew/coordinator.ts`, `lib/caseIntelligence.ts`, not in the digest).
+
 - **Public GitHub `main`** (https://github.com/Kandy22/kingsfield) = local `main` = commit `565a0c0` (checked 2026-10-09).
 - Work done up to the **chat-route signoff (2026-10-08, commit `d06dec2`) WAS reviewed** by the adversary agent and has a signoff file.
 - Work added **after** that (document-write gate, chat titles, ownership checks, MCP gate, analytics gate, crew abort, inferred page bounds, jammed-cite scrub) was applied with `apply_*.py` patch scripts and pushed **without** adversary review or a signoff. Treat it as **unreviewed**.
