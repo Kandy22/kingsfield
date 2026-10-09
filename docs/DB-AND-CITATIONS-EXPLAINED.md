@@ -186,3 +186,21 @@ These are different things; do not compare them.
 - Keep raw captions, audio and PDFs local; publish derived statistics and code only (your rule: code only to GitHub).
 - **Check now:** the public GitHub repo still tracks third-party material (for example a Trellis case-documents PDF under `verifier/judicial-intel/attornies-data/` and the July backup of many documents). Decide whether the repo stays public before any claim is made about the data.
 - Have counsel (your licensed-attorney anchor in the BP) confirm any fair-use position before it is stated publicly; this document is not legal advice.
+
+## 12. The judicial-analytics database(s): where they are, the numbers, and how they differ from the citation database
+
+There is no single "judicial analytics DB" yet. There are two pieces, in two formats.
+
+| | Citation database | Colorado judges database | Florida judicial snapshots (the offer catalog) |
+|---|---|---|---|
+| Where | `~/kingsfield/kingsfield_florida.db` | `Verifier/judicial-intel-analytics/co_judges.db` (0.5 MB, built 2026-09-06) | `Verifier/new-kingsfield-judicial-intel-categories/data/snapshots/fl_2dca/` and `fl_6dca/` (+ `data/catalog.json`) |
+| Format | SQLite, 3 tables | SQLite, 18 tables | JSON / JSONL files, no database |
+| Size | 391,465 citation rows, 369,866 cases | judges 155, judge_accounts 334, judge_bio 130, cultural_signals 562, retention_elections 124, opinions 109, judge_edges 40, data_gaps 13, coverage 15. **Empty (0 rows):** contributions, motion_rulings, press_mentions, district_geodemo, keyword_observations, shortlist_membership, financial_interests, media_sessions, vacancy_events | FL 2DCA: **1,416 cases** (`cases.jsonl`, 749 KB), 17 appellate judge files, 81 trial-judge files, counsel and court summaries. FL 6DCA: **98 cases**. |
+| Question it answers | "Does this citation exist, and does the pin fall inside the case?" | "Who is this Colorado judge: bio, retention votes, signals, ties?" | "How does this Florida appellate panel behave in oral argument, and how did it rule?" |
+| Built from | CourtListener bulk files | public bios, retention results, press/Wikipedia (each row stores its `src` and `retrieved_at`) | oral-argument video captions + Jev scores + court opinions |
+| Status | complete for its purpose | partly filled (9 empty tables) | **9 of 29 catalog facts populated** (F12, F13, F17, F19, F21, F22, F25, F26, F29); 17 are empty because they need **trial-court dockets**, 3 because they need a **source** |
+
+**Sample, Colorado:** `judge_bio`: judge 8, `law_school = University of Colorado Law School`, 1977, source `en.wikipedia.org/wiki/Nathan_B._Coats`, retrieved 2026-09-06.
+**Sample, Florida snapshot:** video `--wftonSWEo`, case `2D2024-1834`, *MHC Cortez Village, LLC v. Cortez Road Investments and Finance, Inc.*, actual disposition `granted`, Jev field F26 = predicted outcome `affirm` against a 74.2% base rate.
+
+**Differences that matter:** the citation database is exact lookups and gives yes/no answers; the judicial data is statistical and gives lift-with-abstention signals (never an accuracy claim; abstain below 0.7). The citation database holds court facts only; the judicial data holds derived judgments about people, so it needs source tracking per row (the Colorado database does this; the Florida snapshots do via `provenance`).
