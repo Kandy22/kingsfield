@@ -73,6 +73,7 @@ export interface ResearcherDeps {
   model: string;
   supabase: SupabaseClient;
   courtListenerToken: string;
+  signal?: AbortSignal;
 }
 
 /**
@@ -98,6 +99,7 @@ export async function runResearcher(
   // The model draws on training to propose; Gate 1 verifies.
   const planText = await completeText({
     model: deps.model,
+    signal: deps.signal,
     systemPrompt: RESEARCHER_SYSTEM_PROMPT,
     user: `
 QUESTION: ${input.query}
@@ -142,6 +144,7 @@ only cases. Format each as:
   if (authorities.length > 0) {
     const noteText = await completeText({
       model: deps.model,
+    signal: deps.signal,
       systemPrompt: RESEARCHER_SYSTEM_PROMPT,
       user: `
 QUESTION: ${input.query}

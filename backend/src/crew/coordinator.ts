@@ -357,7 +357,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
         jurisdiction: input.jurisdiction,
         matterContext: input.matterContext,
       },
-      { model: deps.model, supabase: deps.supabase, courtListenerToken: deps.courtListenerToken },
+      { model: deps.model, supabase: deps.supabase, courtListenerToken: deps.courtListenerToken, signal: deps.signal },
     );
     const theories =
       input.defenseTheories?.length
@@ -517,7 +517,7 @@ export async function runCrew(input: CrewInput, deps: CrewDeps): Promise<CrewOut
       jurisdiction: input.jurisdiction,
       matterContext: input.matterContext,
     },
-    { model: deps.model, supabase: deps.supabase, courtListenerToken: deps.courtListenerToken },
+    { model: deps.model, supabase: deps.supabase, courtListenerToken: deps.courtListenerToken, signal: deps.signal },
   );
 
   // Analyst runs only when there's a document.

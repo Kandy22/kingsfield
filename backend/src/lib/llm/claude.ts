@@ -271,7 +271,9 @@ export async function completeClaudeText(params: {
   user: string;
   maxTokens?: number;
   apiKeys?: { claude?: string | null };
+  signal?: AbortSignal;
 }): Promise<string> {
+  throwIfAborted(params.signal);
   const anthropic = client(params.apiKeys?.claude);
   let resp: Awaited<ReturnType<typeof anthropic.messages.create>>;
   try {
@@ -280,7 +282,7 @@ export async function completeClaudeText(params: {
       max_tokens: params.maxTokens ?? 512,
       system: params.systemPrompt,
       messages: [{ role: "user", content: params.user }],
-    });
+    }, { signal: params.signal });
   } catch (error) {
     throw new Error(claudeErrorMessage(error));
   }
