@@ -136,3 +136,15 @@ A row back means Gate 1 would pass it; no row means veto. Or run the real gate:
 - Gate 1 proves a citation **exists**, not that the case says what the AI claims. That is Gate 2 (quote check), which needs opinion text the database does not yet hold.
 - It covers Florida appellate courts only (Supreme Court and DCAs), not Florida trial courts.
 - Today's fixes are on `main` but the final adversary signoff (`main-verify`) was still running when this was written.
+
+## 9. How this maps to your business plan (BP)
+
+The BP is `to sort/Kingsfield Bus Plan/Kingsfield_Business_Plan_2026_v2.docx` (main plan, section 4.2 "Three Agent Layers"), plus `business-plan/Kingsfield_BP_v3_Additions.docx` (same file also at `business/`). What the BP promises, and what exists today:
+
+| BP promise | Built? |
+|---|---|
+| "Every citation verified through a 4-gate pipeline before it surfaces" (Gates: existence, quote accuracy, currency, jurisdiction fit) | **Gate 1 yes** (local database, this document). Gates 2-4 exist in `backend/src/verification/pipeline.ts` using CourtListener; Gate 2 needs opinion text the database does not hold yet. |
+| "The Skeptic always runs with hard veto: halts output if a citation fails Gate 1" | **Yes in effect**: any veto withholds the whole answer (chat, project chat, tabular, crew, council). |
+| "Verification Council: nine adversarial reviewers; every output GREEN, AMBER or RED" | **Not built.** What exists is the four-status verdict. Proposed mapping, to confirm: `verified` = GREEN, `conditional` = AMBER, `vetoed` / `pending` / error = RED. |
+| "Targets sub-5% residual error through adversarial human-in-the-loop review" | **Not measured.** The benchmark card (Hugging Face `legal-citation-benchmark`) shows the unverified models' error rates; no residual-error number exists for Kingsfield itself. The human review tool (Task 2) is what would produce it. |
+| "Calibrated Kingsfield confidence score" (Oct 3 Task 3.3) | **Not built.** The router's 0.80 threshold is a placeholder. |
