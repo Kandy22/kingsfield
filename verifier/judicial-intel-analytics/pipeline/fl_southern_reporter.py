@@ -140,6 +140,35 @@ def stage_text(out: Path, courts, limit: int, kinds, workers: int):
     print(f"text: {counter['done']} files written")
 
 
+PAREN_RX = re.compile(r"(?:\s*,\s*(?:at\s+)?\d{1,4}(?:\s*[-\u2013\u2014]\s*\d{1,4})?)*\s*\((?P<p>[^()]{0,80}?(?:\([^()]{0,20}\))?[^()]{0,20})\)")
+YEAR_RX = re.compile(r"\b(?:18|19|20)\d\d\b")
+V_RX = re.compile(r"\s+v\.\s+")
+
+
+def regex_cites(text):
+    """Fast, purpose-built reader for So. 2d / So. 3d citations: volume, page, 'X v. Y' before it, and the
+    '(Fla. 4th DCA 2017)' parenthetical after it (which also gives the DCA district number).
+    Replaces eyecite for this stage: eyecite ran at only ~5-16 KB/s here (16 hours for the corpus)."""
+    for m in SO_RE.finditer(text):
+        g = re.match(r"(\d{1,4})\s+So\.\s*([23])d\s+(\d{1,4})", m.group(0))
+        vol, ed, page = g.group(1), g.group(2), g.group(3)
+        pre = text[max(0, m.start() - 170): m.start()]
+        plaintiff = defendant = None
+        vs = list(V_RX.finditer(pre))
+        if vs:
+            v = vs[-1]
+            plaintiff = " ".join(pre[: v.start()].split()[-6:]) or None
+            defendant = " ".join(pre[v.end():].strip(" ,;:").split()[:10]) or None
+        pm = PAREN_RX.match(text[m.end(): m.end() + 200])
+        paren = " ".join(pm.group("p").split()) if pm else None
+        ym = YEAR_RX.search(paren) if paren else None
+        yield {"volume": vol, "reporter": f"So. {ed}d", "page": page, "plaintiff": plaintiff, "defendant": defendant,
+               "year": int(ym.group(0)) if ym else None, "court_paren": paren,
+               "court": court_key(YEAR_RX.sub("", paren).strip(" ,") if paren else ""),
+               "context": " ".join(text[max(0, m.start() - 260): m.end() + 260].split())}
+
+
+SO_RE = re.compile(r"\b\d{1,4}\s+So\.\s*[23]d\s+\d{1,4}\b")   # \s* : cites wrapped across lines have runs of spaces
 COURT_RE = [
     (re.compile(r"\b(\d)(?:st|nd|rd|th)\s+(?:D\.?\s?C\.?\s?A\.?|Dist)", re.I), lambda m: f"{m.group(1)}dca"),
     (re.compile(r"^\s*Fla\.?\s*$", re.I), lambda m: "supremecourt"),
@@ -154,9 +183,10 @@ def court_key(paren: str):
     return None
 
 
-def stage_cites(out: Path):
-    from eyecite import get_citations
-    from eyecite.models import FullCaseCitation
+def stage_cites(out: Path, parser: str = "regex"):
+    if parser == "eyecite":
+        from eyecite import get_citations
+        from eyecite.models import FullCaseCitation
 
     seen = set()
     cpath = out / "cites.jsonl"
@@ -173,20 +203,37 @@ def stage_cites(out: Path):
             if src in seen:
                 continue
             text = t.read_text(encoding="utf-8", errors="ignore")
-            for c in get_citations(text):
-                if not isinstance(c, FullCaseCitation):
-                    continue
-                rep = c.corrected_reporter()
-                if rep not in ("So. 2d", "So. 3d"):
-                    continue
-                md = c.metadata
-                f.write(json.dumps({
-                    "source": src, "volume": c.groups.get("volume"), "reporter": rep, "page": c.groups.get("page"),
-                    "plaintiff": md.plaintiff, "defendant": md.defendant, "year": c.year, "court_paren": md.court,
-                    "court": court_key(md.court),
-                    "context": " ".join(text[max(0, c.span()[0] - 260): c.span()[1] + 260].split()),
-                }) + "\n")
-                n += 1
+            if parser == "regex":
+                for rec in regex_cites(text):
+                    rec["source"] = src
+                    f.write(json.dumps(rec) + "\n")
+                    n += 1
+                seen.add(src)
+                continue
+            parts, targets, pos = [], [], 0
+            for m in SO_RE.finditer(text):
+                a0 = max(0, m.start() - 300)
+                w = text[a0: m.end() + 160]
+                parts.append(w)
+                targets.append((pos + m.start() - a0, pos + m.end() - a0, m.start(), m.end()))
+                pos += len(w) + 2
+            if parts:
+                for c in get_citations("\n\n".join(parts)):
+                    if not isinstance(c, FullCaseCitation):
+                        continue
+                    cs, ce = c.span()
+                    hit = next((t4 for t4 in targets if ce > t4[0] and cs < t4[1]), None)
+                    rep = c.corrected_reporter()
+                    if hit is None or rep not in ("So. 2d", "So. 3d"):
+                        continue
+                    md = c.metadata
+                    f.write(json.dumps({
+                        "source": src, "volume": c.groups.get("volume"), "reporter": rep, "page": c.groups.get("page"),
+                        "plaintiff": md.plaintiff, "defendant": md.defendant, "year": c.year, "court_paren": md.court,
+                        "court": court_key(md.court),
+                        "context": " ".join(text[max(0, hit[2] - 260): hit[3] + 260].split()),
+                    }) + "\n")
+                    n += 1
             seen.add(src)
     print(f"cites: {n} citations -> {cpath}")
 
@@ -243,6 +290,7 @@ def main():
     ap.add_argument("--until", type=int, default=date.today().year)
     ap.add_argument("--kinds", default="opinions", help="text stage: listing kinds to fetch (opinions,pca)")
     ap.add_argument("--workers", type=int, default=3, help="text stage: parallel fetchers (each waits 0.5 s between requests)")
+    ap.add_argument("--parser", default="regex", choices=["regex", "eyecite"], help="cites stage: fast pattern parser (default) or eyecite (slow)")
     ap.add_argument("--limit", type=int, default=0, help="text stage: stop after N files (testing)")
     a = ap.parse_args()
     out = Path(a.out)
@@ -250,9 +298,9 @@ def main():
     courts = [c for c in a.courts.split(",") if c in COURTS]
     {"list": lambda: stage_list(out, courts, a.since, a.until),
      "text": lambda: stage_text(out, courts, a.limit, a.kinds.split(","), a.workers),
-     "cites": lambda: stage_cites(out),
+     "cites": lambda: stage_cites(out, a.parser),
      "match": lambda: stage_match(out),
-     "cites_match": lambda: (stage_cites(out), stage_match(out))}[a.stage]()
+     "cites_match": lambda: (stage_cites(out, a.parser), stage_match(out))}[a.stage]()
 
 
 if __name__ == "__main__":
