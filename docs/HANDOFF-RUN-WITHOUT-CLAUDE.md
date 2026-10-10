@@ -269,3 +269,16 @@ Folder: `wingman-in-your-ear/`. **Important: `wingman-demo/` is git-ignored (`.g
 | 7. Legal footing (ADA accommodation request; protective-order language) | Not started (a legal document, not code) |
 
 Run the demo: `cd ~/kingsfield/wingman-in-your-ear/wingman-demo && npx tsx server.ts` (default port 5174; `PORT=5199` to change). Do **not** run `npm run build` casually: it overwrites `dist/`, which the cleanup note says is the only copy of the July UI besides `wingman-advisor-ui-BUILD-2026-07-03.backup/`.
+
+
+## 13. Task 1 final state and how to finish it by hand (2026-10-09, 22:15)
+
+**Results so far** (all in `~/Kingsfield_Corpus/flcourts/`): `decisions.jsonl` 446,059 decisions listed (all 7 courts, 2008 to today); `text/` 133,111 of 133,113 opinion texts (2 permanent download failures; 164 are empty because the PDFs are scanned images with no text layer, so they yield no citations); `cites.jsonl` **401,999 So. 2d / So. 3d citations from 55,903 opinions**.
+**Still running (detached, no Claude needed):** the matching stage (`--stage match`), about 55 minutes from 22:15. It writes `fl_southern_citations.csv` (decision to citation table) and `review_queue.jsonl` (what a human must label). If `fl_southern_citations.csv` does not exist yet, it is still running: `pgrep -fl "stage match"`.
+**If it stops** (restart, crash): the extraction is already saved, so just rerun the matching, about an hour:
+```bash
+cd ~/kingsfield/Verifier/judicial-intel-analytics/pipeline && nice -n 10 caffeinate -i ~/.venv-flsr/bin/python fl_southern_reporter.py --stage match --out ~/Kingsfield_Corpus/flcourts
+```
+**What changed today and why (so nothing surprises you):** eyecite parsed only 5 to 16 KB/s on this Mac (about 16 hours for the corpus), so `--stage cites` now uses a purpose-built pattern parser (default `--parser regex`; `--parser eyecite` keeps the old one). Validated on 30 documents: it found all 186 citations eyecite found plus 15 more; in the 63 cases where years differed, eyecite had no year (it fails on citations wrapped across lines) and the pattern parser had the right one; it also reads the DCA district number (1st to 6th), which eyecite does not. The matching stage now remembers repeated names and skips hopeless comparisons (a score cutoff that cannot change any accepted match, because acceptance needs 85 or more). A partial early eyecite output is kept as `cites.eyecite-partial-83docs.jsonl` (ignore it).
+**Known limits:** case names are read by pattern from the 170 characters before the cite, so unusual names can score lower and go to the review queue instead of being accepted; PCA one-line orders are matched only if a later opinion happens to cite them; the LawDiver cross-check (needs a free LawDiver key) is not run.
+**Next:** (1) when the CSV exists, `python3 Verifier/prepare_review_rows.py --queue ~/Kingsfield_Corpus/flcourts/review_queue.jsonl --out ~/Kingsfield_Corpus/review_rows.jsonl` (keeps the Jev answers already there), then `python3 Verifier/jev_prelabel.py --rows ~/Kingsfield_Corpus/review_rows.jsonl` (dry run prints the cost first; add `--run` to pre-label); (2) label in `Verifier/sandbox.html`; (3) back up the folder: `cd ~/Kingsfield_Corpus && tar czf flcourts_2026-10-09.tgz flcourts`.

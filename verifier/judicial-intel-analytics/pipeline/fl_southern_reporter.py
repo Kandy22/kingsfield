@@ -239,7 +239,9 @@ def stage_cites(out: Path, parser: str = "regex"):
 
 
 def stage_match(out: Path):
-    from rapidfuzz import fuzz
+    from rapidfuzz import fuzz, process
+    style_cache = {}   # (court, year) -> list of case styles, built once, scored in C by process.extract
+    memo = {}          # (court, year, name) -> scored candidates: the same case is cited again and again
 
     dec = defaultdict(list)  # (court, year) -> [records]
     for line in (out / "decisions.jsonl").open(encoding="utf-8"):
@@ -254,8 +256,16 @@ def stage_match(out: Path):
             continue
         cands = dec.get((c["court"], str(c["year"])), [])
         name = f"{c['plaintiff']} v. {c['defendant']}"
-        scored = sorted(((fuzz.token_set_ratio(name, r.get("case_style") or ""), r) for r in cands),
-                        key=lambda x: -x[0])
+        ckey = (c["court"], str(c["year"]))
+        if ckey not in style_cache:
+            style_cache[ckey] = [r.get("case_style") or "" for r in cands]
+        mk = (ckey, name)
+        if mk not in memo:
+            # score_cutoff skips hopeless comparisons early. Safe: acceptance needs >= 85, and the
+            # runner-up margin only matters for candidates within 5 points of an accepted best.
+            memo[mk] = [(sc, cands[i]) for _, sc, i in
+                        process.extract(name, style_cache[ckey], scorer=fuzz.token_set_ratio, limit=3, score_cutoff=60)]
+        scored = memo[mk]
         cite = f"{c['volume']} {c['reporter']} {c['page']}"
         if scored and scored[0][0] >= ACCEPT_SCORE and (len(scored) == 1 or scored[0][0] - scored[1][0] >= ACCEPT_MARGIN):
             g = groups[(cite, scored[0][1]["_key"])]
