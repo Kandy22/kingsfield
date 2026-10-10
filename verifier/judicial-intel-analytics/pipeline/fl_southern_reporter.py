@@ -236,7 +236,7 @@ def stage_match(out: Path):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--stage", required=True, choices=["list", "text", "cites", "match"])
+    ap.add_argument("--stage", required=True, choices=["list", "text", "cites", "match", "cites_match"])
     ap.add_argument("--out", default=str(DEFAULT_OUT))
     ap.add_argument("--courts", default=",".join(COURTS))
     ap.add_argument("--since", type=int, default=2008)
@@ -251,7 +251,8 @@ def main():
     {"list": lambda: stage_list(out, courts, a.since, a.until),
      "text": lambda: stage_text(out, courts, a.limit, a.kinds.split(","), a.workers),
      "cites": lambda: stage_cites(out),
-     "match": lambda: stage_match(out)}[a.stage]()
+     "match": lambda: stage_match(out),
+     "cites_match": lambda: (stage_cites(out), stage_match(out))}[a.stage]()
 
 
 if __name__ == "__main__":
