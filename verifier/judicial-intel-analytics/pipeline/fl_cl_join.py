@@ -14,6 +14,7 @@ import argparse
 import bz2
 import csv
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -22,9 +23,9 @@ from pathlib import Path
 
 csv.field_size_limit(sys.maxsize)
 HOME = Path.home()
-CORPUS = HOME / "Kingsfield_Corpus"
+CORPUS = Path(os.environ.get("FLJOIN_CORPUS", HOME / "Kingsfield_Corpus"))   # overridable for tests
 DB = HOME / "kingsfield" / "kingsfield_florida.db"
-OUT = CORPUS / "flcourts"
+OUT = Path(os.environ.get("FLJOIN_OUT", CORPUS / "flcourts"))
 
 
 def stream(path):
